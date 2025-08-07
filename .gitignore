@@ -1,0 +1,11 @@
+.DS_Store
+.env
+.idea
+.pytest_cache
+*.egg-info/
+__pycache__
+tmp
+venv
+results
+sandbox.py
+.vscode

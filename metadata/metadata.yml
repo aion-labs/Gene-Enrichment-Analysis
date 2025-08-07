@@ -1,0 +1,12 @@
+metadata_version: 1
+name: Iterative Enrichment
+description: This app tests the input gene list against selected pathway libraries
+  and iteratively removes genes from the top hit at each step. The process stops when
+  no term passes the p-value cutoff. Results include a ranked table, bar chart, and
+  network graph that highlight both primary and secondary signals.
+tags:
+- enrichment
+- gene set
+- GSEA
+authors:
+- name: Maxim Kuleshov
