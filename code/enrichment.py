@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 def compute_pvalue(
-    args: Tuple[GeneSet, BackgroundGeneSet, dict, str],
+    args: Tuple[GeneSet, BackgroundGeneSet, dict, str, int],
 ) -> Tuple[str, str, str, List[str], float]:
     """
     Computes the p-value for a given term using Fisher's exact test.
@@ -33,6 +33,7 @@ def compute_pvalue(
             - background_gene_set (BackgroundGeneSet): The background gene set
             - term (dict): A dictionary representing a term in the gene set library
             - p-value method (str): The name of the method to calculate p-value
+            - library_background_size (int): The size of the intersection between background and library genes
 
     Returns:
         A tuple containing the following elements:
@@ -42,18 +43,18 @@ def compute_pvalue(
             - overlap genes (list): A list of genes in the overlap
             - p_value (float): The p-value computed by Fisher's exact test
     """
-    gene_set, background_gene_set, term, p_value_method_name = args
+    gene_set, background_gene_set, term, p_value_method_name, library_background_size = args
     term_genes = set(term["genes"])
     n_term_genes = len(term_genes)
     overlap = gene_set.genes & term_genes
     n_overlap = len(overlap)
 
-    # Build contingency table for Fisher's exact test
+    # Build contingency table for Fisher's exact test using library-specific background
     contingency_table = [
         [n_overlap, n_term_genes - n_overlap],
         [
             gene_set.size - n_overlap,
-            background_gene_set.size - n_term_genes - gene_set.size + n_overlap,
+            library_background_size - n_term_genes - gene_set.size + n_overlap,
         ],
     ]
 
@@ -63,7 +64,7 @@ def compute_pvalue(
         chi2, p_value, _, _ = chi2_contingency(contingency_table)
     elif p_value_method_name == "Hypergeometric Test":
         p_value = hypergeom.sf(
-            n_overlap - 1, background_gene_set.size, n_term_genes, gene_set.size
+            n_overlap - 1, library_background_size, n_term_genes, gene_set.size
         )
     else:
         logger.error(f"Unsupported p_value_method: {p_value_method_name}")
@@ -146,6 +147,9 @@ class Enrichment:
         with mp.Pool(cpu_count) as pool:
             logger.info(f"Initializing the MP pool with {cpu_count} CPUs")
             try:
+                # Calculate the size of the intersection between the background gene set and the library's unique genes
+                library_background_size = len(self.background_gene_set.genes & self.gene_set_library.unique_genes)
+                logger.info(f"Library-specific background size: {library_background_size} genes (intersection of {self.background_gene_set.size} background genes and {self.gene_set_library.size} library genes)")
                 parallel_results = pool.map(
                     compute_pvalue,
                     [
@@ -154,6 +158,7 @@ class Enrichment:
                             self.background_gene_set,
                             term,
                             self.p_value_method_name,
+                            library_background_size,
                         )
                         for term in self.gene_set_library.library if self.min_term_size <= term["size"] <= self.max_term_size
                     ],
@@ -217,8 +222,13 @@ class Enrichment:
 
     def to_snapshot(self) -> Dict:
         """Return the snapshot of input parameters and the enrichment results as a JSON string."""
+        # Calculate library-specific background size for the snapshot
+        library_background_size = len(self.background_gene_set.genes & self.gene_set_library.unique_genes)
         return {
             "input_gene_set": list(self.gene_set.genes),
             "background": self.background_gene_set.name,
+            "background_size": self.background_gene_set.size,
+            "library_background_size": library_background_size,
+            "library_size": self.gene_set_library.size,
             self.gene_set_library.name: self.results,
         }

@@ -146,6 +146,75 @@ The gene database is sourced from NCBI:
 - **Update frequency**: Regular updates from NCBI
 - **License**: Public domain (NCBI data)
 
+## Library-Specific Background Calculation
+
+### Statistical Improvement
+
+The application now uses **library-specific background sizes** for more accurate p-value calculations. This is a significant statistical improvement that addresses a common issue in gene enrichment analysis.
+
+### How It Works
+
+Instead of using the full background gene set size for all libraries, the application calculates:
+
+```
+Library-specific background size = |Background Genes ∩ Library Genes|
+```
+
+Where:
+- **Background Genes**: The complete set of genes in the background (e.g., all human genes)
+- **Library Genes**: The unique genes present in the specific gene set library being tested
+- **Intersection**: Only genes that exist in both sets
+
+### Example
+
+Consider this scenario:
+- **Background gene set**: 20,000 genes (all human genes)
+- **Library A (KEGG)**: 5,000 unique genes (metabolic pathways only)
+- **Library B (GO)**: 15,000 unique genes (general biological processes)
+
+**Before the fix:**
+- Both libraries would use `background_size = 20,000`
+- This could lead to inflated p-values for Library A
+
+**After the fix:**
+- Library A uses `library_background_size = 5,000`
+- Library B uses `library_background_size = 15,000`
+- More accurate statistical testing for each library
+
+### Implementation Details
+
+The calculation is performed in `code/enrichment.py`:
+
+```python
+# Calculate intersection between background and library genes
+library_background_size = len(self.background_gene_set.genes & self.gene_set_library.unique_genes)
+
+# Use library-specific background in contingency table
+contingency_table = [
+    [n_overlap, n_term_genes - n_overlap],
+    [
+        gene_set.size - n_overlap,
+        library_background_size - n_term_genes - gene_set.size + n_overlap,
+    ],
+]
+```
+
+### Benefits
+
+1. **More Accurate P-values**: Eliminates false positives from genes not present in the library
+2. **Library-Specific Context**: Each library is tested against its own effective gene universe
+3. **Better Statistical Rigor**: Follows best practices for gene enrichment analysis
+4. **Transparency**: Logs show the library-specific background size for verification
+
+### Logging
+
+The application now logs the library-specific background calculation:
+```
+Library-specific background size: 5000 genes (intersection of 20000 background genes and 5000 library genes)
+```
+
+This information is also included in the results snapshot for reproducibility.
+
 ## Future Enhancements
 
 Potential improvements could include:
