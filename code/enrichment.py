@@ -144,6 +144,8 @@ class Enrichment:
         results = []
         logger.info(f"Calculating p-values for {self.gene_set_library.name}")
         cpu_count = mp.cpu_count() - 2
+        parallel_results = []  # Initialize outside try block
+        
         with mp.Pool(cpu_count) as pool:
             logger.info(f"Initializing the MP pool with {cpu_count} CPUs")
             try:
@@ -165,10 +167,20 @@ class Enrichment:
                 )
             except Exception as e:
                 logging.exception("An error occurred: %s", e)
+                return results  # Return empty results if computation failed
             finally:
                 pool.close()
                 pool.join()
                 logger.info(f"Releasing {cpu_count} CPUs from the MP pool")
+
+        # Check if we have results to process
+        if not parallel_results:
+            logger.warning(f"No results obtained for {self.gene_set_library.name}")
+            logger.info(f"Library has {len(self.gene_set_library.library)} total terms")
+            logger.info(f"Terms within size range [{self.min_term_size}, {self.max_term_size}]: {len([t for t in self.gene_set_library.library if self.min_term_size <= t['size'] <= self.max_term_size])}")
+            logger.info(f"Input gene set size: {self.gene_set.size}")
+            logger.info(f"Background gene set size: {self.background_gene_set.size}")
+            return results
 
         # Separate results and p_values for convenience
         p_values = [result[-1] for result in parallel_results]

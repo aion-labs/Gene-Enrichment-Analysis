@@ -52,7 +52,7 @@ def render_table(result: pd.DataFrame) -> None:
     )
 
 
-def render_barchart(result: pd.DataFrame) -> None:
+def render_barchart(result: pd.DataFrame, file_name: str = "") -> None:
     """
     Render a bar chart visualization of the results data within the Streamlit app.
 
@@ -60,6 +60,7 @@ def render_barchart(result: pd.DataFrame) -> None:
     a bar chart using Plotly Express, which is then displayed in the Streamlit app using the `st.plotly_chart` function.
 
     :param result: The DataFrame containing results data to visualize.
+    :param file_name: Optional file name to create unique chart keys.
     """
     logger.info("Rendering bar chart in Streamlit app.")
     bar = result[["term", "p-value"]]
@@ -73,7 +74,7 @@ def render_barchart(result: pd.DataFrame) -> None:
         orientation="h",
         labels={"-log10(p-value)": "−log₁₀(p‐value)", "term": "Term"},
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, key=f"barchart_{file_name}")
 
 
 def render_results(result: Enrichment, file_name: str, n_results: int = 10) -> None:
@@ -97,7 +98,7 @@ def render_results(result: Enrichment, file_name: str, n_results: int = 10) -> N
     with table:
         render_table(result_df)
     with bar:
-        render_barchart(result_df)
+        render_barchart(result_df, file_name)
 
     st.markdown(
         f'Download results as {download_link(result.to_tsv(), file_name, "tsv")}, {download_link(result.to_json(), file_name, "json")}',
@@ -180,12 +181,14 @@ def render_iter_table(result: pd.DataFrame) -> None:
     )
 
 
-def render_iter_barchart(result: pd.DataFrame) -> None:
+def render_iter_barchart(result: pd.DataFrame, file_name: str = "") -> None:
     """
     Render a bar chart visualization of iterative enrichment results.
 
     :param result: DataFrame indexed by 'iteration' with at least a 'p-value' column.
     :type result: pandas.DataFrame
+    :param file_name: Optional file name to create unique chart keys.
+    :type file_name: str
     """
     logger.info("Rendering iterative bar chart.")
 
@@ -205,7 +208,7 @@ def render_iter_barchart(result: pd.DataFrame) -> None:
         labels={"term": "Term", "-log10(p-value)": "-log10(p-value)"},
         title="Iterative Enrichment p-value per Iteration",
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, key=f"iter_barchart_{file_name}")
 
 
 def render_iter_results(result: IterativeEnrichment, file_name: str) -> None:
@@ -235,7 +238,7 @@ def render_iter_results(result: IterativeEnrichment, file_name: str) -> None:
             render_iter_table(df)
 
         with bar_tab:
-            render_iter_barchart(df)
+            render_iter_barchart(df, file_name)
 
         # Download links
         st.markdown(
@@ -260,7 +263,7 @@ def render_network(dot: str, title: str = "Iterative Enrichment Network") -> Non
     st.subheader(title)
     # st.graphviz_chart(dot, use_container_width=True)
 
-    st.plotly_chart(dot_to_plotly(dot), use_container_width=True)
+    st.plotly_chart(dot_to_plotly(dot), use_container_width=True, key="network_chart")
     # Offer DOT download
     st.markdown(
         f'Download network graph as {download_link(dot, "iterative_network", "dot")}',

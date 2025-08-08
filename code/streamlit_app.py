@@ -80,7 +80,13 @@ def main() -> None:
     )
     st.sidebar.title("Enrichment analysis")
     st.sidebar.write(
-        """This app tests the input gene list against selected pathway libraries and iteratively removes genes from the top hit at each step. The process stops when no term passes the p-value cutoff. Results include a ranked table, bar chart, and network graph that highlight both primary and secondary signals."""
+        """This app tests the input gene list against selected pathway libraries. 
+        
+**Regular Mode**: Runs once and reports all results that pass the filters per library.
+
+**Iterative Mode**: Iteratively removes genes from the top hit at each step until no term passes the p-value cutoff.
+
+Results include ranked tables, bar charts, and network graphs."""
     )
 
     _ensure_base_state()
@@ -211,6 +217,36 @@ def main() -> None:
                         )
                     else:
                         state.gene_set = None
+            if mode == "Regular":
+                st.markdown("**Regular enrichment parameters**")
+                st.caption("Configure filters for the enrichment analysis:")
+                # P-value threshold filter for regular mode
+                state.p_threshold = st.number_input(
+                    "Raw p-value threshold",
+                    min_value=1e-10,
+                    max_value=0.5,
+                    value=0.001,
+                    step=0.001,
+                    format="%.4f",
+                    help="Maximum raw p-value for terms to be included in results."
+                )
+                # Minimum overlap filter for regular mode
+                state.min_overlap = st.number_input(
+                    "Minimum overlap with gene set",
+                    min_value=1,
+                    value=3,
+                    step=1,
+                    help="Minimum number of genes that must overlap between your input gene set and a gene set term."
+                )
+                # Term size filter for regular mode
+                state.min_term_size, state.max_term_size = st.slider(
+                    "Minimum and maximum term size",
+                    min_value=1,
+                    value=(10, 1000),
+                    step=10,
+                    max_value=5000,
+                    help="Filter gene sets by their size (number of genes)."
+                )
             if mode == "Iterative":
                 st.markdown("**Iterative parameters**")
                 state.iter_p_threshold = st.number_input(
@@ -354,15 +390,42 @@ def main() -> None:
                 s = "s" if str(n_genes)[-1] != "1" else ""
                 st.warning(f"You've entered {n_genes} gene{s}, which may be {warn}...")
             with st.spinner("Calculating enrichment"):
+                # Debug information
+                st.info(f"Input gene set size: {state.gene_set.size if state.gene_set else 'None'}")
+                st.info(f"Number of libraries: {len(state.gene_set_libraries)}")
+                st.info(f"Term size range: [{state.min_term_size}, {state.max_term_size}]")
+                st.info(f"P-value threshold: {state.p_threshold}")
+                st.info(f"Minimum overlap: {state.min_overlap}")
+                
                 for gsl in state.gene_set_libraries:
+                    st.info(f"Processing library: {gsl.name} ({gsl.num_terms} terms)")
                     enrich = Enrichment(
                         state.gene_set,
                         gsl,
                         state.background_gene_set,
-                        state.p_val_method,
+                        min_term_size=state.min_term_size,
+                        max_term_size=state.max_term_size,
+                        p_value_method_name=state.p_val_method,
                     )
+                    # Filter results by p-value threshold and minimum overlap
+                    filtered_results = [
+                        result for result in enrich.results
+                        if (result.get("p-value", 1.0) <= state.p_threshold and
+                            result.get("overlap_size", "").split("/")[0].isdigit() and 
+                            int(result.get("overlap_size", "").split("/")[0]) >= state.min_overlap)
+                    ]
+                    
+                    # Update the enrichment object with filtered results
+                    enrich.results = filtered_results
                     state.enrich[gsl.name] = enrich
-                    with (ROOT / "results" / f"{enrich.name}.json").open("w") as js:
+                    
+                    # Debug: Show number of results
+                    st.info(f"Results for {gsl.name}: {len(enrich.results)} terms (after filtering for p ≤ {state.p_threshold} and min overlap ≥ {state.min_overlap})")
+                    
+                    # Ensure results directory exists
+                    results_dir = ROOT / "results"
+                    results_dir.mkdir(exist_ok=True)
+                    with (results_dir / f"{enrich.name}.json").open("w") as js:
                         json.dump(enrich.to_snapshot(), js)
                 state.results_ready = True
         else:
@@ -380,6 +443,7 @@ def main() -> None:
         )
         for lib in state.enrich:
             render_results(state.enrich[lib], lib, n_results)
+        # Reset the flag to prevent duplicate rendering
         state.results_ready = False
 
     # Iterative execution
@@ -419,12 +483,15 @@ def main() -> None:
                     # store enrichment object and results
                     state.iter_enrich[gsl.name] = it
                     state.iter_results[gsl.name] = it.results
-                    state.iter_dot[gsl.name] = it.to_dot()
+                    # Filter results for minimum overlap
                     state.iter_results[gsl.name] = [
                         rec
                         for rec in state.iter_results[gsl.name]
                         if len(rec.get("genes", [])) >= state.iter_min_overlap
                     ]
+                    # Generate DOT from filtered results
+                    it.results = state.iter_results[gsl.name]
+                    state.iter_dot[gsl.name] = it.to_dot()
 
             state.iter_ready = True
 
@@ -447,11 +514,6 @@ def main() -> None:
 
         # render each library's results with a persistent checkbox
         for lib, it in state.iter_enrich.items():
-            # Monkey-patch filtered results
-            it.results = [
-                rec for rec in it.results
-                if len(rec.get("genes", [])) >= state.iter_min_overlap
-            ]
             render_iter_results(it, lib)
             state.setdefault(f"use_{lib}_in_network", False)
             st.checkbox(
