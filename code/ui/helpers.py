@@ -14,12 +14,27 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 
 
 def input_example() -> None:
-    """Input an example gene set based on the selected format."""
+    """Input an example gene set from the example_gene_list.txt file."""
     if not hasattr(state, 'gene_input_format'):
         state.gene_input_format = 'symbols'
     
-    if state.gene_input_format == 'entrez_ids':
-        example_genes = """7157
+    # Read from the example_gene_list.txt file
+    example_file_path = ROOT / "data" / "gene_lists" / "example_gene_list.txt"
+    
+    try:
+        with open(example_file_path, "r") as f:
+            example_genes = f.read().strip()
+        
+        state.gene_set_input = example_genes
+        state.gene_set_name = "Example gene set"
+        
+        logger.info(f"Loaded example gene set from {example_file_path}")
+        
+    except FileNotFoundError:
+        logger.error(f"Example gene list file not found: {example_file_path}")
+        # Fallback to hardcoded examples if file doesn't exist
+        if state.gene_input_format == 'entrez_ids':
+            example_genes = """7157
 672
 675
 7159
@@ -29,9 +44,9 @@ def input_example() -> None:
 7162
 7163
 7164"""
-        state.gene_set_name = "Example gene set (Entrez IDs)"
-    else:
-        example_genes = """ABHD11
+            state.gene_set_name = "Example gene set (Entrez IDs)"
+        else:
+            example_genes = """ABHD11
 ABHD14A
 ABHD3
 ACAA1A
@@ -41,9 +56,10 @@ ADH5
 ADHFE1
 ADK
 AFAP1L1"""
-        state.gene_set_name = "Example gene set (Symbols)"
-    
-    state.gene_set_input = example_genes
+            state.gene_set_name = "Example gene set (Symbols)"
+        
+        state.gene_set_input = example_genes
+        st.warning("⚠️ Example gene list file not found. Using fallback examples.")
 
 
 def update_text_widgets() -> None:
