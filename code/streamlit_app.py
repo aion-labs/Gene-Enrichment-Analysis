@@ -1,9 +1,11 @@
 import json
 import logging
 import math
+import re
 from io import StringIO
 from pathlib import Path
 from typing import Dict, List, Set
+from datetime import datetime
 
 import streamlit as st
 from PIL import Image
@@ -37,6 +39,56 @@ st.set_page_config(
 )
 
 
+def get_msigdb_version_info() -> tuple[str, str]:
+    """
+    Get MSigDB version and last update date.
+    
+    Returns:
+        Tuple of (version, update_date)
+    """
+    libraries_dir = ROOT / "data" / "libraries"
+    backup_dir = libraries_dir / "backup"
+    
+    # Get version from GMT files
+    version = "Unknown"
+    gmt_files = list(libraries_dir.glob("*.gmt"))
+    if gmt_files:
+        # Extract version from first GMT file name
+        sample_file = gmt_files[0].name
+        if "v2025.1" in sample_file:
+            version = "2025.1"
+        elif "v2023.2" in sample_file:
+            version = "2023.2"
+        elif "v2023.1" in sample_file:
+            version = "2023.1"
+        else:
+            # Try to extract version pattern
+            version_match = re.search(r'v(\d{4}\.\d+)', sample_file)
+            if version_match:
+                version = version_match.group(1)
+    
+    # Get last update date from backup directories
+    update_date = "Unknown"
+    if backup_dir.exists():
+        backup_dirs = [d for d in backup_dir.iterdir() if d.is_dir() and d.name.startswith("backup_")]
+        if backup_dirs:
+            # Sort by creation time and get the most recent
+            latest_backup = max(backup_dirs, key=lambda x: x.stat().st_mtime)
+            backup_name = latest_backup.name
+            
+            # Extract date from backup name (format: backup_YYYYMMDD_HHMMSS)
+            if backup_name.startswith("backup_"):
+                date_str = backup_name[7:]  # Remove "backup_" prefix
+                try:
+                    # Parse the date string
+                    date_obj = datetime.strptime(date_str, "%Y%m%d_%H%M%S")
+                    update_date = date_obj.strftime("%B %d, %Y")
+                except ValueError:
+                    update_date = "Unknown"
+    
+    return version, update_date
+
+
 def _ensure_base_state():
     if "enrich" not in state:
         state.enrich = {}
@@ -52,6 +104,8 @@ def _ensure_base_state():
         state.min_term_size = 10
     if "max_term_size" not in state:
         state.max_term_size = 1000
+    if "iter_max_term_size" not in state:
+        state.iter_max_term_size = 1000
     if "iter_ready" not in state:
         state.iter_ready = False
     if "selected_dot_paths" not in state:
@@ -61,13 +115,14 @@ def _ensure_base_state():
 
 
 def _build_iterative_tables_download(all_iter_results: Dict[str, List[dict]]) -> str:
-    rows = ["library\titeration\tterm\t p-value\t-log10_p\tgenes"]
+    rows = ["library\titeration\tterm\tp-value\t-log10_p\toverlap_size\tgenes"]
     for lib, records in all_iter_results.items():
         for rec in records:
             p = rec.get("p-value", float("nan"))
+            overlap_size = rec.get("overlap_size", "0/0")
             rows.append(
                 f"{lib}\t{rec['iteration']}\t{rec['term']}\t{p}\t"
-                f"{(-math.log10(p) if p and p>0 else '')}\t{','.join(rec.get('genes', []))}"
+                f"{(-math.log10(p) if p and p>0 else '')}\t{overlap_size}\t{','.join(rec.get('genes', []))}"
             )
     return "\n".join(rows)
 
@@ -99,6 +154,11 @@ Results include ranked tables, bar charts, and network graphs."""
         key="analysis_mode",
     )
     st.subheader(f"Enrichment analysis — {mode} mode")
+
+    # Display MSigDB version and update date
+    version, update_date = get_msigdb_version_info()
+    if version != "Unknown" or update_date != "Unknown":
+        st.caption(f"📊 **Gene Sets:** MSigDB v{version} • Last updated: {update_date}")
 
     state.lib_mapper = update_aliases("libraries")
     state.bg_mapper = update_aliases("backgrounds")
@@ -162,7 +222,9 @@ Results include ranked tables, bar charts, and network graphs."""
             )
         with col_settings:
             state.background_set = st.selectbox(
-                "Background gene list", state.bg_mapper.keys()
+                "Background gene list", 
+                state.bg_mapper.keys(),
+                index=0  # Default to first background
             )
             st.caption("Specifies the background list of genes...")
             state.libraries = st.multiselect(
@@ -178,15 +240,6 @@ Results include ranked tables, bar charts, and network graphs."""
                     )
                     for lib in state.libraries
                 ]
-                # filter out oversized terms by max_term_size setting
-                for gsl in state.gene_set_libraries:
-                    filtered_terms = [
-                        t for t in gsl.library if t["size"] <= state.iter_max_term_size
-                    ]
-                    gsl.library = filtered_terms
-                    gsl.num_terms = len(filtered_terms)
-                    gsl.unique_genes = gsl.compute_unique_genes()
-                    gsl.size = len(gsl.unique_genes)
             else:
                 state.gene_set_libraries = []
             if state.background_set:
@@ -278,6 +331,27 @@ Results include ranked tables, bar charts, and network graphs."""
                     max_value=5000
                 )
 
+
+    # Filter gene sets based on mode-specific max_term_size
+    if state.gene_set_libraries:
+        if mode == "Regular":
+            for gsl in state.gene_set_libraries:
+                filtered_terms = [
+                    t for t in gsl.library if t["size"] <= state.max_term_size
+                ]
+                gsl.library = filtered_terms
+                gsl.num_terms = len(filtered_terms)
+                gsl.unique_genes = gsl.compute_unique_genes()
+                gsl.size = len(gsl.unique_genes)
+        elif mode == "Iterative":
+            for gsl in state.gene_set_libraries:
+                filtered_terms = [
+                    t for t in gsl.library if t["size"] <= state.iter_max_term_size
+                ]
+                gsl.library = filtered_terms
+                gsl.num_terms = len(filtered_terms)
+                gsl.unique_genes = gsl.compute_unique_genes()
+                gsl.size = len(gsl.unique_genes)
 
     col_sub, col_example, _ = st.columns([9, 8, 29])
     ready_common = all(
@@ -479,18 +553,12 @@ Results include ranked tables, bar charts, and network graphs."""
                         max_iterations=(
                             None if state.iter_max_iter == 0 else state.iter_max_iter
                         ),
+                        min_overlap=state.iter_min_overlap,
                     )
                     # store enrichment object and results
                     state.iter_enrich[gsl.name] = it
                     state.iter_results[gsl.name] = it.results
-                    # Filter results for minimum overlap
-                    state.iter_results[gsl.name] = [
-                        rec
-                        for rec in state.iter_results[gsl.name]
-                        if len(rec.get("genes", [])) >= state.iter_min_overlap
-                    ]
-                    # Generate DOT from filtered results
-                    it.results = state.iter_results[gsl.name]
+                    # Generate DOT from results
                     state.iter_dot[gsl.name] = it.to_dot()
 
             state.iter_ready = True

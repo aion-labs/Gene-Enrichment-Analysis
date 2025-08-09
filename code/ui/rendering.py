@@ -37,8 +37,16 @@ def render_table(result: pd.DataFrame) -> None:
         else:
             return f"{n:.3e}"
 
+    # Create a copy of the dataframe to avoid modifying the original
+    display_df = result.copy()
+    
+    # Convert underscores to spaces in term names for better readability
+    if 'term' in display_df.columns and not display_df.empty:
+        # Ensure term column contains strings and handle NaN/None values
+        display_df['term'] = display_df['term'].fillna('').astype(str).str.replace('_', ' ', regex=False)
+
     st.dataframe(
-        result.style.format({"p-value": custom_format, "fdr": custom_format}),
+        display_df.style.format({"p-value": custom_format, "fdr": custom_format}),
         use_container_width=True,
         column_config={
             "rank": None,
@@ -63,7 +71,12 @@ def render_barchart(result: pd.DataFrame, file_name: str = "") -> None:
     :param file_name: Optional file name to create unique chart keys.
     """
     logger.info("Rendering bar chart in Streamlit app.")
-    bar = result[["term", "p-value"]]
+    bar = result[["term", "p-value"]].copy()
+    
+    # Convert underscores to spaces in term names for better readability
+    if not bar.empty:
+        bar['term'] = bar['term'].fillna('').astype(str).str.replace('_', ' ', regex=False)
+    
     bar.loc[:, "p-value"] = bar.loc[:, "p-value"].apply(lambda x: -1 * log10(x))
     bar = bar.sort_values(by=["p-value"])
     bar.columns = ["term", "-log10(p-value)"]
@@ -154,13 +167,20 @@ def render_iter_table(result: pd.DataFrame) -> None:
     """
     Render a styled DataFrame of iterative enrichment results.
 
-    :param result: DataFrame indexed by 'iteration' with columns ['term', 'p-value', 'genes'].
+    :param result: DataFrame indexed by 'iteration' with columns ['term', 'p-value', 'overlap_size', 'genes'].
     :type result: pandas.DataFrame
     """
     logger.info("Rendering iterative results table.")
 
+    # Create a copy to avoid modifying the original
+    df = result.copy()
+    
+    # Convert underscores to spaces in term names for better readability
+    if 'term' in df.columns and not df.empty:
+        df['term'] = df['term'].fillna('').astype(str).str.replace('_', ' ', regex=False)
+
     # Rename 'genes' column for clarity
-    df = result.rename(columns={"genes": "Genes removed"})
+    df = df.rename(columns={"genes": "Genes removed"})
 
     # Apply custom formatting to p-value column
     def custom_format(n):
@@ -176,6 +196,7 @@ def render_iter_table(result: pd.DataFrame) -> None:
         column_config={
             "term": "Term",
             "p-value": "P-value",
+            "overlap_size": "Overlap size",
             "Genes removed": "Genes removed",
         },
     )
@@ -194,6 +215,11 @@ def render_iter_barchart(result: pd.DataFrame, file_name: str = "") -> None:
 
     # Prepare bar plot data
     bar = result.reset_index()[["iteration", "term", "p-value"]].copy()
+    
+    # Convert underscores to spaces in term names for better readability
+    if not bar.empty:
+        bar['term'] = bar['term'].fillna('').astype(str).str.replace('_', ' ', regex=False)
+    
     bar["-log10(p-value)"] = bar["p-value"].apply(
         lambda x: -log10(x) if x and x > 0 else None
     )

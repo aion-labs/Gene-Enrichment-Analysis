@@ -49,7 +49,7 @@ AFAP1L1"""
 def update_text_widgets() -> None:
     """Update text widgets when file selection changes."""
     if state.selected_file != "Select ...":
-        file_path = f"data/gene_lists/{state.selected_file}"
+        file_path = ROOT / "data" / "gene_lists" / state.selected_file
         try:
             with open(file_path, "r") as f:
                 content = f.read()
@@ -99,8 +99,10 @@ def convert_and_validate_gene_input(input_text: str, input_format: str) -> tuple
             if not gene_id:
                 continue
             
-            if state.gene_converter.is_symbol(gene_id):
-                converted_symbols.append(gene_id)
+            # Use validate_and_map_symbol to get the mapped symbol
+            mapped_symbol = state.gene_converter.validate_and_map_symbol(gene_id)
+            if mapped_symbol:
+                converted_symbols.append(mapped_symbol)
             else:
                 unrecognized_symbols.append(gene_id)
     

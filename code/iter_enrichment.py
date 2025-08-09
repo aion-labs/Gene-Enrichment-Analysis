@@ -42,7 +42,22 @@ class IterativeEnrichment:
         name: str = None,
         p_threshold: float = 0.01,
         max_iterations: Optional[int] = None,
+        min_overlap: int = 1,
     ) -> None:
+        """
+        Initialize iterative enrichment.
+
+        :param gene_set: Input gene set
+        :param gene_set_library: Gene set library
+        :param background_gene_set: Background gene set
+        :param min_term_size: Minimum term size
+        :param max_term_size: Maximum term size
+        :param p_value_method_name: P-value calculation method
+        :param name: Name for the enrichment
+        :param p_threshold: P-value cutoff for including terms
+        :param max_iterations: Maximum number of iterations (None for no limit)
+        :param min_overlap: Minimum overlap size required for terms
+        """
         self.gene_set = gene_set
         self.gene_set_library = gene_set_library
         self.min_term_size = min_term_size
@@ -51,6 +66,7 @@ class IterativeEnrichment:
         self.p_value_method_name: str = p_value_method_name
         self.p_threshold: float = p_threshold
         self.max_iterations: Optional[int] = max_iterations
+        self.min_overlap: int = min_overlap
         self.name = (
             name
             if name
@@ -97,7 +113,14 @@ class IterativeEnrichment:
                 logger.warning("Reached max_iterations; stopping iterative enrichment.")
                 break
 
-            current_set = GeneSet(list(remaining), set(self.background_gene_set.genes))
+            # Create a new GeneSet with the remaining genes, but avoid re-validation
+            # since these genes were already validated when the original gene set was created
+            current_set = GeneSet(
+                list(remaining), 
+                set(self.background_gene_set.genes),
+                hgcn=False,  # Don't re-validate against background
+                format=False  # Don't re-format genes
+            )
             try:
                 enr = Enrichment(
                     gene_set=current_set,
@@ -116,18 +139,58 @@ class IterativeEnrichment:
                 logger.info("No enrichment results; terminating.")
                 break
 
-            top = results[0]
+            # Filter results by minimum overlap (same as regular mode)
+            filtered_results = [
+                result for result in results
+                if (result.get("overlap_size", "").split("/")[0].isdigit() and 
+                    int(result.get("overlap_size", "").split("/")[0]) >= self.min_overlap)
+            ]
+            
+            if not filtered_results:
+                logger.info(f"No results meet minimum overlap requirement ({self.min_overlap}); terminating.")
+                break
+
+            top = filtered_results[0]
             pval = top.get("p-value")
             if pval is None or pval >= self.p_threshold:
                 logger.info("Top term p-value >= threshold; terminating.")
                 break
 
-            genes_in_term: Set[str] = set(top.get("overlap", []))
+            # Get overlap size from overlap_size field (format: "3/50")
+            overlap_size_str = top.get("overlap_size", "0/0")
+            try:
+                overlap_count = int(overlap_size_str.split("/")[0])
+            except (ValueError, IndexError):
+                logger.warning(f"Could not parse overlap_size: {overlap_size_str}")
+                overlap_count = 0
+            
+            # Get overlap genes for the record
+            overlap_data = top.get("overlap", [])
+            if isinstance(overlap_data, str):
+                # If overlap is a string, try to parse it
+                genes_in_term = set(overlap_data.split(',') if overlap_data else [])
+            elif isinstance(overlap_data, list):
+                genes_in_term = set(overlap_data)
+            else:
+                logger.warning(f"Unexpected overlap data type: {type(overlap_data)}")
+                genes_in_term = set()
+            
+            # Debug logging
+            logger.info(f"Iteration {iteration}: Top term '{top.get('term', '')}' has p-value {pval} and overlap size {overlap_count}")
+            logger.info(f"Overlap genes: {genes_in_term}")
+            logger.info(f"Minimum overlap requirement: {self.min_overlap}")
+            
+            # Note: We already filtered by minimum overlap above, so this check is redundant but kept for safety
+            if overlap_count < self.min_overlap:
+                logger.info(f"Top term overlap size ({overlap_count}) < minimum overlap requirement ({self.min_overlap}); terminating.")
+                break
+            
             record: Dict[str, Any] = {
                 "iteration": iteration,
                 "term": top.get("term", ""),
                 "library": self.gene_set_library.name,
                 "p-value": pval,
+                "overlap_size": top.get("overlap_size", "0/0"),
                 "genes": sorted(genes_in_term),
             }
             records.append(record)
@@ -182,18 +245,26 @@ class IterativeEnrichment:
             s = re.sub(r"_+", "_", s)
             return s.strip("_")
 
+        def _format_term_name(term_name: str) -> str:
+            """
+            Convert underscores to spaces in term names for better readability.
+            """
+            return term_name.replace("_", " ")
+
         nodes: Set[str] = set()
         edges: Set[str] = set()
 
         # Build nodes and edges
         for rec in self.results:
             term_label = rec.get("term", "")
+            # Format term name for display (convert underscores to spaces)
+            formatted_term_label = _format_term_name(term_label)
             # sanitize and quote term ID
             raw_id = f"term_{rec['iteration']}_{term_label}"
             term_id = _sanitize_id(raw_id)
             term_node = (
                 f'"{term_id}" '
-                f'[label="{term_label} (it {rec["iteration"]})", '
+                f'[label="{formatted_term_label}", '
                 f'style=filled, fontcolor="white", type="term"];'
             )
             nodes.add(term_node)
