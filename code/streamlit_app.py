@@ -103,15 +103,45 @@ def _ensure_base_state():
     if "min_term_size" not in state:
         state.min_term_size = 10
     if "max_term_size" not in state:
-        state.max_term_size = 1000
+        state.max_term_size = 600
     if "iter_max_term_size" not in state:
-        state.iter_max_term_size = 1000
+        state.iter_max_term_size = 600
     if "iter_ready" not in state:
         state.iter_ready = False
     if "selected_dot_paths" not in state:
         state.selected_dot_paths = []
     if "network_generated" not in state:
         state.network_generated = False  # flag to prevent clearing after checkbox changes
+
+
+def reset_app() -> None:
+    """Reset the app to default values."""
+    logger.info("Resetting app to default values")
+    
+    # Clear specific state variables that should be reset
+    keys_to_clear = [
+        'gene_set_input', 'gene_set_name', 'selected_file', 'gene_set', 
+        'background_gene_set', 'gene_set_libraries', 'enrich', 'iter_results', 
+        'iter_enrich', 'iter_dot', 'results_ready', 'iter_ready', 
+        'network_generated', 'selected_dot_paths', 'advanced_settings_changed',
+        'bt_submit_disabled', 'bt_iter_disabled'
+    ]
+    
+    for key in keys_to_clear:
+        if key in state:
+            del state[key]
+    
+    # Reinitialize with default values
+    _ensure_base_state()
+    
+    # Set default values for other state variables
+    state.gene_input_format = 'symbols'
+    state.bg_input_format = 'symbols'
+    state.advanced_settings_changed = False
+    state.bt_submit_disabled = True
+    
+    st.success("✅ App reset to default values!")
+    st.rerun()
 
 
 def _build_iterative_tables_download(all_iter_results: Dict[str, List[dict]]) -> str:
@@ -295,7 +325,7 @@ Results include ranked tables, bar charts, and network graphs."""
                 state.min_term_size, state.max_term_size = st.slider(
                     "Minimum and maximum term size",
                     min_value=1,
-                    value=(10, 1000),
+                    value=(10, 600),
                     step=10,
                     max_value=5000,
                     help="Filter gene sets by their size (number of genes)."
@@ -326,7 +356,7 @@ Results include ranked tables, bar charts, and network graphs."""
                 state.iter_min_term_size, state.iter_max_term_size = st.slider(
                     "Minimum and maximum term size",
                     min_value=1,
-                    value=(10, 1000),
+                    value=(10, 600),
                     step=10,
                     max_value=5000
                 )
@@ -372,7 +402,11 @@ Results include ranked tables, bar charts, and network graphs."""
                 key="bt_iter",
             )
     with col_example:
-        st.button("Input an example", on_click=input_example)
+        col_example_btn1, col_example_btn2 = st.columns(2)
+        with col_example_btn1:
+            st.button("Input an example", on_click=input_example)
+        with col_example_btn2:
+            st.button("Reset app", on_click=reset_app, type="secondary")
 
     with advanced:
         if mode == "Regular":

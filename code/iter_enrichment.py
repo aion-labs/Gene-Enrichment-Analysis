@@ -37,7 +37,7 @@ class IterativeEnrichment:
         gene_set_library: GeneSetLibrary,
         background_gene_set: BackgroundGeneSet,
         min_term_size: int = 10,
-        max_term_size: int = 1000,
+        max_term_size: int = 600,
         p_value_method_name: str = "Fisher's Exact Test",
         name: str = None,
         p_threshold: float = 0.01,
