@@ -1,7 +1,7 @@
 import logging
 import re
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set, Callable
 
 import pandas as pd
 
@@ -15,20 +15,7 @@ logger = logging.getLogger(__name__)
 
 class IterativeEnrichment:
     """
-    Wrapper for iterative gene set enrichment.
-
-    :param gene_set: List of gene identifiers to analyze.
-    :type gene_set: GeneSet
-    :param background_gene_set: Background genes file (one gene per line).
-    :type background_gene_set: BackgroundGeneSet
-    :param gene_set_library: Gene set library GMT file.
-    :type gene_set_library: GeneSetLibrary
-    :param p_value_method_name: Name of p-value calculation method to pass to Enrichment.
-    :type p_value_method_name: str
-    :param p_threshold: P-value cutoff for including terms.
-    :type p_threshold: float
-    :param max_iterations: Maximum number of enrichment iterations to run. None means no limit.
-    :type max_iterations: Optional[int]
+    Perform iterative enrichment analysis by repeatedly removing genes from the top hit.
     """
 
     def __init__(
@@ -43,6 +30,8 @@ class IterativeEnrichment:
         p_threshold: float = 0.01,
         max_iterations: Optional[int] = None,
         min_overlap: int = 1,
+        progress_callback: Optional[Callable[[str], None]] = None,
+        run_id: Optional[str] = None,
     ) -> None:
         """
         Initialize iterative enrichment.
@@ -57,6 +46,7 @@ class IterativeEnrichment:
         :param p_threshold: P-value cutoff for including terms
         :param max_iterations: Maximum number of iterations (None for no limit)
         :param min_overlap: Minimum overlap size required for terms
+        :param progress_callback: Optional callback function to report progress
         """
         self.gene_set = gene_set
         self.gene_set_library = gene_set_library
@@ -67,19 +57,38 @@ class IterativeEnrichment:
         self.p_threshold: float = p_threshold
         self.max_iterations: Optional[int] = max_iterations
         self.min_overlap: int = min_overlap
+        self.progress_callback = progress_callback
+        from datetime import datetime
         self.name = (
             name
             if name
             else f"{gene_set.name}_{gene_set_library.name}_{background_gene_set.name}_{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
         )
+        self._iteration_enrichments: List[Enrichment] = []  # Store full enrichment results for each iteration
+        
+        # Use provided run ID or generate unique run ID for this session
+        from datetime import datetime
+        self._run_id = run_id if run_id is not None else datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3]  # Include milliseconds
+        
         self._results: List[Dict[str, Any]] = self._compute_enrichment()
+
+    def _get_run_results_dir(self) -> "Path":
+        """
+        Get the unique results directory for this run.
+        
+        Returns:
+            Path to the run-specific results directory
+        """
+        from pathlib import Path
+        results_dir = Path("results") / f"run_{self._run_id}"
+        return results_dir
 
     @property
     def results(self) -> List[Dict[str, Any]]:
         """
-        The list of iteration records for this enricher.
+        Get the iterative enrichment results.
 
-        :returns: List of dictionaries with keys [iteration, term, library, p-value, genes]
+        :returns: List of iteration records
         :rtype: List[Dict[str, Any]]
         """
         return self._results
@@ -87,10 +96,10 @@ class IterativeEnrichment:
     @results.setter
     def results(self, value: List[Dict[str, Any]]) -> None:
         """
-        Setter for _results.
+        Set the iterative enrichment results.
 
-        Args:
-            value: A list containing dictionaries of enrichment results
+        :param value: List of iteration records
+        :type value: List[Dict[str, Any]]
         """
         self._results = value
 
@@ -104,14 +113,26 @@ class IterativeEnrichment:
         remaining: Set[str] = set(self.gene_set.genes)
         iteration: int = 1
         records: List[Dict[str, Any]] = []
+        
+        # Report initial status
+        if self.progress_callback:
+            self.progress_callback(f"Starting iterative enrichment with {len(remaining)} genes")
 
         while True:
             if not remaining:
                 logger.info("No genes left; stopping iterative enrichment.")
+                if self.progress_callback:
+                    self.progress_callback("No genes left; stopping iterative enrichment.")
                 break
             if self.max_iterations is not None and iteration > self.max_iterations:
                 logger.warning("Reached max_iterations; stopping iterative enrichment.")
+                if self.progress_callback:
+                    self.progress_callback(f"Reached max iterations ({self.max_iterations}); stopping.")
                 break
+
+            # Report iteration progress
+            if self.progress_callback:
+                self.progress_callback(f"Iteration {iteration}: Processing {len(remaining)} remaining genes")
 
             # Create a new GeneSet with the remaining genes, but avoid re-validation
             # since these genes were already validated when the original gene set was created
@@ -132,11 +153,15 @@ class IterativeEnrichment:
                 )
             except Exception as e:
                 logger.error(f"Enrichment failed at iteration {iteration}: {e}")
+                if self.progress_callback:
+                    self.progress_callback(f"Enrichment failed at iteration {iteration}: {e}")
                 break
 
             results = enr.results
             if not results:
                 logger.info("No enrichment results; terminating.")
+                if self.progress_callback:
+                    self.progress_callback("No enrichment results; terminating.")
                 break
 
             # Filter results by minimum overlap (same as regular mode)
@@ -148,12 +173,16 @@ class IterativeEnrichment:
             
             if not filtered_results:
                 logger.info(f"No results meet minimum overlap requirement ({self.min_overlap}); terminating.")
+                if self.progress_callback:
+                    self.progress_callback(f"No results meet minimum overlap requirement ({self.min_overlap}); terminating.")
                 break
 
             top = filtered_results[0]
             pval = top.get("p-value")
             if pval is None or pval >= self.p_threshold:
                 logger.info("Top term p-value >= threshold; terminating.")
+                if self.progress_callback:
+                    self.progress_callback(f"Top term p-value ({pval}) >= threshold ({self.p_threshold}); terminating.")
                 break
 
             # Get overlap size from overlap_size field (format: "3/50")
@@ -180,9 +209,15 @@ class IterativeEnrichment:
             logger.info(f"Overlap genes: {genes_in_term}")
             logger.info(f"Minimum overlap requirement: {self.min_overlap}")
             
+            # Report iteration result
+            if self.progress_callback:
+                self.progress_callback(f"Iteration {iteration}: Found term '{top.get('term', '')}' (p={pval:.4f}, overlap={overlap_count})")
+            
             # Note: We already filtered by minimum overlap above, so this check is redundant but kept for safety
             if overlap_count < self.min_overlap:
                 logger.info(f"Top term overlap size ({overlap_count}) < minimum overlap requirement ({self.min_overlap}); terminating.")
+                if self.progress_callback:
+                    self.progress_callback(f"Top term overlap size ({overlap_count}) < minimum overlap requirement ({self.min_overlap}); terminating.")
                 break
             
             record: Dict[str, Any] = {
@@ -194,10 +229,227 @@ class IterativeEnrichment:
                 "genes": sorted(genes_in_term),
             }
             records.append(record)
+            
+            # Save this iteration's enrichment results
+            self._save_iteration_results(enr, iteration)
+            
+            # Store the enrichment object for later export
+            self._iteration_enrichments.append(enr)
+            
             remaining -= genes_in_term
             iteration += 1
 
+        # Report final status
+        if self.progress_callback:
+            self.progress_callback(f"Completed iterative enrichment: {len(records)} iterations, {len(remaining)} genes remaining")
+
         return records
+
+    def _save_iteration_results(self, enrichment: Enrichment, iteration: int) -> None:
+        """
+        Save individual iteration enrichment results to a file.
+        
+        Args:
+            enrichment: The Enrichment object for this iteration
+            iteration: The iteration number
+        """
+        import json
+        from pathlib import Path
+        
+        # Ensure results directory exists
+        results_dir = self._get_run_results_dir()
+        results_dir.mkdir(exist_ok=True)
+        
+        # Create filename with library name and iteration number
+        # Replace problematic file name characters with dots
+        library_name = self.gene_set_library.name
+        for char in ['/', '\\', ':', '*', '?', '"', '<', '>', '|', ' ']:
+            library_name = library_name.replace(char, ".")
+        
+        # Collapse multiple consecutive dots into a single dot
+        import re
+        library_name = re.sub(r'\.+', '.', library_name)
+        filename = f"{library_name}_iteration_{iteration:03d}.json"
+        filepath = self._get_run_results_dir() / filename
+        
+        # Create a snapshot with iteration information
+        snapshot = enrichment.to_snapshot()
+        snapshot["iteration"] = iteration
+        # Get the term from the top result of this enrichment
+        top_result = enrichment.results[0] if enrichment.results else {"term": "Unknown"}
+        snapshot["iteration_term"] = top_result.get("term", "Unknown")
+        
+        # Add iteration number to each result
+        for result in snapshot[self.gene_set_library.name]:
+            result["iteration"] = iteration
+        
+        # Save to file
+        with open(filepath, "w") as f:
+            json.dump(snapshot, f, indent=2)
+        
+        # Also save as TSV with iteration number as first column
+        tsv_filename = f"{library_name}_iteration_{iteration:03d}.tsv"
+        tsv_filepath = self._get_run_results_dir() / tsv_filename
+        
+        # Create TSV data with iteration number as first column
+        tsv_data = []
+        for result in enrichment.results:
+            tsv_data.append({
+                "iteration": iteration,
+                "rank": result.get("rank", ""),
+                "term": result.get("term", ""),
+                "description": result.get("description", ""),
+                "overlap_size": result.get("overlap_size", ""),
+                "p-value": result.get("p-value", ""),
+                "fdr": result.get("fdr", ""),
+            })
+        
+        # Save TSV file
+        import pandas as pd
+        df = pd.DataFrame(tsv_data)
+        df.to_csv(tsv_filepath, sep="\t", index=False)
+        
+        logger.info(f"Saved iteration {iteration} results to {filepath} and {tsv_filepath}")
+
+    def create_iteration_results_archive(self) -> str:
+        """
+        Create a tar.gz archive of all iteration results for this library.
+        
+        Returns:
+            Path to the created archive file
+        """
+        import tarfile
+        from pathlib import Path
+        from datetime import datetime
+        
+        # Ensure results directory exists
+        results_dir = self._get_run_results_dir()
+        results_dir.mkdir(exist_ok=True)
+        
+        # Create archive filename
+        library_name = self.gene_set_library.name.replace(" ", "_").replace("/", "_")
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        archive_name = f"{library_name}_iterations_{timestamp}.tar.gz"
+        archive_path = results_dir / archive_name
+        
+        # Create tar.gz archive
+        with tarfile.open(archive_path, "w:gz") as tar:
+            # Find all iteration files for this library (both JSON and TSV)
+            json_pattern = f"{library_name}_iteration_*.json"
+            tsv_pattern = f"{library_name}_iteration_*.tsv"
+            
+            for file_path in results_dir.glob(json_pattern):
+                tar.add(file_path, arcname=file_path.name)
+            for file_path in results_dir.glob(tsv_pattern):
+                tar.add(file_path, arcname=file_path.name)
+        
+        logger.info(f"Created iteration results archive: {archive_path}")
+        return str(archive_path)
+
+    def export_iteration_results_tsv(self) -> str:
+        """
+        Export all iteration results as TSV with iteration number as first column.
+        
+        Returns:
+            TSV string with iteration results
+        """
+        import pandas as pd
+        
+        if not self.results or not self._iteration_enrichments:
+            return ""
+        
+        # Create a list to hold all iteration data
+        all_iteration_data = []
+        
+        # For each iteration, get the full enrichment results and add iteration number
+        for i, (iteration_record, enrichment) in enumerate(zip(self.results, self._iteration_enrichments)):
+            iteration_num = iteration_record["iteration"]
+            
+            # Get all results from this iteration's enrichment
+            for result in enrichment.results:
+                all_iteration_data.append({
+                    "iteration": iteration_num,
+                    "rank": result.get("rank", ""),
+                    "term": result.get("term", ""),
+                    "description": result.get("description", ""),
+                    "overlap_size": result.get("overlap_size", ""),
+                    "p-value": result.get("p-value", ""),
+                    "fdr": result.get("fdr", ""),
+                    "library": self.gene_set_library.name
+                })
+        
+        # Create DataFrame and export to TSV
+        df = pd.DataFrame(all_iteration_data)
+        return df.to_csv(sep="\t", index=False)
+
+    def save_to_results_folder(self) -> None:
+        """
+        Save the main iterative enrichment summary files to the results folder.
+        This creates files similar to regular mode enrichment for consistency.
+        """
+        import json
+        from pathlib import Path
+        
+        # Ensure results directory exists
+        results_dir = self._get_run_results_dir()
+        results_dir.mkdir(exist_ok=True)
+        
+        # Create filename with library name and timestamp
+        # Replace problematic file name characters with dots
+        library_name = self.gene_set_library.name
+        for char in ['/', '\\', ':', '*', '?', '"', '<', '>', '|', ' ']:
+            library_name = library_name.replace(char, ".")
+        
+        # Collapse multiple consecutive dots into a single dot
+        import re
+        library_name = re.sub(r'\.+', '.', library_name)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+        # 1. Save main iterative enrichment summary as JSON
+        summary_filename = f"{library_name}_iterative_enrichment_{timestamp}.json"
+        summary_filepath = results_dir / summary_filename
+        
+        summary_data = {
+            "input_gene_set": list(self.gene_set.genes),
+            "background": self.background_gene_set.name,
+            "background_size": self.background_gene_set.size,
+            "library": self.gene_set_library.name,
+            "library_size": self.gene_set_library.size,
+            "p_value_method": self.p_value_method_name,
+            "p_threshold": self.p_threshold,
+            "max_iterations": self.max_iterations,
+            "min_overlap": self.min_overlap,
+            "min_term_size": self.min_term_size,
+            "max_term_size": self.max_term_size,
+            "total_iterations": len(self.results),
+            "iterations": self.results,
+            "final_remaining_genes": list(set(self.gene_set.genes) - set().union(*[set(record.get("genes", [])) for record in self.results]))
+        }
+        
+        with open(summary_filepath, "w") as f:
+            json.dump(summary_data, f, indent=2)
+        
+        # 2. Save main iterative enrichment summary as TSV
+        tsv_filename = f"{library_name}_iterative_enrichment_{timestamp}.tsv"
+        tsv_filepath = results_dir / tsv_filename
+        
+        # Create TSV with iteration summary data
+        tsv_data = []
+        for record in self.results:
+            tsv_data.append({
+                "iteration": record.get("iteration", ""),
+                "term": record.get("term", ""),
+                "library": record.get("library", ""),
+                "p-value": record.get("p-value", ""),
+                "overlap_size": record.get("overlap_size", ""),
+                "genes": ", ".join(record.get("genes", [])),
+            })
+        
+        import pandas as pd
+        df = pd.DataFrame(tsv_data)
+        df.to_csv(tsv_filepath, sep="\t", index=False)
+        
+        logger.info(f"Saved iterative enrichment summary to {summary_filepath} and {tsv_filepath}")
 
     def to_dataframe(self) -> pd.DataFrame:
         """

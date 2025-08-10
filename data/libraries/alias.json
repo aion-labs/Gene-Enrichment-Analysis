@@ -168,5 +168,10 @@
         "name": "All MSigDB gene sets",
         "file": "msigdb.v2025.1.Hs.symbols.gmt",
         "active": false
+    },
+    {
+        "name": "Protein Interaction",
+        "file": "stringdb_protein_interactions.gmt",
+        "active": true
     }
 ]

@@ -290,8 +290,78 @@ def render_network(dot: str, title: str = "Iterative Enrichment Network") -> Non
     # st.graphviz_chart(dot, use_container_width=True)
 
     st.plotly_chart(dot_to_plotly(dot), use_container_width=True, key="network_chart")
-    # Offer DOT download
+    # Offer DOT download and AI analysis prompt download
     st.markdown(
-        f'Download network graph as {download_link(dot, "iterative_network", "dot")}',
+        f'Download network graph as {download_link(dot, "iterative_network", "dot")}, '
+        f'Download {download_link(generate_ai_analysis_prompt(dot), "ai_analysis_prompt", "txt")} for AI analysis',
         unsafe_allow_html=True,
     )
+
+
+def generate_ai_analysis_prompt(dot_content: str) -> str:
+    """
+    Generate an AI analysis prompt based on the DOT network content.
+    
+    :param dot_content: The DOT network content
+    :return: Formatted AI analysis prompt
+    """
+    prompt = """You are a computational biologist analyzing an iterative gene set enrichment network. Iterative means that for each library source, the top enriched gene set is found, saved and the genes are removed from the initial gene list. The remaining genes are then tested for enrichment again. Thus, each gene appears only once per library source tested but can be linked to multiple terms that originate from different libraries. The names of the libraries are indicated in the legend. The results are provided as a DOT network represents the relationships between genes and gene sets.
+
+**NETWORK STRUCTURE:**
+"""
+    
+    # Add the DOT content
+    prompt += dot_content + "\n\n"
+    
+    # Add the rest of the prompt
+    prompt += """**NETWORK INTERPRETATION GUIDE:**
+
+**Node Types:**
+- **Gene nodes** (type="gene"): Individual genes from the input gene set
+- **Term nodes** (type="term"): Enriched biological pathways/processes/gene sets
+- **Colors**: Term nodes are colored by library source
+
+**Edge Connections:**
+- Each edge (gene -- term) represents a gene's membership in that biological term
+- Thicker/more connections indicate genes that are part of multiple enriched processes
+- The network topology shows which genes are central to the biological response
+
+**Iteration Information:**
+- Term nodes are labeled with iteration numbers (term_1_, term_2_, etc.)
+- Earlier iterations (lower numbers) represent the most significant enrichments
+- Ignore iteration number for biological interpretation, instead focus on network hubs densly connected for interesting biological insights
+
+**ANALYSIS REQUEST:**
+
+Please analyze this network and provide:
+
+1. **Key Biological Insights:**
+   - What are the most significant biological processes/pathways identified?
+   - Which genes appear to be central to the biological response?
+   - What patterns emerge from the iteration sequence?
+
+2. **Network Topology Analysis:**
+   - Which genes are "hub" genes (connected to multiple terms)?
+   - Are there distinct clusters or modules in the network?
+   - What does the connectivity pattern suggest about biological organization?
+
+3. **Biological Hypothesis:**
+   - Based on the network structure, what biological hypothesis can you generate?
+   
+4. **Estimated Experimental Context**
+   - Can you hypothesize on what was the experiment that generated this result?
+
+**RESPONSE STRUCTURE:**
+- **Executive Summary** (2-3 sentences)
+- **Key Biological Processes Identified**
+- **Network Topology Insights**
+- **Proposed Biological Hypothesis**
+- **Estimated Experimental Context**
+
+**IMPORTANT NOTES:**
+- Focus on biological interpretation, not statistical significance or iteration number
+- Consider the functional relationships between connected genes/terms
+- Look for unexpected connections that might reveal novel biology
+- Consider the broader biological context and literature"""
+    
+    return prompt

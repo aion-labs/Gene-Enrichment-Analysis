@@ -4,7 +4,7 @@ import logging
 import re
 from pathlib import Path
 from pprint import pformat
-from typing import Dict
+from typing import Dict, Tuple
 
 import streamlit as st
 
@@ -33,7 +33,7 @@ def update_aliases(directory: str, alias_file: str = "alias.json") -> Dict[str, 
             with open(aliases_path, "r") as f:
                 data = json.load(f)
             if isinstance(data, list):
-                # New format: list of {name, file, active}
+                # New format: list of {name, file, active, format?}
                 is_list_format = True
                 alias_entries = data
             elif isinstance(data, dict):
@@ -61,11 +61,15 @@ def update_aliases(directory: str, alias_file: str = "alias.json") -> Dict[str, 
     # Add new files as active
     for file in files:
         if file.name not in existing_files:
-            alias_entries.append({
+            new_entry = {
                 "name": file.stem,
                 "file": file.name,
                 "active": True
-            })
+            }
+            # Add format field for backgrounds
+            if directory == "backgrounds":
+                new_entry["format"] = "symbols"  # Default to symbols for new files
+            alias_entries.append(new_entry)
 
     # Remove entries whose files no longer exist
     current_files = {f.name for f in files}
@@ -92,6 +96,45 @@ def update_aliases(directory: str, alias_file: str = "alias.json") -> Dict[str, 
     return alias_mapping
 
 
+def get_background_info(background_name: str) -> Tuple[str, str]:
+    """
+    Get background file path and format for a given background name.
+    
+    Args:
+        background_name: Name of the background as shown in the UI
+        
+    Returns:
+        Tuple of (file_path, format) where format is either 'symbols' or 'entrez_ids'
+    """
+    aliases_path = ROOT / "data" / "backgrounds" / "alias.json"
+    
+    if not aliases_path.is_file():
+        logger.error(f"Background alias file not found: {aliases_path}")
+        return "", "symbols"
+    
+    try:
+        with open(aliases_path, "r") as f:
+            data = json.load(f)
+        
+        if isinstance(data, list):
+            # Find the entry with matching name
+            for entry in data:
+                if entry.get("name") == background_name and entry.get("active", False):
+                    file_path = str(ROOT / "data" / "backgrounds" / entry["file"])
+                    format_type = entry.get("format", "symbols")  # Default to symbols if not specified
+                    return file_path, format_type
+            
+            logger.warning(f"Background '{background_name}' not found in alias file")
+            return "", "symbols"
+        else:
+            logger.error("Background alias file is not in expected list format")
+            return "", "symbols"
+            
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        logger.error(f"Error reading background alias file: {e}")
+        return "", "symbols"
+
+
 def download_link(val: str, filename: str, extension: str) -> str:
     """
     Create a download link for a file with the given content, filename, and extension.
@@ -108,6 +151,29 @@ def download_link(val: str, filename: str, extension: str) -> str:
     logger.info(f"Creating download link for file: {filename}.{extension}")
     b64 = base64.b64encode(val.encode("utf-8"))
     return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="{filename}.{extension}">{extension}</a>'
+
+
+def download_file_link(file_path: str, filename: str, extension: str) -> str:
+    """
+    Create a download link for a file at the given path.
+
+    This function generates a download link that, when clicked, will download the file at the given path.
+    The file content is read and encoded in base64, and the link is created using an HTML 'a' tag with a 'download' attribute.
+
+    :param file_path: The path to the file to be downloaded.
+    :param filename: The name of the file, without the extension.
+    :param extension: The file extension (e.g., 'tsv', 'json', 'tar.gz').
+    :return: An HTML string containing the download link.
+    """
+    logger.info(f"Creating download link for file at path: {file_path}")
+    try:
+        with open(file_path, "rb") as f:
+            file_content = f.read()
+        b64 = base64.b64encode(file_content)
+        return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="{filename}.{extension}">{extension}</a>'
+    except Exception as e:
+        logger.error(f"Error creating download link for {file_path}: {e}")
+        return f'<span style="color: red;">Error: Could not create download link for {filename}.{extension}</span>'
 
 
 def sanitize_id(raw: str) -> str:

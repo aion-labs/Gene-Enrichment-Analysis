@@ -26,7 +26,7 @@ from ui.rendering import (
     render_results,
     render_validation,
 )
-from ui.utils import download_link, update_aliases
+from ui.utils import download_link, download_file_link, update_aliases
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -157,6 +157,54 @@ def _build_iterative_tables_download(all_iter_results: Dict[str, List[dict]]) ->
     return "\n".join(rows)
 
 
+def _create_combined_iteration_archive(iter_archives: Dict[str, str]) -> str:
+    """
+    Create a single tar.gz archive containing all individual iteration files directly.
+    
+    Args:
+        iter_archives: Dictionary mapping library names to their archive paths (not used in new approach)
+        
+    Returns:
+        Path to the combined archive file
+    """
+    import tarfile
+    from datetime import datetime
+    
+    # Find the most recent run directory (the one created in this session)
+    results_dir = Path("results")
+    if not results_dir.exists():
+        logger.warning("No results directory found")
+        return ""
+    
+    # Get all run directories and find the most recent one
+    run_dirs = [d for d in results_dir.iterdir() if d.is_dir() and d.name.startswith("run_")]
+    if not run_dirs:
+        logger.warning("No run directories found")
+        return ""
+    
+    # Sort by creation time and get the most recent
+    latest_run_dir = max(run_dirs, key=lambda d: d.stat().st_ctime)
+    logger.info(f"Using run directory: {latest_run_dir}")
+    
+    # Create combined archive filename
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    combined_archive_name = f"all_iteration_files_{timestamp}.tar.gz"
+    combined_archive_path = results_dir / combined_archive_name
+    
+    # Create tar.gz archive with all individual files from the latest run
+    with tarfile.open(combined_archive_path, "w:gz") as tar:
+        # Find all individual iteration TSV files in the latest run directory
+        tsv_files = list(latest_run_dir.glob("*_iteration_*.tsv"))
+        
+        # Add all TSV files
+        for tsv_file in tsv_files:
+            tar.add(tsv_file, arcname=tsv_file.name)
+            logger.info(f"Added to archive: {tsv_file.name}")
+    
+    logger.info(f"Created combined iteration files archive: {combined_archive_path}")
+    return str(combined_archive_path)
+
+
 def main() -> None:
     logger.info("Starting the Streamlit app")
     st.sidebar.image(
@@ -273,14 +321,18 @@ Results include ranked tables, bar charts, and network graphs."""
             else:
                 state.gene_set_libraries = []
             if state.background_set:
-                state.background_gene_set = BackgroundGeneSet(
-                    str(
-                        ROOT
-                        / "data"
-                        / "backgrounds"
-                        / state.bg_mapper[state.background_set]
+                # Get background file path and format from alias file
+                from ui.utils import get_background_info
+                bg_file_path, bg_format = get_background_info(state.background_set)
+                
+                if bg_file_path:
+                    state.background_gene_set = BackgroundGeneSet(
+                        bg_file_path,
+                        input_format=bg_format  # Use format from alias file
                     )
-                )
+                else:
+                    st.error(f"❌ Could not load background: {state.background_set}")
+                    state.background_gene_set = None
                 if state.gene_set_input:
                     # Convert and validate gene input based on selected format
                     converted_symbols, unrecognized_entrez, unrecognized_symbols, stats = convert_and_validate_gene_input(
@@ -297,6 +349,8 @@ Results include ranked tables, bar charts, and network graphs."""
                             converted_symbols,
                             state.background_gene_set.genes,
                             state.gene_set_name,
+                            hgcn=False,  # Skip background validation since genes are already validated
+                            format=False,  # Skip formatting since genes are already formatted
                         )
                     else:
                         state.gene_set = None
@@ -445,9 +499,9 @@ Results include ranked tables, bar charts, and network graphs."""
         
         with bg_format_col2:
             if state.bg_input_format == 'symbols':
-                st.caption("💡 **Background Symbols:** Upload file with gene symbols")
+                st.caption("💡 **Gene Symbols:** Upload file with gene symbols")
             else:
-                st.caption("💡 **Background Entrez IDs:** Upload file with Entrez IDs")
+                st.caption("💡 **Entrez IDs:** Upload file with Entrez IDs (will be converted to symbols)")
         
         state.bg_custom = st.file_uploader(
             "Upload your background gene list", type=[".txt"]
@@ -457,6 +511,28 @@ Results include ranked tables, bar charts, and network graphs."""
             bgf.write(state.bg_custom.getvalue())
             state.advanced_settings_changed = True
             
+            # Update background aliases to refresh the menu
+            state.bg_mapper = update_aliases("backgrounds")
+            
+            # Update the alias file to include format information for the uploaded file
+            try:
+                aliases_path = ROOT / "data" / "backgrounds" / "alias.json"
+                with open(aliases_path, "r") as f:
+                    aliases = json.load(f)
+                
+                # Find and update the entry for the uploaded file
+                for entry in aliases:
+                    if entry.get("file") == state.bg_custom.name:
+                        entry["format"] = state.bg_input_format
+                        break
+                
+                # Write back the updated aliases
+                with open(aliases_path, "w") as f:
+                    json.dump(aliases, f, indent=4)
+                    
+            except Exception as e:
+                logger.warning(f"Could not update format in alias file: {e}")
+            
             # Create background gene set with the uploaded file and selected format
             try:
                 state.background_gene_set = BackgroundGeneSet(
@@ -465,6 +541,8 @@ Results include ranked tables, bar charts, and network graphs."""
                     input_format=state.bg_input_format
                 )
                 st.success(f"✅ Background gene list loaded: {state.background_gene_set.size} genes")
+                # Force page rerun to refresh the background menu
+                st.rerun()
             except Exception as e:
                 st.error(f"❌ Error loading background gene list: {str(e)}")
         state.libs_custom = st.file_uploader(
@@ -482,7 +560,12 @@ Results include ranked tables, bar charts, and network graphs."""
         if state.advanced_settings_changed:
             if st.button("Apply settings"):
                 logger.info("Applied custom settings")
+                # Refresh aliases to ensure menus are updated
+                state.bg_mapper = update_aliases("backgrounds")
+                state.lib_mapper = update_aliases("libraries")
                 st.success("Settings applied")
+                # Force page rerun to refresh the menus
+                st.rerun()
         else:
             with st.empty():
                 st.button("Apply settings", disabled=True)
@@ -497,16 +580,22 @@ Results include ranked tables, bar charts, and network graphs."""
                 warn = "small" if n_genes <= 100 else "big"
                 s = "s" if str(n_genes)[-1] != "1" else ""
                 st.warning(f"You've entered {n_genes} gene{s}, which may be {warn}...")
-            with st.spinner("Calculating enrichment"):
-                # Debug information
-                st.info(f"Input gene set size: {state.gene_set.size if state.gene_set else 'None'}")
-                st.info(f"Number of libraries: {len(state.gene_set_libraries)}")
-                st.info(f"Term size range: [{state.min_term_size}, {state.max_term_size}]")
-                st.info(f"P-value threshold: {state.p_threshold}")
-                st.info(f"Minimum overlap: {state.min_overlap}")
+            # Create progress container for regular enrichment
+            progress_container = st.container()
+            progress_bar = st.progress(0)
+            status_text = st.empty()
+            
+            total_libraries = len(state.gene_set_libraries)
+            
+            for i, gsl in enumerate(state.gene_set_libraries):
+                # Update progress
+                progress = (i + 1) / total_libraries
+                progress_bar.progress(progress)
+                status_text.text(f"Processing library {i+1}/{total_libraries}: {gsl.name} ({gsl.num_terms} terms)")
                 
-                for gsl in state.gene_set_libraries:
-                    st.info(f"Processing library: {gsl.name} ({gsl.num_terms} terms)")
+                logger.info(f"Starting regular enrichment for library: {gsl.name}")
+                
+                try:
                     enrich = Enrichment(
                         state.gene_set,
                         gsl,
@@ -515,6 +604,7 @@ Results include ranked tables, bar charts, and network graphs."""
                         max_term_size=state.max_term_size,
                         p_value_method_name=state.p_val_method,
                     )
+                    
                     # Filter results by p-value threshold and minimum overlap
                     filtered_results = [
                         result for result in enrich.results
@@ -527,15 +617,24 @@ Results include ranked tables, bar charts, and network graphs."""
                     enrich.results = filtered_results
                     state.enrich[gsl.name] = enrich
                     
-                    # Debug: Show number of results
-                    st.info(f"Results for {gsl.name}: {len(enrich.results)} terms (after filtering for p ≤ {state.p_threshold} and min overlap ≥ {state.min_overlap})")
-                    
                     # Ensure results directory exists
                     results_dir = ROOT / "results"
                     results_dir.mkdir(exist_ok=True)
                     with (results_dir / f"{enrich.name}.json").open("w") as js:
                         json.dump(enrich.to_snapshot(), js)
-                state.results_ready = True
+                    
+                    logger.info(f"Completed regular enrichment for library: {gsl.name} ({len(enrich.results)} terms)")
+                    
+                except Exception as e:
+                    logger.error(f"Error processing library {gsl.name}: {e}")
+                    st.error(f"❌ Error processing library {gsl.name}: {str(e)}")
+                    continue
+            
+            # Clear progress indicators
+            progress_bar.empty()
+            status_text.empty()
+            
+            state.results_ready = True
         else:
             if not state.gene_set_input:
                 st.error("Please input genes")
@@ -574,8 +673,34 @@ Results include ranked tables, bar charts, and network graphs."""
             state.iter_enrich = {}
             state.iter_dot.clear()
 
-            with st.spinner("Running iterative enrichment"):
-                for gsl in state.gene_set_libraries:
+            # Load background once and reuse for all libraries
+            logger.info(f"Loading background gene set: {state.background_gene_set.name} ({state.background_gene_set.size} genes)")
+            
+            # Create progress container for iterative enrichment
+            progress_container = st.container()
+            progress_bar = st.progress(0)
+            status_text = st.empty()
+            
+            # Generate a shared run ID for all libraries in this submission
+            from datetime import datetime
+            shared_run_id = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3]  # Include milliseconds
+            logger.info(f"Generated shared run ID for this submission: {shared_run_id}")
+            
+            total_libraries = len(state.gene_set_libraries)
+            
+            for i, gsl in enumerate(state.gene_set_libraries):
+                # Update progress
+                progress = (i + 1) / total_libraries
+                progress_bar.progress(progress)
+                status_text.text(f"Processing library {i+1}/{total_libraries}: {gsl.name} ({gsl.num_terms} terms)")
+                
+                logger.info(f"Starting iterative enrichment for library: {gsl.name}")
+                
+                try:
+                    # Create a progress callback for this library
+                    def progress_callback(message: str):
+                        status_text.text(f"Processing library {i+1}/{total_libraries}: {gsl.name} - {message}")
+                    
                     it = IterativeEnrichment(
                         gene_set=state.gene_set,
                         gene_set_library=gsl,
@@ -588,22 +713,56 @@ Results include ranked tables, bar charts, and network graphs."""
                             None if state.iter_max_iter == 0 else state.iter_max_iter
                         ),
                         min_overlap=state.iter_min_overlap,
+                        progress_callback=progress_callback,
+                        run_id=shared_run_id,
                     )
+                    
                     # store enrichment object and results
                     state.iter_enrich[gsl.name] = it
                     state.iter_results[gsl.name] = it.results
+                    
                     # Generate DOT from results
                     state.iter_dot[gsl.name] = it.to_dot()
+                    
+                    # Save main summary files to results folder (like regular mode)
+                    if it.results:  # Only save if there are results
+                        it.save_to_results_folder()
+                    
+                    logger.info(f"Completed iterative enrichment for library: {gsl.name} ({len(it.results)} iterations)")
+                    
+                except Exception as e:
+                    logger.error(f"Error processing library {gsl.name}: {e}")
+                    st.error(f"❌ Error processing library {gsl.name}: {str(e)}")
+                    continue
+            
+            # Clear progress indicators
+            progress_bar.empty()
+            status_text.empty()
+            
 
+            
             state.iter_ready = True
 
     # Iterative rendering
     if mode == "Iterative" and state.iter_ready:
+        # Download section with just two links
+        st.markdown("**📥 Download Results:**")
+        
+        # 1. Combined iterative enrichment TSV
         combined = _build_iterative_tables_download(state.iter_results)
         st.markdown(
-            f"Download iterative results as {download_link(combined, 'iterative_results', 'tsv')}",
+            f"📊 **Combined Results:** {download_link(combined, 'iterative_enrichment_results', 'tsv')}",
             unsafe_allow_html=True,
         )
+        
+        # 2. All individual iteration files as single archive
+        combined_archive_path = _create_combined_iteration_archive({})
+        if combined_archive_path:
+            combined_archive_name = Path(combined_archive_path).name
+            st.markdown(
+                f"📁 **All Individual Files:** {download_file_link(combined_archive_path, combined_archive_name, 'tar.gz')}",
+                unsafe_allow_html=True,
+            )
 
         # callback to keep checkbox state in session
         def toggle_library(lib_name):
