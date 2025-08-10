@@ -9,3 +9,8 @@ venv
 results
 sandbox.py
 .vscode
+
+# Large data files that exceed GitHub's file size limits
+data/recent_release/
+*.gz
+*.zip
