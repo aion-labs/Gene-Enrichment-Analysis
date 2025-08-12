@@ -300,18 +300,49 @@ def render_network(dot: str, title: str = "Iterative Enrichment Network") -> Non
 
 def generate_ai_analysis_prompt(dot_content: str) -> str:
     """
-    Generate an AI analysis prompt based on the DOT network content.
+    Generate an AI analysis prompt based on the DOT network content with library source annotations.
     
     :param dot_content: The DOT network content
-    :return: Formatted AI analysis prompt
+    :return: Formatted AI analysis prompt with library information
     """
-    prompt = """You are a computational biologist analyzing an iterative gene set enrichment network. Iterative means that for each library source, the top enriched gene set is found, saved and the genes are removed from the initial gene list. The remaining genes are then tested for enrichment again. Thus, each gene appears only once per library source tested but can be linked to multiple terms that originate from different libraries. The names of the libraries are indicated in the legend. The results are provided as a DOT network represents the relationships between genes and gene sets.
+    import re
+    from ui.dot_utils import load_library_colors
+    
+    # Load library color mapping
+    color_to_library = load_library_colors()
+    
+    # Parse the DOT content to add library annotations
+    lines = dot_content.split('\n')
+    annotated_lines = []
+    
+    for line in lines:
+        line = line.strip()
+        
+        # Check if this is a term node line
+        if 'type="term"' in line and 'fillcolor=' in line:
+            # Extract the fillcolor
+            color_match = re.search(r'fillcolor="([^"]+)"', line)
+            if color_match:
+                color = color_match.group(1)
+                library_name = color_to_library.get(color, "Unknown Library")
+                
+                # Add library information to the node attributes
+                if 'library=' not in line:
+                    # Insert library attribute before the closing bracket
+                    line = line.rstrip('];') + f', library="{library_name}"];'
+        
+        annotated_lines.append(line)
+    
+    # Create the annotated DOT content
+    annotated_dot = '\n'.join(annotated_lines)
+    
+    prompt = """You are a computational biologist analyzing an iterative gene set enrichment network. Iterative means that for each library source, the top enriched gene set is found, saved and the genes are removed from the initial gene list. The remaining genes are then tested for enrichment again. Thus, each gene appears only once per library source tested but can be linked to multiple terms that originate from different libraries. The results are provided as a DOT network represents the relationships between genes and gene sets.
 
 **NETWORK STRUCTURE:**
 """
     
-    # Add the DOT content
-    prompt += dot_content + "\n\n"
+    # Add the annotated DOT content
+    prompt += annotated_dot + "\n\n"
     
     # Add the rest of the prompt
     prompt += """**NETWORK INTERPRETATION GUIDE:**
@@ -319,7 +350,20 @@ def generate_ai_analysis_prompt(dot_content: str) -> str:
 **Node Types:**
 - **Gene nodes** (type="gene"): Individual genes from the input gene set
 - **Term nodes** (type="term"): Enriched biological pathways/processes/gene sets
-- **Colors**: Term nodes are colored by library source
+- **Library Source**: Each term node includes a "library" attribute indicating the source database
+
+**Library Sources and Their Biological Context:**
+- **H: Hallmark gene sets**: Curated gene sets representing well-defined biological states or processes
+- **C2: CP: BioCarta**: Canonical pathways from BioCarta database
+- **C2: CP: KEGG MEDICUS**: Metabolic and signaling pathways from KEGG
+- **C2: CP: Pathway Interaction Database**: Curated human signaling pathways
+- **C2: CP: Reactome Pathways**: Expert-curated biological pathways
+- **C2: CP: WikiPathways**: Community-curated biological pathways
+- **C5: Gene Ontology: Biological Process**: Biological processes from Gene Ontology
+- **C5: Gene Ontology: Cellular Component**: Cellular components from Gene Ontology
+- **C5: Gene Ontology: Molecular Function**: Molecular functions from Gene Ontology
+- **C5: Human Phenotype Ontology**: Human phenotypes and diseases
+- **Protein Interaction**: Protein-protein interaction networks
 
 **Edge Connections:**
 - Each edge (gene -- term) represents a gene's membership in that biological term
@@ -328,8 +372,8 @@ def generate_ai_analysis_prompt(dot_content: str) -> str:
 
 **Iteration Information:**
 - Term nodes are labeled with iteration numbers (term_1_, term_2_, etc.)
-- Earlier iterations (lower numbers) represent the most significant enrichments
-- Ignore iteration number for biological interpretation, instead focus on network hubs densly connected for interesting biological insights
+- Earlier iterations (lower numbers) represent the most statistically significant enrichments
+- Ignore iteration number for biological interpretation, instead focus on network hubs densely connected for interesting biological insights
 
 **ANALYSIS REQUEST:**
 
@@ -339,29 +383,381 @@ Please analyze this network and provide:
    - What are the most significant biological processes/pathways identified?
    - Which genes appear to be central to the biological response?
    - What patterns emerge from the iteration sequence?
+   - How do different library sources contribute to the biological interpretation?
 
 2. **Network Topology Analysis:**
    - Which genes are "hub" genes (connected to multiple terms)?
    - Are there distinct clusters or modules in the network?
    - What does the connectivity pattern suggest about biological organization?
+   - Do terms from the same library source cluster together?
 
 3. **Biological Hypothesis:**
    - Based on the network structure, what biological hypothesis can you generate?
+   - How do the different library sources support or complement each other?
    
 4. **Estimated Experimental Context**
    - Can you hypothesize on what was the experiment that generated this result?
+   - What experimental conditions might explain the pattern of library enrichments?
 
 **RESPONSE STRUCTURE:**
 - **Executive Summary** (2-3 sentences)
-- **Key Biological Processes Identified**
+- **Key Biological Processes Identified** (by library source)
 - **Network Topology Insights**
 - **Proposed Biological Hypothesis**
 - **Estimated Experimental Context**
 
 **IMPORTANT NOTES:**
 - Focus on biological interpretation, not statistical significance or iteration number
-- Consider the functional relationships between connected genes/terms
+- Consider the functional relationships between connected genes and terms
+- Pay attention to which library sources are most prominent in your analysis
 - Look for unexpected connections that might reveal novel biology
-- Consider the broader biological context and literature"""
+- Consider the broader biological context and literature
+- Different library sources may provide complementary biological insights"""
     
     return prompt
+
+
+def generate_structured_network_analysis(dot_content: str) -> str:
+    """
+    Generate a structured table format of network data for ChatGPT analysis.
+    This provides the network information in a more parseable, tabular format.
+    
+    :param dot_content: The DOT network content
+    :return: Structured table format for AI analysis
+    """
+    import re
+    from collections import defaultdict
+    
+    # Parse the DOT content
+    nodes = {}
+    edges = []
+    gene_connections = defaultdict(set)
+    term_connections = defaultdict(set)
+    
+    # Parse DOT content
+    lines = dot_content.split('\n')
+    for line in lines:
+        line = line.strip()
+        
+        # Parse node definitions
+        if '[' in line and ']' in line and '--' not in line:
+            match = re.match(r'"([^"]+)"\s*\[([^\]]+)\]', line)
+            if match:
+                node_id = match.group(1)
+                attrs_str = match.group(2)
+                
+                # Parse attributes
+                attrs = {}
+                for attr in attrs_str.split(','):
+                    attr = attr.strip()
+                    if '=' in attr:
+                        key, value = attr.split('=', 1)
+                        attrs[key.strip()] = value.strip().strip('"')
+                
+                nodes[node_id] = attrs
+        
+        # Parse edges
+        elif '--' in line:
+            match = re.match(r'"([^"]+)"\s*--\s*"([^"]+)"', line)
+            if match:
+                source = match.group(1)
+                target = match.group(2)
+                edges.append((source, target))
+                
+                # Track connections
+                gene_connections[source].add(target)
+                gene_connections[target].add(source)
+                term_connections[source].add(target)
+                term_connections[target].add(source)
+    
+    # Analyze network structure
+    gene_nodes = {k: v for k, v in nodes.items() if v.get('type') == 'gene'}
+    term_nodes = {k: v for k, v in nodes.items() if v.get('type') == 'term'}
+    
+    # Calculate centrality metrics
+    gene_centrality = {}
+    for gene_id, gene_data in gene_nodes.items():
+        connections = len(gene_connections.get(gene_id, set()))
+        gene_centrality[gene_data.get('label', gene_id)] = connections
+    
+    # Group terms by iteration
+    term_iterations = defaultdict(list)
+    for term_id, term_data in term_nodes.items():
+        match = re.match(r'term_(\d+)_', term_id)
+        if match:
+            iteration = int(match.group(1))
+            term_iterations[iteration].append({
+                'id': term_id,
+                'name': term_data.get('label', term_id),
+                'color': term_data.get('fillcolor', 'unknown'),
+                'connections': len(term_connections.get(term_id, set()))
+            })
+    
+    # Create structured output
+    output = f"""# ITERATIVE GENE SET ENRICHMENT NETWORK ANALYSIS
+# Structured Data Format for AI Analysis
+
+## NETWORK SUMMARY
+Total Genes: {len(gene_nodes)}
+Total Biological Terms: {len(term_nodes)}
+Total Connections: {len(edges)}
+Total Iterations: {len(term_iterations)}
+Average Connections per Gene: {len(edges) / len(gene_nodes) if gene_nodes else 0:.2f}
+
+## GENE CENTRALITY TABLE
+# Rank | Gene Name | Connections | Biological Terms
+"""
+    
+    # Add gene centrality table
+    sorted_genes = sorted(gene_centrality.items(), key=lambda x: x[1], reverse=True)
+    for i, (gene_name, centrality) in enumerate(sorted_genes, 1):
+        # Get the terms this gene is connected to
+        gene_id = f"gene_{gene_name}"
+        connected_terms = []
+        for term_id in gene_connections.get(gene_id, set()):
+            if term_id in term_nodes:
+                term_name = term_nodes[term_id].get('label', term_id)
+                connected_terms.append(term_name)
+        
+        output += f"{i:4d} | {gene_name:15s} | {centrality:11d} | {', '.join(connected_terms[:3])}"
+        if len(connected_terms) > 3:
+            output += f" (+{len(connected_terms)-3} more)"
+        output += "\n"
+    
+    output += "\n## ITERATION SEQUENCE TABLE\n"
+    output += "# Iteration | Term Name | Genes Connected | Significance Level\n"
+    
+    # Add iteration sequence table
+    for iteration in sorted(term_iterations.keys()):
+        terms = term_iterations[iteration]
+        for term in terms:
+            significance = "HIGH" if iteration == 1 else "MEDIUM" if iteration <= 3 else "LOW"
+            output += f"{iteration:9d} | {term['name']:30s} | {term['connections']:14d} | {significance}\n"
+    
+    output += "\n## CONNECTION MATRIX\n"
+    output += "# Gene -> Biological Terms\n"
+    
+    # Add connection matrix
+    for gene_name, centrality in sorted_genes[:10]:  # Top 10 genes
+        gene_id = f"gene_{gene_name}"
+        connected_terms = []
+        for term_id in gene_connections.get(gene_id, set()):
+            if term_id in term_nodes:
+                term_name = term_nodes[term_id].get('label', term_id)
+                connected_terms.append(term_name)
+        
+        output += f"{gene_name} -> {', '.join(connected_terms)}\n"
+    
+    output += "\n## BIOLOGICAL TERMS SUMMARY\n"
+    output += "# Term Name | Iteration | Gene Count | Connected Genes\n"
+    
+    # Add biological terms summary
+    for iteration in sorted(term_iterations.keys()):
+        terms = term_iterations[iteration]
+        for term in terms:
+            term_id = term['id']
+            connected_genes = []
+            for gene_id in term_connections.get(term_id, set()):
+                if gene_id in gene_nodes:
+                    gene_name = gene_nodes[gene_id].get('label', gene_id)
+                    connected_genes.append(gene_name)
+            
+            output += f"{term['name']:30s} | {iteration:9d} | {term['connections']:10d} | {', '.join(connected_genes[:5])}"
+            if len(connected_genes) > 5:
+                output += f" (+{len(connected_genes)-5} more)"
+            output += "\n"
+    
+    output += "\n## ANALYSIS INSTRUCTIONS\n"
+    output += """Please analyze this structured network data and provide:
+
+1. **Executive Summary**: Key biological themes and experimental context
+2. **Hub Gene Analysis**: Roles of highly connected genes in biological processes  
+3. **Pathway Relationships**: How biological terms relate to each other
+4. **Iteration Patterns**: Biological significance of the iteration sequence
+5. **Biological Hypothesis**: Potential experimental conditions and follow-up studies
+6. **Clinical Relevance**: Therapeutic targets and biomarkers
+
+Focus on biological interpretation and actionable insights."""
+    
+    return output
+
+
+def generate_json_network_analysis(dot_content: str) -> str:
+    """
+    Generate a JSON format of network data for ChatGPT analysis.
+    This provides the network information in a structured JSON format that's easy to parse.
+    
+    :param dot_content: The DOT network content
+    :return: JSON format for AI analysis
+    """
+    import re
+    import json
+    from collections import defaultdict
+    
+    # Parse the DOT content
+    nodes = {}
+    edges = []
+    gene_connections = defaultdict(set)
+    term_connections = defaultdict(set)
+    
+    # Parse DOT content
+    lines = dot_content.split('\n')
+    for line in lines:
+        line = line.strip()
+        
+        # Parse node definitions
+        if '[' in line and ']' in line and '--' not in line:
+            match = re.match(r'"([^"]+)"\s*\[([^\]]+)\]', line)
+            if match:
+                node_id = match.group(1)
+                attrs_str = match.group(2)
+                
+                # Parse attributes
+                attrs = {}
+                for attr in attrs_str.split(','):
+                    attr = attr.strip()
+                    if '=' in attr:
+                        key, value = attr.split('=', 1)
+                        attrs[key.strip()] = value.strip().strip('"')
+                
+                nodes[node_id] = attrs
+        
+        # Parse edges
+        elif '--' in line:
+            match = re.match(r'"([^"]+)"\s*--\s*"([^"]+)"', line)
+            if match:
+                source = match.group(1)
+                target = match.group(2)
+                edges.append((source, target))
+                
+                # Track connections
+                gene_connections[source].add(target)
+                gene_connections[target].add(source)
+                term_connections[source].add(target)
+                term_connections[target].add(source)
+    
+    # Analyze network structure
+    gene_nodes = {k: v for k, v in nodes.items() if v.get('type') == 'gene'}
+    term_nodes = {k: v for k, v in nodes.items() if v.get('type') == 'term'}
+    
+    # Calculate centrality metrics
+    gene_centrality = {}
+    for gene_id, gene_data in gene_nodes.items():
+        connections = len(gene_connections.get(gene_id, set()))
+        gene_centrality[gene_data.get('label', gene_id)] = connections
+    
+    # Group terms by iteration
+    term_iterations = defaultdict(list)
+    for term_id, term_data in term_nodes.items():
+        match = re.match(r'term_(\d+)_', term_id)
+        if match:
+            iteration = int(match.group(1))
+            term_iterations[iteration].append({
+                'id': term_id,
+                'name': term_data.get('label', term_id),
+                'color': term_data.get('fillcolor', 'unknown'),
+                'connections': len(term_connections.get(term_id, set()))
+            })
+    
+    # Create JSON structure
+    network_data = {
+        "analysis_type": "iterative_gene_set_enrichment",
+        "network_summary": {
+            "total_genes": len(gene_nodes),
+            "total_biological_terms": len(term_nodes),
+            "total_connections": len(edges),
+            "total_iterations": len(term_iterations),
+            "average_connections_per_gene": len(edges) / len(gene_nodes) if gene_nodes else 0
+        },
+        "gene_centrality": [
+            {
+                "gene_name": gene_name,
+                "connections": centrality,
+                "rank": i + 1,
+                "connected_terms": [
+                    {
+                        "term_name": term_nodes[term_id].get('label', term_id),
+                        "iteration": int(re.match(r'term_(\d+)_', term_id).group(1)) if re.match(r'term_(\d+)_', term_id) else None
+                    }
+                    for term_id in gene_connections.get(f"gene_{gene_name}", set())
+                    if term_id in term_nodes
+                ]
+            }
+            for i, (gene_name, centrality) in enumerate(sorted(gene_centrality.items(), key=lambda x: x[1], reverse=True))
+        ],
+        "iteration_sequence": [
+            {
+                "iteration": iteration,
+                "significance_level": "HIGH" if iteration == 1 else "MEDIUM" if iteration <= 3 else "LOW",
+                "terms": [
+                    {
+                        "term_name": term['name'],
+                        "gene_count": term['connections'],
+                        "connected_genes": [
+                            gene_nodes[gene_id].get('label', gene_id)
+                            for gene_id in term_connections.get(term['id'], set())
+                            if gene_id in gene_nodes
+                        ]
+                    }
+                    for term in terms
+                ]
+            }
+            for iteration, terms in sorted(term_iterations.items())
+        ],
+        "biological_terms": [
+            {
+                "term_name": term_data.get('label', term_id),
+                "iteration": int(re.match(r'term_(\d+)_', term_id).group(1)) if re.match(r'term_(\d+)_', term_id) else None,
+                "gene_count": len(term_connections.get(term_id, set())),
+                "connected_genes": [
+                    gene_nodes[gene_id].get('label', gene_id)
+                    for gene_id in term_connections.get(term_id, set())
+                    if gene_id in gene_nodes
+                ]
+            }
+            for term_id, term_data in term_nodes.items()
+        ],
+        "hub_genes": [
+            {
+                "gene_name": gene_name,
+                "centrality_score": centrality,
+                "biological_roles": [
+                    term_nodes[term_id].get('label', term_id)
+                    for term_id in gene_connections.get(f"gene_{gene_name}", set())
+                    if term_id in term_nodes
+                ]
+            }
+            for gene_name, centrality in sorted(gene_centrality.items(), key=lambda x: x[1], reverse=True)[:10]
+        ]
+    }
+    
+    # Create the output with instructions
+    output = f"""# ITERATIVE GENE SET ENRICHMENT NETWORK ANALYSIS
+# JSON Format for AI Analysis
+
+## ANALYSIS INSTRUCTIONS
+You are analyzing an iterative gene set enrichment network. The data below is provided in JSON format for easy parsing.
+
+Please provide:
+1. **Executive Summary**: Key biological themes and experimental context
+2. **Hub Gene Analysis**: Roles of highly connected genes in biological processes  
+3. **Pathway Relationships**: How biological terms relate to each other
+4. **Iteration Patterns**: Biological significance of the iteration sequence
+5. **Biological Hypothesis**: Potential experimental conditions and follow-up studies
+6. **Clinical Relevance**: Therapeutic targets and biomarkers
+
+Focus on biological interpretation and actionable insights.
+
+## NETWORK DATA (JSON Format)
+```json
+{json.dumps(network_data, indent=2)}
+```
+
+## KEY INSIGHTS TO LOOK FOR:
+- Genes with high centrality scores are likely key regulators or biomarkers
+- Earlier iterations represent the most statistically significant enrichments
+- Connected biological terms may represent related pathways or processes
+- The iteration sequence reveals the hierarchical importance of biological processes
+"""
+    
+    return output

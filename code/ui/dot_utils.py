@@ -4,6 +4,35 @@ import networkx as nx
 import plotly.graph_objects as go
 import pydot
 from plotly.colors import sample_colorscale
+import json
+import os
+
+
+def load_library_colors() -> Dict[str, str]:
+    """
+    Load library colors from alias.json file.
+    
+    Returns:
+        Dictionary mapping library names to their hex colors
+    """
+    # Get the path to alias.json relative to this file
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    alias_path = os.path.join(current_dir, "..", "..", "data", "libraries", "alias.json")
+    
+    try:
+        with open(alias_path, 'r') as f:
+            libraries = json.load(f)
+        
+        # Create mapping from color to library name
+        color_to_library = {}
+        for lib in libraries:
+            if 'color' in lib and 'name' in lib:
+                color_to_library[lib['color']] = lib['name']
+        
+        return color_to_library
+    except Exception as e:
+        print(f"Warning: Could not load library colors from {alias_path}: {e}")
+        return {}
 
 
 def _sample_scale_hex(scale_name: str, n: int) -> List[str]:
@@ -96,11 +125,27 @@ def merge_iterative_dot(
     """Merge per-library DOT strings and color term nodes per library.
 
     per_lib_dots : {library_name: dot_string}
-    scale_name   : Plotly continuous scale name.
+    scale_name   : Plotly continuous scale name (fallback if library colors not found).
     """
     libs = list(per_lib_dots.keys())
-    colors = _sample_scale_hex(scale_name, len(libs))
-    lib_to_color = dict(zip(libs, colors))
+    
+    # Try to get colors from alias.json first
+    library_colors = load_library_colors()
+    lib_to_color = {}
+    
+    # Create reverse mapping from library name to color
+    color_to_library = {v: k for k, v in library_colors.items()}
+    
+    for lib in libs:
+        # Try to find the library by name first
+        if lib in color_to_library:
+            lib_to_color[lib] = color_to_library[lib]
+        else:
+            # Fallback to dynamic color generation
+            if lib not in lib_to_color:
+                colors = _sample_scale_hex(scale_name, len([l for l in libs if l not in lib_to_color]))
+                for i, remaining_lib in enumerate([l for l in libs if l not in lib_to_color]):
+                    lib_to_color[remaining_lib] = colors[i]
 
     # 1) Colorize each library snippet
     colorized = {
