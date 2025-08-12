@@ -180,8 +180,4 @@ def display_conversion_results(converted_symbols: list[str],
                 else:
                     st.write(f"Invalid symbols: {', '.join(unrecognized_symbols[:10])}... (and {len(unrecognized_symbols)-10} more)")
         
-        # Show database stats
-        if input_format == 'entrez_ids':
-            st.info(f"📊 Database contains {stats['entrez_mappings']:,} Entrez ID mappings")
-        else:
-            st.info(f"📊 Database contains {stats['symbol_mappings']:,} gene symbol mappings")
+
