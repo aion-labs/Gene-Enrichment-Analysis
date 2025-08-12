@@ -16,3 +16,7 @@ data/recent_release/
 # Large data files that exceed GitHub's file size limits
 *.gz
 *.zip
+
+# Local launcher files (user-specific)
+launch_gene_enrichment.sh
+Gene_Enrichment.command
