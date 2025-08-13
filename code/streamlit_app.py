@@ -274,9 +274,9 @@ Results include ranked tables, bar charts, and network graphs."""
             
             # Gene input area
             placeholder_text = (
-                "Enter gene symbols (e.g., TP53, BRCA1) - one per line" 
+                "Enter gene symbols (e.g., TP53, BRCA1) - one per line (max 500 genes)" 
                 if state.gene_input_format == 'symbols' 
-                else "Enter Entrez IDs (e.g., 7157, 672) - one per line"
+                else "Enter Entrez IDs (e.g., 7157, 672) - one per line (max 500 genes)"
             )
             
             st.text_area(
@@ -286,6 +286,7 @@ Results include ranked tables, bar charts, and network graphs."""
                 placeholder=placeholder_text,
                 label_visibility="collapsed",
             )
+            st.caption("📝 **Note:** Maximum 500 genes allowed for optimal performance")
             st.text_input(
                 "Gene set name",
                 key="gene_set_name",
@@ -406,20 +407,25 @@ Results include ranked tables, bar charts, and network graphs."""
                         state.gene_input_format
                     )
                     
-                    # Display conversion results
-                    display_conversion_results(converted_symbols, unrecognized_entrez, unrecognized_symbols, stats, state.gene_input_format)
-                    
-                    # Create gene set with converted symbols
-                    if converted_symbols:
-                        state.gene_set = GeneSet(
-                            converted_symbols,
-                            state.background_gene_set.genes,
-                            state.gene_set_name,
-                            hgcn=False,  # Skip background validation since genes are already validated
-                            format=False,  # Skip formatting since genes are already formatted
-                        )
-                    else:
+                    # Check gene list size limit (500 genes maximum)
+                    if converted_symbols and len(converted_symbols) > 500:
+                        st.error(f"❌ **Gene list too large!** Your input contains {len(converted_symbols)} genes, but the maximum allowed is 500 genes. Please reduce your gene list size.")
                         state.gene_set = None
+                    else:
+                        # Display conversion results
+                        display_conversion_results(converted_symbols, unrecognized_entrez, unrecognized_symbols, stats, state.gene_input_format)
+                        
+                        # Create gene set with converted symbols
+                        if converted_symbols:
+                            state.gene_set = GeneSet(
+                                converted_symbols,
+                                state.background_gene_set.genes,
+                                state.gene_set_name,
+                                hgcn=False,  # Skip background validation since genes are already validated
+                                format=False,  # Skip formatting since genes are already formatted
+                            )
+                        else:
+                            state.gene_set = None
             if mode == "Regular":
                 st.markdown("**Regular enrichment parameters**")
                 st.caption("Configure filters for the enrichment analysis:")
