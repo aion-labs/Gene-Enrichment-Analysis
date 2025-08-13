@@ -80,7 +80,9 @@ class IterativeEnrichment:
             Path to the run-specific results directory
         """
         from pathlib import Path
-        results_dir = Path("results") / f"run_{self._run_id}"
+        # Use absolute path to project root, same as regular enrichment
+        ROOT = Path(__file__).resolve().parent.parent
+        results_dir = ROOT / "results" / f"run_{self._run_id}"
         return results_dir
 
     @property
