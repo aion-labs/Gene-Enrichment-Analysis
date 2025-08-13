@@ -764,14 +764,25 @@ Results include ranked tables, bar charts, and network graphs."""
                 unsafe_allow_html=True,
             )
 
-        # callback to keep checkbox state in session
+        # callback to keep checkbox state in session and clear network when toggles change
         def toggle_library(lib_name):
+            # Clear the network when any toggle changes
+            state.network_generated = False
+            state.last_merged_dot = None
+            
             if state[f"use_{lib_name}_in_network"]:
                 if lib_name not in state.selected_dot_paths:
                     state.selected_dot_paths.append(lib_name)
             else:
                 if lib_name in state.selected_dot_paths:
                     state.selected_dot_paths.remove(lib_name)
+            
+            # Sort the selected libraries to maintain order
+            if state.selected_dot_paths:
+                # Get the original library order from the enrichment results
+                library_order = list(state.iter_enrich.keys())
+                # Sort selected_dot_paths based on the original order
+                state.selected_dot_paths = sorted(state.selected_dot_paths, key=lambda x: library_order.index(x))
 
         # render each library's results with a persistent checkbox
         for lib, it in state.iter_enrich.items():
@@ -787,6 +798,8 @@ Results include ranked tables, bar charts, and network graphs."""
         # Network section
         st.markdown("---")
         st.header("Network")
+        
+        # Show selected libraries
         if state.selected_dot_paths:
             st.write("**Selected libraries:**")
             for sel in state.selected_dot_paths:
@@ -794,14 +807,19 @@ Results include ranked tables, bar charts, and network graphs."""
         else:
             st.write("No libraries selected for network generation.")
 
-        # generate or re-display merged network
-        if st.button("Generate Network"):
-            state.network_generated = True
-            selected_dots = {lib: state.iter_dot[lib] for lib in state.selected_dot_paths}
-            state.last_merged_dot = merge_iterative_dot(selected_dots)
-            render_network(state.last_merged_dot)
-        elif state.network_generated:
-            render_network(state.last_merged_dot)
+        # Generate network button - only show if libraries are selected
+        if state.selected_dot_paths:
+            if st.button("Generate Network"):
+                state.network_generated = True
+                selected_dots = {lib: state.iter_dot[lib] for lib in state.selected_dot_paths}
+                state.last_merged_dot = merge_iterative_dot(selected_dots)
+                render_network(state.last_merged_dot)
+            elif state.network_generated and state.last_merged_dot:
+                render_network(state.last_merged_dot)
+        else:
+            # Clear network state when no libraries are selected
+            state.network_generated = False
+            state.last_merged_dot = None
 
     logger.info("Finishing the Streamlit app")
 
