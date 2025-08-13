@@ -545,18 +545,19 @@ Results include ranked tables, bar charts, and network graphs."""
                 st.rerun()
             except Exception as e:
                 st.error(f"❌ Error loading background gene list: {str(e)}")
-        state.libs_custom = st.file_uploader(
-            "Upload gene set libraries",
-            type=[".gmt"],
-            accept_multiple_files=True,
-            on_change=update_aliases,
-            args=("libraries",),
-        )
-        if state.libs_custom:
-            for libf in state.libs_custom:
-                lf = (ROOT / "data" / "libraries" / libf.name).open("wb")
-                lf.write(libf.getvalue())
-                state.advanced_settings_changed = True
+        # Gene set library upload disabled
+        # state.libs_custom = st.file_uploader(
+        #     "Upload gene set libraries",
+        #     type=[".gmt"],
+        #     accept_multiple_files=True,
+        #     on_change=update_aliases,
+        #     args=("libraries",),
+        # )
+        # if state.libs_custom:
+        #     for libf in state.libs_custom:
+        #         lf = (ROOT / "data" / "libraries" / libf.name).open("wb")
+        #         lf.write(libf.getvalue())
+        #         state.advanced_settings_changed = True
         if state.advanced_settings_changed:
             if st.button("Apply settings"):
                 logger.info("Applied custom settings")
