@@ -131,6 +131,11 @@ def reset_app() -> None:
         if key in state:
             del state[key]
     
+    # Clear text input widgets by setting them to empty strings
+    state.gene_set_input = ""
+    state.gene_set_name = ""
+    state.selected_file = "Select ..."
+    
     # Reinitialize with default values
     _ensure_base_state()
     
@@ -298,6 +303,67 @@ Results include ranked tables, bar charts, and network graphs."""
                 on_change=update_text_widgets,
                 key="selected_file",
             )
+            
+            # Action buttons aligned under file selection - vertical layout
+            st.markdown("&nbsp;")  # Add some spacing
+            
+            # Create a container for buttons to ensure consistent sizing
+            button_container = st.container()
+            
+            with button_container:
+                # Use CSS to ensure equal button heights and consistent styling
+                st.markdown("""
+                <style>
+                .stButton > button {
+                    height: 40px !important;
+                    min-height: 40px !important;
+                    max-height: 40px !important;
+                    white-space: nowrap !important;
+                    overflow: hidden !important;
+                    text-overflow: ellipsis !important;
+                    margin-bottom: 8px !important;
+                }
+                </style>
+                """, unsafe_allow_html=True)
+                
+                # Load Example button (top)
+                st.button(
+                    "Load Example", 
+                    on_click=input_example,
+                    use_container_width=True,
+                    key="btn_load_example"
+                )
+                
+                # Reset App button (middle)
+                st.button(
+                    "Reset App", 
+                    on_click=reset_app, 
+                    type="secondary",
+                    use_container_width=True,
+                    key="btn_reset_app"
+                )
+                
+                # Submit button (bottom)
+                ready_common = all(
+                    getattr(state, k, None)
+                    for k in ["gene_set", "background_gene_set", "gene_set_libraries"]
+                )
+                if mode == "Regular":
+                    state.bt_submit_disabled = not ready_common
+                    bt_submit = st.button(
+                        "Submit", 
+                        disabled=state.bt_submit_disabled, 
+                        key="bt_reg",
+                        use_container_width=True
+                    )
+                else:
+                    state.bt_iter_disabled = not ready_common
+                    bt_iter = st.button(
+                        "Submit",
+                        disabled=state.bt_iter_disabled,
+                        key="bt_iter",
+                        use_container_width=True
+                    )
         with col_settings:
             state.background_set = st.selectbox(
                 "Background gene list", 
@@ -437,32 +503,13 @@ Results include ranked tables, bar charts, and network graphs."""
                 gsl.unique_genes = gsl.compute_unique_genes()
                 gsl.size = len(gsl.unique_genes)
 
-    col_sub, col_example, _ = st.columns([9, 8, 29])
-    ready_common = all(
-        getattr(state, k, None)
-        for k in ["gene_set", "background_gene_set", "gene_set_libraries"]
-    )
-    with col_sub:
-        if mode == "Regular":
-            state.bt_submit_disabled = not ready_common
-            bt_submit = st.button(
-                "Submit", disabled=state.bt_submit_disabled, key="bt_reg"
-            )
-        else:
-            state.bt_iter_disabled = not ready_common
-            bt_iter = st.button(
-                "Submit",
-                disabled=state.bt_iter_disabled,
-                key="bt_iter",
-            )
-    with col_example:
-        col_example_btn1, col_example_btn2 = st.columns(2)
-        with col_example_btn1:
-            st.button("Input an example", on_click=input_example)
-        with col_example_btn2:
-            st.button("Reset app", on_click=reset_app, type="secondary")
+
 
     with advanced:
+        # Analysis Settings Section
+        st.markdown("### 📊 Analysis Settings")
+        
+        # Results display settings
         if mode == "Regular":
             n_results = st.slider(
                 "Number of results to display", 1, 100, 10, 1, key="n_res"
@@ -476,7 +523,8 @@ Results include ranked tables, bar charts, and network graphs."""
                 1,
                 disabled=True,
             )
-        # Use widget key to set session_state; do not assign to state directly
+        
+        # P-value calculation method
         st.selectbox(
             "P-value calculation method",
             ["Fisher's Exact Test", "Hypergeometric Test", "Chi-squared Test"],
@@ -484,6 +532,12 @@ Results include ranked tables, bar charts, and network graphs."""
         )
         if state.p_val_method != "Fisher's Exact Test":
             state.advanced_settings_changed = True
+        
+        st.markdown("---")
+        
+        # Background Gene Set Section
+        st.markdown("### 🧬 Background Gene Set")
+        
         # Background gene list format selector
         bg_format_col1, bg_format_col2 = st.columns([1, 3])
         with bg_format_col1:
@@ -558,18 +612,35 @@ Results include ranked tables, bar charts, and network graphs."""
         #         lf = (ROOT / "data" / "libraries" / libf.name).open("wb")
         #         lf.write(libf.getvalue())
         #         state.advanced_settings_changed = True
-        if state.advanced_settings_changed:
-            if st.button("Apply settings"):
-                logger.info("Applied custom settings")
-                # Refresh aliases to ensure menus are updated
-                state.bg_mapper = update_aliases("backgrounds")
-                state.lib_mapper = update_aliases("libraries")
-                st.success("Settings applied")
-                # Force page rerun to refresh the menus
-                st.rerun()
-        else:
-            with st.empty():
-                st.button("Apply settings", disabled=True)
+        # Settings Actions Section
+        st.markdown("---")
+        st.markdown("### ⚙️ Settings Actions")
+        
+        # Create a container for status messages
+        status_container = st.container()
+        
+        # Apply settings button with improved layout
+        col_apply, col_status = st.columns([1, 3])
+        
+        with col_apply:
+            if state.advanced_settings_changed:
+                if st.button("Apply Settings", use_container_width=True):
+                    logger.info("Applied custom settings")
+                    # Refresh aliases to ensure menus are updated
+                    state.bg_mapper = update_aliases("backgrounds")
+                    state.lib_mapper = update_aliases("libraries")
+                    with status_container:
+                        st.success("✅ Settings applied successfully!")
+                    # Force page rerun to refresh the menus
+                    st.rerun()
+            else:
+                st.button("Apply Settings", disabled=True, use_container_width=True)
+        
+        with col_status:
+            if state.advanced_settings_changed:
+                st.info("ℹ️ Settings have been modified. Click 'Apply Settings' to save changes.")
+            else:
+                st.success("✅ All settings are up to date.")
 
     # Regular execution
     if mode == "Regular" and "bt_submit" in locals() and bt_submit:
