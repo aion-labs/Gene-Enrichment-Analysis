@@ -2,7 +2,7 @@ import json
 import logging
 import multiprocessing as mp
 from datetime import datetime
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Set
 
 import pandas as pd
 from scipy.stats import chi2_contingency, fisher_exact, hypergeom
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 def compute_pvalue(
-    args: Tuple[GeneSet, BackgroundGeneSet, dict, str, int],
+    args: Tuple[GeneSet, BackgroundGeneSet, dict, str, int, Set[str]],
 ) -> Tuple[str, str, str, List[str], float]:
     """
     Computes the p-value for a given term using Fisher's exact test.
@@ -34,6 +34,7 @@ def compute_pvalue(
             - term (dict): A dictionary representing a term in the gene set library
             - p-value method (str): The name of the method to calculate p-value
             - library_background_size (int): The size of the intersection between background and library genes
+            - filtered_unique_genes (Set[str]): The unique genes from filtered terms
 
     Returns:
         A tuple containing the following elements:
@@ -43,18 +44,25 @@ def compute_pvalue(
             - overlap genes (list): A list of genes in the overlap
             - p_value (float): The p-value computed by Fisher's exact test
     """
-    gene_set, background_gene_set, term, p_value_method_name, library_background_size = args
+    gene_set, background_gene_set, term, p_value_method_name, library_background_size, filtered_unique_genes = args
     term_genes = set(term["genes"])
     n_term_genes = len(term_genes)
-    overlap = gene_set.genes & term_genes
+    
+    # Intersect input gene set with library-specific background for statistical consistency
+    # This ensures we only test genes that exist in the library-specific background
+    filtered_gene_set = gene_set.genes & filtered_unique_genes
+    filtered_gene_set_size = len(filtered_gene_set)
+    
+    # Calculate overlap using the filtered gene set
+    overlap = filtered_gene_set & term_genes
     n_overlap = len(overlap)
 
-    # Build contingency table for Fisher's exact test using library-specific background
+    # Build contingency table for Fisher's exact test using library-specific background and filtered gene set
     contingency_table = [
         [n_overlap, n_term_genes - n_overlap],
         [
-            gene_set.size - n_overlap,
-            library_background_size - n_term_genes - gene_set.size + n_overlap,
+            filtered_gene_set_size - n_overlap,
+            library_background_size - n_term_genes - filtered_gene_set_size + n_overlap,
         ],
     ]
 
@@ -64,7 +72,7 @@ def compute_pvalue(
         chi2, p_value, _, _ = chi2_contingency(contingency_table)
     elif p_value_method_name == "Hypergeometric Test":
         p_value = hypergeom.sf(
-            n_overlap - 1, library_background_size, n_term_genes, gene_set.size
+            n_overlap - 1, library_background_size, n_term_genes, filtered_gene_set_size
         )
     else:
         logger.error(f"Unsupported p_value_method: {p_value_method_name}")
@@ -162,6 +170,14 @@ class Enrichment:
                 library_background_size = len(self.background_gene_set.genes & filtered_unique_genes)
                 logger.info(f"Library-specific background size: {library_background_size} genes (intersection of {self.background_gene_set.size} background genes and {len(filtered_unique_genes)} filtered library genes from {len(filtered_terms)} terms within size range [{self.min_term_size}, {self.max_term_size}])")
                 
+                # Log the impact of filtering the input gene set
+                original_gene_set_size = self.gene_set.size
+                filtered_gene_set_size = len(self.gene_set.genes & filtered_unique_genes)
+                if original_gene_set_size != filtered_gene_set_size:
+                    logger.info(f"Input gene set filtered: {original_gene_set_size} → {filtered_gene_set_size} genes (intersected with library-specific background)")
+                else:
+                    logger.info(f"Input gene set size: {original_gene_set_size} genes (all genes present in library-specific background)")
+                
                 parallel_results = pool.map(
                     compute_pvalue,
                     [
@@ -171,6 +187,7 @@ class Enrichment:
                             term,
                             self.p_value_method_name,
                             library_background_size,
+                            filtered_unique_genes,
                         )
                         for term in filtered_terms
                     ],
