@@ -131,11 +131,6 @@ def reset_app() -> None:
         if key in state:
             del state[key]
     
-    # Clear text input widgets by setting them to empty strings
-    state.gene_set_input = ""
-    state.gene_set_name = ""
-    state.selected_file = "Select ..."
-    
     # Reinitialize with default values
     _ensure_base_state()
     
@@ -305,66 +300,56 @@ Results include ranked tables, bar charts, and network graphs."""
                 key="selected_file",
             )
             
-            # Action buttons aligned under file selection - vertical layout
-            st.markdown("&nbsp;")  # Add some spacing
-            
-            # Create a container for buttons to ensure consistent sizing
-            button_container = st.container()
-            
-            with button_container:
-                # Use CSS to ensure equal button heights and consistent styling
-                st.markdown("""
+            # Add CSS for consistent button styling
+            st.markdown("""
                 <style>
                 .stButton > button {
-                    height: 40px !important;
-                    min-height: 40px !important;
-                    max-height: 40px !important;
-                    white-space: nowrap !important;
-                    overflow: hidden !important;
-                    text-overflow: ellipsis !important;
-                    margin-bottom: 8px !important;
+                    height: 40px;
+                    margin-bottom: 8px;
                 }
                 </style>
                 """, unsafe_allow_html=True)
-                
-                # Load Example button (top)
-                st.button(
-                    "Load Example", 
-                    on_click=input_example,
-                    use_container_width=True,
-                    key="btn_load_example"
+            
+            # Vertical button stack layout under the left column
+            ready_common = all(
+                getattr(state, k, None)
+                for k in ["gene_set", "background_gene_set", "gene_set_libraries"]
+            )
+            
+            # Load Example button (top)
+            st.button(
+                "Load Example", 
+                on_click=input_example,
+                use_container_width=True,
+                key="btn_load_example"
+            )
+            
+            # Reset App button (middle)
+            st.button(
+                "Reset App", 
+                on_click=reset_app, 
+                type="secondary",
+                use_container_width=True,
+                key="btn_reset_app"
+            )
+            
+            # Submit button (bottom)
+            if mode == "Regular":
+                state.bt_submit_disabled = not ready_common
+                bt_submit = st.button(
+                    "Submit", 
+                    disabled=state.bt_submit_disabled, 
+                    key="bt_reg",
+                    use_container_width=True
                 )
-                
-                # Reset App button (middle)
-                st.button(
-                    "Reset App", 
-                    on_click=reset_app, 
-                    type="secondary",
-                    use_container_width=True,
-                    key="btn_reset_app"
+            else:
+                state.bt_iter_disabled = not ready_common
+                bt_iter = st.button(
+                    "Submit",
+                    disabled=state.bt_iter_disabled,
+                    key="bt_iter",
+                    use_container_width=True
                 )
-                
-                # Submit button (bottom)
-                ready_common = all(
-                    getattr(state, k, None)
-                    for k in ["gene_set", "background_gene_set", "gene_set_libraries"]
-                )
-                if mode == "Regular":
-                    state.bt_submit_disabled = not ready_common
-                    bt_submit = st.button(
-                        "Submit", 
-                        disabled=state.bt_submit_disabled, 
-                        key="bt_reg",
-                        use_container_width=True
-                    )
-                else:
-                    state.bt_iter_disabled = not ready_common
-                    bt_iter = st.button(
-                        "Submit",
-                        disabled=state.bt_iter_disabled,
-                        key="bt_iter",
-                        use_container_width=True
-                    )
         with col_settings:
             state.background_set = st.selectbox(
                 "Background gene list", 
@@ -409,7 +394,7 @@ Results include ranked tables, bar charts, and network graphs."""
                     
                     # Check gene list size limit (500 genes maximum)
                     if converted_symbols and len(converted_symbols) > 500:
-                        st.error(f"❌ **Gene list too large!** Your input contains {len(converted_symbols)} genes, but the maximum allowed is 500 genes. Please reduce your gene list size.")
+                        st.error(f"❌ **Gene list too large!** Your input contains {len(converted_symbols)} genes, but the maximum allowed is 500 genes. Please reduce your gene list size.")                        
                         state.gene_set = None
                     else:
                         # Display conversion results
@@ -512,10 +497,6 @@ Results include ranked tables, bar charts, and network graphs."""
 
 
     with advanced:
-        # Analysis Settings Section
-        st.markdown("### 📊 Analysis Settings")
-        
-        # Results display settings
         if mode == "Regular":
             n_results = st.slider(
                 "Number of results to display", 1, 100, 10, 1, key="n_res"
@@ -529,8 +510,7 @@ Results include ranked tables, bar charts, and network graphs."""
                 1,
                 disabled=True,
             )
-        
-        # P-value calculation method
+        # Use widget key to set session_state; do not assign to state directly
         st.selectbox(
             "P-value calculation method",
             ["Fisher's Exact Test", "Hypergeometric Test", "Chi-squared Test"],
@@ -538,12 +518,6 @@ Results include ranked tables, bar charts, and network graphs."""
         )
         if state.p_val_method != "Fisher's Exact Test":
             state.advanced_settings_changed = True
-        
-        st.markdown("---")
-        
-        # Background Gene Set Section
-        st.markdown("### 🧬 Background Gene Set")
-        
         # Background gene list format selector
         bg_format_col1, bg_format_col2 = st.columns([1, 3])
         with bg_format_col1:
@@ -618,13 +592,6 @@ Results include ranked tables, bar charts, and network graphs."""
         #         lf = (ROOT / "data" / "libraries" / libf.name).open("wb")
         #         lf.write(libf.getvalue())
         #         state.advanced_settings_changed = True
-        # Settings Actions Section
-        st.markdown("---")
-        st.markdown("### ⚙️ Settings Actions")
-        
-        # Create a container for status messages
-        status_container = st.container()
-        
         # Apply settings button with improved layout
         col_apply, col_status = st.columns([1, 3])
         
@@ -635,7 +602,7 @@ Results include ranked tables, bar charts, and network graphs."""
                     # Refresh aliases to ensure menus are updated
                     state.bg_mapper = update_aliases("backgrounds")
                     state.lib_mapper = update_aliases("libraries")
-                    with status_container:
+                    with col_status:
                         st.success("✅ Settings applied successfully!")
                     # Force page rerun to refresh the menus
                     st.rerun()
@@ -842,25 +809,14 @@ Results include ranked tables, bar charts, and network graphs."""
                 unsafe_allow_html=True,
             )
 
-        # callback to keep checkbox state in session and clear network when toggles change
+        # callback to keep checkbox state in session
         def toggle_library(lib_name):
-            # Clear the network when any toggle changes
-            state.network_generated = False
-            state.last_merged_dot = None
-            
             if state[f"use_{lib_name}_in_network"]:
                 if lib_name not in state.selected_dot_paths:
                     state.selected_dot_paths.append(lib_name)
             else:
                 if lib_name in state.selected_dot_paths:
                     state.selected_dot_paths.remove(lib_name)
-            
-            # Sort the selected libraries to maintain order
-            if state.selected_dot_paths:
-                # Get the original library order from the enrichment results
-                library_order = list(state.iter_enrich.keys())
-                # Sort selected_dot_paths based on the original order
-                state.selected_dot_paths = sorted(state.selected_dot_paths, key=lambda x: library_order.index(x))
 
         # render each library's results with a persistent checkbox
         for lib, it in state.iter_enrich.items():
@@ -876,8 +832,6 @@ Results include ranked tables, bar charts, and network graphs."""
         # Network section
         st.markdown("---")
         st.header("Network")
-        
-        # Show selected libraries
         if state.selected_dot_paths:
             st.write("**Selected libraries:**")
             for sel in state.selected_dot_paths:
@@ -885,19 +839,14 @@ Results include ranked tables, bar charts, and network graphs."""
         else:
             st.write("No libraries selected for network generation.")
 
-        # Generate network button - only show if libraries are selected
-        if state.selected_dot_paths:
-            if st.button("Generate Network"):
-                state.network_generated = True
-                selected_dots = {lib: state.iter_dot[lib] for lib in state.selected_dot_paths}
-                state.last_merged_dot = merge_iterative_dot(selected_dots)
-                render_network(state.last_merged_dot)
-            elif state.network_generated and state.last_merged_dot:
-                render_network(state.last_merged_dot)
-        else:
-            # Clear network state when no libraries are selected
-            state.network_generated = False
-            state.last_merged_dot = None
+        # generate or re-display merged network
+        if st.button("Generate Network"):
+            state.network_generated = True
+            selected_dots = {lib: state.iter_dot[lib] for lib in state.selected_dot_paths}
+            state.last_merged_dot = merge_iterative_dot(selected_dots)
+            render_network(state.last_merged_dot)
+        elif state.network_generated:
+            render_network(state.last_merged_dot)
 
     logger.info("Finishing the Streamlit app")
 

@@ -213,8 +213,8 @@ class Enrichment:
             {
                 "rank": [result["rank"] for result in self.results],
                 "term": [result["term"] for result in self.results],
-                "overlap": [result["overlap"] for result in self.results],
                 "overlap_size": [result["overlap_size"] for result in self.results],
+                "Genes": [", ".join(result["overlap"]) for result in self.results],
                 "p-value": [result["p-value"] for result in self.results],
                 "fdr": [result["fdr"] for result in self.results],
             }
