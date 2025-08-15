@@ -419,7 +419,7 @@ Results include ranked tables, bar charts, and network graphs."""
                     "Raw p-value threshold",
                     min_value=1e-10,
                     max_value=0.5,
-                    value=0.001,
+                    value=0.01,
                     step=0.001,
                     format="%.4f",
                     help="Maximum raw p-value for terms to be included in results."
