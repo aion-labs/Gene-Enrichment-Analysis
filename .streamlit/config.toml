@@ -1,0 +1,20 @@
+[server]
+# Increase timeout for large file processing
+maxUploadSize = 200
+enableXsrfProtection = false
+
+[browser]
+# Optimize for cloud deployment
+gatherUsageStats = false
+
+[theme]
+# Use a clean, professional theme
+primaryColor = "#FF6B6B"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F0F2F6"
+textColor = "#262730"
+
+[client]
+# Optimize performance
+showErrorDetails = true
+

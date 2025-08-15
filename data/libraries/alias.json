@@ -24,45 +24,45 @@
         "color": "#96CEB4"
     },
     {
-        "name": "C2: CP: Canonical pathways",
+        "name": "C2: Canonical pathways",
         "file": "c2.cp.v2025.1.Hs.symbols.gmt",
         "active": false,
         "color": "#FFEAA7"
     },
     {
-        "name": "C2: CP: BioCarta",
+        "name": "C2:P: BioCarta",
         "file": "c2.cp.biocarta.v2025.1.Hs.symbols.gmt",
         "active": true,
         "color": "#DDA0DD"
     },
     {
-        "name": "C2: CP: KEGG MEDICUS",
+        "name": "C2: KEGG MEDICUS",
         "file": "c2.cp.kegg_medicus.v2025.1.Hs.symbols.gmt",
         "active": true,
         "color": "#98D8C8"
     },
     {
-        "name": "C2: CP: Pathway Interaction Database",
+        "name": "C2: Pathway Interaction Database",
         "file": "c2.cp.pid.v2025.1.Hs.symbols.gmt",
         "active": true,
         "color": "#F7DC6F"
     },
     {
-        "name": "C2: CP: Reactome Pathways",
+        "name": "C2: Reactome Pathways",
         "file": "c2.cp.reactome.v2025.1.Hs.symbols.gmt",
         "active": true,
         "color": "#BB8FCE"
     },
     {
-        "name": "C2: CP: WikiPathways",
+        "name": "C2: WikiPathways",
         "file": "c2.cp.wikipathways.v2025.1.Hs.symbols.gmt",
         "active": true,
         "color": "#85C1E9"
     },
     {
-        "name": "C2: CP: KEGG Legacy",
+        "name": "C2: KEGG Legacy",
         "file": "c2.cp.kegg_legacy.v2025.1.Hs.symbols.gmt",
-        "active": false,
+        "active": true,
         "color": "#F8C471"
     },
     {

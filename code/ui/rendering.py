@@ -336,7 +336,7 @@ def generate_ai_analysis_prompt(dot_content: str) -> str:
     # Create the annotated DOT content
     annotated_dot = '\n'.join(annotated_lines)
     
-    prompt = """You are a computational biologist analyzing an iterative gene set enrichment network. Iterative means that for each library source, the top enriched gene set is found, saved and the genes are removed from the initial gene list. The remaining genes are then tested for enrichment again. Thus, each gene appears only once per library source tested but can be linked to multiple terms that originate from different libraries. The results are provided as a DOT network represents the relationships between genes and gene sets.
+    prompt = """You are a computational biologist analyzing an iterative gene set enrichment network. Iterative means that for each library source, the top enriched gene set is found, saved and the genes are removed from the initial gene list. The remaining genes are then tested for enrichment again. Thus, each gene appears only once per library source tested but can be linked to multiple terms that originate from different libraries. The results are provided as a DOT network represents the relationships between genes and gene sets(=terms).
 
 **NETWORK STRUCTURE:**
 """
@@ -354,11 +354,11 @@ def generate_ai_analysis_prompt(dot_content: str) -> str:
 
 **Library Sources and Their Biological Context:**
 - **H: Hallmark gene sets**: Curated gene sets representing well-defined biological states or processes
-- **C2: CP: BioCarta**: Canonical pathways from BioCarta database
-- **C2: CP: KEGG MEDICUS**: Metabolic and signaling pathways from KEGG
-- **C2: CP: Pathway Interaction Database**: Curated human signaling pathways
-- **C2: CP: Reactome Pathways**: Expert-curated biological pathways
-- **C2: CP: WikiPathways**: Community-curated biological pathways
+- **C2: BioCarta**: Canonical pathways from BioCarta database
+- **C2: KEGG MEDICUS**: Metabolic and signaling pathways from KEGG
+- **C2: Pathway Interaction Database**: Curated human signaling pathways
+- **C2: Reactome Pathways**: Expert-curated biological pathways
+- **C2: WikiPathways**: Community-curated biological pathways
 - **C5: Gene Ontology: Biological Process**: Biological processes from Gene Ontology
 - **C5: Gene Ontology: Cellular Component**: Cellular components from Gene Ontology
 - **C5: Gene Ontology: Molecular Function**: Molecular functions from Gene Ontology
@@ -367,7 +367,7 @@ def generate_ai_analysis_prompt(dot_content: str) -> str:
 
 **Edge Connections:**
 - Each edge (gene -- term) represents a gene's membership in that biological term
-- Thicker/more connections indicate genes that are part of multiple enriched processes
+- More connections indicate genes that are part of multiple enriched processes
 - The network topology shows which genes are central to the biological response
 
 **Iteration Information:**
@@ -382,22 +382,19 @@ Please analyze this network and provide:
 1. **Key Biological Insights:**
    - What are the most significant biological processes/pathways identified?
    - Which genes appear to be central to the biological response?
-   - What patterns emerge from the iteration sequence?
-   - How do different library sources contribute to the biological interpretation?
 
 2. **Network Topology Analysis:**
    - Which genes are "hub" genes (connected to multiple terms)?
    - Are there distinct clusters or modules in the network?
    - What does the connectivity pattern suggest about biological organization?
-   - Do terms from the same library source cluster together?
 
 3. **Biological Hypothesis:**
    - Based on the network structure, what biological hypothesis can you generate?
    - How do the different library sources support or complement each other?
+   - Try to formulate one hypothesis based on the most central terms and how they possibly related to one another.
    
 4. **Estimated Experimental Context**
    - Can you hypothesize on what was the experiment that generated this result?
-   - What experimental conditions might explain the pattern of library enrichments?
 
 **RESPONSE STRUCTURE:**
 - **Executive Summary** (2-3 sentences)
@@ -409,9 +406,9 @@ Please analyze this network and provide:
 **IMPORTANT NOTES:**
 - Focus on biological interpretation, not statistical significance or iteration number
 - Consider the functional relationships between connected genes and terms
-- Pay attention to which library sources are most prominent in your analysis
-- Look for unexpected connections that might reveal novel biology
+- Look for unexpected connections that might reveal novel or unexpected biology
 - Consider the broader biological context and literature
+- Note that protein interaction library could shed light on physical interaction between genes while terms indicate functional interaction
 - Different library sources may provide complementary biological insights"""
     
     return prompt

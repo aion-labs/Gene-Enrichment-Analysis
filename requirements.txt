@@ -28,3 +28,6 @@ typer==0.9.0
 
 # Additional utilities
 pathlib2>=2.3.0
+
+# Streamlit Cloud specific
+streamlit-option-menu>=0.3.6

@@ -280,3 +280,4 @@ If you encounter issues:
 4. Check the application logs for error messages
 
 For additional support, please refer to the main README.md file or create an issue on the GitHub repository.
+
