@@ -107,6 +107,26 @@ def render_results(result: Enrichment, file_name: str, n_results: int = 10) -> N
     result_df = result_df.set_index("rank")
     st.divider()
     st.subheader(file_name)
+    
+    # Calculate library-specific sizes for display
+    # Get the library-specific background size from the enrichment object
+    filtered_terms = [term for term in result.gene_set_library.library 
+                     if result.min_term_size <= term["size"] <= result.max_term_size]
+    
+    # Calculate unique genes from filtered terms only
+    filtered_unique_genes = set()
+    for term in filtered_terms:
+        filtered_unique_genes.update(term["genes"])
+    
+    # Calculate library-specific background size
+    library_background_size = len(result.background_gene_set.genes & filtered_unique_genes)
+    
+    # Calculate library-specific input size (genes that are in both input and library background)
+    library_input_size = len(result.gene_set.genes & filtered_unique_genes)
+    
+    # Display library-specific size information
+    st.caption(f"{library_input_size}/{result.gene_set.size} genes, {library_background_size}/{result.background_gene_set.size} background")
+    
     table, bar = st.tabs(["Results", "Bar chart"])
     with table:
         render_table(result_df)
