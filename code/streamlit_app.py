@@ -118,27 +118,37 @@ def reset_app() -> None:
     """Reset the app to default values."""
     logger.info("Resetting app to default values")
     
-    # Clear specific state variables that should be reset
-    keys_to_clear = [
-        'gene_set_input', 'gene_set_name', 'selected_file', 'gene_set', 
-        'background_gene_set', 'gene_set_libraries', 'enrich', 'iter_results', 
-        'iter_enrich', 'iter_dot', 'results_ready', 'iter_ready', 
-        'network_generated', 'selected_dot_paths', 'advanced_settings_changed',
-        'bt_submit_disabled', 'bt_iter_disabled'
-    ]
-    
-    for key in keys_to_clear:
-        if key in state:
-            del state[key]
+    # Clear ALL state variables to ensure complete reset
+    for key in list(state.keys()):
+        del state[key]
     
     # Reinitialize with default values
     _ensure_base_state()
     
-    # Set default values for other state variables
+    # Set default values for all parameters
     state.gene_input_format = 'symbols'
     state.bg_input_format = 'symbols'
     state.advanced_settings_changed = False
     state.bt_submit_disabled = True
+    state.bt_iter_disabled = True
+    
+    # Reset all parameters to defaults
+    state.p_threshold = 0.01
+    state.min_overlap = 3
+    state.min_term_size = 10
+    state.max_term_size = 600
+    state.iter_p_threshold = 0.01
+    state.iter_max_iter = 10
+    state.iter_min_overlap = 3
+    state.iter_min_term_size = 10
+    state.iter_max_term_size = 600
+    state.p_val_method = "Fisher's Exact Test"
+    
+    # Clear all selections
+    state.libraries = []
+    state.background_set = None
+    state.gene_set_input = ""
+    state.gene_set_name = ""
     
     st.success("✅ App reset to default values!")
     st.rerun()
