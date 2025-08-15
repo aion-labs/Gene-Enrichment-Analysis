@@ -296,7 +296,9 @@ def render_iter_results(result: IterativeEnrichment, file_name: str) -> None:
         
         # Show final remaining genes if different from initial
         if result.results:
-            final_remaining = len(result.gene_set.genes) - sum(len(record.get("genes", [])) for record in result.results)
+            # Calculate final remaining genes by starting with library-specific input size
+            # and subtracting genes removed in each iteration
+            final_remaining = library_input_size - sum(len(record.get("genes", [])) for record in result.results)
             if final_remaining != library_input_size:
                 st.caption(f"Final: {final_remaining} genes remaining after {len(result.results)} iterations")
 
