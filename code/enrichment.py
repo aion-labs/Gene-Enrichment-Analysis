@@ -149,9 +149,19 @@ class Enrichment:
         with mp.Pool(cpu_count) as pool:
             logger.info(f"Initializing the MP pool with {cpu_count} CPUs")
             try:
-                # Calculate the size of the intersection between the background gene set and the library's unique genes
-                library_background_size = len(self.background_gene_set.genes & self.gene_set_library.unique_genes)
-                logger.info(f"Library-specific background size: {library_background_size} genes (intersection of {self.background_gene_set.size} background genes and {self.gene_set_library.size} library genes)")
+                # Filter terms by size range first
+                filtered_terms = [term for term in self.gene_set_library.library 
+                                 if self.min_term_size <= term["size"] <= self.max_term_size]
+                
+                # Calculate unique genes from filtered terms only
+                filtered_unique_genes = set()
+                for term in filtered_terms:
+                    filtered_unique_genes.update(term["genes"])
+                
+                # Calculate the size of the intersection between the background gene set and the filtered library's unique genes
+                library_background_size = len(self.background_gene_set.genes & filtered_unique_genes)
+                logger.info(f"Library-specific background size: {library_background_size} genes (intersection of {self.background_gene_set.size} background genes and {len(filtered_unique_genes)} filtered library genes from {len(filtered_terms)} terms within size range [{self.min_term_size}, {self.max_term_size}])")
+                
                 parallel_results = pool.map(
                     compute_pvalue,
                     [
@@ -162,7 +172,7 @@ class Enrichment:
                             self.p_value_method_name,
                             library_background_size,
                         )
-                        for term in self.gene_set_library.library if self.min_term_size <= term["size"] <= self.max_term_size
+                        for term in filtered_terms
                     ],
                 )
             except Exception as e:
@@ -177,7 +187,7 @@ class Enrichment:
         if not parallel_results:
             logger.warning(f"No results obtained for {self.gene_set_library.name}")
             logger.info(f"Library has {len(self.gene_set_library.library)} total terms")
-            logger.info(f"Terms within size range [{self.min_term_size}, {self.max_term_size}]: {len([t for t in self.gene_set_library.library if self.min_term_size <= t['size'] <= self.max_term_size])}")
+            logger.info(f"Terms within size range [{self.min_term_size}, {self.max_term_size}]: {len(filtered_terms)}")
             logger.info(f"Input gene set size: {self.gene_set.size}")
             logger.info(f"Background gene set size: {self.background_gene_set.size}")
             return results
@@ -235,7 +245,17 @@ class Enrichment:
     def to_snapshot(self) -> Dict:
         """Return the snapshot of input parameters and the enrichment results as a JSON string."""
         # Calculate library-specific background size for the snapshot
-        library_background_size = len(self.background_gene_set.genes & self.gene_set_library.unique_genes)
+        # Filter terms by size range first
+        filtered_terms = [term for term in self.gene_set_library.library 
+                         if self.min_term_size <= term["size"] <= self.max_term_size]
+        
+        # Calculate unique genes from filtered terms only
+        filtered_unique_genes = set()
+        for term in filtered_terms:
+            filtered_unique_genes.update(term["genes"])
+        
+        # Calculate the size of the intersection between the background gene set and the filtered library's unique genes
+        library_background_size = len(self.background_gene_set.genes & filtered_unique_genes)
         return {
             "input_gene_set": list(self.gene_set.genes),
             "background": self.background_gene_set.name,
