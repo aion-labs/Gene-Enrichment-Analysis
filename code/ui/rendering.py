@@ -270,6 +270,35 @@ def render_iter_results(result: IterativeEnrichment, file_name: str) -> None:
 
     st.divider()
     st.subheader(file_name)
+    
+    # Calculate and display library-specific size information for the initial gene set
+    # Get the first iteration's enrichment object to show initial sizes
+    if result._iteration_enrichments:
+        initial_enrichment = result._iteration_enrichments[0]
+        
+        # Calculate library-specific sizes for display
+        filtered_terms = [term for term in initial_enrichment.gene_set_library.library 
+                         if initial_enrichment.min_term_size <= term["size"] <= initial_enrichment.max_term_size]
+        
+        # Calculate unique genes from filtered terms only
+        filtered_unique_genes = set()
+        for term in filtered_terms:
+            filtered_unique_genes.update(term["genes"])
+        
+        # Calculate library-specific background size
+        library_background_size = len(initial_enrichment.background_gene_set.genes & filtered_unique_genes)
+        
+        # Calculate library-specific input size (genes that are in both input and library background)
+        library_input_size = len(initial_enrichment.gene_set.genes & filtered_unique_genes)
+        
+        # Display library-specific size information
+        st.caption(f"Initial: {library_input_size}/{initial_enrichment.gene_set.size} genes, {library_background_size}/{initial_enrichment.background_gene_set.size} background")
+        
+        # Show final remaining genes if different from initial
+        if result.results:
+            final_remaining = len(result.gene_set.genes) - sum(len(record.get("genes", [])) for record in result.results)
+            if final_remaining != library_input_size:
+                st.caption(f"Final: {final_remaining} genes remaining after {len(result.results)} iterations")
 
     # Tabs for table and chart
     table_tab, bar_tab = st.tabs(["Iterations", "Bar chart"])
