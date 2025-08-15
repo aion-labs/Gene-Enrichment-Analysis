@@ -1,6 +1,6 @@
 [
     {
-        "name": "H: Hallmark gene sets",
+        "name": "H: Hallmark Gene Sets",
         "file": "h.all.v2025.1.Hs.symbols.gmt",
         "active": true,
         "color": "#FF6B6B"
@@ -30,7 +30,7 @@
         "color": "#FFEAA7"
     },
     {
-        "name": "C2:P: BioCarta",
+        "name": "C2: BioCarta",
         "file": "c2.cp.biocarta.v2025.1.Hs.symbols.gmt",
         "active": true,
         "color": "#DDA0DD"
