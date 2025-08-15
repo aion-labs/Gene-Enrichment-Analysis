@@ -630,11 +630,12 @@ Results include ranked tables, bar charts, and network graphs."""
         logger.info("Running regular enrichment")
         render_validation()
         if state.gene_set_input and ready_common:
-            n_genes = len(state.gene_set_input.split())
+            # Use validated gene count instead of raw input count
+            n_genes = state.gene_set.size if state.gene_set else len(state.gene_set_input.split())
             if n_genes <= 100 or n_genes >= 5000:
                 warn = "small" if n_genes <= 100 else "big"
                 s = "s" if str(n_genes)[-1] != "1" else ""
-                st.warning(f"You've entered {n_genes} gene{s}, which may be {warn}...")
+                st.warning(f"You've entered {n_genes} validated gene{s}, which may be {warn}...")
             # Create progress container for regular enrichment
             progress_container = st.container()
             progress_bar = st.progress(0)
