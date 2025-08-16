@@ -224,7 +224,7 @@ class IterativeEnrichment:
             
             record: Dict[str, Any] = {
                 "Iteration": iteration,
-                "Term": top.get("term", ""),
+                "Term": format_term_name(top.get("term", "")),
                 "Description": top.get("description", ""),
                 "Library": self.gene_set_library.name,
                 "p-value": pval,
@@ -451,7 +451,7 @@ class IterativeEnrichment:
         for record in self.results:
             tsv_data.append({
                 "Iteration": record.get("Iteration", ""),
-                "Term": format_term_name(record.get("Term", "")),
+                "Term": record.get("Term", ""),
                 "Description": record.get("Description", ""),
                 "Library": record.get("Library", ""),
                 "Overlap size": record.get("Overlap size", ""),
