@@ -18,6 +18,31 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def format_term_name(term_name: str) -> str:
+    """
+    Format term name by replacing underscores with spaces and adding colon after library shortcut.
+    
+    Args:
+        term_name: Original term name (e.g., "GOBP_CELLULAR_RESPONSE_TO_STRESS")
+        
+    Returns:
+        Formatted term name (e.g., "GOBP: CELLULAR RESPONSE TO STRESS")
+    """
+    # Replace underscores with spaces
+    formatted = term_name.replace("_", " ")
+    
+    # Split by space to get the first word (library shortcut)
+    words = formatted.split()
+    if len(words) > 1:
+        # Add colon after the first word
+        library_shortcut = words[0]
+        rest_of_term = " ".join(words[1:])
+        return f"{library_shortcut}: {rest_of_term}"
+    else:
+        # If only one word, just return it
+        return formatted
+
+
 def compute_pvalue(
     args: Tuple[GeneSet, BackgroundGeneSet, dict, str, int, Set[str]],
 ) -> Tuple[str, str, str, List[str], float]:
@@ -240,7 +265,7 @@ class Enrichment:
             {
                 "Library": [self.gene_set_library.name for _ in self.results],
                 "Rank": [result["rank"] for result in self.results],
-                "Term": [result["term"] for result in self.results],
+                "Term": [format_term_name(result["term"]) for result in self.results],
                 "Description": [result.get("description", "") for result in self.results],
                 "Overlap size": [result["overlap_size"] for result in self.results],
                 "Genes": [", ".join(result["overlap"]) for result in self.results],

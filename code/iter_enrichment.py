@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional, Set, Callable
 import pandas as pd
 
 from background_gene_set import BackgroundGeneSet
-from enrichment import Enrichment
+from enrichment import Enrichment, format_term_name
 from gene_set import GeneSet
 from gene_set_library import GeneSetLibrary
 
@@ -302,7 +302,7 @@ class IterativeEnrichment:
                 "Library": self.gene_set_library.name,
                 "Iteration": iteration,
                 "Rank": result.get("rank", ""),
-                "Term": result.get("term", ""),
+                "Term": format_term_name(result.get("term", "")),
                 "Description": result.get("description", ""),
                 "Overlap size": result.get("overlap_size", ""),
                 "Genes": ", ".join(result.get("overlap", [])),
@@ -379,7 +379,7 @@ class IterativeEnrichment:
                 all_iteration_data.append({
                     "iteration": iteration_num,
                     "rank": result.get("rank", ""),
-                    "term": result.get("term", ""),
+                    "term": format_term_name(result.get("term", "")),
                     "description": result.get("description", ""),
                     "overlap_size": result.get("overlap_size", ""),
                     "Genes": ", ".join(result.get("overlap", [])),
@@ -451,7 +451,7 @@ class IterativeEnrichment:
         for record in self.results:
             tsv_data.append({
                 "Iteration": record.get("Iteration", ""),
-                "Term": record.get("Term", ""),
+                "Term": format_term_name(record.get("Term", "")),
                 "Description": record.get("Description", ""),
                 "Library": record.get("Library", ""),
                 "Overlap size": record.get("Overlap size", ""),
