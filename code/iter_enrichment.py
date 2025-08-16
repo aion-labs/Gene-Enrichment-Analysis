@@ -476,7 +476,14 @@ class IterativeEnrichment:
         :returns: DataFrame of iteration records
         :rtype: pandas.DataFrame
         """
-        return pd.DataFrame(self.results)
+        df = pd.DataFrame(self.results)
+        # Ensure correct column order if columns exist
+        if not df.empty:
+            expected_columns = ["Library", "Iteration", "Term", "Description", "Overlap size", "p-value", "FDR", "Genes"]
+            existing_columns = [col for col in expected_columns if col in df.columns]
+            if existing_columns:
+                df = df[existing_columns]
+        return df
 
     def to_tsv(self) -> str:
         """
