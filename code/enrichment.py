@@ -249,7 +249,7 @@ class Enrichment:
             }
         )
         # Reorder columns to put Library first
-        column_order = ["Library", "Rank", "Term", "Description", "Overlap size", "Genes", "p-value", "FDR"]
+        column_order = ["Library", "Rank", "Term", "Description", "Overlap size", "p-value", "FDR", "Genes"]
         return df[column_order]
 
     def to_json(self):

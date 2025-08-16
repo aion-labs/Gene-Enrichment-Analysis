@@ -225,9 +225,11 @@ class IterativeEnrichment:
             record: Dict[str, Any] = {
                 "Iteration": iteration,
                 "Term": top.get("term", ""),
+                "Description": top.get("description", ""),
                 "Library": self.gene_set_library.name,
                 "p-value": pval,
                 "Overlap size": top.get("overlap_size", "0/0"),
+                "FDR": top.get("fdr", ""),
                 "Genes": sorted(genes_in_term),
             }
             records.append(record)
@@ -311,8 +313,8 @@ class IterativeEnrichment:
         # Save TSV file
         import pandas as pd
         df = pd.DataFrame(tsv_data)
-        # Reorder columns to put Library first, then Iteration, then Term
-        column_order = ["Library", "Iteration", "Rank", "Term", "Description", "Overlap size", "Genes", "p-value", "FDR"]
+        # Reorder columns to put Library first, then Iteration, then Term, then Description
+        column_order = ["Library", "Iteration", "Rank", "Term", "Description", "Overlap size", "p-value", "FDR", "Genes"]
         df = df[column_order]
         df.to_csv(tsv_filepath, sep="\t", index=False)
         
@@ -450,16 +452,18 @@ class IterativeEnrichment:
             tsv_data.append({
                 "Iteration": record.get("Iteration", ""),
                 "Term": record.get("Term", ""),
+                "Description": record.get("Description", ""),
                 "Library": record.get("Library", ""),
-                "p-value": record.get("p-value", ""),
                 "Overlap size": record.get("Overlap size", ""),
+                "p-value": record.get("p-value", ""),
+                "FDR": record.get("FDR", ""),
                 "Genes": ", ".join(record.get("Genes", [])),
             })
         
         import pandas as pd
         df = pd.DataFrame(tsv_data)
-        # Reorder columns to put Library first, then Iteration, then Term
-        column_order = ["Library", "Iteration", "Term", "p-value", "Overlap size", "Genes"]
+        # Reorder columns to put Library first, then Iteration, then Term, then Description
+        column_order = ["Library", "Iteration", "Term", "Description", "Overlap size", "p-value", "FDR", "Genes"]
         df = df[column_order]
         df.to_csv(tsv_filepath, sep="\t", index=False)
         
