@@ -628,6 +628,9 @@ Results include ranked tables, bar charts, and network graphs."""
     # Regular execution
     if mode == "Regular" and "bt_submit" in locals() and bt_submit:
         logger.info("Running regular enrichment")
+        # Clear previous results state
+        state.results_ready = False
+        state.enrich = {}
         render_validation()
         if state.gene_set_input and ready_common:
             # Use validated gene count instead of raw input count
@@ -716,6 +719,10 @@ Results include ranked tables, bar charts, and network graphs."""
     # Iterative execution
     if mode == "Iterative" and "bt_iter" in locals() and bt_iter:
         logger.info("Running iterative enrichment")
+        # Clear previous results state
+        state.iter_enrich = {}
+        state.iter_results.clear()
+        state.iter_dot = {}
         render_validation()
         if not state.gene_set_input:
             st.error("Please input genes")
@@ -724,14 +731,6 @@ Results include ranked tables, bar charts, and network graphs."""
         if not getattr(state, "background_gene_set", None):
             st.error("No background gene list selected")
         if ready_common and state.gene_set_input:
-            # clear prior iterative objects/results
-            state.iter_enrich = {}
-            state.iter_results.clear()
-            state.iter_dot = {}
-
-            # --- Inside your enrichment block in streamlit_app.py ---
-            state.iter_enrich = {}
-            state.iter_dot.clear()
 
             # Load background once and reuse for all libraries
             logger.info(f"Loading background gene set: {state.background_gene_set.name} ({state.background_gene_set.size} genes)")
