@@ -261,6 +261,8 @@ class Enrichment:
 
     def to_dataframe(self):
         """Return the enrichment results as a pandas dataframe."""
+        import math
+        
         df = pd.DataFrame(
             {
                 "Library": [self.gene_set_library.name for _ in self.results],
@@ -270,11 +272,12 @@ class Enrichment:
                 "Overlap size": [result["overlap_size"] for result in self.results],
                 "Genes": [", ".join(result["overlap"]) for result in self.results],
                 "p-value": [result["p-value"] for result in self.results],
+                "-log(p-value)": [-math.log10(result["p-value"]) if result["p-value"] > 0 else 0 for result in self.results],
                 "FDR": [result["fdr"] for result in self.results],
             }
         )
-        # Reorder columns to put Library first
-        column_order = ["Library", "Rank", "Term", "Description", "Overlap size", "p-value", "FDR", "Genes"]
+        # Reorder columns to put Library first, then add -log(p-value) after p-value
+        column_order = ["Library", "Rank", "Term", "Description", "Overlap size", "p-value", "-log(p-value)", "FDR", "Genes"]
         return df[column_order]
 
     def to_json(self):

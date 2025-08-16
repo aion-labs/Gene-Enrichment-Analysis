@@ -296,8 +296,16 @@ class IterativeEnrichment:
         tsv_filepath = self._get_run_results_dir() / tsv_filename
         
         # Create TSV data with library name as first column
+        import math
         tsv_data = []
         for result in enrichment.results:
+            p_value = result.get("p-value", 0)
+            if isinstance(p_value, str):
+                try:
+                    p_value = float(p_value)
+                except ValueError:
+                    p_value = 0
+            
             tsv_data.append({
                 "Library": self.gene_set_library.name,
                 "Iteration": iteration,
@@ -307,14 +315,15 @@ class IterativeEnrichment:
                 "Overlap size": result.get("overlap_size", ""),
                 "Genes": ", ".join(result.get("overlap", [])),
                 "p-value": result.get("p-value", ""),
+                "-log(p-value)": -math.log10(p_value) if p_value > 0 else 0,
                 "FDR": result.get("fdr", ""),
             })
         
         # Save TSV file
         import pandas as pd
         df = pd.DataFrame(tsv_data)
-        # Reorder columns to put Library first, then Iteration, then Term, then Description
-        column_order = ["Library", "Iteration", "Rank", "Term", "Description", "Overlap size", "p-value", "FDR", "Genes"]
+        # Reorder columns to put Library first, then Iteration, then Term, then Description, then add -log(p-value) after p-value
+        column_order = ["Library", "Iteration", "Rank", "Term", "Description", "Overlap size", "p-value", "-log(p-value)", "FDR", "Genes"]
         df = df[column_order]
         df.to_csv(tsv_filepath, sep="\t", index=False)
         
@@ -371,27 +380,36 @@ class IterativeEnrichment:
         all_iteration_data = []
         
         # For each iteration, get the full enrichment results and add iteration number
+        import math
         for i, (iteration_record, enrichment) in enumerate(zip(self.results, self._iteration_enrichments)):
-            iteration_num = iteration_record["iteration"]
+            iteration_num = iteration_record["Iteration"]
             
             # Get all results from this iteration's enrichment
             for result in enrichment.results:
+                p_value = result.get("p-value", 0)
+                if isinstance(p_value, str):
+                    try:
+                        p_value = float(p_value)
+                    except ValueError:
+                        p_value = 0
+                
                 all_iteration_data.append({
-                    "iteration": iteration_num,
-                    "rank": result.get("rank", ""),
-                    "term": format_term_name(result.get("term", "")),
-                    "description": result.get("description", ""),
-                    "overlap_size": result.get("overlap_size", ""),
+                    "Library": self.gene_set_library.name,
+                    "Iteration": iteration_num,
+                    "Rank": result.get("rank", ""),
+                    "Term": format_term_name(result.get("term", "")),
+                    "Description": result.get("description", ""),
+                    "Overlap size": result.get("overlap_size", ""),
                     "Genes": ", ".join(result.get("overlap", [])),
                     "p-value": result.get("p-value", ""),
-                    "fdr": result.get("fdr", ""),
-                    "library": self.gene_set_library.name
+                    "-log(p-value)": -math.log10(p_value) if p_value > 0 else 0,
+                    "FDR": result.get("fdr", ""),
                 })
         
         # Create DataFrame and export to TSV
         df = pd.DataFrame(all_iteration_data)
-        # Reorder columns to put overlap_size before Genes
-        column_order = ["iteration", "rank", "term", "description", "overlap_size", "Genes", "p-value", "fdr", "library"]
+        # Reorder columns to put Library first, then Iteration, then Rank, then Term, then Description, then add -log(p-value) after p-value
+        column_order = ["Library", "Iteration", "Rank", "Term", "Description", "Overlap size", "p-value", "-log(p-value)", "FDR", "Genes"]
         df = df[column_order]
         return df.to_csv(sep="\t", index=False)
 
@@ -447,23 +465,32 @@ class IterativeEnrichment:
         tsv_filepath = results_dir / tsv_filename
         
         # Create TSV with iteration summary data
+        import math
         tsv_data = []
         for record in self.results:
+            p_value = record.get("p-value", 0)
+            if isinstance(p_value, str):
+                try:
+                    p_value = float(p_value)
+                except ValueError:
+                    p_value = 0
+            
             tsv_data.append({
+                "Library": record.get("Library", ""),
                 "Iteration": record.get("Iteration", ""),
                 "Term": record.get("Term", ""),
                 "Description": record.get("Description", ""),
-                "Library": record.get("Library", ""),
                 "Overlap size": record.get("Overlap size", ""),
                 "p-value": record.get("p-value", ""),
+                "-log(p-value)": -math.log10(p_value) if p_value > 0 else 0,
                 "FDR": record.get("FDR", ""),
                 "Genes": ", ".join(record.get("Genes", [])),
             })
         
         import pandas as pd
         df = pd.DataFrame(tsv_data)
-        # Reorder columns to put Library first, then Iteration, then Term, then Description
-        column_order = ["Library", "Iteration", "Term", "Description", "Overlap size", "p-value", "FDR", "Genes"]
+        # Reorder columns to put Library first, then Iteration, then Term, then Description, then add -log(p-value) after p-value
+        column_order = ["Library", "Iteration", "Term", "Description", "Overlap size", "p-value", "-log(p-value)", "FDR", "Genes"]
         df = df[column_order]
         df.to_csv(tsv_filepath, sep="\t", index=False)
         
@@ -476,10 +503,12 @@ class IterativeEnrichment:
         :returns: DataFrame of iteration records
         :rtype: pandas.DataFrame
         """
+        import math
+        
         df = pd.DataFrame(self.results)
         # Ensure correct column order if columns exist
         if not df.empty:
-            expected_columns = ["Library", "Iteration", "Term", "Description", "Overlap size", "p-value", "FDR", "Genes"]
+            expected_columns = ["Library", "Iteration", "Term", "Description", "Overlap size", "p-value", "-log(p-value)", "FDR", "Genes"]
             existing_columns = [col for col in expected_columns if col in df.columns]
             if existing_columns:
                 df = df[existing_columns]
