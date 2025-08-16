@@ -218,6 +218,7 @@ def render_iter_table(result: pd.DataFrame) -> None:
             "p-value": "P-value",
             "Overlap size": "Overlap size",
             "Genes removed": "Genes removed",
+            "Description": None,
         },
     )
 
