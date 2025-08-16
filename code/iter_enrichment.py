@@ -293,10 +293,11 @@ class IterativeEnrichment:
         tsv_filename = f"{library_name}_iteration_{iteration:03d}.tsv"
         tsv_filepath = self._get_run_results_dir() / tsv_filename
         
-        # Create TSV data with iteration number as first column
+        # Create TSV data with library name as first column
         tsv_data = []
         for result in enrichment.results:
             tsv_data.append({
+                "Library": self.gene_set_library.name,
                 "Iteration": iteration,
                 "Rank": result.get("rank", ""),
                 "Term": result.get("term", ""),
@@ -310,8 +311,8 @@ class IterativeEnrichment:
         # Save TSV file
         import pandas as pd
         df = pd.DataFrame(tsv_data)
-        # Reorder columns to put Overlap size before Genes
-        column_order = ["Iteration", "Rank", "Term", "Description", "Overlap size", "Genes", "p-value", "FDR"]
+        # Reorder columns to put Library first, then Iteration, then Term
+        column_order = ["Library", "Iteration", "Rank", "Term", "Description", "Overlap size", "Genes", "p-value", "FDR"]
         df = df[column_order]
         df.to_csv(tsv_filepath, sep="\t", index=False)
         
@@ -457,8 +458,8 @@ class IterativeEnrichment:
         
         import pandas as pd
         df = pd.DataFrame(tsv_data)
-        # Reorder columns to put Overlap size before Genes
-        column_order = ["Iteration", "Term", "Library", "p-value", "Overlap size", "Genes"]
+        # Reorder columns to put Library first, then Iteration, then Term
+        column_order = ["Library", "Iteration", "Term", "p-value", "Overlap size", "Genes"]
         df = df[column_order]
         df.to_csv(tsv_filepath, sep="\t", index=False)
         

@@ -236,8 +236,9 @@ class Enrichment:
 
     def to_dataframe(self):
         """Return the enrichment results as a pandas dataframe."""
-        return pd.DataFrame(
+        df = pd.DataFrame(
             {
+                "Library": [self.gene_set_library.name for _ in self.results],
                 "Rank": [result["rank"] for result in self.results],
                 "Term": [result["term"] for result in self.results],
                 "Description": [result.get("description", "") for result in self.results],
@@ -247,6 +248,9 @@ class Enrichment:
                 "FDR": [result["fdr"] for result in self.results],
             }
         )
+        # Reorder columns to put Library first
+        column_order = ["Library", "Rank", "Term", "Description", "Overlap size", "Genes", "p-value", "FDR"]
+        return df[column_order]
 
     def to_json(self):
         """Return the enrichment results as a JSON string."""
