@@ -292,7 +292,7 @@ def render_iter_results(result: IterativeEnrichment, file_name: str) -> None:
         library_input_size = len(initial_enrichment.gene_set.genes & filtered_unique_genes)
         
         # Display library-specific size information
-        st.caption(f"Initial: {library_input_size}/{initial_enrichment.gene_set.size} genes, {library_background_size}/{initial_enrichment.background_gene_set.size} background")
+        st.caption(f"Library specific input: {library_input_size}/{initial_enrichment.gene_set.size} genes; Library specific background: {library_background_size}/{initial_enrichment.background_gene_set.size}")
         
         # Show final remaining genes if different from initial
         if result.results:
