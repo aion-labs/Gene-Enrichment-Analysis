@@ -159,10 +159,10 @@ def _build_iterative_tables_download(all_iter_results: Dict[str, List[dict]]) ->
     for lib, records in all_iter_results.items():
         for rec in records:
             p = rec.get("p-value", float("nan"))
-            overlap_size = rec.get("overlap_size", "0/0")
+            overlap_size = rec.get("Overlap size", "0/0")
             rows.append(
-                f"{lib}\t{rec['iteration']}\t{rec['term']}\t{p}\t"
-                f"{(-math.log10(p) if p and p>0 else '')}\t{overlap_size}\t{','.join(rec.get('genes', []))}"
+                f"{lib}\t{rec['Iteration']}\t{rec['Term']}\t{p}\t"
+                f"{(-math.log10(p) if p and p>0 else '')}\t{overlap_size}\t{','.join(rec.get('Genes', []))}"
             )
     return "\n".join(rows)
 

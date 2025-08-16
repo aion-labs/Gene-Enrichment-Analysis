@@ -532,7 +532,7 @@ class IterativeEnrichment:
             # Format term name for display (convert underscores to spaces)
             formatted_term_label = _format_term_name(term_label)
             # sanitize and quote term ID
-            raw_id = f"term_{rec['iteration']}_{term_label}"
+            raw_id = f"term_{rec['Iteration']}_{term_label}"
             term_id = _sanitize_id(raw_id)
             term_node = (
                 f'"{term_id}" '
