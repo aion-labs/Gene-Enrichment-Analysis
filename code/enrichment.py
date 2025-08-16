@@ -238,12 +238,13 @@ class Enrichment:
         """Return the enrichment results as a pandas dataframe."""
         return pd.DataFrame(
             {
-                "rank": [result["rank"] for result in self.results],
-                "term": [result["term"] for result in self.results],
-                "overlap_size": [result["overlap_size"] for result in self.results],
+                "Rank": [result["rank"] for result in self.results],
+                "Term": [result["term"] for result in self.results],
+                "Description": [result.get("description", "") for result in self.results],
+                "Overlap size": [result["overlap_size"] for result in self.results],
                 "Genes": [", ".join(result["overlap"]) for result in self.results],
                 "p-value": [result["p-value"] for result in self.results],
-                "fdr": [result["fdr"] for result in self.results],
+                "FDR": [result["fdr"] for result in self.results],
             }
         )
 

@@ -223,12 +223,12 @@ class IterativeEnrichment:
                 break
             
             record: Dict[str, Any] = {
-                "iteration": iteration,
-                "term": top.get("term", ""),
-                "library": self.gene_set_library.name,
+                "Iteration": iteration,
+                "Term": top.get("term", ""),
+                "Library": self.gene_set_library.name,
                 "p-value": pval,
-                "overlap_size": top.get("overlap_size", "0/0"),
-                "genes": sorted(genes_in_term),
+                "Overlap size": top.get("overlap_size", "0/0"),
+                "Genes": sorted(genes_in_term),
             }
             records.append(record)
             
@@ -297,21 +297,21 @@ class IterativeEnrichment:
         tsv_data = []
         for result in enrichment.results:
             tsv_data.append({
-                "iteration": iteration,
-                "rank": result.get("rank", ""),
-                "term": result.get("term", ""),
-                "description": result.get("description", ""),
-                "overlap_size": result.get("overlap_size", ""),
+                "Iteration": iteration,
+                "Rank": result.get("rank", ""),
+                "Term": result.get("term", ""),
+                "Description": result.get("description", ""),
+                "Overlap size": result.get("overlap_size", ""),
                 "Genes": ", ".join(result.get("overlap", [])),
                 "p-value": result.get("p-value", ""),
-                "fdr": result.get("fdr", ""),
+                "FDR": result.get("fdr", ""),
             })
         
         # Save TSV file
         import pandas as pd
         df = pd.DataFrame(tsv_data)
-        # Reorder columns to put overlap_size before Genes
-        column_order = ["iteration", "rank", "term", "description", "overlap_size", "Genes", "p-value", "fdr"]
+        # Reorder columns to put Overlap size before Genes
+        column_order = ["Iteration", "Rank", "Term", "Description", "Overlap size", "Genes", "p-value", "FDR"]
         df = df[column_order]
         df.to_csv(tsv_filepath, sep="\t", index=False)
         
@@ -433,7 +433,7 @@ class IterativeEnrichment:
             "max_term_size": self.max_term_size,
             "total_iterations": len(self.results),
             "iterations": self.results,
-            "final_remaining_genes": list(set(self.gene_set.genes) - set().union(*[set(record.get("genes", [])) for record in self.results]))
+            "final_remaining_genes": list(set(self.gene_set.genes) - set().union(*[set(record.get("Genes", [])) for record in self.results]))
         }
         
         with open(summary_filepath, "w") as f:
@@ -447,18 +447,18 @@ class IterativeEnrichment:
         tsv_data = []
         for record in self.results:
             tsv_data.append({
-                "iteration": record.get("iteration", ""),
-                "term": record.get("term", ""),
-                "library": record.get("library", ""),
+                "Iteration": record.get("Iteration", ""),
+                "Term": record.get("Term", ""),
+                "Library": record.get("Library", ""),
                 "p-value": record.get("p-value", ""),
-                "overlap_size": record.get("overlap_size", ""),
-                "Genes": ", ".join(record.get("genes", [])),
+                "Overlap size": record.get("Overlap size", ""),
+                "Genes": ", ".join(record.get("Genes", [])),
             })
         
         import pandas as pd
         df = pd.DataFrame(tsv_data)
-        # Reorder columns to put overlap_size before Genes
-        column_order = ["iteration", "term", "library", "p-value", "overlap_size", "Genes"]
+        # Reorder columns to put Overlap size before Genes
+        column_order = ["Iteration", "Term", "Library", "p-value", "Overlap size", "Genes"]
         df = df[column_order]
         df.to_csv(tsv_filepath, sep="\t", index=False)
         
