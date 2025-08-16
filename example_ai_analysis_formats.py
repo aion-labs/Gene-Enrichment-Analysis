@@ -23,25 +23,25 @@ def create_sample_dot():
   "gene_ATM" [label="ATM", type="gene"];
   "gene_CHEK2" [label="CHEK2", type="gene"];
   "gene_RAD51" [label="RAD51", type="gene"];
-  "term_1_APOPTOSIS" [label="APOPTOSIS", style=filled, fontcolor="white", fillcolor="#FF6B6B", type="term"];
-  "term_2_DNA_REPAIR" [label="DNA REPAIR", style=filled, fontcolor="white", fillcolor="#4ECDC4", type="term"];
-  "term_3_CELL_CYCLE" [label="CELL CYCLE", style=filled, fontcolor="white", fillcolor="#45B7D1", type="term"];
-  "term_4_STRESS_RESPONSE" [label="STRESS RESPONSE", style=filled, fontcolor="white", fillcolor="#96CEB4", type="term"];
-  "gene_TP53" -- "term_1_APOPTOSIS";
-  "gene_TP53" -- "term_2_DNA_REPAIR";
-  "gene_TP53" -- "term_3_CELL_CYCLE";
-  "gene_TP53" -- "term_4_STRESS_RESPONSE";
-  "gene_BRCA1" -- "term_2_DNA_REPAIR";
-  "gene_BRCA1" -- "term_3_CELL_CYCLE";
-  "gene_CDKN1A" -- "term_1_APOPTOSIS";
-  "gene_CDKN1A" -- "term_3_CELL_CYCLE";
-  "gene_BAX" -- "term_1_APOPTOSIS";
-  "gene_CASP3" -- "term_1_APOPTOSIS";
-  "gene_ATM" -- "term_2_DNA_REPAIR";
-  "gene_ATM" -- "term_4_STRESS_RESPONSE";
-  "gene_CHEK2" -- "term_2_DNA_REPAIR";
-  "gene_CHEK2" -- "term_4_STRESS_RESPONSE";
-  "gene_RAD51" -- "term_2_DNA_REPAIR";
+  "term_1_GOBP_APOPTOSIS" [label="GOBP: APOPTOSIS", style=filled, fontcolor="white", fillcolor="#FF6B6B", type="term"];
+  "term_2_REACTOME_DNA_REPAIR" [label="REACTOME: DNA REPAIR", style=filled, fontcolor="white", fillcolor="#4ECDC4", type="term"];
+  "term_3_KEGG_CELL_CYCLE" [label="KEGG: CELL CYCLE", style=filled, fontcolor="white", fillcolor="#45B7D1", type="term"];
+  "term_4_HALLMARK_STRESS_RESPONSE" [label="HALLMARK: STRESS RESPONSE", style=filled, fontcolor="white", fillcolor="#96CEB4", type="term"];
+  "gene_TP53" -- "term_1_GOBP_APOPTOSIS";
+  "gene_TP53" -- "term_2_REACTOME_DNA_REPAIR";
+  "gene_TP53" -- "term_3_KEGG_CELL_CYCLE";
+  "gene_TP53" -- "term_4_HALLMARK_STRESS_RESPONSE";
+  "gene_BRCA1" -- "term_2_REACTOME_DNA_REPAIR";
+  "gene_BRCA1" -- "term_3_KEGG_CELL_CYCLE";
+  "gene_CDKN1A" -- "term_1_GOBP_APOPTOSIS";
+  "gene_CDKN1A" -- "term_3_KEGG_CELL_CYCLE";
+  "gene_BAX" -- "term_1_GOBP_APOPTOSIS";
+  "gene_CASP3" -- "term_1_GOBP_APOPTOSIS";
+  "gene_ATM" -- "term_2_REACTOME_DNA_REPAIR";
+  "gene_ATM" -- "term_4_HALLMARK_STRESS_RESPONSE";
+  "gene_CHEK2" -- "term_2_REACTOME_DNA_REPAIR";
+  "gene_CHEK2" -- "term_4_HALLMARK_STRESS_RESPONSE";
+  "gene_RAD51" -- "term_2_REACTOME_DNA_REPAIR";
 }'''
 
 def main():
@@ -55,7 +55,7 @@ def main():
     print("\n📊 SAMPLE NETWORK DATA:")
     print("This example shows a network with 8 genes and 4 biological terms from 4 iterations")
     print("Genes: TP53, BRCA1, CDKN1A, BAX, CASP3, ATM, CHEK2, RAD51")
-    print("Terms: APOPTOSIS (iter 1), DNA REPAIR (iter 2), CELL CYCLE (iter 3), STRESS RESPONSE (iter 4)")
+    print("Terms: GOBP: APOPTOSIS (iter 1), REACTOME: DNA REPAIR (iter 2), KEGG: CELL CYCLE (iter 3), HALLMARK: STRESS RESPONSE (iter 4)")
     print("\n" + "=" * 80)
     
     # Generate Enhanced Prompt Format

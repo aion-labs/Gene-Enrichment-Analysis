@@ -517,9 +517,11 @@ class IterativeEnrichment:
 
         def _format_term_name(term_name: str) -> str:
             """
-            Convert underscores to spaces in term names for better readability.
+            Format term name by replacing underscores with spaces and adding colon after library shortcut.
             """
-            return term_name.replace("_", " ")
+            # Import the format_term_name function from enrichment module
+            from enrichment import format_term_name
+            return format_term_name(term_name)
 
         nodes: Set[str] = set()
         edges: Set[str] = set()
