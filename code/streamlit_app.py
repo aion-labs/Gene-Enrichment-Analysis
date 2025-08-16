@@ -155,14 +155,17 @@ def reset_app() -> None:
 
 
 def _build_iterative_tables_download(all_iter_results: Dict[str, List[dict]]) -> str:
-    rows = ["library\titeration\tterm\tp-value\t-log10_p\toverlap_size\tgenes"]
+    rows = ["Library\tIteration\tTerm\tDescription\tOverlap size\tp-value\t-log(p-value)\tFDR\tGenes"]
     for lib, records in all_iter_results.items():
         for rec in records:
             p = rec.get("p-value", float("nan"))
             overlap_size = rec.get("Overlap size", "0/0")
+            description = rec.get("Description", "")
+            fdr = rec.get("FDR", "")
+            genes = ','.join(rec.get('Genes', []))
+            log_p = -math.log10(p) if p and p > 0 else 0
             rows.append(
-                f"{lib}\t{rec['Iteration']}\t{rec['Term']}\t{p}\t"
-                f"{(-math.log10(p) if p and p>0 else '')}\t{overlap_size}\t{','.join(rec.get('Genes', []))}"
+                f"{lib}\t{rec['Iteration']}\t{rec['Term']}\t{description}\t{overlap_size}\t{p}\t{log_p}\t{fdr}\t{genes}"
             )
     return "\n".join(rows)
 
