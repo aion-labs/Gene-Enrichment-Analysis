@@ -821,8 +821,10 @@ Results include ranked tables, bar charts, and network graphs."""
         combined_archive_path = _create_combined_iteration_archive({})
         if combined_archive_path:
             combined_archive_name = Path(combined_archive_path).name
+            # Remove the .tar.gz extension since download_file_link will add it back
+            base_filename = combined_archive_name.replace('.tar.gz', '')
             st.markdown(
-                f"📁 **All Individual Files:** {download_file_link(combined_archive_path, combined_archive_name, 'tar.gz')}",
+                f"📁 **All Individual Files:** {download_file_link(combined_archive_path, base_filename, 'tar.gz')}",
                 unsafe_allow_html=True,
             )
 
