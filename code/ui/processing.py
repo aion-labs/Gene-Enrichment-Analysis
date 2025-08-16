@@ -19,7 +19,7 @@ def collect_results(results: Dict) -> str:
     results_concat = []
     for library_name in results.keys():
         result = results[library_name].to_dataframe()
-        result.insert(0, "Library", library_name)
+        # Library column is already included in the DataFrame from to_dataframe()
         results_concat.append(result)
 
     return pd.concat(results_concat, ignore_index=True).to_csv(sep="\t", index=False)
