@@ -669,6 +669,10 @@ Results include ranked tables, bar charts, and network graphs."""
                             int(result.get("overlap_size", "").split("/")[0]) >= state.min_overlap)
                     ]
                     
+                    # Re-rank the filtered results (1-based indexing)
+                    for i, result in enumerate(filtered_results):
+                        result["rank"] = i + 1
+                    
                     # Update the enrichment object with filtered results
                     enrich.results = filtered_results
                     state.enrich[gsl.name] = enrich
