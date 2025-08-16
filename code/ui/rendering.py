@@ -54,6 +54,7 @@ def render_table(result: pd.DataFrame) -> None:
             "Overlap size": "Overlap size",
             "Genes": "Overlap (click to expand)",
             "Description": None,
+            "Library": None,
             "p-value": "P-value",
             "FDR": "FDR",
         },
@@ -219,6 +220,7 @@ def render_iter_table(result: pd.DataFrame) -> None:
             "Overlap size": "Overlap size",
             "Genes removed": "Genes removed",
             "Description": None,
+            "Library": None,
         },
     )
 
