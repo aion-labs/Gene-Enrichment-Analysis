@@ -41,21 +41,21 @@ def render_table(result: pd.DataFrame) -> None:
     display_df = result.copy()
     
     # Convert underscores to spaces in term names for better readability
-    if 'term' in display_df.columns and not display_df.empty:
+    if 'Term' in display_df.columns and not display_df.empty:
         # Ensure term column contains strings and handle NaN/None values
-        display_df['term'] = display_df['term'].fillna('').astype(str).str.replace('_', ' ', regex=False)
+        display_df['Term'] = display_df['Term'].fillna('').astype(str).str.replace('_', ' ', regex=False)
 
     st.dataframe(
         display_df.style.format({"p-value": custom_format, "fdr": custom_format}),
         use_container_width=True,
         column_config={
-            "rank": None,
-            "term": "Term",
-            "overlap_size": "Overlap size",
-            "overlap": "Overlap (click to expand)",
-            "description": None,
+            "Rank": None,
+            "Term": "Term",
+            "Overlap size": "Overlap size",
+            "Genes": "Overlap (click to expand)",
+            "Description": None,
             "p-value": "P-value",
-            "fdr": "FDR",
+            "FDR": "FDR",
         },
     )
 
@@ -71,21 +71,21 @@ def render_barchart(result: pd.DataFrame, file_name: str = "") -> None:
     :param file_name: Optional file name to create unique chart keys.
     """
     logger.info("Rendering bar chart in Streamlit app.")
-    bar = result[["term", "p-value"]].copy()
+    bar = result[["Term", "p-value"]].copy()
     
     # Convert underscores to spaces in term names for better readability
     if not bar.empty:
-        bar['term'] = bar['term'].fillna('').astype(str).str.replace('_', ' ', regex=False)
+        bar['Term'] = bar['Term'].fillna('').astype(str).str.replace('_', ' ', regex=False)
     
     bar.loc[:, "p-value"] = bar.loc[:, "p-value"].apply(lambda x: -1 * log10(x))
     bar = bar.sort_values(by=["p-value"])
-    bar.columns = ["term", "-log10(p-value)"]
+    bar.columns = ["Term", "-log10(p-value)"]
     fig = px.bar(
         bar,
         x="-log10(p-value)",
-        y="term",
+        y="Term",
         orientation="h",
-        labels={"-log10(p-value)": "−log₁₀(p‐value)", "term": "Term"},
+        labels={"-log10(p-value)": "−log₁₀(p‐value)", "Term": "Term"},
     )
     st.plotly_chart(fig, use_container_width=True, key=f"barchart_{file_name}")
 
@@ -104,7 +104,7 @@ def render_results(result: Enrichment, file_name: str, n_results: int = 10) -> N
     """
     logger.info(f"Rendering results for file: {file_name}")
     result_df = result.to_dataframe().head(n_results)
-    result_df = result_df.set_index("rank")
+    result_df = result_df.set_index("Rank")
     st.divider()
     st.subheader(file_name)
     
@@ -196,11 +196,11 @@ def render_iter_table(result: pd.DataFrame) -> None:
     df = result.copy()
     
     # Convert underscores to spaces in term names for better readability
-    if 'term' in df.columns and not df.empty:
-        df['term'] = df['term'].fillna('').astype(str).str.replace('_', ' ', regex=False)
+    if 'Term' in df.columns and not df.empty:
+        df['Term'] = df['Term'].fillna('').astype(str).str.replace('_', ' ', regex=False)
 
-    # Rename 'genes' column for clarity
-    df = df.rename(columns={"genes": "Genes removed"})
+    # Rename 'Genes' column for clarity
+    df = df.rename(columns={"Genes": "Genes removed"})
 
     # Apply custom formatting to p-value column
     def custom_format(n):
@@ -214,9 +214,9 @@ def render_iter_table(result: pd.DataFrame) -> None:
         styled,
         use_container_width=True,
         column_config={
-            "term": "Term",
+            "Term": "Term",
             "p-value": "P-value",
-            "overlap_size": "Overlap size",
+            "Overlap size": "Overlap size",
             "Genes removed": "Genes removed",
         },
     )
@@ -234,11 +234,11 @@ def render_iter_barchart(result: pd.DataFrame, file_name: str = "") -> None:
     logger.info("Rendering iterative bar chart.")
 
     # Prepare bar plot data
-    bar = result.reset_index()[["iteration", "term", "p-value"]].copy()
+    bar = result.reset_index()[["Iteration", "Term", "p-value"]].copy()
     
     # Convert underscores to spaces in term names for better readability
     if not bar.empty:
-        bar['term'] = bar['term'].fillna('').astype(str).str.replace('_', ' ', regex=False)
+        bar['Term'] = bar['Term'].fillna('').astype(str).str.replace('_', ' ', regex=False)
     
     bar["-log10(p-value)"] = bar["p-value"].apply(
         lambda x: -log10(x) if x and x > 0 else None
@@ -248,10 +248,10 @@ def render_iter_barchart(result: pd.DataFrame, file_name: str = "") -> None:
     fig = px.bar(
         bar,
         x="-log10(p-value)",
-        y="term",
+        y="Term",
         orientation="h",
         hover_data=["p-value"],
-        labels={"term": "Term", "-log10(p-value)": "-log10(p-value)"},
+        labels={"Term": "Term", "-log10(p-value)": "-log10(p-value)"},
         title="Iterative Enrichment p-value per Iteration",
     )
     st.plotly_chart(fig, use_container_width=True, key=f"iter_barchart_{file_name}")
