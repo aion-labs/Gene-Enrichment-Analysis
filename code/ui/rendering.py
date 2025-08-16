@@ -306,11 +306,11 @@ def render_iter_results(result: IterativeEnrichment, file_name: str) -> None:
     table_tab, bar_tab = st.tabs(["Iterations", "Bar chart"])
     df = result.to_dataframe()
 
-    if df.empty or "iteration" not in df.columns:
+    if df.empty or "Iteration" not in df.columns:
         logger.warning("No iterative enrichment results.")
         st.warning("No iterative enrichment results.")
     else:
-        df = df.set_index("iteration")
+        df = df.set_index("Iteration")
         with table_tab:
             render_iter_table(df)
 
