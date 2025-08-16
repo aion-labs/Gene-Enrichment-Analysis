@@ -711,7 +711,7 @@ Results include ranked tables, bar charts, and network graphs."""
     if mode == "Regular" and state.results_ready:
         logger.info("Displaying regular results")
         st.markdown(
-            f"Download all results as {download_link(collect_results(state.enrich), 'results','tsv')}",
+            f"Download all results as {download_link(collect_results(state.enrich), 'regular_enrichment_results','tsv')}",
             unsafe_allow_html=True,
         )
         for lib in state.enrich:
