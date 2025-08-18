@@ -560,7 +560,7 @@ class IterativeEnrichment:
 
         # Build nodes and edges
         for rec in self.results:
-            term_label = rec.get("term", "")
+            term_label = rec.get("Term", "")
             # Format term name for display (convert underscores to spaces)
             formatted_term_label = _format_term_name(term_label)
             # sanitize and quote term ID
@@ -573,7 +573,7 @@ class IterativeEnrichment:
             )
             nodes.add(term_node)
 
-            for gene in rec.get("genes", []):
+            for gene in rec.get("Genes", []):
                 gene_id = _sanitize_id(f"gene_{gene}")
                 gene_node = f'"{gene_id}" [label="{gene}", type="gene"];'
                 nodes.add(gene_node)
