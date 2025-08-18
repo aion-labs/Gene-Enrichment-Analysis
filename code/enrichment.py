@@ -31,6 +31,11 @@ def format_term_name(term_name: str) -> str:
     # Replace underscores with spaces
     formatted = term_name.replace("_", " ")
     
+    # Check if the term already contains a colon (indicating library name might be prepended)
+    if ":" in formatted:
+        # If it already has a colon, just return the formatted version
+        return formatted
+    
     # Split by space to get the first word (library shortcut)
     words = formatted.split()
     if len(words) > 1:
