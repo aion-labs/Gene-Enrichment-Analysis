@@ -420,30 +420,11 @@ Results include ranked tables, bar charts, and network graphs."""
             )
             st.caption("Specifies the background list of genes...")
             
-            # Use a checkbox for "Select All" and separate multiselect for libraries
-            select_all = st.checkbox("Select All Libraries", value=state.select_all_libraries)
-            
-            if select_all:
-                # If "Select All" is checked, show all libraries as selected
-                state.libraries = list(state.lib_mapper.keys())
-                state.select_all_libraries = True
-                # Show the multiselect with all libraries selected but disabled
-                st.multiselect(
-                    "Select libraries",
-                    state.lib_mapper.keys(),
-                    default=state.libraries,
-                    disabled=True,
-                    help="All libraries selected. Uncheck 'Select All Libraries' to select individual libraries."
-                )
-            else:
-                # If "Select All" is unchecked, allow individual selection
-                state.select_all_libraries = False
-                selected_libraries = st.multiselect(
-                    "Select libraries",
-                    state.lib_mapper.keys(),
-                    default=state.libraries if state.libraries else []
-                )
-                state.libraries = selected_libraries
+            # Simple multiselect for library selection
+            state.libraries = st.multiselect(
+                "Select libraries",
+                state.lib_mapper.keys()
+            )
             if state.libraries:
                 state.gene_set_libraries = [
                     GeneSetLibrary(
