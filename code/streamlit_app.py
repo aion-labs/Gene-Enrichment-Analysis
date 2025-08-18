@@ -844,6 +844,9 @@ Results include ranked tables, bar charts, and network graphs."""
             else:
                 if lib_name in state.selected_dot_paths:
                     state.selected_dot_paths.remove(lib_name)
+            # Clear network when selection changes
+            state.network_generated = False
+            state.last_merged_dot = ""
 
         def toggle_network_selection(lib_name):
             if state[f"network_select_{lib_name}"]:
@@ -856,6 +859,9 @@ Results include ranked tables, bar charts, and network graphs."""
                     state.selected_dot_paths.remove(lib_name)
                 # Also update the individual checkbox
                 state[f"use_{lib_name}_in_network"] = False
+            # Clear network when selection changes
+            state.network_generated = False
+            state.last_merged_dot = ""
 
         # render each library's results with a persistent checkbox
         for lib, it in state.iter_enrich.items():
