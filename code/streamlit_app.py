@@ -429,7 +429,7 @@ Results include ranked tables, bar charts, and network graphs."""
             
             # Determine what to show in the multiselect
             if state.select_all_libraries:
-                # Show all libraries as selected
+                # Show all libraries as selected (but not "Select All" itself)
                 default_selection = list(state.lib_mapper.keys())
             else:
                 # Show only individually selected libraries
@@ -443,13 +443,19 @@ Results include ranked tables, bar charts, and network graphs."""
             )
             
             # Process the selection to handle "Select All" logic
+            actual_libraries = [lib for lib in selected_libraries if lib != "Select All"]
+            
             if "Select All" in selected_libraries:
                 # If "Select All" is selected, select all actual libraries
                 state.libraries = list(state.lib_mapper.keys())
                 state.select_all_libraries = True
+            elif len(actual_libraries) == len(state.lib_mapper.keys()):
+                # If all individual libraries are selected, treat as "Select All"
+                state.libraries = list(state.lib_mapper.keys())
+                state.select_all_libraries = True
             else:
-                # Otherwise, use the selected libraries (excluding "Select All")
-                state.libraries = [lib for lib in selected_libraries if lib != "Select All"]
+                # Otherwise, use the selected libraries
+                state.libraries = actual_libraries
                 state.select_all_libraries = False
             if state.libraries:
                 state.gene_set_libraries = [
