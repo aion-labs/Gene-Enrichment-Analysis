@@ -341,10 +341,24 @@ def render_network(dot: str, title: str = "Iterative Enrichment Network") -> Non
 
     st.divider()
     st.subheader(title)
-    # st.graphviz_chart(dot, use_container_width=True)
-
-    st.plotly_chart(dot_to_plotly(dot), use_container_width=True, key="network_chart")
-    # Offer DOT download and AI analysis prompt download
+    
+    # Count edges to check network size
+    from ui.dot_utils import count_edges_in_dot
+    edge_count = count_edges_in_dot(dot)
+    
+    # Check if network is too large for Plotly rendering
+    if edge_count <= 500:
+        # Render Plotly network as usual
+        st.plotly_chart(dot_to_plotly(dot), use_container_width=True, key="network_chart")
+    else:
+        # Show warning and skip Plotly rendering
+        st.warning(
+            f"⚠️ Network too large ({edge_count} edges). "
+            "Plotly visualization skipped to prevent crashes. "
+            "Download the DOT file to view in external tools like Graphviz."
+        )
+    
+    # Always offer downloads regardless of size
     st.markdown(
         f'Download network graph as {download_link(dot, "iterative_network", "dot")}, '
         f'Download {download_link(generate_ai_analysis_prompt(dot), "ai_analysis_prompt", "txt")} for AI analysis',

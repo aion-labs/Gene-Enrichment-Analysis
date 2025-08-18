@@ -8,6 +8,25 @@ import json
 import os
 
 
+def count_edges_in_dot(dot_string: str) -> int:
+    """
+    Count the number of edges in a DOT string.
+    
+    Parameters:
+    - dot_string: DOT format string
+    
+    Returns:
+    - int: Number of edges in the graph
+    """
+    edge_count = 0
+    for line in dot_string.split('\n'):
+        line = line.strip()
+        # Count lines that contain edge connections (--)
+        if ' -- ' in line and not line.startswith('#') and not line.startswith('//'):
+            edge_count += 1
+    return edge_count
+
+
 def load_library_colors() -> Dict[str, str]:
     """
     Load library colors from alias.json file.

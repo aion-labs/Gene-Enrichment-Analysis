@@ -859,8 +859,54 @@ Results include ranked tables, bar charts, and network graphs."""
         # Network section
         st.markdown("---")
         st.header("Network")
+        
+        # Interactive library selection interface
+        st.subheader("📋 Library Selection for Network")
+        
+        # Get all available libraries
+        available_libraries = list(state.iter_enrich.keys())
+        
+        # Create columns for better layout
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            # Interactive list showing all libraries with selection status
+            st.write("**Available Libraries:**")
+            for lib in available_libraries:
+                is_selected = lib in state.selected_dot_paths
+                status_icon = "✅" if is_selected else "⭕"
+                status_text = "selected" if is_selected else "not selected"
+                st.write(f"{status_icon} {lib} ({status_text})")
+        
+        with col2:
+            # Quick selection controls
+            st.write("**Quick Actions:**")
+            
+            if st.button("Select All"):
+                state.selected_dot_paths = available_libraries.copy()
+                # Update checkbox states to match
+                for lib in available_libraries:
+                    state[f"use_{lib}_in_network"] = True
+                st.rerun()
+            
+            if st.button("Clear All"):
+                state.selected_dot_paths = []
+                # Update checkbox states to match
+                for lib in available_libraries:
+                    state[f"use_{lib}_in_network"] = False
+                st.rerun()
+            
+            if st.button("Select Top 5"):
+                top_5 = available_libraries[:5]
+                state.selected_dot_paths = top_5.copy()
+                # Update checkbox states to match
+                for lib in available_libraries:
+                    state[f"use_{lib}_in_network"] = lib in top_5
+                st.rerun()
+        
+        # Show current selection summary
         if state.selected_dot_paths:
-            st.write("**Selected libraries:**")
+            st.write(f"**Selected libraries ({len(state.selected_dot_paths)}):**")
             for sel in state.selected_dot_paths:
                 st.write(f"- {sel}")
         else:
