@@ -112,6 +112,38 @@ def _ensure_base_state():
         state.selected_dot_paths = []
     if "network_generated" not in state:
         state.network_generated = False  # flag to prevent clearing after checkbox changes
+    if "libraries" not in state:
+        state.libraries = []
+    if "background_set" not in state:
+        state.background_set = None
+    if "gene_set_input" not in state:
+        state.gene_set_input = ""
+    if "gene_set_name" not in state:
+        state.gene_set_name = ""
+    if "gene_input_format" not in state:
+        state.gene_input_format = 'symbols'
+    if "bg_input_format" not in state:
+        state.bg_input_format = 'symbols'
+    if "advanced_settings_changed" not in state:
+        state.advanced_settings_changed = False
+    if "bt_submit_disabled" not in state:
+        state.bt_submit_disabled = True
+    if "bt_iter_disabled" not in state:
+        state.bt_iter_disabled = True
+    if "p_threshold" not in state:
+        state.p_threshold = 0.01
+    if "min_overlap" not in state:
+        state.min_overlap = 3
+    if "iter_p_threshold" not in state:
+        state.iter_p_threshold = 0.01
+    if "iter_max_iter" not in state:
+        state.iter_max_iter = 10
+    if "iter_min_term_size" not in state:
+        state.iter_min_term_size = 10
+    if "p_val_method" not in state:
+        state.p_val_method = "Fisher's Exact Test"
+    if "select_all_libraries" not in state:
+        state.select_all_libraries = False
 
 
 def reset_app() -> None:
