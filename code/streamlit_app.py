@@ -845,6 +845,14 @@ Results include ranked tables, bar charts, and network graphs."""
                 if lib_name in state.selected_dot_paths:
                     state.selected_dot_paths.remove(lib_name)
 
+        def toggle_network_selection(lib_name):
+            if state[f"network_select_{lib_name}"]:
+                if lib_name not in state.selected_dot_paths:
+                    state.selected_dot_paths.append(lib_name)
+            else:
+                if lib_name in state.selected_dot_paths:
+                    state.selected_dot_paths.remove(lib_name)
+
         # render each library's results with a persistent checkbox
         for lib, it in state.iter_enrich.items():
             render_iter_results(it, lib)
@@ -853,7 +861,7 @@ Results include ranked tables, bar charts, and network graphs."""
                 "Use results in network",
                 key=f"use_{lib}_in_network",
                 on_change=toggle_library,
-                args=(lib,),
+                args=(lib,)
             )
 
         # Network section
@@ -861,22 +869,31 @@ Results include ranked tables, bar charts, and network graphs."""
         st.header("Network")
         
         # Interactive library selection interface
-        st.subheader("📋 Library Selection for Network")
+        st.subheader("Library Selection for Network")
         
         # Get all available libraries
         available_libraries = list(state.iter_enrich.keys())
         
         # Create columns for better layout
-        col1, col2 = st.columns([2, 1])
+        col1, col2 = st.columns([3, 1])
         
         with col1:
-            # Interactive list showing all libraries with selection status
+            # Interactive list with checkboxes for each library
             st.write("**Available Libraries:**")
             for lib in available_libraries:
-                is_selected = lib in state.selected_dot_paths
-                status_icon = "✅" if is_selected else "⭕"
-                status_text = "selected" if is_selected else "not selected"
-                st.write(f"{status_icon} {lib} ({status_text})")
+                # Create a checkbox for each library
+                is_selected = st.checkbox(
+                    lib,
+                    value=lib in state.selected_dot_paths,
+                    key=f"network_select_{lib}",
+                    on_change=toggle_network_selection,
+                    args=(lib,)
+                )
+                # Update the selection list based on checkbox state
+                if is_selected and lib not in state.selected_dot_paths:
+                    state.selected_dot_paths.append(lib)
+                elif not is_selected and lib in state.selected_dot_paths:
+                    state.selected_dot_paths.remove(lib)
         
         with col2:
             # Quick selection controls
@@ -886,6 +903,7 @@ Results include ranked tables, bar charts, and network graphs."""
                 state.selected_dot_paths = available_libraries.copy()
                 # Update checkbox states to match
                 for lib in available_libraries:
+                    state[f"network_select_{lib}"] = True
                     state[f"use_{lib}_in_network"] = True
                 st.rerun()
             
@@ -893,15 +911,8 @@ Results include ranked tables, bar charts, and network graphs."""
                 state.selected_dot_paths = []
                 # Update checkbox states to match
                 for lib in available_libraries:
+                    state[f"network_select_{lib}"] = False
                     state[f"use_{lib}_in_network"] = False
-                st.rerun()
-            
-            if st.button("Select Top 5"):
-                top_5 = available_libraries[:5]
-                state.selected_dot_paths = top_5.copy()
-                # Update checkbox states to match
-                for lib in available_libraries:
-                    state[f"use_{lib}_in_network"] = lib in top_5
                 st.rerun()
         
         # Show current selection summary
