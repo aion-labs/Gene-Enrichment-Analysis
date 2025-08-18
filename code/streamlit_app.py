@@ -725,6 +725,9 @@ Results include ranked tables, bar charts, and network graphs."""
         state.iter_enrich = {}
         state.iter_results.clear()
         state.iter_dot = {}
+        state.selected_dot_paths = []
+        state.network_generated = False
+        state.last_merged_dot = ""
         render_validation()
         if not state.gene_set_input:
             st.error("Please input genes")
@@ -863,9 +866,14 @@ Results include ranked tables, bar charts, and network graphs."""
                 st.error("Please select at least one library for network generation.")
             else:
                 state.network_generated = True
-                selected_dots = {lib: state.iter_dot[lib] for lib in state.selected_dot_paths}
-                state.last_merged_dot = merge_iterative_dot(selected_dots)
-                render_network(state.last_merged_dot)
+                available = set(state.iter_dot.keys())
+                chosen = [lib for lib in state.selected_dot_paths if lib in available]
+                if not chosen:
+                    st.error("No valid libraries selected for network generation.")
+                else:
+                    selected_dots = {lib: state.iter_dot[lib] for lib in chosen}
+                    state.last_merged_dot = merge_iterative_dot(selected_dots)
+                    render_network(state.last_merged_dot)
         elif state.network_generated and state.selected_dot_paths:
             render_network(state.last_merged_dot)
 
