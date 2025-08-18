@@ -169,10 +169,7 @@ def reset_app() -> None:
     for key in keys_to_remove:
         del state[key]
     
-    st.success("✅ App reset to default values! Refreshing...")
-    
-    # Force a complete app refresh
-    st.rerun()
+    st.success("✅ App reset to default values!")
 
 
 def _build_iterative_tables_download(all_iter_results: Dict[str, List[dict]]) -> str:
