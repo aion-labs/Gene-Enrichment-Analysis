@@ -394,20 +394,34 @@ Results include ranked tables, bar charts, and network graphs."""
             # Add "Select All" option to library list
             library_options = ["Select All"] + list(state.lib_mapper.keys())
             
+            # Initialize select all state if not present
+            if "select_all_libraries" not in state:
+                state.select_all_libraries = False
+            
+            # Determine what to show in the multiselect
+            if state.select_all_libraries:
+                # Show all libraries as selected
+                default_selection = list(state.lib_mapper.keys())
+            else:
+                # Show only individually selected libraries
+                default_selection = state.libraries if state.libraries else []
+            
             # Handle "Select All" logic
             selected_libraries = st.multiselect(
                 "Select libraries",
                 library_options,
-                # default=list(state.lib_mapper.keys())
+                default=default_selection
             )
             
             # Process the selection to handle "Select All" logic
             if "Select All" in selected_libraries:
                 # If "Select All" is selected, select all actual libraries
                 state.libraries = list(state.lib_mapper.keys())
+                state.select_all_libraries = True
             else:
                 # Otherwise, use the selected libraries (excluding "Select All")
                 state.libraries = [lib for lib in selected_libraries if lib != "Select All"]
+                state.select_all_libraries = False
             if state.libraries:
                 state.gene_set_libraries = [
                     GeneSetLibrary(
