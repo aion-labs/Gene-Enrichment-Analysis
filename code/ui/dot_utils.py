@@ -127,6 +127,9 @@ def merge_iterative_dot(
     per_lib_dots : {library_name: dot_string}
     scale_name   : Plotly continuous scale name (fallback if library colors not found).
     """
+    if not per_lib_dots:
+        return "graph empty { }"
+    
     libs = list(per_lib_dots.keys())
     
     # Try to get colors from alias.json first

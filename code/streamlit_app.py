@@ -859,11 +859,14 @@ Results include ranked tables, bar charts, and network graphs."""
 
         # generate or re-display merged network
         if st.button("Generate Network"):
-            state.network_generated = True
-            selected_dots = {lib: state.iter_dot[lib] for lib in state.selected_dot_paths}
-            state.last_merged_dot = merge_iterative_dot(selected_dots)
-            render_network(state.last_merged_dot)
-        elif state.network_generated:
+            if not state.selected_dot_paths:
+                st.error("Please select at least one library for network generation.")
+            else:
+                state.network_generated = True
+                selected_dots = {lib: state.iter_dot[lib] for lib in state.selected_dot_paths}
+                state.last_merged_dot = merge_iterative_dot(selected_dots)
+                render_network(state.last_merged_dot)
+        elif state.network_generated and state.selected_dot_paths:
             render_network(state.last_merged_dot)
 
     logger.info("Finishing the Streamlit app")
