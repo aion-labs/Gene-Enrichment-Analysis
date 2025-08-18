@@ -150,7 +150,28 @@ def reset_app() -> None:
     state.gene_set_input = ""
     state.gene_set_name = ""
     
-    st.success("✅ App reset to default values!")
+    # Clear any results and network state
+    state.results_ready = False
+    state.enrich = {}
+    state.iter_enrich = {}
+    state.iter_results.clear()
+    state.iter_dot = {}
+    state.selected_dot_paths = []
+    state.network_generated = False
+    state.last_merged_dot = ""
+    
+    # Clear any network checkbox states
+    keys_to_remove = [key for key in state.keys() if key.startswith("use_") and key.endswith("_in_network")]
+    for key in keys_to_remove:
+        del state[key]
+    
+    keys_to_remove = [key for key in state.keys() if key.startswith("network_select_")]
+    for key in keys_to_remove:
+        del state[key]
+    
+    st.success("✅ App reset to default values! Refreshing...")
+    
+    # Force a complete app refresh
     st.rerun()
 
 
