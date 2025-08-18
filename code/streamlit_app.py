@@ -914,14 +914,6 @@ Results include ranked tables, bar charts, and network graphs."""
                     state[f"network_select_{lib}"] = False
                     state[f"use_{lib}_in_network"] = False
                 st.rerun()
-        
-        # Show current selection summary
-        if state.selected_dot_paths:
-            st.write(f"**Selected libraries ({len(state.selected_dot_paths)}):**")
-            for sel in state.selected_dot_paths:
-                st.write(f"- {sel}")
-        else:
-            st.write("No libraries selected for network generation.")
 
         # generate or re-display merged network
         if st.button("Generate Network"):
