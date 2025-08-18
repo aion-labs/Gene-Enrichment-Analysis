@@ -728,6 +728,12 @@ Results include ranked tables, bar charts, and network graphs."""
         state.selected_dot_paths = []
         state.network_generated = False
         state.last_merged_dot = ""
+        
+        # Clear all network checkbox states from previous runs
+        keys_to_remove = [key for key in state.keys() if key.startswith("use_") and key.endswith("_in_network")]
+        for key in keys_to_remove:
+            del state[key]
+        
         render_validation()
         if not state.gene_set_input:
             st.error("Please input genes")
