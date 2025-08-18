@@ -390,11 +390,24 @@ Results include ranked tables, bar charts, and network graphs."""
                 index=0  # Default to first background
             )
             st.caption("Specifies the background list of genes...")
-            state.libraries = st.multiselect(
+            
+            # Add "Select All" option to library list
+            library_options = ["Select All"] + list(state.lib_mapper.keys())
+            
+            # Handle "Select All" logic
+            selected_libraries = st.multiselect(
                 "Select libraries",
-                state.lib_mapper.keys(),
+                library_options,
                 # default=list(state.lib_mapper.keys())
             )
+            
+            # Process the selection to handle "Select All" logic
+            if "Select All" in selected_libraries:
+                # If "Select All" is selected, select all actual libraries
+                state.libraries = list(state.lib_mapper.keys())
+            else:
+                # Otherwise, use the selected libraries (excluding "Select All")
+                state.libraries = [lib for lib in selected_libraries if lib != "Select All"]
             if state.libraries:
                 state.gene_set_libraries = [
                     GeneSetLibrary(
