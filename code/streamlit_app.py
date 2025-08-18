@@ -849,9 +849,13 @@ Results include ranked tables, bar charts, and network graphs."""
             if state[f"network_select_{lib_name}"]:
                 if lib_name not in state.selected_dot_paths:
                     state.selected_dot_paths.append(lib_name)
+                # Also update the individual checkbox
+                state[f"use_{lib_name}_in_network"] = True
             else:
                 if lib_name in state.selected_dot_paths:
                     state.selected_dot_paths.remove(lib_name)
+                # Also update the individual checkbox
+                state[f"use_{lib_name}_in_network"] = False
 
         # render each library's results with a persistent checkbox
         for lib, it in state.iter_enrich.items():
