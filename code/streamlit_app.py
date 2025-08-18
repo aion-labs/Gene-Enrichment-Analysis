@@ -420,43 +420,30 @@ Results include ranked tables, bar charts, and network graphs."""
             )
             st.caption("Specifies the background list of genes...")
             
-            # Add "Select All" option to library list
-            library_options = ["Select All"] + list(state.lib_mapper.keys())
+            # Use a checkbox for "Select All" and separate multiselect for libraries
+            select_all = st.checkbox("Select All Libraries", value=state.select_all_libraries)
             
-            # Initialize select all state if not present
-            if "select_all_libraries" not in state:
-                state.select_all_libraries = False
-            
-            # Determine what to show in the multiselect
-            if state.select_all_libraries:
-                # Show all libraries as selected (but not "Select All" itself)
-                default_selection = list(state.lib_mapper.keys())
-            else:
-                # Show only individually selected libraries
-                default_selection = state.libraries if state.libraries else []
-            
-            # Handle "Select All" logic
-            selected_libraries = st.multiselect(
-                "Select libraries",
-                library_options,
-                default=default_selection
-            )
-            
-            # Process the selection to handle "Select All" logic
-            actual_libraries = [lib for lib in selected_libraries if lib != "Select All"]
-            
-            if "Select All" in selected_libraries:
-                # If "Select All" is selected, select all actual libraries
+            if select_all:
+                # If "Select All" is checked, show all libraries as selected
                 state.libraries = list(state.lib_mapper.keys())
                 state.select_all_libraries = True
-            elif len(actual_libraries) == len(state.lib_mapper.keys()):
-                # If all individual libraries are selected, treat as "Select All"
-                state.libraries = list(state.lib_mapper.keys())
-                state.select_all_libraries = True
+                # Show the multiselect with all libraries selected but disabled
+                st.multiselect(
+                    "Select libraries",
+                    state.lib_mapper.keys(),
+                    default=state.libraries,
+                    disabled=True,
+                    help="All libraries selected. Uncheck 'Select All Libraries' to select individual libraries."
+                )
             else:
-                # Otherwise, use the selected libraries
-                state.libraries = actual_libraries
+                # If "Select All" is unchecked, allow individual selection
                 state.select_all_libraries = False
+                selected_libraries = st.multiselect(
+                    "Select libraries",
+                    state.lib_mapper.keys(),
+                    default=state.libraries if state.libraries else []
+                )
+                state.libraries = selected_libraries
             if state.libraries:
                 state.gene_set_libraries = [
                     GeneSetLibrary(
