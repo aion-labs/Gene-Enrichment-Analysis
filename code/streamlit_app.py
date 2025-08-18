@@ -866,9 +866,9 @@ Results include ranked tables, bar charts, and network graphs."""
         # render each library's results with a persistent checkbox
         for lib, it in state.iter_enrich.items():
             render_iter_results(it, lib)
-            state.setdefault(f"use_{lib}_in_network", False)
             st.checkbox(
                 "Use results in network",
+                value=lib in state.selected_dot_paths,
                 key=f"use_{lib}_in_network",
                 on_change=toggle_library,
                 args=(lib,)
@@ -911,18 +911,16 @@ Results include ranked tables, bar charts, and network graphs."""
             
             if st.button("Select All"):
                 state.selected_dot_paths = available_libraries.copy()
-                # Update checkbox states to match
-                for lib in available_libraries:
-                    state[f"network_select_{lib}"] = True
-                    state[f"use_{lib}_in_network"] = True
+                # Clear network when selection changes
+                state.network_generated = False
+                state.last_merged_dot = ""
                 st.rerun()
             
             if st.button("Clear All"):
                 state.selected_dot_paths = []
-                # Update checkbox states to match
-                for lib in available_libraries:
-                    state[f"network_select_{lib}"] = False
-                    state[f"use_{lib}_in_network"] = False
+                # Clear network when selection changes
+                state.network_generated = False
+                state.last_merged_dot = ""
                 st.rerun()
 
         # generate or re-display merged network
