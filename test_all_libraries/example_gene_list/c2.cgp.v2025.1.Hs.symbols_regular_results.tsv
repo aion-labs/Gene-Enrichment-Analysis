@@ -1,0 +1,8 @@
+term	rank	description	overlap	overlap_size	p-value	fdr	library
+ZHAN_V1_LATE_DIFFERENTIATION_GENES_UP	1	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/ZHAN_V1_LATE_DIFFERENTIATION_GENES_UP	['ATP6V1B2', 'CAT', 'NAGLU', 'TCN2']	4/33	0.0004872991407993008	0.10915500753904338	c2.cgp.v2025.1.Hs.symbols
+LANG_MYB_FAMILY_TARGETS	2	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/LANG_MYB_FAMILY_TARGETS	['TFB1M', 'TIMM44']	2/29	0.042820314214828736	1.0	c2.cgp.v2025.1.Hs.symbols
+NIKOLSKY_BREAST_CANCER_20Q11_AMPLICON	3	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/NIKOLSKY_BREAST_CANCER_20Q11_AMPLICON	['NFS1', 'RBM39']	2/31	0.0483417459348533	1.0	c2.cgp.v2025.1.Hs.symbols
+YANG_BREAST_CANCER_ESR1_LASER_UP	4	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/YANG_BREAST_CANCER_ESR1_LASER_UP	['CPT1A', 'GSTZ1']	2/32	0.05119502259137404	1.0	c2.cgp.v2025.1.Hs.symbols
+BARRIER_CANCER_RELAPSE_NORMAL_SAMPLE_UP	5	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/BARRIER_CANCER_RELAPSE_NORMAL_SAMPLE_UP	['CREBL2', 'TFAM']	2/33	0.054107725611355226	1.0	c2.cgp.v2025.1.Hs.symbols
+GROSS_ELK3_TARGETS_DN	6	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GROSS_ELK3_TARGETS_DN	['GBE1', 'VLDLR']	2/33	0.054107725611355226	1.0	c2.cgp.v2025.1.Hs.symbols
+JIANG_AGING_CEREBRAL_CORTEX_UP	7	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/JIANG_AGING_CEREBRAL_CORTEX_UP	['FAH', 'UBE2E1']	2/33	0.054107725611355226	1.0	c2.cgp.v2025.1.Hs.symbols

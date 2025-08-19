@@ -1,0 +1,17 @@
+term	rank	description	overlap	overlap_size	p-value	fdr	library
+METHYLCYTOSINE_DIOXYGENASE_TET_UNIPROT_A0A023HHK9_UNREVIEWED_TARGET_GENES	1	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/METHYLCYTOSINE_DIOXYGENASE_TET_UNIPROT_A0A023HHK9_UNREVIEWED_TARGET_GENES	['ATAD3A', 'ATPAF1', 'ATXN2', 'FAHD1', 'INTU', 'SFXN5', 'UBOX5', 'WDR24']	8/180	0.004028011730798965	1.0	c3.tft.v2025.1.Hs.symbols
+GCNF_01	2	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GCNF_01	['GPR155', 'PSMC3IP', 'RPS6KB1', 'USP34']	4/78	0.0243476657459774	1.0	c3.tft.v2025.1.Hs.symbols
+PXR_Q2	3	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/PXR_Q2	['ARHGAP18', 'CABLES1', 'GPHN', 'HPN', 'OVOL1', 'PRKACA', 'RPS6KA5', 'RWDD3']	8/260	0.031252264511724435	1.0	c3.tft.v2025.1.Hs.symbols
+SYNCRIP_TARGET_GENES	4	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/SYNCRIP_TARGET_GENES	['COL4A4', 'IAH1']	2/21	0.034834694805482104	1.0	c3.tft.v2025.1.Hs.symbols
+AHRARNT_01	5	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/AHRARNT_01	['NAGLU', 'NR3C1', 'PITPNC1', 'TM2D2', 'TRIM23']	5/142	0.05064949385835525	1.0	c3.tft.v2025.1.Hs.symbols
+SETBP1_TARGET_GENES	6	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/SETBP1_TARGET_GENES	['DNAJC19', 'IFT122', 'ITFG1', 'RIOK2', 'TGDS', 'VAMP8']	6/199	0.0628869487873909	1.0	c3.tft.v2025.1.Hs.symbols
+RTTTNNNYTGGM_UNKNOWN	7	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/RTTTNNNYTGGM_UNKNOWN	['DMXL1', 'HOXA7', 'HPN', 'METTL8', 'PCMTD2']	5/155	0.06846904943590239	1.0	c3.tft.v2025.1.Hs.symbols
+ZBTB1_TARGET_GENES	8	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/ZBTB1_TARGET_GENES	['CACNB4', 'NR3C1', 'PMS1', 'SMYD4']	4/115	0.07960430689809635	1.0	c3.tft.v2025.1.Hs.symbols
+RGTTAMWNATT_HNF1_01	9	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/RGTTAMWNATT_HNF1_01	['ANXA13', 'CNTD1', 'FGFR4']	3/74	0.08662915756237702	1.0	c3.tft.v2025.1.Hs.symbols
+FOXJ2_02	10	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/FOXJ2_02	['ARSG', 'HOXA7', 'LIFR', 'NEO1', 'RBM39', 'TASP1', 'UBE2E1']	7/243	0.08762011893978339	1.0	c3.tft.v2025.1.Hs.symbols
+FOXO4_01	11	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/FOXO4_01	['CREBL2', 'KLF12', 'LRRC1', 'NEO1', 'NR3C1', 'PITPNC1', 'VLDLR']	7/246	0.0893841024181626	1.0	c3.tft.v2025.1.Hs.symbols
+FOXD3_TARGET_GENES	12	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/FOXD3_TARGET_GENES	['PHF7', 'UBE2E1']	2/36	0.09121229727343864	1.0	c3.tft.v2025.1.Hs.symbols
+FOXO1_02	13	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/FOXO1_02	['CREBL2', 'KLF12', 'LIFR', 'PITPNC1', 'RBM39', 'SCRN3', 'SLC25A39']	7/249	0.0913038805088774	1.0	c3.tft.v2025.1.Hs.symbols
+HNF1_C	14	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HNF1_C	['ANXA13', 'CNTD1', 'FGFR4', 'KALRN', 'LRRC19', 'NEO1', 'SLC25A40']	7/249	0.0913038805088774	1.0	c3.tft.v2025.1.Hs.symbols
+TGIF_01	15	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/TGIF_01	['GPHN', 'METTL8', 'NR3C1', 'PARP16', 'RBM39', 'RPS6KB1', 'VAMP8']	7/254	0.09484426626068028	1.0	c3.tft.v2025.1.Hs.symbols
+CAGNYGKNAAA_UNKNOWN	16	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/CAGNYGKNAAA_UNKNOWN	['HOXA7', 'NR3C1', 'PRKACA']	3/78	0.09770678612564349	1.0	c3.tft.v2025.1.Hs.symbols

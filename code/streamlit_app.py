@@ -144,6 +144,12 @@ def _ensure_base_state():
         state.p_val_method = "Fisher's Exact Test"
     if "select_all_libraries" not in state:
         state.select_all_libraries = False
+    if "gene_set" not in state:
+        state.gene_set = None
+    if "background_gene_set" not in state:
+        state.background_gene_set = None
+    if "gene_set_libraries" not in state:
+        state.gene_set_libraries = []
 
 
 def reset_app() -> None:
@@ -181,6 +187,9 @@ def reset_app() -> None:
     state.background_set = None
     state.gene_set_input = ""
     state.gene_set_name = ""
+    state.gene_set = None
+    state.background_gene_set = None
+    state.gene_set_libraries = []
     
     # Clear any results and network state
     state.results_ready = False
@@ -233,7 +242,10 @@ def _create_combined_iteration_archive(iter_archives: Dict[str, str]) -> str:
     from datetime import datetime
     
     # Find the most recent run directory (the one created in this session)
-    results_dir = Path("results")
+    results_dir = ROOT / "results"
+    # Ensure results directory exists
+    results_dir.mkdir(exist_ok=True)
+    
     if not results_dir.exists():
         logger.warning("No results directory found")
         return ""
@@ -331,9 +343,9 @@ Results include ranked tables, bar charts, and network graphs."""
             
             # Gene input area
             placeholder_text = (
-                "Enter gene symbols (e.g., TP53, BRCA1) - one per line (max 500 genes)" 
+                "Enter gene symbols (e.g., TP53, BRCA1) - one per line (max 800 genes)" 
                 if state.gene_input_format == 'symbols' 
-                else "Enter Entrez IDs (e.g., 7157, 672) - one per line (max 500 genes)"
+                else "Enter Entrez IDs (e.g., 7157, 672) - one per line (max 800 genes)"
             )
             
             st.text_area(
@@ -343,7 +355,7 @@ Results include ranked tables, bar charts, and network graphs."""
                 placeholder=placeholder_text,
                 label_visibility="collapsed",
             )
-            st.caption("📝 **Note:** Maximum 500 genes allowed for optimal performance")
+            st.caption("📝 **Note:** Maximum 800 genes allowed for optimal performance")
             st.text_input(
                 "Gene set name",
                 key="gene_set_name",
@@ -372,12 +384,6 @@ Results include ranked tables, bar charts, and network graphs."""
                 </style>
                 """, unsafe_allow_html=True)
             
-            # Vertical button stack layout under the left column
-            ready_common = all(
-                getattr(state, k, None)
-                for k in ["gene_set", "background_gene_set", "gene_set_libraries"]
-            )
-            
             # Load Example button (top)
             st.button(
                 "Load Example", 
@@ -395,23 +401,8 @@ Results include ranked tables, bar charts, and network graphs."""
                 key="btn_reset_app"
             )
             
-            # Submit button (bottom)
-            if mode == "Regular":
-                state.bt_submit_disabled = not ready_common
-                bt_submit = st.button(
-                    "Submit", 
-                    disabled=state.bt_submit_disabled, 
-                    key="bt_reg",
-                    use_container_width=True
-                )
-            else:
-                state.bt_iter_disabled = not ready_common
-                bt_iter = st.button(
-                    "Submit",
-                    disabled=state.bt_iter_disabled,
-                    key="bt_iter",
-                    use_container_width=True
-                )
+            # Submit button container - will be conditionally shown
+            submit_container = st.container()
         with col_settings:
             state.background_set = st.selectbox(
                 "Background gene list", 
@@ -420,60 +411,113 @@ Results include ranked tables, bar charts, and network graphs."""
             )
             st.caption("Specifies the background list of genes...")
             
+            # Initialize background gene set if not already set
+            if not hasattr(state, 'background_gene_set') or state.background_gene_set is None:
+                if state.background_set:
+                    # Get background file path and format from alias file
+                    from ui.utils import get_background_info
+                    bg_file_path, bg_format = get_background_info(state.background_set)
+                    
+                    if bg_file_path:
+                        state.background_gene_set = BackgroundGeneSet(
+                            bg_file_path,
+                            input_format=bg_format  # Use format from alias file
+                        )
+                    else:
+                        st.error(f"❌ Could not load background: {state.background_set}")
+                        state.background_gene_set = None
+            
             # Simple multiselect for library selection
             state.libraries = st.multiselect(
                 "Select libraries",
-                state.lib_mapper.keys()
+                state.lib_mapper.keys(),
+                default=state.libraries if hasattr(state, 'libraries') and state.libraries else None
             )
+            
+            # Create gene set libraries if libraries are selected
             if state.libraries:
-                state.gene_set_libraries = [
-                    GeneSetLibrary(
-                        str(ROOT / "data" / "libraries" / state.lib_mapper[lib]),
-                        name=lib,
-                    )
-                    for lib in state.libraries
-                ]
+                try:
+                    state.gene_set_libraries = [
+                        GeneSetLibrary(
+                            str(ROOT / "data" / "libraries" / state.lib_mapper[lib]),
+                            name=lib,
+                        )
+                        for lib in state.libraries
+                    ]
+                except Exception as e:
+                    st.error(f"Error creating libraries: {e}")
+                    state.gene_set_libraries = []
             else:
                 state.gene_set_libraries = []
-            if state.background_set:
-                # Get background file path and format from alias file
-                from ui.utils import get_background_info
-                bg_file_path, bg_format = get_background_info(state.background_set)
-                
-                if bg_file_path:
-                    state.background_gene_set = BackgroundGeneSet(
-                        bg_file_path,
-                        input_format=bg_format  # Use format from alias file
-                    )
-                else:
-                    st.error(f"❌ Could not load background: {state.background_set}")
-                    state.background_gene_set = None
-                if state.gene_set_input:
-                    # Convert and validate gene input based on selected format
-                    converted_symbols, unrecognized_entrez, unrecognized_symbols, stats = convert_and_validate_gene_input(
-                        state.gene_set_input, 
-                        state.gene_input_format
-                    )
+            
+            # Create gene set if we have input
+            if state.gene_set_input:
+                # Ensure background gene set is created
+                if not state.background_gene_set and state.background_set:
+                    from ui.utils import get_background_info
+                    bg_file_path, bg_format = get_background_info(state.background_set)
                     
-                    # Check gene list size limit (500 genes maximum)
-                    if converted_symbols and len(converted_symbols) > 500:
-                        st.error(f"❌ **Gene list too large!** Your input contains {len(converted_symbols)} genes, but the maximum allowed is 500 genes. Please reduce your gene list size.")                        
-                        state.gene_set = None
+                    if bg_file_path:
+                        state.background_gene_set = BackgroundGeneSet(
+                            bg_file_path,
+                            input_format=bg_format
+                        )
+                
+                # Convert and validate gene input based on selected format
+                converted_symbols, unrecognized_entrez, unrecognized_symbols, stats = convert_and_validate_gene_input(
+                    state.gene_set_input, 
+                    state.gene_input_format
+                )
+                
+                # Check gene list size limit (800 genes maximum)
+                if converted_symbols and len(converted_symbols) > 800:
+                    st.error(f"❌ **Gene list too large!** Your input contains {len(converted_symbols)} genes, but the maximum allowed is 800 genes. Please reduce your gene list size.")                        
+                    state.gene_set = None
+                else:
+                    # Display conversion results
+                    display_conversion_results(converted_symbols, unrecognized_entrez, unrecognized_symbols, stats, state.gene_input_format)
+                    
+                    # Create gene set with converted symbols
+                    if converted_symbols:
+                        state.gene_set = GeneSet(
+                            converted_symbols,
+                            state.background_gene_set.genes,
+                            state.gene_set_name,
+                            hgcn=False,  # Skip background validation since genes are already validated
+                            format=False,  # Skip formatting since genes are already formatted
+                        )
                     else:
-                        # Display conversion results
-                        display_conversion_results(converted_symbols, unrecognized_entrez, unrecognized_symbols, stats, state.gene_input_format)
-                        
-                        # Create gene set with converted symbols
-                        if converted_symbols:
-                            state.gene_set = GeneSet(
-                                converted_symbols,
-                                state.background_gene_set.genes,
-                                state.gene_set_name,
-                                hgcn=False,  # Skip background validation since genes are already validated
-                                format=False,  # Skip formatting since genes are already formatted
-                            )
-                        else:
-                            state.gene_set = None
+                        state.gene_set = None
+            
+            # Now evaluate ready_common after all state is set up
+            ready_common = (
+                getattr(state, "gene_set", None) is not None and
+                getattr(state, "gene_set_libraries", []) and len(state.gene_set_libraries) > 0
+            )
+            
+            # Show submit button in the container if ready
+            with submit_container:
+                if ready_common:
+                    if mode == "Regular":
+                        bt_submit = st.button(
+                            "Submit", 
+                            key="bt_reg",
+                            use_container_width=True
+                        )
+                    else:
+                        bt_iter = st.button(
+                            "Submit",
+                            key="bt_iter",
+                            use_container_width=True
+                        )
+                else:
+                    st.button(
+                        "Submit", 
+                        disabled=True,
+                        key="bt_disabled",
+                        use_container_width=True
+                    )
+            
             if mode == "Regular":
                 st.markdown("**Regular enrichment parameters**")
                 st.caption("Configure filters for the enrichment analysis:")
@@ -485,7 +529,7 @@ Results include ranked tables, bar charts, and network graphs."""
                     value=0.01,
                     step=0.001,
                     format="%.4f",
-                    help="Maximum raw p-value for terms to be included in results."
+                    help="Maximum raw p-value for terms to be included in results. This is NOT a corrected p-value (e.g., FDR-corrected)."
                 )
                 # Minimum overlap filter for regular mode
                 state.min_overlap = st.number_input(
@@ -507,12 +551,13 @@ Results include ranked tables, bar charts, and network graphs."""
             if mode == "Iterative":
                 st.markdown("**Iterative parameters**")
                 state.iter_p_threshold = st.number_input(
-                    "P-value threshold",
+                    "Raw p-value threshold",
                     min_value=1e-10,
                     max_value=0.5,
                     value=0.01,
                     step=0.001,
                     format="%.4f",
+                    help="Maximum raw p-value for terms to be included in results. This is NOT a corrected p-value (e.g., FDR-corrected)."
                 )
                 state.iter_max_iter = st.number_input(
                     "Max iterations (0 = no limit)",

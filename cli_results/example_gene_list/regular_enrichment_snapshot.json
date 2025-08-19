@@ -1,0 +1,16 @@
+{
+  "gene_set_name": "example_gene_list",
+  "gene_set_size": 300,
+  "background_name": "all_genes",
+  "background_size": 23391,
+  "libraries": [
+    "h.all.v2025.1.Hs.symbols"
+  ],
+  "parameters": {
+    "p_value_method": "Fisher's Exact Test",
+    "p_threshold": 0.01,
+    "min_overlap": 3
+  },
+  "total_results": 3,
+  "timestamp": "2025-08-19T22:15:41.792684"
+}

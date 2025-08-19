@@ -4,7 +4,7 @@ Create STRING-DB protein interaction library for enrichment analysis.
 
 This script:
 1. Downloads the STRING-DB human protein interaction file
-2. Filters interactions by score >= 0.7
+2. Filters interactions by score >= 0.9
 3. Maps Ensembl IDs to gene symbols using gene_info
 4. Creates a GMT format library
 5. Adds it to the enrichment system

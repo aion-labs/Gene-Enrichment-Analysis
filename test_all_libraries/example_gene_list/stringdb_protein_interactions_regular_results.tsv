@@ -1,0 +1,41 @@
+term	rank	description	overlap	overlap_size	p-value	fdr	library
+EXOSC3	1	STRING-DB protein interactions for EXOSC3	['C1D', 'CDK5RAP1', 'EXOSC4']	3/23	0.004475928079600345	1.0	stringdb_protein_interactions
+EXOSC5	2	STRING-DB protein interactions for EXOSC5	['C1D', 'CDK5RAP1', 'EXOSC4']	3/23	0.004475928079600345	1.0	stringdb_protein_interactions
+ACACB	3	STRING-DB protein interactions for ACACB	['ALDH6A1', 'CPT1A', 'MCAT']	3/27	0.007084853053780972	1.0	stringdb_protein_interactions
+TIMMDC1	4	STRING-DB protein interactions for TIMMDC1	['NDUFB6', 'NDUFV1', 'YME1L1']	3/30	0.009526150127839656	1.0	stringdb_protein_interactions
+EXOSC1	5	STRING-DB protein interactions for EXOSC1	['C1D', 'EXOSC4']	2/23	0.04481814281492206	1.0	stringdb_protein_interactions
+WNT4	6	STRING-DB protein interactions for WNT4	['FZD5', 'NOTUM']	2/23	0.04481814281492206	1.0	stringdb_protein_interactions
+DBT	7	STRING-DB protein interactions for DBT	['ALDH6A1', 'DHTKD1']	2/24	0.04843240796193884	1.0	stringdb_protein_interactions
+EXOSC7	8	STRING-DB protein interactions for EXOSC7	['C1D', 'EXOSC4']	2/24	0.04843240796193884	1.0	stringdb_protein_interactions
+EXOSC8	9	STRING-DB protein interactions for EXOSC8	['C1D', 'EXOSC4']	2/24	0.04843240796193884	1.0	stringdb_protein_interactions
+FASN	10	STRING-DB protein interactions for FASN	['MCAT', 'OXSM']	2/24	0.04843240796193884	1.0	stringdb_protein_interactions
+GLI2	11	STRING-DB protein interactions for GLI2	['PRKACA', 'SMO']	2/24	0.04843240796193884	1.0	stringdb_protein_interactions
+ACACA	12	STRING-DB protein interactions for ACACA	['ALDH6A1', 'MCAT']	2/25	0.05214908845490331	1.0	stringdb_protein_interactions
+EXOSC9	13	STRING-DB protein interactions for EXOSC9	['C1D', 'EXOSC4']	2/25	0.05214908845490331	1.0	stringdb_protein_interactions
+KYAT1	14	STRING-DB protein interactions for KYAT1	['AFMID', 'KMO']	2/25	0.05214908845490331	1.0	stringdb_protein_interactions
+RRAGB	15	STRING-DB protein interactions for RRAGB	['RPS6KB1', 'WDR24']	2/25	0.05214908845490331	1.0	stringdb_protein_interactions
+STX3	16	STRING-DB protein interactions for STX3	['STXBP2', 'VAMP8']	2/25	0.05214908845490331	1.0	stringdb_protein_interactions
+ACO2	17	STRING-DB protein interactions for ACO2	['ACO1', 'NDUFV1']	2/26	0.055964440899078656	1.0	stringdb_protein_interactions
+AMPD1	18	STRING-DB protein interactions for AMPD1	['ADK', 'ENTPD5']	2/26	0.055964440899078656	1.0	stringdb_protein_interactions
+AMPD2	19	STRING-DB protein interactions for AMPD2	['ADK', 'ENTPD5']	2/26	0.055964440899078656	1.0	stringdb_protein_interactions
+AMPD3	20	STRING-DB protein interactions for AMPD3	['ADK', 'ENTPD5']	2/26	0.055964440899078656	1.0	stringdb_protein_interactions
+PPARA	21	STRING-DB protein interactions for PPARA	['CPT1A', 'PRKACA']	2/26	0.055964440899078656	1.0	stringdb_protein_interactions
+CYP3A7	22	STRING-DB protein interactions for CYP3A7	['ALDH1A3', 'HSD3B2']	2/27	0.05987480792670248	1.0	stringdb_protein_interactions
+DDX5	23	STRING-DB protein interactions for DDX5	['RBM39', 'SF1']	2/27	0.05987480792670248	1.0	stringdb_protein_interactions
+ENSP00000480571	24	STRING-DB protein interactions for ENSP00000480571	['ALDH1A3', 'HSD3B2']	2/27	0.05987480792670248	1.0	stringdb_protein_interactions
+UBQLN4	25	STRING-DB protein interactions for UBQLN4	['PSMB1', 'PSMC6']	2/27	0.05987480792670248	1.0	stringdb_protein_interactions
+WNT1	26	STRING-DB protein interactions for WNT1	['FZD5', 'NOTUM']	2/27	0.05987480792670248	1.0	stringdb_protein_interactions
+AKT1S1	27	STRING-DB protein interactions for AKT1S1	['PRKACA', 'RPS6KB1']	2/28	0.06387661652062362	1.0	stringdb_protein_interactions
+CACNA1F	28	STRING-DB protein interactions for CACNA1F	['CACNB4', 'PRKACA']	2/28	0.06387661652062362	1.0	stringdb_protein_interactions
+HSD17B8	29	STRING-DB protein interactions for HSD17B8	['HSD3B2', 'OXSM']	2/28	0.06387661652062362	1.0	stringdb_protein_interactions
+LCAT	30	STRING-DB protein interactions for LCAT	['CHPT1', 'LYPLA1']	2/28	0.06387661652062362	1.0	stringdb_protein_interactions
+AGXT	31	STRING-DB protein interactions for AGXT	['GNMT', 'SRR']	2/29	0.06796637636778757	1.0	stringdb_protein_interactions
+ATXN7	32	STRING-DB protein interactions for ATXN7	['ATXN2', 'ENY2']	2/29	0.06796637636778757	1.0	stringdb_protein_interactions
+CRY1	33	STRING-DB protein interactions for CRY1	['FBXL3', 'NR3C1']	2/29	0.06796637636778757	1.0	stringdb_protein_interactions
+IMPDH1	34	STRING-DB protein interactions for IMPDH1	['ENTPD5', 'TPMT']	2/29	0.06796637636778757	1.0	stringdb_protein_interactions
+NDUFC2-KCTD14	35	STRING-DB protein interactions for NDUFC2-KCTD14	['NDUFB6', 'NDUFV1']	2/29	0.06796637636778757	1.0	stringdb_protein_interactions
+PER2	36	STRING-DB protein interactions for PER2	['FBXL3', 'NR3C1']	2/29	0.06796637636778757	1.0	stringdb_protein_interactions
+VASP	37	STRING-DB protein interactions for VASP	['PRKACA', 'TLN1']	2/29	0.06796637636778757	1.0	stringdb_protein_interactions
+YARS1	38	STRING-DB protein interactions for YARS1	['FARS2', 'YARS2']	2/29	0.06796637636778757	1.0	stringdb_protein_interactions
+ACOX3	39	STRING-DB protein interactions for ACOX3	['ALDH6A1', 'SCP2']	2/30	0.07214067824206961	1.0	stringdb_protein_interactions
+DLAT	40	STRING-DB protein interactions for DLAT	['DHTKD1', 'LIPT1']	2/30	0.07214067824206961	1.0	stringdb_protein_interactions

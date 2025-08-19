@@ -49,6 +49,8 @@ The app offers various statistical methods to calculate p-values:
 - Hypergeometric Test.
 - Chi-Squared Test.
 
+**Important Note on P-values**: The p-value threshold used for filtering results is a **raw p-value**, not a corrected p-value (e.g., FDR-corrected). While FDR values are calculated and reported in the results, the filtering threshold applies to the raw p-values.
+
 #### Custom Reference Data Upload
 Background Gene List Upload: Users can upload their background gene lists as .txt files containing newline-separated gene names or Entrez IDs.
 Gene Set Libraries Upload: The app allows for the upload of gene set libraries in the .gmt file format, enabling the use of custom gene sets in the analysis.

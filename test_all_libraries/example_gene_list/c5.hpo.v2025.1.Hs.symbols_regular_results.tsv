@@ -1,0 +1,4 @@
+term	rank	description	overlap	overlap_size	p-value	fdr	library
+HP_MICROCYTIC_ANEMIA	1	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HP_MICROCYTIC_ANEMIA	['CAT', 'DNAJC19', 'FECH', 'KLF1']	4/49	0.008694365462313877	0.4338416489511689	c5.hpo.v2025.1.Hs.symbols
+HP_ABNORMAL_NUMBER_OF_ERYTHROID_PRECURSORS	2	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HP_ABNORMAL_NUMBER_OF_ERYTHROID_PRECURSORS	['CDAN1', 'KLF1', 'TCN2', 'TSR2']	4/52	0.010712139480275775	0.4338416489511689	c5.hpo.v2025.1.Hs.symbols
+HP_NEONATAL_HYPOGLYCEMIA	3	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HP_NEONATAL_HYPOGLYCEMIA	['DNAJC19', 'GYS2', 'HSD3B2']	3/49	0.04884034042704353	1.0	c5.hpo.v2025.1.Hs.symbols

@@ -1,0 +1,5 @@
+term	rank	description	overlap	overlap_size	p-value	fdr	library
+METHYLCYTOSINE_DIOXYGENASE_TET_UNIPROT_A0A023HHK9_UNREVIEWED_TARGET_GENES	1	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/METHYLCYTOSINE_DIOXYGENASE_TET_UNIPROT_A0A023HHK9_UNREVIEWED_TARGET_GENES	['ATAD3A', 'ATPAF1', 'ATXN2', 'FAHD1', 'INTU', 'SFXN5', 'UBOX5', 'WDR24']	8/180	0.008039773197625855	1.0	c3.tft.gtrd.v2025.1.Hs.symbols
+SYNCRIP_TARGET_GENES	2	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/SYNCRIP_TARGET_GENES	['COL4A4', 'IAH1']	2/21	0.04347344465016685	1.0	c3.tft.gtrd.v2025.1.Hs.symbols
+PSMB5_TARGET_GENES	3	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/PSMB5_TARGET_GENES	['DALRD3']	1/311	0.06534885076407736	1.0	c3.tft.gtrd.v2025.1.Hs.symbols
+PBXIP1_TARGET_GENES	4	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/PBXIP1_TARGET_GENES	['GAL3ST2']	1/284	0.09346596948253749	1.0	c3.tft.gtrd.v2025.1.Hs.symbols
