@@ -7,8 +7,60 @@
 - The NCBI gene information database (`Homo_sapiens.gene_info`) is automatically downloaded for Entrez ID support.
 
 ## Run the Application
-- To run locally, use `streamlit run code/streamlit.app`
-- To run in Docker use `docker build -t cc_enrichment:latest .` and `docker run -p 8080:8080 cc_enrichment:latest`
+
+### Web Interface (Streamlit)
+The application provides a user-friendly web interface that runs in your browser:
+- **To run locally**: `streamlit run code/streamlit_app.py`
+- **To run in Docker**: `docker build -t cc_enrichment:latest .` and `docker run -p 8080:8080 cc_enrichment:latest`
+
+The Streamlit interface offers:
+- Interactive web-based UI accessible through your browser
+- Real-time parameter adjustment
+- Visual results display with charts and graphs
+- Easy file upload and download capabilities
+
+### Command Line Interface (CLI)
+For automated analysis, batch processing, or integration into workflows, use the command-line interface:
+
+```bash
+# Basic usage
+python code/cli.py --genelist your_genes.txt --libraries "H: Hallmark Gene Sets"
+
+# Run with all active libraries
+python code/cli.py --genelist your_genes.txt
+
+# Iterative enrichment mode
+python code/cli.py --genelist your_genes.txt --mode iterative
+
+# See all options
+python code/cli.py --help
+```
+
+**CLI Features:**
+- Full feature parity with the web interface
+- Support for both regular and iterative enrichment modes
+- Batch processing capabilities
+- Automated output generation (TSV, JSON, DOT files)
+- Gene format support (symbols or Entrez IDs)
+- Configurable statistical parameters
+
+For detailed CLI documentation, see [CLI_README.md](CLI_README.md).
+
+### Choosing Between Web Interface and CLI
+
+| Feature | Web Interface (Streamlit) | Command Line Interface (CLI) |
+|---------|---------------------------|------------------------------|
+| **Ease of Use** | ✅ User-friendly, no command line knowledge required | ⚠️ Requires basic command line skills |
+| **Visualization** | ✅ Interactive charts and graphs | ❌ Text-based output only |
+| **Real-time Adjustments** | ✅ Instant parameter changes | ❌ Requires re-running commands |
+| **Batch Processing** | ❌ Manual operation only | ✅ Automated processing |
+| **Integration** | ❌ Limited to web browser | ✅ Easy integration into workflows |
+| **Resource Usage** | ⚠️ Higher memory usage | ✅ Lower resource footprint |
+| **Remote Access** | ✅ Accessible from any browser | ⚠️ Requires SSH/remote access |
+
+**Recommendation:**
+- **Use Streamlit** for interactive exploration, visualization, and one-off analyses
+- **Use CLI** for batch processing, automation, and integration into computational pipelines
 
 ## Overview of Application Components
 ### Key Features
