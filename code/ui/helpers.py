@@ -75,7 +75,7 @@ def update_text_widgets() -> None:
             st.error(f"File {file_path} not found")
 
 
-def convert_and_validate_gene_input(input_text: str, input_format: str) -> tuple[list[str], list[str], list[str], dict]:
+def convert_and_validate_gene_input(input_text: str, input_format: str) -> tuple[list[str], list[str], list[str], dict, list[str]]:
     """
     Convert gene input based on specified format to symbols and provide validation feedback.
     
@@ -84,10 +84,13 @@ def convert_and_validate_gene_input(input_text: str, input_format: str) -> tuple
         input_format: Either 'symbols' or 'entrez_ids'
         
     Returns:
-        Tuple of (converted_symbols, unrecognized_entrez, unrecognized_symbols, stats)
+        Tuple of (converted_symbols, unrecognized_entrez, unrecognized_symbols, stats, conversions)
     """
     if not hasattr(state, 'gene_converter'):
         state.gene_converter = GeneConverter()
+    
+    # Clear previous conversions
+    state.gene_converter.clear_conversions()
     
     # Parse input lines
     lines = [line.strip() for line in input_text.split('\n') if line.strip()]
@@ -122,17 +125,19 @@ def convert_and_validate_gene_input(input_text: str, input_format: str) -> tuple
             else:
                 unrecognized_symbols.append(gene_id)
     
-    # Get conversion statistics
+    # Get conversion statistics and conversions
     stats = state.gene_converter.get_stats()
+    conversions = state.gene_converter.get_conversions()
     
-    return converted_symbols, unrecognized_entrez, unrecognized_symbols, stats
+    return converted_symbols, unrecognized_entrez, unrecognized_symbols, stats, conversions
 
 
 def display_conversion_results(converted_symbols: list[str], 
                               unrecognized_entrez: list[str], 
                               unrecognized_symbols: list[str],
                               stats: dict,
-                              input_format: str) -> None:
+                              input_format: str,
+                              conversions: list[str] = None) -> None:
     """
     Display the results of gene input conversion and validation.
     
@@ -142,6 +147,7 @@ def display_conversion_results(converted_symbols: list[str],
         unrecognized_symbols: List of unrecognized gene symbols
         stats: Dictionary with conversion statistics
         input_format: The input format that was used ('symbols' or 'entrez_ids')
+        conversions: List of gene symbol conversions (e.g., ["P53→TP53", "P21→CDKN1A"])
     """
     total_input = len(converted_symbols) + len(unrecognized_entrez) + len(unrecognized_symbols)
     
@@ -165,19 +171,18 @@ def display_conversion_results(converted_symbols: list[str],
         if converted_symbols:
             st.success(f"✅ Successfully processed {len(converted_symbols)} genes")
         
+        # Show conversions if any
+        if conversions and len(conversions) > 0:
+            st.info(f"🔄 {len(conversions)} gene symbols converted")
+            st.caption(", ".join(conversions))
+        
         if input_format == 'entrez_ids':
             if unrecognized_entrez:
                 st.warning(f"⚠️ {len(unrecognized_entrez)} Entrez IDs not found in database")
-                if len(unrecognized_entrez) <= 10:
-                    st.write("Invalid Entrez IDs:", ", ".join(unrecognized_entrez))
-                else:
-                    st.write(f"Invalid Entrez IDs: {', '.join(unrecognized_entrez[:10])}... (and {len(unrecognized_entrez)-10} more)")
+                st.caption("Invalid Entrez IDs: " + ", ".join(unrecognized_entrez))
         else:
             if unrecognized_symbols:
                 st.warning(f"⚠️ {len(unrecognized_symbols)} gene symbols not found in database")
-                if len(unrecognized_symbols) <= 10:
-                    st.write("Invalid symbols:", ", ".join(unrecognized_symbols))
-                else:
-                    st.write(f"Invalid symbols: {', '.join(unrecognized_symbols[:10])}... (and {len(unrecognized_symbols)-10} more)")
+                st.caption("Invalid symbols: " + ", ".join(unrecognized_symbols))
         
 

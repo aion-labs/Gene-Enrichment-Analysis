@@ -132,6 +132,8 @@ def _ensure_base_state():
         state.bt_iter_disabled = True
     if "p_threshold" not in state:
         state.p_threshold = 0.01
+    if "adjusted_p_threshold" not in state:
+        state.adjusted_p_threshold = 0.05
     if "min_overlap" not in state:
         state.min_overlap = 3
     if "iter_p_threshold" not in state:
@@ -347,11 +349,6 @@ Results include ranked tables, bar charts, and network graphs."""
                 label_visibility="collapsed",
             )
             st.caption("📝 **Note:** Maximum 500 genes allowed for optimal performance")
-            # Initialize gene set name if not provided
-            if 'gene_set_name' not in state or not state.gene_set_name or state.gene_set_name.strip() == "":
-                from datetime import datetime
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                state.gene_set_name = f"genelist_{timestamp}"
             
             st.text_input(
                 "Gene set name",
@@ -521,13 +518,13 @@ Results include ranked tables, bar charts, and network graphs."""
             # Gene validation section (always runs)
             if state.gene_set_input:
                 # Convert and validate gene input based on selected format
-                converted_symbols, unrecognized_entrez, unrecognized_symbols, stats = convert_and_validate_gene_input(
+                converted_symbols, unrecognized_entrez, unrecognized_symbols, stats, conversions = convert_and_validate_gene_input(
                     state.gene_set_input, 
                     state.gene_input_format
                 )
                 
                 # Display conversion results (always show validation results)
-                display_conversion_results(converted_symbols, unrecognized_entrez, unrecognized_symbols, stats, state.gene_input_format)
+                display_conversion_results(converted_symbols, unrecognized_entrez, unrecognized_symbols, stats, state.gene_input_format, conversions)
                 
                 # Create gene set with converted symbols (if any valid genes found)
                 if converted_symbols:
@@ -552,6 +549,16 @@ Results include ranked tables, bar charts, and network graphs."""
                     step=0.001,
                     format="%.4f",
                     help="Maximum raw p-value for terms to be included in results."
+                )
+                # Adjusted p-value threshold filter for regular mode
+                state.adjusted_p_threshold = st.number_input(
+                    "Adjusted p-value threshold",
+                    min_value=1e-10,
+                    max_value=1.0,
+                    value=0.05,
+                    step=0.001,
+                    format="%.4f",
+                    help="Maximum adjusted p-value (FDR) for terms to be included in results."
                 )
                 # Minimum overlap filter for regular mode
                 state.min_overlap = st.number_input(
@@ -778,6 +785,12 @@ Results include ranked tables, bar charts, and network graphs."""
         
         # Only proceed if all validations pass
         if validation_passed and state.gene_set_input and ready_common:
+            # Auto-generate gene set name if not provided
+            if not state.gene_set_name or state.gene_set_name.strip() == "":
+                from datetime import datetime
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                state.gene_set_name = f"genelist_{timestamp}"
+            
             # Use validated gene count instead of raw input count
             n_genes = state.gene_set.size if state.gene_set else len(state.gene_set_input.split())
             if n_genes <= 100 or n_genes >= 5000:
@@ -809,10 +822,11 @@ Results include ranked tables, bar charts, and network graphs."""
                         p_value_method_name=state.p_val_method,
                     )
                     
-                    # Filter results by p-value threshold and minimum overlap
+                    # Filter results by p-value threshold, adjusted p-value threshold, and minimum overlap
                     filtered_results = [
                         result for result in enrich.results
                         if (result.get("p-value", 1.0) <= state.p_threshold and
+                            result.get("fdr", 1.0) <= state.adjusted_p_threshold and
                             result.get("overlap_size", "").split("/")[0].isdigit() and 
                             int(result.get("overlap_size", "").split("/")[0]) >= state.min_overlap)
                     ]
@@ -845,14 +859,127 @@ Results include ranked tables, bar charts, and network graphs."""
             state.results_ready = True
     if mode == "Regular" and state.results_ready:
         logger.info("Displaying regular results")
+        
+
+        
+        # Always render results section
         st.markdown(
             f"Download all results as {download_link(collect_results(state.enrich), 'regular_enrichment_results','tsv')}",
             unsafe_allow_html=True,
         )
-        for lib in state.enrich:
+        
+        # Display results for each library in the same order as the checkbox list
+        def sort_libraries(libraries):
+            hallmark = [lib for lib in libraries if lib.startswith("H:")]
+            c2_libs = sorted([lib for lib in libraries if lib.startswith("C2:")])
+            c5_libs = sorted([lib for lib in libraries if lib.startswith("C5:")])
+            protein_interaction = [lib for lib in libraries if lib.startswith("Protein Interaction")]
+            other = sorted([lib for lib in libraries if not any(lib.startswith(prefix) for prefix in ["H:", "C2:", "C5:", "Protein Interaction"])])
+            
+            return hallmark + c2_libs + c5_libs + protein_interaction + other
+        
+        available_libraries = sort_libraries(list(state.enrich.keys()))
+        for lib in available_libraries:
             render_results(state.enrich[lib], lib, n_results)
-        # Reset the flag to prevent duplicate rendering
-        state.results_ready = False
+        
+        # Initialize network selection state if not exists
+        if not hasattr(state, 'selected_regular_libraries'):
+            state.selected_regular_libraries = []
+        if not hasattr(state, 'regular_network_generated'):
+            state.regular_network_generated = False
+        if not hasattr(state, 'last_regular_network'):
+            state.last_regular_network = ""
+        
+        # AI prompt construction section for regular enrichment
+        st.markdown("---")
+        st.header("Construction of AI Prompt")
+        
+        # callback to keep checkbox state in session
+        def toggle_regular_library(lib_name):
+            # Sanitize library name for widget key (replace special characters)
+            safe_lib_name = lib_name.replace(':', '_').replace(' ', '_').replace('-', '_')
+            if state[f"regular_network_select_{safe_lib_name}"]:
+                if lib_name not in state.selected_regular_libraries:
+                    state.selected_regular_libraries.append(lib_name)
+            else:
+                if lib_name in state.selected_regular_libraries:
+                    state.selected_regular_libraries.remove(lib_name)
+            # Clear network when selection changes
+            state.regular_network_generated = False
+            state.last_regular_network = ""
+        
+        # Interactive library selection interface
+        st.subheader("Library Selection for AI Prompt")
+        
+        # Get all available libraries in specific order: Hallmark, C2 (alphabetical), C5 (alphabetical), Protein Interaction
+        def sort_libraries(libraries):
+            hallmark = [lib for lib in libraries if lib.startswith("H:")]
+            c2_libs = sorted([lib for lib in libraries if lib.startswith("C2:")])
+            c5_libs = sorted([lib for lib in libraries if lib.startswith("C5:")])
+            protein_interaction = [lib for lib in libraries if lib.startswith("Protein Interaction")]
+            other = sorted([lib for lib in libraries if not any(lib.startswith(prefix) for prefix in ["H:", "C2:", "C5:", "Protein Interaction"])])
+            
+            return hallmark + c2_libs + c5_libs + protein_interaction + other
+        
+        available_libraries = sort_libraries(list(state.enrich.keys()))
+        
+        # Create columns for better layout
+        col1, col2 = st.columns([3, 1])
+        
+        with col1:
+            # Interactive list with checkboxes for each library
+            st.write("**Available Libraries:**")
+            for lib in available_libraries:
+                # Check if this library has any enrichment results
+                has_results = not state.enrich[lib].to_dataframe().empty
+                
+                # Sanitize library name for widget key (replace special characters)
+                safe_lib_name = lib.replace(':', '_').replace(' ', '_').replace('-', '_')
+                
+                if has_results:
+                    st.checkbox(
+                        lib,
+                        value=lib in state.selected_regular_libraries,
+                        key=f"regular_network_select_{safe_lib_name}",
+                        on_change=toggle_regular_library,
+                        args=(lib,)
+                    )
+                else:
+                    # Gray out libraries with no results
+                    st.markdown(f"~~{lib}~~ *(no enrichment results)*")
+        
+        with col2:
+            # Quick selection controls
+            st.write("**Quick Actions:**")
+            
+            if st.button("Select All", key="regular_select_all"):
+                # Only select libraries that have results
+                libraries_with_results = [lib for lib in available_libraries if not state.enrich[lib].to_dataframe().empty]
+                state.selected_regular_libraries = libraries_with_results.copy()
+                # Clear network when selection changes
+                state.regular_network_generated = False
+                state.last_regular_network = ""
+                st.rerun()
+            
+            if st.button("Clear All", key="regular_clear_all"):
+                state.selected_regular_libraries = []
+                # Clear network when selection changes
+                state.regular_network_generated = False
+                state.last_regular_network = ""
+                st.rerun()
+
+        # Generate AI prompt
+        if st.button("Generate AI Prompt", key="regular_generate_network"):
+            if not state.selected_regular_libraries:
+                st.error("Please select at least one library for AI prompt generation.")
+            else:
+                state.regular_network_generated = True
+                # Generate JSON network from regular enrichment results
+                network_json = generate_regular_network_json(state.enrich, state.selected_regular_libraries)
+                state.last_regular_network = network_json
+                render_regular_network_analysis(network_json, state.selected_regular_libraries)
+        elif state.regular_network_generated and state.selected_regular_libraries:
+            render_regular_network_analysis(state.last_regular_network, state.selected_regular_libraries)
 
     # Iterative execution
     if mode == "Iterative" and "bt_iter" in locals() and bt_iter:
@@ -898,6 +1025,11 @@ Results include ranked tables, bar charts, and network graphs."""
         
         # Only proceed if all validations pass
         if validation_passed and ready_common and state.gene_set_input:
+            # Auto-generate gene set name if not provided
+            if not state.gene_set_name or state.gene_set_name.strip() == "":
+                from datetime import datetime
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                state.gene_set_name = f"genelist_{timestamp}"
 
             # Load background once and reuse for all libraries
             logger.info(f"Loading background gene set: {state.background_gene_set.name} ({state.background_gene_set.size} genes)")
@@ -1019,8 +1151,19 @@ Results include ranked tables, bar charts, and network graphs."""
             state.network_generated = False
             state.last_merged_dot = ""
 
-        # render each library's results with a persistent checkbox
-        for lib, it in state.iter_enrich.items():
+        # render each library's results with a persistent checkbox in the same order as the checkbox list
+        def sort_libraries(libraries):
+            hallmark = [lib for lib in libraries if lib.startswith("H:")]
+            c2_libs = sorted([lib for lib in libraries if lib.startswith("C2:")])
+            c5_libs = sorted([lib for lib in libraries if lib.startswith("C5:")])
+            protein_interaction = [lib for lib in libraries if lib.startswith("Protein Interaction")]
+            other = sorted([lib for lib in libraries if not any(lib.startswith(prefix) for prefix in ["H:", "C2:", "C5:", "Protein Interaction"])])
+            
+            return hallmark + c2_libs + c5_libs + protein_interaction + other
+        
+        available_libraries = sort_libraries(list(state.iter_enrich.keys()))
+        for lib in available_libraries:
+            it = state.iter_enrich[lib]
             render_iter_results(it, lib)
             # Sanitize library name for widget key (replace special characters)
             safe_lib_name = lib.replace(':', '_').replace(' ', '_').replace('-', '_')
@@ -1039,8 +1182,17 @@ Results include ranked tables, bar charts, and network graphs."""
         # Interactive library selection interface
         st.subheader("Library Selection for Network")
         
-        # Get all available libraries
-        available_libraries = list(state.iter_enrich.keys())
+        # Get all available libraries in specific order: Hallmark, C2 (alphabetical), C5 (alphabetical), Protein Interaction
+        def sort_libraries(libraries):
+            hallmark = [lib for lib in libraries if lib.startswith("H:")]
+            c2_libs = sorted([lib for lib in libraries if lib.startswith("C2:")])
+            c5_libs = sorted([lib for lib in libraries if lib.startswith("C5:")])
+            protein_interaction = [lib for lib in libraries if lib.startswith("Protein Interaction")]
+            other = sorted([lib for lib in libraries if not any(lib.startswith(prefix) for prefix in ["H:", "C2:", "C5:", "Protein Interaction"])])
+            
+            return hallmark + c2_libs + c5_libs + protein_interaction + other
+        
+        available_libraries = sort_libraries(list(state.iter_enrich.keys()))
         
         # Create columns for better layout
         col1, col2 = st.columns([3, 1])
@@ -1049,23 +1201,32 @@ Results include ranked tables, bar charts, and network graphs."""
             # Interactive list with checkboxes for each library
             st.write("**Available Libraries:**")
             for lib in available_libraries:
-                # Create a checkbox for each library
+                # Check if this library has any enrichment results
+                has_results = not state.iter_enrich[lib].to_dataframe().empty
+                
                 # Sanitize library name for widget key (replace special characters)
                 safe_lib_name = lib.replace(':', '_').replace(' ', '_').replace('-', '_')
-                st.checkbox(
-                    lib,
-                    value=lib in state.selected_dot_paths,
-                    key=f"network_select_{safe_lib_name}",
-                    on_change=toggle_network_selection,
-                    args=(lib,)
-                )
+                
+                if has_results:
+                    st.checkbox(
+                        lib,
+                        value=lib in state.selected_dot_paths,
+                        key=f"network_select_{safe_lib_name}",
+                        on_change=toggle_network_selection,
+                        args=(lib,)
+                    )
+                else:
+                    # Gray out libraries with no results
+                    st.markdown(f"~~{lib}~~ *(no enrichment results)*")
         
         with col2:
             # Quick selection controls
             st.write("**Quick Actions:**")
             
             if st.button("Select All"):
-                state.selected_dot_paths = available_libraries.copy()
+                # Only select libraries that have results
+                libraries_with_results = [lib for lib in available_libraries if not state.iter_enrich[lib].to_dataframe().empty]
+                state.selected_dot_paths = libraries_with_results.copy()
                 # Clear network when selection changes
                 state.network_generated = False
                 state.last_merged_dot = ""
@@ -1096,6 +1257,189 @@ Results include ranked tables, bar charts, and network graphs."""
             render_network(state.last_merged_dot)
 
     logger.info("Finishing the Streamlit app")
+
+
+def generate_regular_network_json(enrich_results, selected_libraries):
+    """
+    Generate a JSON network representation from regular enrichment results.
+    
+    :param enrich_results: Dictionary of enrichment results by library
+    :param selected_libraries: List of selected library names
+    :return: JSON network string
+    """
+    import json
+    
+    network_data = {
+        "analysis_type": "over_representation_analysis",
+        "libraries_analyzed": selected_libraries,
+        "edges": []
+    }
+    
+    # Build edges for each enriched term
+    for lib_name in selected_libraries:
+        if lib_name in enrich_results:
+            enrich = enrich_results[lib_name]
+            
+            for result in enrich.results:
+                term_name = result.get('term', 'Unknown')
+                p_value = result.get('p-value', 1.0)
+                overlap_size = result.get('overlap_size', '0/0')
+                rank = result.get('rank', 0)
+                
+                # Get genes from the result
+                genes = result.get('overlap', [])
+                if isinstance(genes, str):
+                    genes = genes.split(',')
+                elif isinstance(genes, list):
+                    genes = [str(g) for g in genes]
+                else:
+                    genes = []
+                
+                # Create an edge for each gene in the overlap
+                for gene in genes:
+                    edge = {
+                        "term": term_name,
+                        "library": lib_name,
+                        "gene": gene
+                    }
+                    network_data["edges"].append(edge)
+    
+    return json.dumps(network_data, indent=2)
+
+
+def render_regular_network_analysis(network_json, selected_libraries):
+    """
+    Render the network analysis for regular enrichment results.
+    
+    :param network_json: JSON network content
+    :param selected_libraries: List of selected library names
+    """
+    st.subheader("AI Analysis")
+    
+    # Generate AI prompt for regular enrichment
+    ai_prompt = generate_regular_ai_prompt(network_json, selected_libraries)
+    
+    # Display the prompt in an expander
+    with st.expander("📋 AI Analysis Prompt", expanded=False):
+        st.text_area(
+            "Copy this prompt to use with AI analysis tools:",
+            value=ai_prompt,
+            height=400,
+            key="regular_ai_prompt"
+        )
+    
+    # Offer download
+    st.markdown(
+        f'Download {download_link(ai_prompt, "regular_ai_analysis_prompt", "txt")} for AI analysis',
+        unsafe_allow_html=True,
+    )
+
+
+def generate_regular_ai_prompt(network_json, selected_libraries):
+    """
+    Generate AI analysis prompt for regular enrichment results.
+    
+    :param network_json: JSON network content
+    :param selected_libraries: List of selected library names
+    :return: Formatted AI analysis prompt
+    """
+    import json
+    
+    # Parse the JSON network data
+    network_data = json.loads(network_json)
+    
+    prompt = f"""You are a computational biologist analyzing gene set enrichment results from an over-representation analysis (ORA). This analysis identifies biological pathways, processes, and functions that are significantly enriched in a given gene set compared to a background gene set.
+
+**ANALYSIS CONTEXT:**
+- **Analysis Type**: Over-representation analysis (ORA)
+- **Libraries Analyzed**: {len(selected_libraries)} libraries
+
+**LIBRARY SOURCES AND THEIR BIOLOGICAL CONTEXT:**
+"""
+    
+    # Add library descriptions only for selected libraries
+    library_descriptions = {
+        "H: Hallmark Gene Sets": "Curated gene sets representing well-defined biological states or processes",
+        "C2: BioCarta": "Canonical pathways from BioCarta database",
+        "C2: KEGG MEDICUS": "Metabolic and signaling pathways from KEGG",
+        "C2: Pathway Interaction Database": "Curated human signaling pathways",
+        "C2: Reactome Pathways": "Expert-curated biological pathways",
+        "C2: WikiPathways": "Community-curated biological pathways",
+        "C5: Gene Ontology: Biological Process": "Biological processes from Gene Ontology",
+        "C5: Gene Ontology: Cellular Component": "Cellular components from Gene Ontology",
+        "C5: Gene Ontology: Molecular Function": "Molecular functions from Gene Ontology",
+        "C5: Human Phenotype Ontology": "Human phenotypes and diseases",
+        "Protein Interaction": "Protein-protein interaction networks"
+    }
+    
+    for lib in selected_libraries:
+        description = library_descriptions.get(lib, "Biological pathway/process database")
+        prompt += f"- **{lib}**: {description}\n"
+    
+    prompt += f"""
+**NETWORK STRUCTURE:**
+The following JSON represents the gene-term network where each edge connects a gene to an enriched biological term:
+
+```json
+{network_json}
+```
+
+**NETWORK INTERPRETATION:**
+- Each edge represents a gene's membership in an enriched biological term
+- The network shows which genes are associated with which biological processes/pathways
+- Terms are annotated with their source library and statistical information
+- Genes that appear in multiple terms are "hub genes" that may be central to the biological response
+"""
+    
+    prompt += """**NETWORK INTERPRETATION GUIDE:**
+
+**Node Types:**
+- **Gene nodes** (type="gene"): Individual genes from the input gene set
+- **Term nodes** (type="term"): Enriched biological pathways/processes/gene sets
+- **Library Source**: Each term node includes a "library" attribute indicating the source database
+
+**Edge Connections:**
+- Each edge (gene -- term) represents a gene's membership in that biological term
+- More connections indicate genes that are part of multiple enriched processes
+- The network topology shows which genes are central to the biological response
+
+**ANALYSIS REQUEST:**
+
+Please analyze this network and provide:
+
+1. **Key Biological Insights:**
+   - What are the most significant biological processes/pathways identified?
+   - Which genes appear to be central to the biological response?
+
+2. **Network Topology Analysis:**
+   - Which genes are "hub" genes (connected to multiple terms)?
+   - Are there distinct clusters or modules in the network?
+   - What does the connectivity pattern suggest about biological organization?
+
+3. **Biological Hypothesis:**
+   - Based on the network structure, what biological hypothesis can you generate?
+   - How do the different library sources support or complement each other?
+   - Try to formulate one hypothesis based on the most central terms and how they possibly related to one another.
+   
+4. **Estimated Experimental Context**
+   - Can you hypothesize on what was the experiment that generated this result?
+
+**RESPONSE STRUCTURE:**
+- **Executive Summary** (2-3 sentences)
+- **Key Biological Processes Identified** (by library source)
+- **Network Topology Insights**
+- **Proposed Biological Hypothesis**
+- **Estimated Experimental Context**
+
+**IMPORTANT NOTES:**
+- Focus on biological interpretation, not statistical significance
+- Consider the functional relationships between connected genes and terms
+- Look for unexpected connections that might reveal novel or unexpected biology
+- Consider the broader biological context and literature
+- Note that protein interaction library could shed light on physical interaction between genes while terms indicate functional interaction
+- Different library sources may provide complementary biological insights"""
+    
+    return prompt
 
 
 if __name__ == "__main__":

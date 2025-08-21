@@ -128,6 +128,11 @@ def render_results(result: Enrichment, file_name: str, n_results: int = 10) -> N
     # Display library-specific size information
     st.caption(f"{library_input_size}/{result.gene_set.size} genes, {library_background_size}/{result.background_gene_set.size} background")
     
+    # Check if there are any results to display
+    if result_df.empty:
+        st.warning("⚠️ No enrichment results found.")
+        return
+    
     table, bar = st.tabs(["Results", "Bar chart"])
     with table:
         render_table(result_df)

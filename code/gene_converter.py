@@ -41,6 +41,9 @@ class GeneConverter:
         self.synonyms_to_symbol: Dict[str, str] = {}
         self.old_to_current_symbol: Dict[str, str] = {}
         
+        # Track conversions for this session
+        self.conversions: List[str] = []
+        
         if self.gene_info_path.exists():
             self._load_gene_info()
         else:
@@ -163,6 +166,9 @@ class GeneConverter:
         if symbol_upper in self.synonyms_to_symbol:
             mapped_symbol = self.synonyms_to_symbol[symbol_upper].upper()
             if mapped_symbol in self.symbol_to_entrez:
+                # Track conversion
+                if symbol_upper != mapped_symbol:
+                    self.conversions.append(f"{symbol_upper}→{mapped_symbol}")
                 return mapped_symbol
         
         # Try gene history mapping
@@ -170,6 +176,9 @@ class GeneConverter:
             mapped_symbol = self.old_to_current_symbol[symbol_upper]
             if mapped_symbol in self.symbol_to_entrez:
                 logger.debug(f"Mapped {symbol_upper} -> {mapped_symbol} using gene history")
+                # Track conversion
+                if symbol_upper != mapped_symbol:
+                    self.conversions.append(f"{symbol_upper}→{mapped_symbol}")
                 return mapped_symbol
         
         return None
@@ -236,4 +245,12 @@ class GeneConverter:
             'symbol_mappings': len(self.symbol_to_entrez),
             'synonym_mappings': len(self.synonyms_to_symbol),
             'history_mappings': len(self.old_to_current_symbol)
-        } 
+        }
+    
+    def get_conversions(self) -> List[str]:
+        """Get list of conversions made in this session."""
+        return self.conversions.copy()
+    
+    def clear_conversions(self) -> None:
+        """Clear the conversion tracking list."""
+        self.conversions.clear() 

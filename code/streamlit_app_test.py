@@ -521,13 +521,13 @@ Results include ranked tables, bar charts, and network graphs."""
             # Gene validation section (always runs)
             if state.gene_set_input:
                 # Convert and validate gene input based on selected format
-                converted_symbols, unrecognized_entrez, unrecognized_symbols, stats = convert_and_validate_gene_input(
+                converted_symbols, unrecognized_entrez, unrecognized_symbols, stats, conversions = convert_and_validate_gene_input(
                     state.gene_set_input, 
                     state.gene_input_format
                 )
                 
                 # Display conversion results (always show validation results)
-                display_conversion_results(converted_symbols, unrecognized_entrez, unrecognized_symbols, stats, state.gene_input_format)
+                display_conversion_results(converted_symbols, unrecognized_entrez, unrecognized_symbols, stats, state.gene_input_format, conversions)
                 
                 # Create gene set with converted symbols (if any valid genes found)
                 if converted_symbols:
