@@ -21,7 +21,7 @@ graphviz==0.21
 pydot==4.0.1
 
 # Web application framework
-streamlit==1.43.2
+streamlit==1.48.0
 
 # Command line interface
 typer==0.9.0

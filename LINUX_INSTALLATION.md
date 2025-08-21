@@ -70,7 +70,7 @@ pip install statsmodels==0.14.4
 pip install plotly==6.0.1
 pip install pydot==4.0.1
 pip install networkx==3.5
-pip install streamlit==1.43.2
+pip install streamlit==1.48.0
 pip install typer==0.9.0
 pip install Pillow==11.1.0
 pip install graphviz==0.21

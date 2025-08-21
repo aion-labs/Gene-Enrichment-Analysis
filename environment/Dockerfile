@@ -13,5 +13,5 @@ RUN pip3 install -U --no-cache-dir \
     pytest==7.4.3 \
     scipy==1.15.2 \
     statsmodels==0.14.4 \
-    streamlit==1.43.2 \
+    streamlit==1.48.0 \
     typer==0.9.0

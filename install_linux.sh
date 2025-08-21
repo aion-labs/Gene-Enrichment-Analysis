@@ -78,7 +78,7 @@ install_python_dependencies() {
     else
         echo "❌ requirements.txt not found. Installing core dependencies manually..."
         pip install pandas==2.2.3 scipy==1.15.2 statsmodels==0.14.4 \
-            plotly==6.0.1 pydot==4.0.1 networkx==3.5 streamlit==1.43.2 \
+            plotly==6.0.1 pydot==4.0.1 networkx==3.5 streamlit==1.48.0 \
             typer==0.9.0 Pillow==11.1.0 graphviz==0.21 numpy matplotlib seaborn
     fi
 }
