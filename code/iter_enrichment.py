@@ -297,6 +297,20 @@ class IterativeEnrichment:
         # Create TSV data with library name as first column
         import math
         tsv_data = []
+        
+        # Get the genes from the top result of this iteration (same as used in main results)
+        top_result = enrichment.results[0] if enrichment.results else {}
+        genes_in_term = []
+        if top_result:
+            overlap_data = top_result.get("overlap", [])
+            if isinstance(overlap_data, str):
+                # If overlap is a string, try to parse it
+                genes_in_term = sorted(overlap_data.split(',') if overlap_data else [])
+            elif isinstance(overlap_data, list):
+                genes_in_term = sorted(overlap_data)
+            else:
+                genes_in_term = []
+        
         for result in enrichment.results:
             p_value = result.get("p-value", 0)
             if isinstance(p_value, str):
@@ -312,7 +326,7 @@ class IterativeEnrichment:
                 "Term": format_term_name(result.get("term", "")),
                 "Description": result.get("description", ""),
                 "Overlap size": result.get("overlap_size", ""),
-                "Genes": ", ".join(result.get("overlap", [])),
+                "Genes": ", ".join(genes_in_term),
                 "p-value": result.get("p-value", ""),
                 "-log(p-value)": -math.log10(p_value) if p_value > 0 else 0,
             })
@@ -382,6 +396,9 @@ class IterativeEnrichment:
         for i, (iteration_record, enrichment) in enumerate(zip(self.results, self._iteration_enrichments)):
             iteration_num = iteration_record["Iteration"]
             
+            # Get the genes from the iteration record (same as used in main results)
+            genes_in_term = iteration_record.get("Genes", [])
+            
             # Get all results from this iteration's enrichment
             for result in enrichment.results:
                 p_value = result.get("p-value", 0)
@@ -398,7 +415,7 @@ class IterativeEnrichment:
                     "Term": format_term_name(result.get("term", "")),
                     "Description": result.get("description", ""),
                     "Overlap size": result.get("overlap_size", ""),
-                    "Genes": ", ".join(result.get("overlap", [])),
+                    "Genes": ", ".join(genes_in_term),
                     "p-value": result.get("p-value", ""),
                     "-log(p-value)": -math.log10(p_value) if p_value > 0 else 0,
                 })
@@ -502,6 +519,13 @@ class IterativeEnrichment:
         import math
         
         df = pd.DataFrame(self.results)
+        
+        # Convert genes from list format to comma-separated format
+        if not df.empty and 'Genes' in df.columns:
+            df['Genes'] = df['Genes'].apply(
+                lambda x: ', '.join(x) if isinstance(x, list) else str(x)
+            )
+        
         # Ensure correct column order if columns exist
         if not df.empty:
             expected_columns = ["Library", "Iteration", "Term", "Description", "Overlap size", "p-value", "-log(p-value)", "Genes"]

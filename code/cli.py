@@ -353,12 +353,6 @@ def run_iterative_enrichment(
                 # Use the same formatting as Streamlit app
                 results_df = it.to_dataframe()
                 
-                # Convert genes lists to comma-separated strings to match Streamlit format
-                if 'Genes' in results_df.columns:
-                    results_df['Genes'] = results_df['Genes'].apply(
-                        lambda x: ', '.join(x) if isinstance(x, list) else str(x)
-                    )
-                
                 output_file = output_dir / f"{library.name}_iterative_results.tsv"
                 results_df.to_csv(output_file, sep='\t', index=False)
                 logger.info(f"Saved {len(it.results)} iterations to {output_file}")
