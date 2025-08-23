@@ -347,6 +347,7 @@ Results include ranked tables, bar charts, and network graphs."""
                 label_visibility="collapsed",
             )
             st.caption("📝 **Note:** Maximum 500 genes allowed for optimal performance")
+            
             # Initialize gene set name if not provided
             if 'gene_set_name' not in state or not state.gene_set_name or state.gene_set_name.strip() == "":
                 from datetime import datetime
@@ -354,10 +355,9 @@ Results include ranked tables, bar charts, and network graphs."""
                 state.gene_set_name = f"genelist_{timestamp}"
             
             st.text_input(
-                "Gene set name",
+                "Input gene list name:",
                 key="gene_set_name",
                 placeholder="Input a gene set name",
-                label_visibility="collapsed",
             )
             gene_files = [
                 str(f).replace(f"{ROOT}/data/gene_lists/", "")

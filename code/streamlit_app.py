@@ -350,11 +350,16 @@ Results include ranked tables, bar charts, and network graphs."""
             )
             st.caption("📝 **Note:** Maximum 500 genes allowed for optimal performance")
             
+            # Auto-generate gene set name if not provided
+            if not state.gene_set_name or state.gene_set_name.strip() == "":
+                from datetime import datetime
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                state.gene_set_name = f"genelist_{timestamp}"
+            
             st.text_input(
-                "Gene set name",
+                "Input/edit gene list name:",
                 key="gene_set_name",
                 placeholder="Input a gene set name",
-                label_visibility="collapsed",
             )
             gene_files = [
                 str(f).replace(f"{ROOT}/data/gene_lists/", "")
@@ -785,11 +790,6 @@ Results include ranked tables, bar charts, and network graphs."""
         
         # Only proceed if all validations pass
         if validation_passed and state.gene_set_input and ready_common:
-            # Auto-generate gene set name if not provided
-            if not state.gene_set_name or state.gene_set_name.strip() == "":
-                from datetime import datetime
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                state.gene_set_name = f"genelist_{timestamp}"
             
             # Use validated gene count instead of raw input count
             n_genes = state.gene_set.size if state.gene_set else len(state.gene_set_input.split())
@@ -1025,11 +1025,6 @@ Results include ranked tables, bar charts, and network graphs."""
         
         # Only proceed if all validations pass
         if validation_passed and ready_common and state.gene_set_input:
-            # Auto-generate gene set name if not provided
-            if not state.gene_set_name or state.gene_set_name.strip() == "":
-                from datetime import datetime
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                state.gene_set_name = f"genelist_{timestamp}"
 
             # Load background once and reuse for all libraries
             logger.info(f"Loading background gene set: {state.background_gene_set.name} ({state.background_gene_set.size} genes)")
