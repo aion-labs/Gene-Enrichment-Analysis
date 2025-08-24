@@ -25,6 +25,7 @@ from ui.rendering import (
     render_network,
     render_results,
     render_validation,
+    generate_regular_enrichment_json_analysis,
 )
 from ui.utils import download_link, download_file_link, update_aliases
 
@@ -846,7 +847,8 @@ Results include ranked tables, bar charts, and network graphs."""
     if mode == "Regular" and state.results_ready:
         logger.info("Displaying regular results")
         st.markdown(
-            f"Download all results as {download_link(collect_results(state.enrich), 'regular_enrichment_results','tsv')}",
+            f"Download all results as {download_link(collect_results(state.enrich), 'regular_enrichment_results','tsv')}, "
+            f"{download_link(generate_regular_enrichment_json_analysis(state.enrich), 'regular_enrichment_results','json')}",
             unsafe_allow_html=True,
         )
         for lib in state.enrich:

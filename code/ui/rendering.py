@@ -831,3 +831,109 @@ Focus on biological interpretation and actionable insights.
 """
     
     return output
+
+
+def generate_regular_enrichment_json_analysis(enrichment_results: dict) -> str:
+    """
+    Generate a lightweight JSON format of regular enrichment results for AI analysis.
+    This provides only essential data: Library, Term, Rank, Genes.
+    
+    :param enrichment_results: Dictionary of enrichment results from user-selected libraries
+    :return: JSON format for AI analysis
+    """
+    import json
+    
+    # Extract data from enrichment results
+    results = []
+    
+    for library_name, enrichment_obj in enrichment_results.items():
+        # Get the DataFrame with all results
+        df = enrichment_obj.to_dataframe()
+        
+        # Extract only the required columns: Library, Term, Rank, Genes
+        for _, row in df.iterrows():
+            # Convert genes string back to list
+            genes = [gene.strip() for gene in row['Genes'].split(',') if gene.strip()]
+            
+            results.append({
+                "library": row['Library'],
+                "term": row['Term'],
+                "rank": int(row['Rank']),
+                "genes": genes
+            })
+    
+    # Create the JSON structure
+    analysis_data = {
+        "analysis_type": "over_representation_analysis",
+        "results": results
+    }
+    
+    # Create the output with instructions
+    output = f"""# OVER-REPRESENTATION ANALYSIS (ORA)
+# Ranked List of Enriched Biological Terms
+
+## ANALYSIS CONTEXT
+You are a computational biologist analyzing over-representation analysis (ORA) results. This analysis identifies biological pathways, processes, and functions that are significantly enriched in a given gene set compared to a background gene set. The results are provided as a ranked list of enriched terms, where each term contains a list of genes that are over-represented in that biological process.
+
+**DATA STRUCTURE:**
+- **Ranked List**: Terms are ranked by statistical significance (lower rank = more significant)
+- **Gene Lists**: Each term contains the specific genes that are enriched in that biological process
+- **Library Sources**: Different databases provide complementary biological context
+- **Table Format**: Results are organized by ranked terms per library source
+
+## ENRICHMENT DATA (JSON Format)
+```json
+{json.dumps(analysis_data, indent=2)}
+```
+
+## LIBRARY SOURCES AND THEIR BIOLOGICAL CONTEXT:
+- **H: Hallmark gene sets**: Curated gene sets representing well-defined biological states or processes
+- **C2: BioCarta**: Canonical pathways from BioCarta database
+- **C2: KEGG MEDICUS**: Metabolic and signaling pathways from KEGG
+- **C2: Pathway Interaction Database**: Curated human signaling pathways
+- **C2: Reactome Pathways**: Expert-curated biological pathways
+- **C2: WikiPathways**: Community-curated biological pathways
+- **C5: Gene Ontology: Biological Process**: Biological processes from Gene Ontology
+- **C5: Gene Ontology: Cellular Component**: Cellular components from Gene Ontology
+- **C5: Gene Ontology: Molecular Function**: Molecular functions from Gene Ontology
+- **C5: Human Phenotype Ontology**: Human phenotypes and diseases
+- **Protein Interaction**: Protein-protein interaction networks
+
+## ANALYSIS REQUEST:
+
+Please analyze this ranked list of enriched terms and provide:
+
+1. **Key Biological Insights:**
+   - What are the most significant biological processes/pathways identified?
+   - Which genes appear may be central to the biological response?
+
+2. **Ranked List Analysis:**
+   - How do the terms relate to each other biologically?
+   - Are there patterns in the gene composition across different terms and processes?
+
+3. **Biological Hypothesis:**
+   - Based on the ranked list structure, what biological hypothesis can you generate?
+   - How do the different library sources support or complement each other?
+   - Try to formulate one coherent hypothesis that explains as many terms as possible and generates a coherent biological story.
+   
+4. **Estimated Experimental Context**
+   - Can you hypothesize on what was the experiment that generated this result?
+
+## RESPONSE STRUCTURE:
+- **Executive Summary** (2-3 sentences)
+- **Key Biological Processes Identified** (by library source and rank)
+- **Gene-Term Relationship Analysis**
+- **Proposed Biological Hypothesis** (coherent story explaining multiple terms)
+- **Estimated Experimental Context**
+
+## IMPORTANT NOTES:
+- Focus on biological interpretation, not just ranking
+- Consider the functional relationships between genes within and across terms
+- Consider that some genes may appear in multiple terms due to term redundancy
+- Consider the broader biological context and literature
+- Different library sources may provide complementary biological insights
+- Build a coherent story that explains as many terms as possible rather than treating them in isolation
+- The goal is to find a unifying biological hypothesis that connects the enriched terms into a meaningful narrative
+"""
+    
+    return output

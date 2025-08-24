@@ -25,6 +25,7 @@ from ui.rendering import (
     render_network,
     render_results,
     render_validation,
+    generate_regular_enrichment_json_analysis,
 )
 from ui.utils import download_link, download_file_link, update_aliases
 
@@ -864,7 +865,8 @@ Results include ranked tables, bar charts, and network graphs."""
         
         # Always render results section
         st.markdown(
-            f"Download all results as {download_link(collect_results(state.enrich), 'regular_enrichment_results','tsv')}",
+            f"Download all results as {download_link(collect_results(state.enrich), 'regular_enrichment_results','tsv')}, "
+            f"{download_link(generate_regular_enrichment_json_analysis(state.enrich), 'regular_enrichment_results','json')}",
             unsafe_allow_html=True,
         )
         
@@ -1256,50 +1258,44 @@ Results include ranked tables, bar charts, and network graphs."""
 
 def generate_regular_network_json(enrich_results, selected_libraries):
     """
-    Generate a JSON network representation from regular enrichment results.
+    Generate a lightweight JSON representation from regular enrichment results.
+    This provides only essential data: Library, Term, Rank, Genes.
     
     :param enrich_results: Dictionary of enrichment results by library
     :param selected_libraries: List of selected library names
-    :return: JSON network string
+    :return: JSON string with lightweight format
     """
     import json
     
-    network_data = {
-        "analysis_type": "over_representation_analysis",
-        "libraries_analyzed": selected_libraries,
-        "edges": []
-    }
+    # Extract data from enrichment results for selected libraries only
+    results = []
     
-    # Build edges for each enriched term
     for lib_name in selected_libraries:
         if lib_name in enrich_results:
             enrich = enrich_results[lib_name]
             
-            for result in enrich.results:
-                term_name = result.get('term', 'Unknown')
-                p_value = result.get('p-value', 1.0)
-                overlap_size = result.get('overlap_size', '0/0')
-                rank = result.get('rank', 0)
+            # Get the DataFrame with all results
+            df = enrich.to_dataframe()
+            
+            # Extract only the required columns: Library, Term, Rank, Genes
+            for _, row in df.iterrows():
+                # Convert genes string back to list
+                genes = [gene.strip() for gene in row['Genes'].split(',') if gene.strip()]
                 
-                # Get genes from the result
-                genes = result.get('overlap', [])
-                if isinstance(genes, str):
-                    genes = genes.split(',')
-                elif isinstance(genes, list):
-                    genes = [str(g) for g in genes]
-                else:
-                    genes = []
-                
-                # Create an edge for each gene in the overlap
-                for gene in genes:
-                    edge = {
-                        "term": term_name,
-                        "library": lib_name,
-                        "gene": gene
-                    }
-                    network_data["edges"].append(edge)
+                results.append({
+                    "library": row['Library'],
+                    "term": row['Term'],
+                    "rank": int(row['Rank']),
+                    "genes": genes
+                })
     
-    return json.dumps(network_data, indent=2)
+    # Create the lightweight JSON structure
+    analysis_data = {
+        "analysis_type": "over_representation_analysis",
+        "results": results
+    }
+    
+    return json.dumps(analysis_data, indent=2)
 
 
 def render_regular_network_analysis(network_json, selected_libraries):
@@ -1334,22 +1330,33 @@ def generate_regular_ai_prompt(network_json, selected_libraries):
     """
     Generate AI analysis prompt for regular enrichment results.
     
-    :param network_json: JSON network content
+    :param network_json: JSON enrichment data
     :param selected_libraries: List of selected library names
     :return: Formatted AI analysis prompt
     """
     import json
     
-    # Parse the JSON network data
-    network_data = json.loads(network_json)
+    # Parse the JSON data
+    analysis_data = json.loads(network_json)
     
-    prompt = f"""You are a computational biologist analyzing gene set enrichment results from an over-representation analysis (ORA). This analysis identifies biological pathways, processes, and functions that are significantly enriched in a given gene set compared to a background gene set.
+    prompt = f"""# OVER-REPRESENTATION ANALYSIS (ORA)
+# Ranked List of Enriched Biological Terms
 
-**ANALYSIS CONTEXT:**
-- **Analysis Type**: Over-representation analysis (ORA)
-- **Libraries Analyzed**: {len(selected_libraries)} libraries
+## ANALYSIS CONTEXT
+You are a computational biologist analyzing over-representation analysis (ORA) results. This analysis identifies biological pathways, processes, and functions that are significantly enriched in a given gene set compared to a background gene set. The results are provided as a ranked list of enriched terms, where each term contains a list of genes that are over-represented in that biological process.
 
-**LIBRARY SOURCES AND THEIR BIOLOGICAL CONTEXT:**
+**DATA STRUCTURE:**
+- **Ranked List**: Terms are ranked by statistical significance (lower rank = more significant)
+- **Gene Lists**: Each term contains the specific genes that are enriched in that biological process
+- **Library Sources**: Different databases provide complementary biological context
+- **Table Format**: Results are organized as a table rather than a network structure
+
+## ENRICHMENT DATA (JSON Format)
+```json
+{network_json}
+```
+
+## LIBRARY SOURCES AND THEIR BIOLOGICAL CONTEXT:
 """
     
     # Add library descriptions only for selected libraries
@@ -1371,68 +1378,43 @@ def generate_regular_ai_prompt(network_json, selected_libraries):
         description = library_descriptions.get(lib, "Biological pathway/process database")
         prompt += f"- **{lib}**: {description}\n"
     
-    prompt += f"""
-**NETWORK STRUCTURE:**
-The following JSON represents the gene-term network where each edge connects a gene to an enriched biological term:
+    prompt += """
+## ANALYSIS REQUEST:
 
-```json
-{network_json}
-```
-
-**NETWORK INTERPRETATION:**
-- Each edge represents a gene's membership in an enriched biological term
-- The network shows which genes are associated with which biological processes/pathways
-- Terms are annotated with their source library and statistical information
-- Genes that appear in multiple terms are "hub genes" that may be central to the biological response
-"""
-    
-    prompt += """**NETWORK INTERPRETATION GUIDE:**
-
-**Node Types:**
-- **Gene nodes** (type="gene"): Individual genes from the input gene set
-- **Term nodes** (type="term"): Enriched biological pathways/processes/gene sets
-- **Library Source**: Each term node includes a "library" attribute indicating the source database
-
-**Edge Connections:**
-- Each edge (gene -- term) represents a gene's membership in that biological term
-- More connections indicate genes that are part of multiple enriched processes
-- The network topology shows which genes are central to the biological response
-
-**ANALYSIS REQUEST:**
-
-Please analyze this network and provide:
+Please analyze this ranked list of enriched terms and provide:
 
 1. **Key Biological Insights:**
    - What are the most significant biological processes/pathways identified?
-   - Which genes appear to be central to the biological response?
+   - Which genes appear in multiple terms and may be central to the biological response?
 
-2. **Network Topology Analysis:**
-   - Which genes are "hub" genes (connected to multiple terms)?
-   - Are there distinct clusters or modules in the network?
-   - What does the connectivity pattern suggest about biological organization?
+2. **Ranked List Analysis:**
+   - How do the top-ranked terms relate to each other biologically?
+   - Are there patterns in the gene composition across different terms?
+   - What does the ranking suggest about the hierarchy of biological processes?
 
 3. **Biological Hypothesis:**
-   - Based on the network structure, what biological hypothesis can you generate?
+   - Based on the ranked list structure, what biological hypothesis can you generate?
    - How do the different library sources support or complement each other?
-   - Try to formulate one hypothesis based on the most central terms and how they possibly related to one another.
+   - Try to formulate one coherent hypothesis that explains as many terms as possible and generates a coherent biological story.
    
 4. **Estimated Experimental Context**
    - Can you hypothesize on what was the experiment that generated this result?
 
-**RESPONSE STRUCTURE:**
+## RESPONSE STRUCTURE:
 - **Executive Summary** (2-3 sentences)
-- **Key Biological Processes Identified** (by library source)
-- **Network Topology Insights**
-- **Proposed Biological Hypothesis**
+- **Key Biological Processes Identified** (by library source and rank)
+- **Gene-Term Relationship Analysis**
+- **Proposed Biological Hypothesis** (coherent story explaining multiple terms)
 - **Estimated Experimental Context**
 
-**IMPORTANT NOTES:**
-- Focus on biological interpretation, not statistical significance
-- Consider the functional relationships between connected genes and terms
-- Look for unexpected connections that might reveal novel or unexpected biology
+## IMPORTANT NOTES:
+- Focus on biological interpretation, not just statistical significance
+- Consider the functional relationships between genes within and across terms
+- Look for genes that appear in multiple terms as potential key regulators
 - Consider the broader biological context and literature
-- Note that protein interaction library could shed light on physical interaction between genes while terms indicate functional interaction
-- Different library sources may provide complementary biological insights"""
+- Different library sources may provide complementary biological insights
+- Build a coherent story that explains as many terms as possible rather than treating them in isolation
+- The goal is to find a unifying biological hypothesis that connects the enriched terms into a meaningful narrative"""
     
     return prompt
 
