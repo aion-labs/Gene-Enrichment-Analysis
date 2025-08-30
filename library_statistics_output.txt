@@ -1,0 +1,2716 @@
+2025-08-23 10:39:38,564 - INFO - Gene Set Library
+c1.all.v2025.1.Hs.symbols (Homo Sapiens)
+	302 terms
+	43315 genes
+2025-08-23 10:39:38,640 - INFO - Gene Set Library
+c2.all.v2025.1.Hs.symbols (Homo Sapiens)
+	7561 terms
+	22381 genes
+2025-08-23 10:39:38,768 - INFO - Gene Set Library
+c2.cgp.v2025.1.Hs.symbols (Homo Sapiens)
+	3538 terms
+	21705 genes
+2025-08-23 10:39:38,845 - INFO - Gene Set Library
+c2.cp.biocarta.v2025.1.Hs.symbols (Homo Sapiens)
+	292 terms
+	1509 genes
+2025-08-23 10:39:38,848 - INFO - Gene Set Library
+c2.cp.kegg_legacy.v2025.1.Hs.symbols (Homo Sapiens)
+	186 terms
+	5245 genes
+2025-08-23 10:39:38,852 - INFO - Gene Set Library
+c2.cp.kegg_medicus.v2025.1.Hs.symbols (Homo Sapiens)
+	658 terms
+	2788 genes
+2025-08-23 10:39:38,856 - INFO - Gene Set Library
+c2.cp.pid.v2025.1.Hs.symbols (Homo Sapiens)
+	196 terms
+	2534 genes
+2025-08-23 10:39:38,865 - INFO - Gene Set Library
+c2.cp.reactome.v2025.1.Hs.symbols (Homo Sapiens)
+	1787 terms
+	11369 genes
+2025-08-23 10:39:38,895 - INFO - Gene Set Library
+c2.cp.v2025.1.Hs.symbols (Homo Sapiens)
+	4023 terms
+	13868 genes
+🔬 COMPREHENSIVE LIBRARY STATISTICS
+================================================================================
+📋 Loaded 35 library aliases
+📁 Found 35 library files
+
+🔄 Analyzing c1.all.v2025.1.Hs.symbols.gmt...
+
+📚 C1: Positional gene sets
+🏷️  Category: C1
+============================================================
+📊 Total terms: 302
+🧬 Unique genes: 43,315
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1205 genes
+   Average term size: 143.8 genes
+   Median term size: 119.5 genes
+   Standard deviation: 129.7 genes
+
+📊 Term Size Distribution:
+   small (1-10): 6 terms (2.0%)
+   medium (11-50): 41 terms (13.6%)
+   large (51-200): 192 terms (63.6%)
+   very_large (201-500): 57 terms (18.9%)
+   huge (500+): 6 terms (2.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 43,251
+   Genes appearing in 2-5 terms: 60
+   Genes appearing in 6-10 terms: 3
+   Genes appearing in 11-20 terms: 0
+   Genes appearing in 21-50 terms: 1
+   Genes appearing in 50+ terms: 0
+
+🔄 Analyzing c2.all.v2025.1.Hs.symbols.gmt...
+
+📚 C2: Curated gene sets
+🏷️  Category: C2
+============================================================
+📊 Total terms: 7,561
+🧬 Unique genes: 22,381
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1964 genes
+   Average term size: 76.9 genes
+   Median term size: 30.0 genes
+   Standard deviation: 144.4 genes
+
+📊 Term Size Distribution:
+   small (1-10): 1,290 terms (17.1%)
+   medium (11-50): 3,719 terms (49.2%)
+   large (51-200): 1,888 terms (25.0%)
+   very_large (201-500): 488 terms (6.5%)
+   huge (500+): 176 terms (2.3%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 2,412
+   Genes appearing in 2-5 terms: 3,400
+   Genes appearing in 6-10 terms: 2,689
+   Genes appearing in 11-20 terms: 4,460
+   Genes appearing in 21-50 terms: 6,299
+   Genes appearing in 50+ terms: 3,121
+
+🔄 Analyzing c2.cgp.v2025.1.Hs.symbols.gmt...
+
+📚 C2: CGP: Chemical & genetic perturbations
+🏷️  Category: C2
+============================================================
+📊 Total terms: 3,538
+🧬 Unique genes: 21,705
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1964 genes
+   Average term size: 115.3 genes
+   Median term size: 47.0 genes
+   Standard deviation: 186.3 genes
+
+📊 Term Size Distribution:
+   small (1-10): 366 terms (10.3%)
+   medium (11-50): 1,495 terms (42.3%)
+   large (51-200): 1,120 terms (31.7%)
+   very_large (201-500): 403 terms (11.4%)
+   huge (500+): 154 terms (4.4%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 2,632
+   Genes appearing in 2-5 terms: 3,552
+   Genes appearing in 6-10 terms: 3,278
+   Genes appearing in 11-20 terms: 5,092
+   Genes appearing in 21-50 terms: 5,566
+   Genes appearing in 50+ terms: 1,585
+
+🔄 Analyzing c2.cp.biocarta.v2025.1.Hs.symbols.gmt...
+
+📚 C2: BioCarta
+🏷️  Category: C2
+============================================================
+📊 Total terms: 292
+🧬 Unique genes: 1,509
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 81 genes
+   Average term size: 16.5 genes
+   Median term size: 15.0 genes
+   Standard deviation: 9.3 genes
+
+📊 Term Size Distribution:
+   small (1-10): 78 terms (26.7%)
+   medium (11-50): 210 terms (71.9%)
+   large (51-200): 4 terms (1.4%)
+   very_large (201-500): 0 terms (0.0%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 874
+   Genes appearing in 2-5 terms: 439
+   Genes appearing in 6-10 terms: 102
+   Genes appearing in 11-20 terms: 63
+   Genes appearing in 21-50 terms: 29
+   Genes appearing in 50+ terms: 2
+
+🔄 Analyzing c2.cp.kegg_legacy.v2025.1.Hs.symbols.gmt...
+
+📚 C2: KEGG Legacy
+🏷️  Category: C2
+============================================================
+📊 Total terms: 186
+🧬 Unique genes: 5,245
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 10 genes
+   Largest term: 389 genes
+   Average term size: 68.8 genes
+   Median term size: 52.5 genes
+   Standard deviation: 58.2 genes
+
+📊 Term Size Distribution:
+   small (1-10): 2 terms (1.1%)
+   medium (11-50): 85 terms (45.7%)
+   large (51-200): 93 terms (50.0%)
+   very_large (201-500): 6 terms (3.2%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 2,982
+   Genes appearing in 2-5 terms: 1,862
+   Genes appearing in 6-10 terms: 253
+   Genes appearing in 11-20 terms: 119
+   Genes appearing in 21-50 terms: 29
+   Genes appearing in 50+ terms: 0
+
+🔄 Analyzing c2.cp.kegg_medicus.v2025.1.Hs.symbols.gmt...
+
+📚 C2: KEGG MEDICUS
+🏷️  Category: C2
+============================================================
+📊 Total terms: 658
+🧬 Unique genes: 2,788
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 92 genes
+   Average term size: 14.7 genes
+   Median term size: 11.5 genes
+   Standard deviation: 10.8 genes
+
+📊 Term Size Distribution:
+   small (1-10): 288 terms (43.8%)
+   medium (11-50): 363 terms (55.2%)
+   large (51-200): 7 terms (1.1%)
+   very_large (201-500): 0 terms (0.0%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,446
+   Genes appearing in 2-5 terms: 891
+   Genes appearing in 6-10 terms: 281
+   Genes appearing in 11-20 terms: 103
+   Genes appearing in 21-50 terms: 54
+   Genes appearing in 50+ terms: 13
+
+🔄 Analyzing c2.cp.pid.v2025.1.Hs.symbols.gmt...
+
+📚 C2: Pathway Interaction Database
+🏷️  Category: C2
+============================================================
+📊 Total terms: 196
+🧬 Unique genes: 2,534
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 10 genes
+   Largest term: 137 genes
+   Average term size: 41.1 genes
+   Median term size: 37.5 genes
+   Standard deviation: 20.7 genes
+
+📊 Term Size Distribution:
+   small (1-10): 1 terms (0.5%)
+   medium (11-50): 143 terms (73.0%)
+   large (51-200): 52 terms (26.5%)
+   very_large (201-500): 0 terms (0.0%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,242
+   Genes appearing in 2-5 terms: 973
+   Genes appearing in 6-10 terms: 175
+   Genes appearing in 11-20 terms: 110
+   Genes appearing in 21-50 terms: 29
+   Genes appearing in 50+ terms: 5
+
+🔄 Analyzing c2.cp.reactome.v2025.1.Hs.symbols.gmt...
+
+📚 C2: Reactome Pathways
+🏷️  Category: C2
+============================================================
+📊 Total terms: 1,787
+🧬 Unique genes: 11,369
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1491 genes
+   Average term size: 54.6 genes
+   Median term size: 23.0 genes
+   Standard deviation: 106.4 genes
+
+📊 Term Size Distribution:
+   small (1-10): 417 terms (23.3%)
+   medium (11-50): 891 terms (49.9%)
+   large (51-200): 397 terms (22.2%)
+   very_large (201-500): 61 terms (3.4%)
+   huge (500+): 21 terms (1.2%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 535
+   Genes appearing in 2-5 terms: 6,126
+   Genes appearing in 6-10 terms: 2,403
+   Genes appearing in 11-20 terms: 1,432
+   Genes appearing in 21-50 terms: 627
+   Genes appearing in 50+ terms: 246
+
+🔄 Analyzing c2.cp.v2025.1.Hs.symbols.gmt...
+
+📚 C2: Canonical pathways
+🏷️  Category: C2
+============================================================
+📊 Total terms: 4,023
+🧬 Unique genes: 13,868
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1491 genes
+   Average term size: 43.1 genes
+   Median term size: 21.0 genes
+   Standard deviation: 78.9 genes
+
+📊 Term Size Distribution:
+   small (1-10): 924 terms (23.0%)
+   medium (11-50): 2,224 terms (55.3%)
+   large (51-200): 768 terms (19.1%)
+   very_large (201-500): 85 terms (2.1%)
+   huge (500+): 22 terms (0.5%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,842
+   Genes appearing in 2-5 terms: 4,912
+   Genes appearing in 6-10 terms: 2,907
+   Genes appearing in 11-20 terms: 2,215
+   Genes appearing in 21-50 terms: 1,380
+   Genes appearing in 50+ terms: 6122025-08-23 10:39:38,928 - INFO - Gene Set Library
+c2.cp.wikipathways.v2025.1.Hs.symbols (Homo Sapiens)
+	885 terms
+	9127 genes
+2025-08-23 10:39:38,996 - INFO - Gene Set Library
+c3.all.v2025.1.Hs.symbols (Homo Sapiens)
+	3713 terms
+	28831 genes
+2025-08-23 10:39:39,126 - INFO - Gene Set Library
+c3.mir.mir_legacy.v2025.1.Hs.symbols (Homo Sapiens)
+	221 terms
+	7450 genes
+2025-08-23 10:39:39,163 - INFO - Gene Set Library
+c3.mir.mirdb.v2025.1.Hs.symbols (Homo Sapiens)
+	2377 terms
+	16652 genes
+2025-08-23 10:39:39,252 - INFO - Gene Set Library
+c3.mir.v2025.1.Hs.symbols (Homo Sapiens)
+	2598 terms
+	16872 genes
+2025-08-23 10:39:39,342 - INFO - Gene Set Library
+c3.tft.gtrd.v2025.1.Hs.symbols (Homo Sapiens)
+	505 terms
+	26924 genes
+2025-08-23 10:39:39,402 - INFO - Gene Set Library
+c3.tft.tft_legacy.v2025.1.Hs.symbols (Homo Sapiens)
+	610 terms
+	12779 genes
+2025-08-23 10:39:39,456 - INFO - Gene Set Library
+c3.tft.v2025.1.Hs.symbols (Homo Sapiens)
+	1115 terms
+	27964 genes
+2025-08-23 10:39:39,525 - INFO - Gene Set Library
+c4.3ca.v2025.1.Hs.symbols (Homo Sapiens)
+	148 terms
+	2992 genes
+
+
+🔄 Analyzing c2.cp.wikipathways.v2025.1.Hs.symbols.gmt...
+
+📚 C2: WikiPathways
+🏷️  Category: C2
+============================================================
+📊 Total terms: 885
+🧬 Unique genes: 9,127
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 507 genes
+   Average term size: 45.1 genes
+   Median term size: 27.0 genes
+   Standard deviation: 56.8 genes
+
+📊 Term Size Distribution:
+   small (1-10): 136 terms (15.4%)
+   medium (11-50): 518 terms (58.5%)
+   large (51-200): 212 terms (24.0%)
+   very_large (201-500): 18 terms (2.0%)
+   huge (500+): 1 terms (0.1%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 3,483
+   Genes appearing in 2-5 terms: 3,865
+   Genes appearing in 6-10 terms: 1,033
+   Genes appearing in 11-20 terms: 491
+   Genes appearing in 21-50 terms: 200
+   Genes appearing in 50+ terms: 55
+
+🔄 Analyzing c3.all.v2025.1.Hs.symbols.gmt...
+
+📚 C3: Regulatory target gene sets
+🏷️  Category: C3
+============================================================
+📊 Total terms: 3,713
+🧬 Unique genes: 28,831
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1997 genes
+   Average term size: 220.5 genes
+   Median term size: 127.0 genes
+   Standard deviation: 280.9 genes
+
+📊 Term Size Distribution:
+   small (1-10): 165 terms (4.4%)
+   medium (11-50): 473 terms (12.7%)
+   large (51-200): 1,764 terms (47.5%)
+   very_large (201-500): 952 terms (25.6%)
+   huge (500+): 359 terms (9.7%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 5,119
+   Genes appearing in 2-5 terms: 4,403
+   Genes appearing in 6-10 terms: 2,579
+   Genes appearing in 11-20 terms: 3,921
+   Genes appearing in 21-50 terms: 7,398
+   Genes appearing in 50+ terms: 5,411
+
+🔄 Analyzing c3.mir.mir_legacy.v2025.1.Hs.symbols.gmt...
+
+📚 C3: MicroRNA targets Legacy
+🏷️  Category: C3
+============================================================
+📊 Total terms: 221
+🧬 Unique genes: 7,450
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 728 genes
+   Average term size: 154.6 genes
+   Median term size: 113.0 genes
+   Standard deviation: 133.6 genes
+
+📊 Term Size Distribution:
+   small (1-10): 9 terms (4.1%)
+   medium (11-50): 31 terms (14.0%)
+   large (51-200): 118 terms (53.4%)
+   very_large (201-500): 55 terms (24.9%)
+   huge (500+): 8 terms (3.6%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 2,218
+   Genes appearing in 2-5 terms: 3,174
+   Genes appearing in 6-10 terms: 1,308
+   Genes appearing in 11-20 terms: 604
+   Genes appearing in 21-50 terms: 144
+   Genes appearing in 50+ terms: 2
+
+🔄 Analyzing c3.mir.mirdb.v2025.1.Hs.symbols.gmt...
+
+📚 C3: MicroRNA Database (mirDB)
+🏷️  Category: C3
+============================================================
+📊 Total terms: 2,377
+🧬 Unique genes: 16,652
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1071 genes
+   Average term size: 156.5 genes
+   Median term size: 103.0 genes
+   Standard deviation: 158.6 genes
+
+📊 Term Size Distribution:
+   small (1-10): 112 terms (4.7%)
+   medium (11-50): 347 terms (14.6%)
+   large (51-200): 1,373 terms (57.8%)
+   very_large (201-500): 434 terms (18.3%)
+   huge (500+): 111 terms (4.7%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 781
+   Genes appearing in 2-5 terms: 3,124
+   Genes appearing in 6-10 terms: 2,966
+   Genes appearing in 11-20 terms: 3,740
+   Genes appearing in 21-50 terms: 4,139
+   Genes appearing in 50+ terms: 1,902
+
+🔄 Analyzing c3.mir.v2025.1.Hs.symbols.gmt...
+
+📚 C3: microRNA targets
+🏷️  Category: C3
+============================================================
+📊 Total terms: 2,598
+🧬 Unique genes: 16,872
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1071 genes
+   Average term size: 156.4 genes
+   Median term size: 104.0 genes
+   Standard deviation: 156.6 genes
+
+📊 Term Size Distribution:
+   small (1-10): 121 terms (4.7%)
+   medium (11-50): 378 terms (14.5%)
+   large (51-200): 1,491 terms (57.4%)
+   very_large (201-500): 489 terms (18.8%)
+   huge (500+): 119 terms (4.6%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 852
+   Genes appearing in 2-5 terms: 3,021
+   Genes appearing in 6-10 terms: 2,883
+   Genes appearing in 11-20 terms: 3,651
+   Genes appearing in 21-50 terms: 4,240
+   Genes appearing in 50+ terms: 2,225
+
+🔄 Analyzing c3.tft.gtrd.v2025.1.Hs.symbols.gmt...
+
+📚 C3: TFT: Gene Regulon Database (GTRD)
+🏷️  Category: C3
+============================================================
+📊 Total terms: 505
+🧬 Unique genes: 26,924
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1997 genes
+   Average term size: 509.4 genes
+   Median term size: 288.0 genes
+   Standard deviation: 544.0 genes
+
+📊 Term Size Distribution:
+   small (1-10): 43 terms (8.5%)
+   medium (11-50): 76 terms (15.0%)
+   large (51-200): 103 terms (20.4%)
+   very_large (201-500): 81 terms (16.0%)
+   huge (500+): 202 terms (40.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 6,425
+   Genes appearing in 2-5 terms: 7,118
+   Genes appearing in 6-10 terms: 4,465
+   Genes appearing in 11-20 terms: 5,254
+   Genes appearing in 21-50 terms: 3,404
+   Genes appearing in 50+ terms: 258
+
+🔄 Analyzing c3.tft.tft_legacy.v2025.1.Hs.symbols.gmt...
+
+📚 C3: Transcription Factor Targets: Legacy
+🏷️  Category: C3
+============================================================
+📊 Total terms: 610
+🧬 Unique genes: 12,779
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 6 genes
+   Largest term: 1936 genes
+   Average term size: 254.4 genes
+   Median term size: 249.0 genes
+   Standard deviation: 208.3 genes
+
+📊 Term Size Distribution:
+   small (1-10): 1 terms (0.2%)
+   medium (11-50): 19 terms (3.1%)
+   large (51-200): 170 terms (27.9%)
+   very_large (201-500): 382 terms (62.6%)
+   huge (500+): 38 terms (6.2%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,450
+   Genes appearing in 2-5 terms: 3,931
+   Genes appearing in 6-10 terms: 2,570
+   Genes appearing in 11-20 terms: 2,555
+   Genes appearing in 21-50 terms: 1,927
+   Genes appearing in 50+ terms: 346
+
+🔄 Analyzing c3.tft.v2025.1.Hs.symbols.gmt...
+
+📚 C3: Transcription Factor Targets
+🏷️  Category: C3
+============================================================
+📊 Total terms: 1,115
+🧬 Unique genes: 27,964
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1997 genes
+   Average term size: 369.9 genes
+   Median term size: 250.0 genes
+   Standard deviation: 416.8 genes
+
+📊 Term Size Distribution:
+   small (1-10): 44 terms (3.9%)
+   medium (11-50): 95 terms (8.5%)
+   large (51-200): 273 terms (24.5%)
+   very_large (201-500): 463 terms (41.5%)
+   huge (500+): 240 terms (21.5%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 5,675
+   Genes appearing in 2-5 terms: 5,778
+   Genes appearing in 6-10 terms: 3,820
+   Genes appearing in 11-20 terms: 5,478
+   Genes appearing in 21-50 terms: 5,880
+   Genes appearing in 50+ terms: 1,333
+
+🔄 Analyzing c4.3ca.v2025.1.Hs.symbols.gmt...
+
+📚 C4: 3CA: Curated Cancer Cell Atlas
+🏷️  Category: C4
+============================================================
+📊 Total terms: 148
+🧬 Unique genes: 2,992
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 47 genes
+   Largest term: 50 genes
+   Average term size: 49.8 genes
+   Median term size: 50.0 genes
+   Standard deviation: 0.5 genes
+
+📊 Term Size Distribution:
+   small (1-10): 0 terms (0.0%)
+   medium (11-50): 148 terms (100.0%)
+   large (51-200): 0 terms (0.0%)
+   very_large (201-500): 0 terms (0.0%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,477
+   Genes appearing in 2-5 terms: 1,221
+   Genes appearing in 6-10 terms: 246
+   Genes appearing in 11-20 terms: 45
+   Genes appearing in 21-50 terms: 3
+   Genes appearing in 50+ terms: 0
+
+🔄 Analyzing c4.all.v2025.1.Hs.symbols.gmt...2025-08-23 10:39:39,534 - INFO - Gene Set Library
+c4.all.v2025.1.Hs.symbols (Homo Sapiens)
+	1006 terms
+	10749 genes
+2025-08-23 10:39:39,554 - INFO - Gene Set Library
+c4.cgn.v2025.1.Hs.symbols (Homo Sapiens)
+	427 terms
+	4883 genes
+2025-08-23 10:39:39,565 - INFO - Gene Set Library
+c4.cm.v2025.1.Hs.symbols (Homo Sapiens)
+	431 terms
+	8359 genes
+2025-08-23 10:39:39,679 - INFO - Gene Set Library
+c5.all.v2025.1.Hs.symbols (Homo Sapiens)
+	16228 terms
+	19548 genes
+2025-08-23 10:39:39,943 - INFO - Gene Set Library
+c5.go.bp.v2025.1.Hs.symbols (Homo Sapiens)
+	7583 terms
+	17999 genes
+2025-08-23 10:39:40,042 - INFO - Gene Set Library
+c5.go.cc.v2025.1.Hs.symbols (Homo Sapiens)
+	1042 terms
+	14868 genes
+2025-08-23 10:39:40,069 - INFO - Gene Set Library
+c5.go.mf.v2025.1.Hs.symbols (Homo Sapiens)
+	1855 terms
+	15698 genes
+2025-08-23 10:39:40,154 - INFO - Gene Set Library
+c5.go.v2025.1.Hs.symbols (Homo Sapiens)
+	10480 terms
+	19499 genes
+2025-08-23 10:39:40,316 - INFO - Gene Set Library
+c5.hpo.v2025.1.Hs.symbols (Homo Sapiens)
+	5748 terms
+	5112 genes
+2025-08-23 10:39:40,393 - INFO - Gene Set Library
+c6.all.v2025.1.Hs.symbols (Homo Sapiens)
+	189 terms
+	10927 genes
+
+
+📚 C4: Computational gene sets
+🏷️  Category: C4
+============================================================
+📊 Total terms: 1,006
+🧬 Unique genes: 10,749
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 10 genes
+   Largest term: 835 genes
+   Average term size: 98.0 genes
+   Median term size: 50.0 genes
+   Standard deviation: 111.9 genes
+
+📊 Term Size Distribution:
+   small (1-10): 9 terms (0.9%)
+   medium (11-50): 497 terms (49.4%)
+   large (51-200): 374 terms (37.2%)
+   very_large (201-500): 109 terms (10.8%)
+   huge (500+): 17 terms (1.7%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,857
+   Genes appearing in 2-5 terms: 3,486
+   Genes appearing in 6-10 terms: 2,048
+   Genes appearing in 11-20 terms: 2,087
+   Genes appearing in 21-50 terms: 1,216
+   Genes appearing in 50+ terms: 55
+
+🔄 Analyzing c4.cgn.v2025.1.Hs.symbols.gmt...
+
+📚 C4: CGN: Cancer gene neighborhoods
+🏷️  Category: C4
+============================================================
+📊 Total terms: 427
+🧬 Unique genes: 4,883
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 24 genes
+   Largest term: 423 genes
+   Average term size: 99.5 genes
+   Median term size: 71.0 genes
+   Standard deviation: 75.5 genes
+
+📊 Term Size Distribution:
+   small (1-10): 0 terms (0.0%)
+   medium (11-50): 128 terms (30.0%)
+   large (51-200): 252 terms (59.0%)
+   very_large (201-500): 47 terms (11.0%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 904
+   Genes appearing in 2-5 terms: 1,647
+   Genes appearing in 6-10 terms: 989
+   Genes appearing in 11-20 terms: 780
+   Genes appearing in 21-50 terms: 550
+   Genes appearing in 50+ terms: 13
+
+🔄 Analyzing c4.cm.v2025.1.Hs.symbols.gmt...
+
+📚 C4: CM: Cancer modules
+🏷️  Category: C4
+============================================================
+📊 Total terms: 431
+🧬 Unique genes: 8,359
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 10 genes
+   Largest term: 835 genes
+   Average term size: 112.9 genes
+   Median term size: 45.0 genes
+   Standard deviation: 150.4 genes
+
+📊 Term Size Distribution:
+   small (1-10): 9 terms (2.1%)
+   medium (11-50): 221 terms (51.3%)
+   large (51-200): 122 terms (28.3%)
+   very_large (201-500): 62 terms (14.4%)
+   huge (500+): 17 terms (3.9%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,876
+   Genes appearing in 2-5 terms: 3,296
+   Genes appearing in 6-10 terms: 1,810
+   Genes appearing in 11-20 terms: 1,178
+   Genes appearing in 21-50 terms: 199
+   Genes appearing in 50+ terms: 0
+
+🔄 Analyzing c5.all.v2025.1.Hs.symbols.gmt...
+
+📚 C5: Ontology gene sets
+🏷️  Category: C5
+============================================================
+📊 Total terms: 16,228
+🧬 Unique genes: 19,548
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1986 genes
+   Average term size: 83.9 genes
+   Median term size: 20.0 genes
+   Standard deviation: 196.6 genes
+
+📊 Term Size Distribution:
+   small (1-10): 4,918 terms (30.3%)
+   medium (11-50): 6,677 terms (41.1%)
+   large (51-200): 3,064 terms (18.9%)
+   very_large (201-500): 977 terms (6.0%)
+   huge (500+): 592 terms (3.6%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 264
+   Genes appearing in 2-5 terms: 2,213
+   Genes appearing in 6-10 terms: 1,684
+   Genes appearing in 11-20 terms: 3,119
+   Genes appearing in 21-50 terms: 4,794
+   Genes appearing in 50+ terms: 7,474
+
+🔄 Analyzing c5.go.bp.v2025.1.Hs.symbols.gmt...
+
+📚 C5: Gene Ontology: Biological Process
+🏷️  Category: C5
+============================================================
+📊 Total terms: 7,583
+🧬 Unique genes: 17,999
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1986 genes
+   Average term size: 81.3 genes
+   Median term size: 20.0 genes
+   Standard deviation: 197.1 genes
+
+📊 Term Size Distribution:
+   small (1-10): 2,274 terms (30.0%)
+   medium (11-50): 3,209 terms (42.3%)
+   large (51-200): 1,415 terms (18.7%)
+   very_large (201-500): 428 terms (5.6%)
+   huge (500+): 257 terms (3.4%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,038
+   Genes appearing in 2-5 terms: 2,410
+   Genes appearing in 6-10 terms: 2,739
+   Genes appearing in 11-20 terms: 3,413
+   Genes appearing in 21-50 terms: 4,835
+   Genes appearing in 50+ terms: 3,564
+
+🔄 Analyzing c5.go.cc.v2025.1.Hs.symbols.gmt...
+
+📚 C5: Gene Ontology: Cellular Component
+🏷️  Category: C5
+============================================================
+📊 Total terms: 1,042
+🧬 Unique genes: 14,868
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1852 genes
+   Average term size: 98.8 genes
+   Median term size: 17.0 genes
+   Standard deviation: 236.5 genes
+
+📊 Term Size Distribution:
+   small (1-10): 350 terms (33.6%)
+   medium (11-50): 385 terms (36.9%)
+   large (51-200): 190 terms (18.2%)
+   very_large (201-500): 63 terms (6.0%)
+   huge (500+): 54 terms (5.2%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 2,287
+   Genes appearing in 2-5 terms: 5,887
+   Genes appearing in 6-10 terms: 3,597
+   Genes appearing in 11-20 terms: 2,379
+   Genes appearing in 21-50 terms: 709
+   Genes appearing in 50+ terms: 9
+
+🔄 Analyzing c5.go.mf.v2025.1.Hs.symbols.gmt...
+
+📚 C5: Gene Ontology: Molecular Function
+🏷️  Category: C5
+============================================================
+📊 Total terms: 1,855
+🧬 Unique genes: 15,698
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1943 genes
+   Average term size: 60.8 genes
+   Median term size: 14.0 genes
+   Standard deviation: 168.1 genes
+
+📊 Term Size Distribution:
+   small (1-10): 725 terms (39.1%)
+   medium (11-50): 773 terms (41.7%)
+   large (51-200): 245 terms (13.2%)
+   very_large (201-500): 62 terms (3.3%)
+   huge (500+): 50 terms (2.7%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,169
+   Genes appearing in 2-5 terms: 6,634
+   Genes appearing in 6-10 terms: 4,662
+   Genes appearing in 11-20 terms: 2,688
+   Genes appearing in 21-50 terms: 538
+   Genes appearing in 50+ terms: 7
+
+🔄 Analyzing c5.go.v2025.1.Hs.symbols.gmt...
+
+📚 C5: GO: Gene Ontology
+🏷️  Category: C5
+============================================================
+📊 Total terms: 10,480
+🧬 Unique genes: 19,499
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1986 genes
+   Average term size: 79.4 genes
+   Median term size: 18.0 genes
+   Standard deviation: 196.9 genes
+
+📊 Term Size Distribution:
+   small (1-10): 3,349 terms (32.0%)
+   medium (11-50): 4,367 terms (41.7%)
+   large (51-200): 1,850 terms (17.7%)
+   very_large (201-500): 553 terms (5.3%)
+   huge (500+): 361 terms (3.4%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 270
+   Genes appearing in 2-5 terms: 2,300
+   Genes appearing in 6-10 terms: 1,879
+   Genes appearing in 11-20 terms: 3,672
+   Genes appearing in 21-50 terms: 6,225
+   Genes appearing in 50+ terms: 5,153
+
+🔄 Analyzing c5.hpo.v2025.1.Hs.symbols.gmt...
+
+📚 C5: Human Phenotype Ontology
+🏷️  Category: C5
+============================================================
+📊 Total terms: 5,748
+🧬 Unique genes: 5,112
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1759 genes
+   Average term size: 92.1 genes
+   Median term size: 23.0 genes
+   Standard deviation: 196.0 genes
+
+📊 Term Size Distribution:
+   small (1-10): 1,569 terms (27.3%)
+   medium (11-50): 2,310 terms (40.2%)
+   large (51-200): 1,214 terms (21.1%)
+   very_large (201-500): 424 terms (7.4%)
+   huge (500+): 231 terms (4.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 18
+   Genes appearing in 2-5 terms: 131
+   Genes appearing in 6-10 terms: 217
+   Genes appearing in 11-20 terms: 322
+   Genes appearing in 21-50 terms: 1,055
+   Genes appearing in 50+ terms: 3,369
+
+🔄 Analyzing c6.all.v2025.1.Hs.symbols.gmt...
+
+📚 C6: Oncogenic Signatures
+🏷️  Category: C62025-08-23 10:39:40,474 - INFO - Gene Set Library
+c7.all.v2025.1.Hs.symbols (Homo Sapiens)
+	5219 terms
+	21373 genes
+2025-08-23 10:39:40,698 - INFO - Gene Set Library
+c7.immunesigdb.v2025.1.Hs.symbols (Homo Sapiens)
+	4872 terms
+	20440 genes
+2025-08-23 10:39:40,875 - INFO - Gene Set Library
+c7.vax.v2025.1.Hs.symbols (Homo Sapiens)
+	347 terms
+	13431 genes
+2025-08-23 10:39:40,900 - INFO - Gene Set Library
+c8.all.v2025.1.Hs.symbols (Homo Sapiens)
+	866 terms
+	20531 genes
+2025-08-23 10:39:40,931 - INFO - Gene Set Library
+h.all.v2025.1.Hs.symbols (Homo Sapiens)
+	50 terms
+	4384 genes
+2025-08-23 10:39:41,326 - INFO - Gene Set Library
+msigdb.v2025.1.Hs.symbols (Homo Sapiens)
+	35134 terms
+	43345 genes
+2025-08-23 10:39:42,040 - INFO - Gene Set Library
+stringdb_protein_interactions (Homo Sapiens)
+	12323 terms
+	12320 genes
+
+============================================================
+📊 Total terms: 189
+🧬 Unique genes: 10,927
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 11 genes
+   Largest term: 469 genes
+   Average term size: 161.8 genes
+   Median term size: 172.0 genes
+   Standard deviation: 59.4 genes
+
+📊 Term Size Distribution:
+   small (1-10): 0 terms (0.0%)
+   medium (11-50): 17 terms (9.0%)
+   large (51-200): 159 terms (84.1%)
+   very_large (201-500): 13 terms (6.9%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 3,905
+   Genes appearing in 2-5 terms: 5,804
+   Genes appearing in 6-10 terms: 1,080
+   Genes appearing in 11-20 terms: 136
+   Genes appearing in 21-50 terms: 2
+   Genes appearing in 50+ terms: 0
+
+🔄 Analyzing c7.all.v2025.1.Hs.symbols.gmt...
+
+📚 C7: All Immunologic Signatures
+🏷️  Category: C7
+============================================================
+📊 Total terms: 5,219
+🧬 Unique genes: 21,373
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1991 genes
+   Average term size: 189.8 genes
+   Median term size: 199.0 genes
+   Standard deviation: 69.5 genes
+
+📊 Term Size Distribution:
+   small (1-10): 81 terms (1.6%)
+   medium (11-50): 146 terms (2.8%)
+   large (51-200): 4,931 terms (94.5%)
+   very_large (201-500): 39 terms (0.7%)
+   huge (500+): 22 terms (0.4%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,132
+   Genes appearing in 2-5 terms: 1,868
+   Genes appearing in 6-10 terms: 1,419
+   Genes appearing in 11-20 terms: 2,306
+   Genes appearing in 21-50 terms: 6,649
+   Genes appearing in 50+ terms: 7,999
+
+🔄 Analyzing c7.immunesigdb.v2025.1.Hs.symbols.gmt...
+
+📚 C7: ImmuneSigDB: Immune Signatures Database
+🏷️  Category: C7
+============================================================
+📊 Total terms: 4,872
+🧬 Unique genes: 20,440
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 102 genes
+   Largest term: 200 genes
+   Average term size: 194.2 genes
+   Median term size: 199.0 genes
+   Standard deviation: 13.9 genes
+
+📊 Term Size Distribution:
+   small (1-10): 0 terms (0.0%)
+   medium (11-50): 0 terms (0.0%)
+   large (51-200): 4,872 terms (100.0%)
+   very_large (201-500): 0 terms (0.0%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 524
+   Genes appearing in 2-5 terms: 1,692
+   Genes appearing in 6-10 terms: 1,407
+   Genes appearing in 11-20 terms: 2,379
+   Genes appearing in 21-50 terms: 6,873
+   Genes appearing in 50+ terms: 7,565
+
+🔄 Analyzing c7.vax.v2025.1.Hs.symbols.gmt...
+
+📚 C7: VAX: Vaccine response
+🏷️  Category: C7
+============================================================
+📊 Total terms: 347
+🧬 Unique genes: 13,431
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1991 genes
+   Average term size: 128.1 genes
+   Median term size: 30.0 genes
+   Standard deviation: 257.0 genes
+
+📊 Term Size Distribution:
+   small (1-10): 81 terms (23.3%)
+   medium (11-50): 146 terms (42.1%)
+   large (51-200): 59 terms (17.0%)
+   very_large (201-500): 39 terms (11.2%)
+   huge (500+): 22 terms (6.3%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 4,491
+   Genes appearing in 2-5 terms: 6,825
+   Genes appearing in 6-10 terms: 1,691
+   Genes appearing in 11-20 terms: 359
+   Genes appearing in 21-50 terms: 65
+   Genes appearing in 50+ terms: 0
+
+🔄 Analyzing c8.all.v2025.1.Hs.symbols.gmt...
+
+📚 C8: Cell Type Signatures
+🏷️  Category: C8
+============================================================
+📊 Total terms: 866
+🧬 Unique genes: 20,531
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1770 genes
+   Average term size: 181.7 genes
+   Median term size: 118.0 genes
+   Standard deviation: 209.9 genes
+
+📊 Term Size Distribution:
+   small (1-10): 31 terms (3.6%)
+   medium (11-50): 174 terms (20.1%)
+   large (51-200): 417 terms (48.2%)
+   very_large (201-500): 184 terms (21.2%)
+   huge (500+): 60 terms (6.9%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 4,238
+   Genes appearing in 2-5 terms: 7,578
+   Genes appearing in 6-10 terms: 3,812
+   Genes appearing in 11-20 terms: 3,107
+   Genes appearing in 21-50 terms: 1,737
+   Genes appearing in 50+ terms: 59
+
+🔄 Analyzing h.all.v2025.1.Hs.symbols.gmt...
+
+📚 H: Hallmark Gene Sets
+🏷️  Category: H
+============================================================
+📊 Total terms: 50
+🧬 Unique genes: 4,384
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 32 genes
+   Largest term: 200 genes
+   Average term size: 146.4 genes
+   Median term size: 180.0 genes
+   Standard deviation: 62.3 genes
+
+📊 Term Size Distribution:
+   small (1-10): 0 terms (0.0%)
+   medium (11-50): 7 terms (14.0%)
+   large (51-200): 43 terms (86.0%)
+   very_large (201-500): 0 terms (0.0%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 2,671
+   Genes appearing in 2-5 terms: 1,659
+   Genes appearing in 6-10 terms: 54
+   Genes appearing in 11-20 terms: 0
+   Genes appearing in 21-50 terms: 0
+   Genes appearing in 50+ terms: 0
+
+🔄 Analyzing msigdb.v2025.1.Hs.symbols.gmt...
+
+📚 All MSigDB gene sets
+🏷️  Category: Other
+============================================================
+📊 Total terms: 35,134
+🧬 Unique genes: 43,345
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1997 genes
+   Average term size: 116.4 genes
+   Median term size: 47.0 genes
+   Standard deviation: 189.5 genes
+
+📊 Term Size Distribution:
+   small (1-10): 6,500 terms (18.5%)
+   medium (11-50): 11,751 terms (33.4%)
+   large (51-200): 12,832 terms (36.5%)
+   very_large (201-500): 2,819 terms (8.0%)
+   huge (500+): 1,232 terms (3.5%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 10,417
+   Genes appearing in 2-5 terms: 8,623
+   Genes appearing in 6-10 terms: 2,277
+   Genes appearing in 11-20 terms: 2,358
+   Genes appearing in 21-50 terms: 2,685
+   Genes appearing in 50+ terms: 16,985
+
+🔄 Analyzing stringdb_protein_interactions.gmt...
+
+📚 Protein Interaction
+🏷️  Category: Other
+============================================================
+📊 Total terms: 12,323
+🧬 Unique genes: 12,320
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 1 genes
+   Largest term: 375 genes
+   Average term size: 16.4 genes
+   Median term size: 7.0 genes
+   Standard deviation: 26.3 genes
+
+📊 Term Size Distribution:
+   small (1-10): 7,385 terms (59.9%)
+   medium (11-50): 4,066 terms (33.0%)
+   large (51-200): 840 terms (6.8%)
+   very_large (201-500): 32 terms (0.3%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,928
+   Genes appearing in 2-5 terms: 3,376
+   Genes appearing in 6-10 terms: 2,079
+   Genes appearing in 11-20 terms: 2,179
+   Genes appearing in 21-50 terms: 1,887
+   Genes appearing in 50+ terms: 871
+
+📋 SUMMARY TABLE
+================================================================================
+Category                                     Library                         Original Name  Total Terms  Unique Genes  Avg Term Size  Median Term Size  Min Term Size  Max Term Size  Genes in 1 Term  Genes in 50+ Terms
+      C1                    C1: Positional gene sets             c1.all.v2025.1.Hs.symbols          302         43315          143.8             119.5              5           1205            43251                   0
+      C2                       C2: Curated gene sets             c2.all.v2025.1.Hs.symbols         7561         22381           76.9              30.0              5           1964             2412                3121
+      C2   C2: CGP: Chemical & genetic perturbations             c2.cgp.v2025.1.Hs.symbols         3538         21705          115.3              47.0              5           1964             2632                1585
+      C2                                C2: BioCarta     c2.cp.biocarta.v2025.1.Hs.symbols          292          1509           16.5              15.0              5             81              874                   2
+      C2                             C2: KEGG Legacy  c2.cp.kegg_legacy.v2025.1.Hs.symbols          186          5245           68.8              52.5             10            389             2982                   0
+      C2                            C2: KEGG MEDICUS c2.cp.kegg_medicus.v2025.1.Hs.symbols          658          2788           14.7              11.5              5             92             1446                  13
+      C2            C2: Pathway Interaction Database          c2.cp.pid.v2025.1.Hs.symbols          196          2534           41.1              37.5             10            137             1242                   5
+      C2                       C2: Reactome Pathways     c2.cp.reactome.v2025.1.Hs.symbols         1787         11369           54.6              23.0              5           1491              535                 246
+      C2                      C2: Canonical pathways              c2.cp.v2025.1.Hs.symbols         4023         13868           43.1              21.0              5           1491             1842                 612
+      C2                            C2: WikiPathways c2.cp.wikipathways.v2025.1.Hs.symbols          885          9127           45.1              27.0              5            507             3483                  55
+      C3             C3: Regulatory target gene sets             c3.all.v2025.1.Hs.symbols         3713         28831          220.5             127.0              5           1997             5119                5411
+      C3                 C3: MicroRNA targets Legacy  c3.mir.mir_legacy.v2025.1.Hs.symbols          221          7450          154.6             113.0              5            728             2218                   2
+      C3               C3: MicroRNA Database (mirDB)       c3.mir.mirdb.v2025.1.Hs.symbols         2377         16652          156.5             103.0              5           1071              781                1902
+      C3                        C3: microRNA targets             c3.mir.v2025.1.Hs.symbols         2598         16872          156.4             104.0              5           1071              852                2225
+      C3       C3: TFT: Gene Regulon Database (GTRD)        c3.tft.gtrd.v2025.1.Hs.symbols          505         26924          509.4             288.0              5           1997             6425                 258
+      C3    C3: Transcription Factor Targets: Legacy  c3.tft.tft_legacy.v2025.1.Hs.symbols          610         12779          254.4             249.0              6           1936             1450                 346
+      C3            C3: Transcription Factor Targets             c3.tft.v2025.1.Hs.symbols         1115         27964          369.9             250.0              5           1997             5675                1333
+      C4          C4: 3CA: Curated Cancer Cell Atlas             c4.3ca.v2025.1.Hs.symbols          148          2992           49.8              50.0             47             50             1477                   0
+      C4                 C4: Computational gene sets             c4.all.v2025.1.Hs.symbols         1006         10749           98.0              50.0             10            835             1857                  55
+      C4          C4: CGN: Cancer gene neighborhoods             c4.cgn.v2025.1.Hs.symbols          427          4883           99.5              71.0             24            423              904                  13
+      C4                      C4: CM: Cancer modules              c4.cm.v2025.1.Hs.symbols          431          8359          112.9              45.0             10            835             1876                   0
+      C5                      C5: Ontology gene sets             c5.all.v2025.1.Hs.symbols        16228         19548           83.9              20.0              5           1986              264                7474
+      C5       C5: Gene Ontology: Biological Process           c5.go.bp.v2025.1.Hs.symbols         7583         17999           81.3              20.0              5           1986             1038                3564
+      C5       C5: Gene Ontology: Cellular Component           c5.go.cc.v2025.1.Hs.symbols         1042         14868           98.8              17.0              5           1852             2287                   9
+      C5       C5: Gene Ontology: Molecular Function           c5.go.mf.v2025.1.Hs.symbols         1855         15698           60.8              14.0              5           1943             1169                   7
+      C5                       C5: GO: Gene Ontology              c5.go.v2025.1.Hs.symbols        10480         19499           79.4              18.0              5           1986              270                5153
+      C5                C5: Human Phenotype Ontology             c5.hpo.v2025.1.Hs.symbols         5748          5112           92.1              23.0              5           1759               18                3369
+      C6                    C6: Oncogenic Signatures             c6.all.v2025.1.Hs.symbols          189         10927          161.8             172.0             11            469             3905                   0
+      C7              C7: All Immunologic Signatures             c7.all.v2025.1.Hs.symbols         5219         21373          189.8             199.0              5           1991             1132                7999
+      C7 C7: ImmuneSigDB: Immune Signatures Database     c7.immunesigdb.v2025.1.Hs.symbols         4872         20440          194.2             199.0            102            200              524                7565
+      C7                   C7: VAX: Vaccine response             c7.vax.v2025.1.Hs.symbols          347         13431          128.1              30.0              5           1991             4491                   0
+      C8                    C8: Cell Type Signatures             c8.all.v2025.1.Hs.symbols          866         20531          181.7             118.0              5           1770             4238                  59
+       H                       H: Hallmark Gene Sets              h.all.v2025.1.Hs.symbols           50          4384          146.4             180.0             32            200             2671                   0
+   Other                        All MSigDB gene sets             msigdb.v2025.1.Hs.symbols        35134         43345          116.4              47.0              5           1997            10417               16985
+   Other                         Protein Interaction         stringdb_protein_interactions        12323         12320           16.4               7.0              1            375             1928                 871
+
+💾 Summary saved to: library_statistics_summary.csv
+
+📄 DETAILED REPORT
+================================================================================
+
+📚 C1: Positional gene sets
+🏷️  Category: C1
+============================================================
+📊 Total terms: 302
+🧬 Unique genes: 43,315
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1205 genes
+   Average term size: 143.8 genes
+   Median term size: 119.5 genes
+   Standard deviation: 129.7 genes
+
+📊 Term Size Distribution:
+   small (1-10): 6 terms (2.0%)
+   medium (11-50): 41 terms (13.6%)
+   large (51-200): 192 terms (63.6%)
+   very_large (201-500): 57 terms (18.9%)
+   huge (500+): 6 terms (2.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 43,251
+   Genes appearing in 2-5 terms: 60
+   Genes appearing in 6-10 terms: 3
+   Genes appearing in 11-20 terms: 0
+   Genes appearing in 21-50 terms: 1
+   Genes appearing in 50+ terms: 0
+
+🏆 Top 10 most common genes:
+   SNORA70: 24 terms
+   SNORA72: 8 terms
+   SNORA62: 7 terms
+   SNORA63: 7 terms
+   SNORD55: 5 terms
+   SNORA75: 5 terms
+   DDX11L16: 5 terms
+   SNORA74: 3 terms
+   SNORD63: 3 terms
+   SNORD81: 3 terms
+
+📚 C2: Curated gene sets
+🏷️  Category: C2
+============================================================
+📊 Total terms: 7,561
+🧬 Unique genes: 22,381
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1964 genes
+   Average term size: 76.9 genes
+   Median term size: 30.0 genes
+   Standard deviation: 144.4 genes
+
+📊 Term Size Distribution:
+   small (1-10): 1,290 terms (17.1%)
+   medium (11-50): 3,719 terms (49.2%)
+   large (51-200): 1,888 terms (25.0%)
+   very_large (201-500): 488 terms (6.5%)
+   huge (500+): 176 terms (2.3%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 2,412
+   Genes appearing in 2-5 terms: 3,400
+   Genes appearing in 6-10 terms: 2,689
+   Genes appearing in 11-20 terms: 4,460
+   Genes appearing in 21-50 terms: 6,299
+   Genes appearing in 50+ terms: 3,121
+
+🏆 Top 10 most common genes:
+   MAPK1: 548 terms
+   MAPK3: 515 terms
+   AKT1: 467 terms
+   PIK3R1: 442 terms
+   PIK3CA: 440 terms
+   HRAS: 428 terms
+   JUN: 425 terms
+   GRB2: 415 terms
+   MYC: 392 terms
+   NFKB1: 389 terms
+
+📚 C2: CGP: Chemical & genetic perturbations
+🏷️  Category: C2
+============================================================
+📊 Total terms: 3,538
+🧬 Unique genes: 21,705
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1964 genes
+   Average term size: 115.3 genes
+   Median term size: 47.0 genes
+   Standard deviation: 186.3 genes
+
+📊 Term Size Distribution:
+   small (1-10): 366 terms (10.3%)
+   medium (11-50): 1,495 terms (42.3%)
+   large (51-200): 1,120 terms (31.7%)
+   very_large (201-500): 403 terms (11.4%)
+   huge (500+): 154 terms (4.4%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 2,632
+   Genes appearing in 2-5 terms: 3,552
+   Genes appearing in 6-10 terms: 3,278
+   Genes appearing in 11-20 terms: 5,092
+   Genes appearing in 21-50 terms: 5,566
+   Genes appearing in 50+ terms: 1,585
+
+🏆 Top 10 most common genes:
+   MYC: 195 terms
+   TOP2A: 190 terms
+   CDKN1A: 187 terms
+   CCND1: 179 terms
+   JUN: 179 terms
+   CD44: 176 terms
+   FOS: 176 terms
+   ID2: 176 terms
+   CDK1: 175 terms
+   SERPINE1: 170 terms
+
+📚 C2: BioCarta
+🏷️  Category: C2
+============================================================
+📊 Total terms: 292
+🧬 Unique genes: 1,509
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 81 genes
+   Average term size: 16.5 genes
+   Median term size: 15.0 genes
+   Standard deviation: 9.3 genes
+
+📊 Term Size Distribution:
+   small (1-10): 78 terms (26.7%)
+   medium (11-50): 210 terms (71.9%)
+   large (51-200): 4 terms (1.4%)
+   very_large (201-500): 0 terms (0.0%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 874
+   Genes appearing in 2-5 terms: 439
+   Genes appearing in 6-10 terms: 102
+   Genes appearing in 11-20 terms: 63
+   Genes appearing in 21-50 terms: 29
+   Genes appearing in 50+ terms: 2
+
+🏆 Top 10 most common genes:
+   MAPK3: 60 terms
+   HRAS: 55 terms
+   PIK3CA: 48 terms
+   PIK3R1: 48 terms
+   MAP2K1: 44 terms
+   MAPK1: 42 terms
+   RAF1: 42 terms
+   JUN: 40 terms
+   PRKCA: 39 terms
+   PRKCB: 39 terms
+
+📚 C2: KEGG Legacy
+🏷️  Category: C2
+============================================================
+📊 Total terms: 186
+🧬 Unique genes: 5,245
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 10 genes
+   Largest term: 389 genes
+   Average term size: 68.8 genes
+   Median term size: 52.5 genes
+   Standard deviation: 58.2 genes
+
+📊 Term Size Distribution:
+   small (1-10): 2 terms (1.1%)
+   medium (11-50): 85 terms (45.7%)
+   large (51-200): 93 terms (50.0%)
+   very_large (201-500): 6 terms (3.2%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 2,982
+   Genes appearing in 2-5 terms: 1,862
+   Genes appearing in 6-10 terms: 253
+   Genes appearing in 11-20 terms: 119
+   Genes appearing in 21-50 terms: 29
+   Genes appearing in 50+ terms: 0
+
+🏆 Top 10 most common genes:
+   MAPK1: 46 terms
+   MAPK3: 46 terms
+   MAP2K1: 37 terms
+   KRAS: 34 terms
+   PIK3CA: 34 terms
+   PIK3CB: 34 terms
+   PIK3CD: 34 terms
+   PIK3CG: 34 terms
+   PIK3R1: 33 terms
+   PIK3R2: 33 terms
+
+📚 C2: KEGG MEDICUS
+🏷️  Category: C2
+============================================================
+📊 Total terms: 658
+🧬 Unique genes: 2,788
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 92 genes
+   Average term size: 14.7 genes
+   Median term size: 11.5 genes
+   Standard deviation: 10.8 genes
+
+📊 Term Size Distribution:
+   small (1-10): 288 terms (43.8%)
+   medium (11-50): 363 terms (55.2%)
+   large (51-200): 7 terms (1.1%)
+   very_large (201-500): 0 terms (0.0%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,446
+   Genes appearing in 2-5 terms: 891
+   Genes appearing in 6-10 terms: 281
+   Genes appearing in 11-20 terms: 103
+   Genes appearing in 21-50 terms: 54
+   Genes appearing in 50+ terms: 13
+
+🏆 Top 10 most common genes:
+   MAPK1: 62 terms
+   MAPK3: 62 terms
+   AKT1: 55 terms
+   AKT2: 55 terms
+   AKT3: 55 terms
+   KRAS: 54 terms
+   MAP2K1: 54 terms
+   MAP2K2: 54 terms
+   NRAS: 54 terms
+   RAF1: 54 terms
+
+📚 C2: Pathway Interaction Database
+🏷️  Category: C2
+============================================================
+📊 Total terms: 196
+🧬 Unique genes: 2,534
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 10 genes
+   Largest term: 137 genes
+   Average term size: 41.1 genes
+   Median term size: 37.5 genes
+   Standard deviation: 20.7 genes
+
+📊 Term Size Distribution:
+   small (1-10): 1 terms (0.5%)
+   medium (11-50): 143 terms (73.0%)
+   large (51-200): 52 terms (26.5%)
+   very_large (201-500): 0 terms (0.0%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,242
+   Genes appearing in 2-5 terms: 973
+   Genes appearing in 6-10 terms: 175
+   Genes appearing in 11-20 terms: 110
+   Genes appearing in 21-50 terms: 29
+   Genes appearing in 50+ terms: 5
+
+🏆 Top 10 most common genes:
+   PIK3R1: 63 terms
+   PIK3CA: 61 terms
+   AKT1: 58 terms
+   MAPK1: 51 terms
+   MAPK3: 51 terms
+   RAC1: 50 terms
+   SRC: 48 terms
+   RHOA: 45 terms
+   JUN: 43 terms
+   GRB2: 42 terms
+
+📚 C2: Reactome Pathways
+🏷️  Category: C2
+============================================================
+📊 Total terms: 1,787
+🧬 Unique genes: 11,369
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1491 genes
+   Average term size: 54.6 genes
+   Median term size: 23.0 genes
+   Standard deviation: 106.4 genes
+
+📊 Term Size Distribution:
+   small (1-10): 417 terms (23.3%)
+   medium (11-50): 891 terms (49.9%)
+   large (51-200): 397 terms (22.2%)
+   very_large (201-500): 61 terms (3.4%)
+   huge (500+): 21 terms (1.2%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 535
+   Genes appearing in 2-5 terms: 6,126
+   Genes appearing in 6-10 terms: 2,403
+   Genes appearing in 11-20 terms: 1,432
+   Genes appearing in 21-50 terms: 627
+   Genes appearing in 50+ terms: 246
+
+🏆 Top 10 most common genes:
+   RPS27A: 326 terms
+   UBA52: 323 terms
+   UBB: 317 terms
+   UBC: 312 terms
+   GRB2: 154 terms
+   SRC: 132 terms
+   PIK3R1: 129 terms
+   MAPK1: 128 terms
+   SEM1: 126 terms
+   MAPK3: 123 terms
+
+📚 C2: Canonical pathways
+🏷️  Category: C2
+============================================================
+📊 Total terms: 4,023
+🧬 Unique genes: 13,868
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1491 genes
+   Average term size: 43.1 genes
+   Median term size: 21.0 genes
+   Standard deviation: 78.9 genes
+
+📊 Term Size Distribution:
+   small (1-10): 924 terms (23.0%)
+   medium (11-50): 2,224 terms (55.3%)
+   large (51-200): 768 terms (19.1%)
+   very_large (201-500): 85 terms (2.1%)
+   huge (500+): 22 terms (0.5%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,842
+   Genes appearing in 2-5 terms: 4,912
+   Genes appearing in 6-10 terms: 2,907
+   Genes appearing in 11-20 terms: 2,215
+   Genes appearing in 21-50 terms: 1,380
+   Genes appearing in 50+ terms: 612
+
+🏆 Top 10 most common genes:
+   MAPK1: 506 terms
+   MAPK3: 489 terms
+   AKT1: 437 terms
+   PIK3CA: 414 terms
+   HRAS: 378 terms
+   GRB2: 374 terms
+   PIK3R1: 373 terms
+   UBB: 338 terms
+   RPS27A: 337 terms
+   UBA52: 336 terms
+
+📚 C2: WikiPathways
+🏷️  Category: C2
+============================================================
+📊 Total terms: 885
+🧬 Unique genes: 9,127
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 507 genes
+   Average term size: 45.1 genes
+   Median term size: 27.0 genes
+   Standard deviation: 56.8 genes
+
+📊 Term Size Distribution:
+   small (1-10): 136 terms (15.4%)
+   medium (11-50): 518 terms (58.5%)
+   large (51-200): 212 terms (24.0%)
+   very_large (201-500): 18 terms (2.0%)
+   huge (500+): 1 terms (0.1%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 3,483
+   Genes appearing in 2-5 terms: 3,865
+   Genes appearing in 6-10 terms: 1,033
+   Genes appearing in 11-20 terms: 491
+   Genes appearing in 21-50 terms: 200
+   Genes appearing in 50+ terms: 55
+
+🏆 Top 10 most common genes:
+   MAPK1: 171 terms
+   AKT1: 160 terms
+   NFKB1: 151 terms
+   MAPK3: 141 terms
+   TNF: 104 terms
+   RAF1: 103 terms
+   MTOR: 101 terms
+   MAP2K1: 100 terms
+   MAPK8: 99 terms
+   PIK3CA: 98 terms
+
+📚 C3: Regulatory target gene sets
+🏷️  Category: C3
+============================================================
+📊 Total terms: 3,713
+🧬 Unique genes: 28,831
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1997 genes
+   Average term size: 220.5 genes
+   Median term size: 127.0 genes
+   Standard deviation: 280.9 genes
+
+📊 Term Size Distribution:
+   small (1-10): 165 terms (4.4%)
+   medium (11-50): 473 terms (12.7%)
+   large (51-200): 1,764 terms (47.5%)
+   very_large (201-500): 952 terms (25.6%)
+   huge (500+): 359 terms (9.7%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 5,119
+   Genes appearing in 2-5 terms: 4,403
+   Genes appearing in 6-10 terms: 2,579
+   Genes appearing in 11-20 terms: 3,921
+   Genes appearing in 21-50 terms: 7,398
+   Genes appearing in 50+ terms: 5,411
+
+🏆 Top 10 most common genes:
+   ZBTB20: 417 terms
+   RORA: 377 terms
+   NUFIP2: 375 terms
+   AAK1: 367 terms
+   TNRC6B: 366 terms
+   DMD: 325 terms
+   ZEB2: 323 terms
+   CREBRF: 322 terms
+   NFAT5: 319 terms
+   IKZF2: 316 terms
+
+📚 C3: MicroRNA targets Legacy
+🏷️  Category: C3
+============================================================
+📊 Total terms: 221
+🧬 Unique genes: 7,450
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 728 genes
+   Average term size: 154.6 genes
+   Median term size: 113.0 genes
+   Standard deviation: 133.6 genes
+
+📊 Term Size Distribution:
+   small (1-10): 9 terms (4.1%)
+   medium (11-50): 31 terms (14.0%)
+   large (51-200): 118 terms (53.4%)
+   very_large (201-500): 55 terms (24.9%)
+   huge (500+): 8 terms (3.6%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 2,218
+   Genes appearing in 2-5 terms: 3,174
+   Genes appearing in 6-10 terms: 1,308
+   Genes appearing in 11-20 terms: 604
+   Genes appearing in 21-50 terms: 144
+   Genes appearing in 50+ terms: 2
+
+🏆 Top 10 most common genes:
+   QKI: 66 terms
+   TNRC6B: 54 terms
+   OGT: 49 terms
+   DDX3X: 44 terms
+   CELF2: 42 terms
+   PURB: 41 terms
+   SOX11: 40 terms
+   ATXN1: 40 terms
+   ACACA: 39 terms
+   MECP2: 39 terms
+
+📚 C3: MicroRNA Database (mirDB)
+🏷️  Category: C3
+============================================================
+📊 Total terms: 2,377
+🧬 Unique genes: 16,652
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1071 genes
+   Average term size: 156.5 genes
+   Median term size: 103.0 genes
+   Standard deviation: 158.6 genes
+
+📊 Term Size Distribution:
+   small (1-10): 112 terms (4.7%)
+   medium (11-50): 347 terms (14.6%)
+   large (51-200): 1,373 terms (57.8%)
+   very_large (201-500): 434 terms (18.3%)
+   huge (500+): 111 terms (4.7%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 781
+   Genes appearing in 2-5 terms: 3,124
+   Genes appearing in 6-10 terms: 2,966
+   Genes appearing in 11-20 terms: 3,740
+   Genes appearing in 21-50 terms: 4,139
+   Genes appearing in 50+ terms: 1,902
+
+🏆 Top 10 most common genes:
+   AAK1: 317 terms
+   ZBTB20: 317 terms
+   RORA: 295 terms
+   INO80D: 278 terms
+   TNRC6B: 276 terms
+   NUFIP2: 251 terms
+   ZNF704: 251 terms
+   ONECUT2: 240 terms
+   NFAT5: 225 terms
+   MBNL3: 223 terms
+
+📚 C3: microRNA targets
+🏷️  Category: C3
+============================================================
+📊 Total terms: 2,598
+🧬 Unique genes: 16,872
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1071 genes
+   Average term size: 156.4 genes
+   Median term size: 104.0 genes
+   Standard deviation: 156.6 genes
+
+📊 Term Size Distribution:
+   small (1-10): 121 terms (4.7%)
+   medium (11-50): 378 terms (14.5%)
+   large (51-200): 1,491 terms (57.4%)
+   very_large (201-500): 489 terms (18.8%)
+   huge (500+): 119 terms (4.6%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 852
+   Genes appearing in 2-5 terms: 3,021
+   Genes appearing in 6-10 terms: 2,883
+   Genes appearing in 11-20 terms: 3,651
+   Genes appearing in 21-50 terms: 4,240
+   Genes appearing in 50+ terms: 2,225
+
+🏆 Top 10 most common genes:
+   TNRC6B: 330 terms
+   AAK1: 319 terms
+   ZBTB20: 319 terms
+   RORA: 295 terms
+   INO80D: 282 terms
+   QKI: 274 terms
+   NUFIP2: 272 terms
+   ZNF704: 257 terms
+   NFAT5: 254 terms
+   CREBRF: 248 terms
+
+📚 C3: TFT: Gene Regulon Database (GTRD)
+🏷️  Category: C3
+============================================================
+📊 Total terms: 505
+🧬 Unique genes: 26,924
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1997 genes
+   Average term size: 509.4 genes
+   Median term size: 288.0 genes
+   Standard deviation: 544.0 genes
+
+📊 Term Size Distribution:
+   small (1-10): 43 terms (8.5%)
+   medium (11-50): 76 terms (15.0%)
+   large (51-200): 103 terms (20.4%)
+   very_large (201-500): 81 terms (16.0%)
+   huge (500+): 202 terms (40.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 6,425
+   Genes appearing in 2-5 terms: 7,118
+   Genes appearing in 6-10 terms: 4,465
+   Genes appearing in 11-20 terms: 5,254
+   Genes appearing in 21-50 terms: 3,404
+   Genes appearing in 50+ terms: 258
+
+🏆 Top 10 most common genes:
+   GBA1: 122 terms
+   MTCO3P12: 117 terms
+   MTF2: 102 terms
+   STAT6: 96 terms
+   SMARCD2: 95 terms
+   GTPBP3: 94 terms
+   INTS12: 92 terms
+   WEE2-AS1: 92 terms
+   DPP9: 91 terms
+   NUF2: 91 terms
+
+📚 C3: Transcription Factor Targets: Legacy
+🏷️  Category: C3
+============================================================
+📊 Total terms: 610
+🧬 Unique genes: 12,779
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 6 genes
+   Largest term: 1936 genes
+   Average term size: 254.4 genes
+   Median term size: 249.0 genes
+   Standard deviation: 208.3 genes
+
+📊 Term Size Distribution:
+   small (1-10): 1 terms (0.2%)
+   medium (11-50): 19 terms (3.1%)
+   large (51-200): 170 terms (27.9%)
+   very_large (201-500): 382 terms (62.6%)
+   huge (500+): 38 terms (6.2%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,450
+   Genes appearing in 2-5 terms: 3,931
+   Genes appearing in 6-10 terms: 2,570
+   Genes appearing in 11-20 terms: 2,555
+   Genes appearing in 21-50 terms: 1,927
+   Genes appearing in 50+ terms: 346
+
+🏆 Top 10 most common genes:
+   DMD: 214 terms
+   HOXC4: 169 terms
+   FOXP2: 151 terms
+   LMO3: 139 terms
+   BDNF: 136 terms
+   ELAVL4: 129 terms
+   HOXA3: 123 terms
+   MITF: 121 terms
+   DLG2: 120 terms
+   SOX5: 120 terms
+
+📚 C3: Transcription Factor Targets
+🏷️  Category: C3
+============================================================
+📊 Total terms: 1,115
+🧬 Unique genes: 27,964
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1997 genes
+   Average term size: 369.9 genes
+   Median term size: 250.0 genes
+   Standard deviation: 416.8 genes
+
+📊 Term Size Distribution:
+   small (1-10): 44 terms (3.9%)
+   medium (11-50): 95 terms (8.5%)
+   large (51-200): 273 terms (24.5%)
+   very_large (201-500): 463 terms (41.5%)
+   huge (500+): 240 terms (21.5%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 5,675
+   Genes appearing in 2-5 terms: 5,778
+   Genes appearing in 6-10 terms: 3,820
+   Genes appearing in 11-20 terms: 5,478
+   Genes appearing in 21-50 terms: 5,880
+   Genes appearing in 50+ terms: 1,333
+
+🏆 Top 10 most common genes:
+   DMD: 222 terms
+   HOXC4: 181 terms
+   FOXP2: 178 terms
+   CHD2: 160 terms
+   SKIDA1: 145 terms
+   PRDM1: 144 terms
+   BDNF: 144 terms
+   LMO3: 143 terms
+   PURA: 142 terms
+   MEIS2: 141 terms
+
+📚 C4: 3CA: Curated Cancer Cell Atlas
+🏷️  Category: C4
+============================================================
+📊 Total terms: 148
+🧬 Unique genes: 2,992
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 47 genes
+   Largest term: 50 genes
+   Average term size: 49.8 genes
+   Median term size: 50.0 genes
+   Standard deviation: 0.5 genes
+
+📊 Term Size Distribution:
+   small (1-10): 0 terms (0.0%)
+   medium (11-50): 148 terms (100.0%)
+   large (51-200): 0 terms (0.0%)
+   very_large (201-500): 0 terms (0.0%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,477
+   Genes appearing in 2-5 terms: 1,221
+   Genes appearing in 6-10 terms: 246
+   Genes appearing in 11-20 terms: 45
+   Genes appearing in 21-50 terms: 3
+   Genes appearing in 50+ terms: 0
+
+🏆 Top 10 most common genes:
+   MT2A: 22 terms
+   FABP5: 22 terms
+   LGALS1: 21 terms
+   CLU: 19 terms
+   ANXA1: 19 terms
+   IGFBP7: 16 terms
+   STMN1: 16 terms
+   CCL2: 16 terms
+   CD74: 16 terms
+   S100A4: 15 terms
+
+📚 C4: Computational gene sets
+🏷️  Category: C4
+============================================================
+📊 Total terms: 1,006
+🧬 Unique genes: 10,749
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 10 genes
+   Largest term: 835 genes
+   Average term size: 98.0 genes
+   Median term size: 50.0 genes
+   Standard deviation: 111.9 genes
+
+📊 Term Size Distribution:
+   small (1-10): 9 terms (0.9%)
+   medium (11-50): 497 terms (49.4%)
+   large (51-200): 374 terms (37.2%)
+   very_large (201-500): 109 terms (10.8%)
+   huge (500+): 17 terms (1.7%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,857
+   Genes appearing in 2-5 terms: 3,486
+   Genes appearing in 6-10 terms: 2,048
+   Genes appearing in 11-20 terms: 2,087
+   Genes appearing in 21-50 terms: 1,216
+   Genes appearing in 50+ terms: 55
+
+🏆 Top 10 most common genes:
+   KHDRBS1: 90 terms
+   PCNA: 84 terms
+   H2AZ1: 74 terms
+   RAN: 73 terms
+   NONO: 70 terms
+   SUMO2: 67 terms
+   SNRNP200: 67 terms
+   SNRPE: 66 terms
+   KRT86: 66 terms
+   FOSL1: 64 terms
+
+📚 C4: CGN: Cancer gene neighborhoods
+🏷️  Category: C4
+============================================================
+📊 Total terms: 427
+🧬 Unique genes: 4,883
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 24 genes
+   Largest term: 423 genes
+   Average term size: 99.5 genes
+   Median term size: 71.0 genes
+   Standard deviation: 75.5 genes
+
+📊 Term Size Distribution:
+   small (1-10): 0 terms (0.0%)
+   medium (11-50): 128 terms (30.0%)
+   large (51-200): 252 terms (59.0%)
+   very_large (201-500): 47 terms (11.0%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 904
+   Genes appearing in 2-5 terms: 1,647
+   Genes appearing in 6-10 terms: 989
+   Genes appearing in 11-20 terms: 780
+   Genes appearing in 21-50 terms: 550
+   Genes appearing in 50+ terms: 13
+
+🏆 Top 10 most common genes:
+   KHDRBS1: 79 terms
+   NONO: 69 terms
+   SUMO2: 66 terms
+   SNRNP200: 62 terms
+   CS: 56 terms
+   ILF2: 55 terms
+   HNRNPAB: 55 terms
+   PSG1: 53 terms
+   HNRNPA2B1: 52 terms
+   SET: 52 terms
+
+📚 C4: CM: Cancer modules
+🏷️  Category: C4
+============================================================
+📊 Total terms: 431
+🧬 Unique genes: 8,359
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 10 genes
+   Largest term: 835 genes
+   Average term size: 112.9 genes
+   Median term size: 45.0 genes
+   Standard deviation: 150.4 genes
+
+📊 Term Size Distribution:
+   small (1-10): 9 terms (2.1%)
+   medium (11-50): 221 terms (51.3%)
+   large (51-200): 122 terms (28.3%)
+   very_large (201-500): 62 terms (14.4%)
+   huge (500+): 17 terms (3.9%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,876
+   Genes appearing in 2-5 terms: 3,296
+   Genes appearing in 6-10 terms: 1,810
+   Genes appearing in 11-20 terms: 1,178
+   Genes appearing in 21-50 terms: 199
+   Genes appearing in 50+ terms: 0
+
+🏆 Top 10 most common genes:
+   PDGFRA: 46 terms
+   CXCR4: 42 terms
+   CCL2: 41 terms
+   CD14: 40 terms
+   FGFR1: 40 terms
+   CXCL8: 40 terms
+   ITGB5: 39 terms
+   FN1: 38 terms
+   KRT19: 36 terms
+   GJA1: 35 terms
+
+📚 C5: Ontology gene sets
+🏷️  Category: C5
+============================================================
+📊 Total terms: 16,228
+🧬 Unique genes: 19,548
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1986 genes
+   Average term size: 83.9 genes
+   Median term size: 20.0 genes
+   Standard deviation: 196.6 genes
+
+📊 Term Size Distribution:
+   small (1-10): 4,918 terms (30.3%)
+   medium (11-50): 6,677 terms (41.1%)
+   large (51-200): 3,064 terms (18.9%)
+   very_large (201-500): 977 terms (6.0%)
+   huge (500+): 592 terms (3.6%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 264
+   Genes appearing in 2-5 terms: 2,213
+   Genes appearing in 6-10 terms: 1,684
+   Genes appearing in 11-20 terms: 3,119
+   Genes appearing in 21-50 terms: 4,794
+   Genes appearing in 50+ terms: 7,474
+
+🏆 Top 10 most common genes:
+   AKT1: 1173 terms
+   TGFB1: 1142 terms
+   FGFR1: 1028 terms
+   CTNNB1: 1016 terms
+   FGFR2: 995 terms
+   LMNA: 968 terms
+   FLNA: 946 terms
+   TP53: 933 terms
+   EP300: 897 terms
+   PIK3CA: 887 terms
+
+📚 C5: Gene Ontology: Biological Process
+🏷️  Category: C5
+============================================================
+📊 Total terms: 7,583
+🧬 Unique genes: 17,999
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1986 genes
+   Average term size: 81.3 genes
+   Median term size: 20.0 genes
+   Standard deviation: 197.1 genes
+
+📊 Term Size Distribution:
+   small (1-10): 2,274 terms (30.0%)
+   medium (11-50): 3,209 terms (42.3%)
+   large (51-200): 1,415 terms (18.7%)
+   very_large (201-500): 428 terms (5.6%)
+   huge (500+): 257 terms (3.4%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,038
+   Genes appearing in 2-5 terms: 2,410
+   Genes appearing in 6-10 terms: 2,739
+   Genes appearing in 11-20 terms: 3,413
+   Genes appearing in 21-50 terms: 4,835
+   Genes appearing in 50+ terms: 3,564
+
+🏆 Top 10 most common genes:
+   TGFB1: 788 terms
+   TNF: 715 terms
+   AKT1: 606 terms
+   WNT5A: 591 terms
+   NOTCH1: 568 terms
+   CTNNB1: 556 terms
+   BMP4: 534 terms
+   EDN1: 530 terms
+   ABL1: 509 terms
+   MIR21: 495 terms
+
+📚 C5: Gene Ontology: Cellular Component
+🏷️  Category: C5
+============================================================
+📊 Total terms: 1,042
+🧬 Unique genes: 14,868
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1852 genes
+   Average term size: 98.8 genes
+   Median term size: 17.0 genes
+   Standard deviation: 236.5 genes
+
+📊 Term Size Distribution:
+   small (1-10): 350 terms (33.6%)
+   medium (11-50): 385 terms (36.9%)
+   large (51-200): 190 terms (18.2%)
+   very_large (201-500): 63 terms (6.0%)
+   huge (500+): 54 terms (5.2%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 2,287
+   Genes appearing in 2-5 terms: 5,887
+   Genes appearing in 6-10 terms: 3,597
+   Genes appearing in 11-20 terms: 2,379
+   Genes appearing in 21-50 terms: 709
+   Genes appearing in 50+ terms: 9
+
+🏆 Top 10 most common genes:
+   CTNNB1: 72 terms
+   APP: 70 terms
+   GRIA1: 69 terms
+   LRRK2: 67 terms
+   RAC1: 64 terms
+   PSEN1: 64 terms
+   ACTB: 57 terms
+   ATP6AP2: 56 terms
+   DAG1: 51 terms
+   AP2A1: 50 terms
+
+📚 C5: Gene Ontology: Molecular Function
+🏷️  Category: C5
+============================================================
+📊 Total terms: 1,855
+🧬 Unique genes: 15,698
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1943 genes
+   Average term size: 60.8 genes
+   Median term size: 14.0 genes
+   Standard deviation: 168.1 genes
+
+📊 Term Size Distribution:
+   small (1-10): 725 terms (39.1%)
+   medium (11-50): 773 terms (41.7%)
+   large (51-200): 245 terms (13.2%)
+   very_large (201-500): 62 terms (3.3%)
+   huge (500+): 50 terms (2.7%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,169
+   Genes appearing in 2-5 terms: 6,634
+   Genes appearing in 6-10 terms: 4,662
+   Genes appearing in 11-20 terms: 2,688
+   Genes appearing in 21-50 terms: 538
+   Genes appearing in 50+ terms: 7
+
+🏆 Top 10 most common genes:
+   TP53: 60 terms
+   PARK7: 60 terms
+   CAV1: 59 terms
+   SNCA: 58 terms
+   CALM3: 55 terms
+   APP: 53 terms
+   HSP90AB1: 52 terms
+   GRIA1: 48 terms
+   RACK1: 48 terms
+   DAB2IP: 47 terms
+
+📚 C5: GO: Gene Ontology
+🏷️  Category: C5
+============================================================
+📊 Total terms: 10,480
+🧬 Unique genes: 19,499
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1986 genes
+   Average term size: 79.4 genes
+   Median term size: 18.0 genes
+   Standard deviation: 196.9 genes
+
+📊 Term Size Distribution:
+   small (1-10): 3,349 terms (32.0%)
+   medium (11-50): 4,367 terms (41.7%)
+   large (51-200): 1,850 terms (17.7%)
+   very_large (201-500): 553 terms (5.3%)
+   huge (500+): 361 terms (3.4%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 270
+   Genes appearing in 2-5 terms: 2,300
+   Genes appearing in 6-10 terms: 1,879
+   Genes appearing in 11-20 terms: 3,672
+   Genes appearing in 21-50 terms: 6,225
+   Genes appearing in 50+ terms: 5,153
+
+🏆 Top 10 most common genes:
+   TGFB1: 829 terms
+   TNF: 735 terms
+   AKT1: 669 terms
+   CTNNB1: 654 terms
+   WNT5A: 620 terms
+   NOTCH1: 616 terms
+   APP: 588 terms
+   ABL1: 574 terms
+   SIRT1: 557 terms
+   BMP4: 557 terms
+
+📚 C5: Human Phenotype Ontology
+🏷️  Category: C5
+============================================================
+📊 Total terms: 5,748
+🧬 Unique genes: 5,112
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1759 genes
+   Average term size: 92.1 genes
+   Median term size: 23.0 genes
+   Standard deviation: 196.0 genes
+
+📊 Term Size Distribution:
+   small (1-10): 1,569 terms (27.3%)
+   medium (11-50): 2,310 terms (40.2%)
+   large (51-200): 1,214 terms (21.1%)
+   very_large (201-500): 424 terms (7.4%)
+   huge (500+): 231 terms (4.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 18
+   Genes appearing in 2-5 terms: 131
+   Genes appearing in 6-10 terms: 217
+   Genes appearing in 11-20 terms: 322
+   Genes appearing in 21-50 terms: 1,055
+   Genes appearing in 50+ terms: 3,369
+
+🏆 Top 10 most common genes:
+   LMNA: 841 terms
+   FGFR1: 685 terms
+   FGFR2: 684 terms
+   KRAS: 677 terms
+   PIK3CA: 643 terms
+   BRAF: 634 terms
+   FLNA: 625 terms
+   FGFR3: 612 terms
+   ELN: 579 terms
+   COL2A1: 543 terms
+
+📚 C6: Oncogenic Signatures
+🏷️  Category: C6
+============================================================
+📊 Total terms: 189
+🧬 Unique genes: 10,927
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 11 genes
+   Largest term: 469 genes
+   Average term size: 161.8 genes
+   Median term size: 172.0 genes
+   Standard deviation: 59.4 genes
+
+📊 Term Size Distribution:
+   small (1-10): 0 terms (0.0%)
+   medium (11-50): 17 terms (9.0%)
+   large (51-200): 159 terms (84.1%)
+   very_large (201-500): 13 terms (6.9%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 3,905
+   Genes appearing in 2-5 terms: 5,804
+   Genes appearing in 6-10 terms: 1,080
+   Genes appearing in 11-20 terms: 136
+   Genes appearing in 21-50 terms: 2
+   Genes appearing in 50+ terms: 0
+
+🏆 Top 10 most common genes:
+   ANGPTL4: 28 terms
+   EDN1: 22 terms
+   FOS: 20 terms
+   ACKR3: 19 terms
+   CXCL8: 19 terms
+   IL1R1: 17 terms
+   HBEGF: 17 terms
+   ASPH: 17 terms
+   ATF3: 16 terms
+   CXCL1: 16 terms
+
+📚 C7: All Immunologic Signatures
+🏷️  Category: C7
+============================================================
+📊 Total terms: 5,219
+🧬 Unique genes: 21,373
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1991 genes
+   Average term size: 189.8 genes
+   Median term size: 199.0 genes
+   Standard deviation: 69.5 genes
+
+📊 Term Size Distribution:
+   small (1-10): 81 terms (1.6%)
+   medium (11-50): 146 terms (2.8%)
+   large (51-200): 4,931 terms (94.5%)
+   very_large (201-500): 39 terms (0.7%)
+   huge (500+): 22 terms (0.4%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,132
+   Genes appearing in 2-5 terms: 1,868
+   Genes appearing in 6-10 terms: 1,419
+   Genes appearing in 11-20 terms: 2,306
+   Genes appearing in 21-50 terms: 6,649
+   Genes appearing in 50+ terms: 7,999
+
+🏆 Top 10 most common genes:
+   IRF7: 304 terms
+   PLSCR1: 299 terms
+   CD38: 296 terms
+   RSAD2: 278 terms
+   BHLHE40: 275 terms
+   MX2: 275 terms
+   IRF4: 271 terms
+   ISG20: 271 terms
+   IFIT3: 268 terms
+   BCL2A1: 263 terms
+
+📚 C7: ImmuneSigDB: Immune Signatures Database
+🏷️  Category: C7
+============================================================
+📊 Total terms: 4,872
+🧬 Unique genes: 20,440
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 102 genes
+   Largest term: 200 genes
+   Average term size: 194.2 genes
+   Median term size: 199.0 genes
+   Standard deviation: 13.9 genes
+
+📊 Term Size Distribution:
+   small (1-10): 0 terms (0.0%)
+   medium (11-50): 0 terms (0.0%)
+   large (51-200): 4,872 terms (100.0%)
+   very_large (201-500): 0 terms (0.0%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 524
+   Genes appearing in 2-5 terms: 1,692
+   Genes appearing in 6-10 terms: 1,407
+   Genes appearing in 11-20 terms: 2,379
+   Genes appearing in 21-50 terms: 6,873
+   Genes appearing in 50+ terms: 7,565
+
+🏆 Top 10 most common genes:
+   IRF7: 276 terms
+   CD38: 271 terms
+   PLSCR1: 269 terms
+   BHLHE40: 263 terms
+   IRF4: 262 terms
+   ISG20: 257 terms
+   MX2: 255 terms
+   TRAF1: 251 terms
+   IRF8: 251 terms
+   RSAD2: 250 terms
+
+📚 C7: VAX: Vaccine response
+🏷️  Category: C7
+============================================================
+📊 Total terms: 347
+🧬 Unique genes: 13,431
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1991 genes
+   Average term size: 128.1 genes
+   Median term size: 30.0 genes
+   Standard deviation: 257.0 genes
+
+📊 Term Size Distribution:
+   small (1-10): 81 terms (23.3%)
+   medium (11-50): 146 terms (42.1%)
+   large (51-200): 59 terms (17.0%)
+   very_large (201-500): 39 terms (11.2%)
+   huge (500+): 22 terms (6.3%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 4,491
+   Genes appearing in 2-5 terms: 6,825
+   Genes appearing in 6-10 terms: 1,691
+   Genes appearing in 11-20 terms: 359
+   Genes appearing in 21-50 terms: 65
+   Genes appearing in 50+ terms: 0
+
+🏆 Top 10 most common genes:
+   GBP1: 37 terms
+   SERPING1: 37 terms
+   IFI44L: 37 terms
+   STAT1: 36 terms
+   OAS1: 35 terms
+   IFIT3: 34 terms
+   OAS3: 34 terms
+   IFIT1: 33 terms
+   OAS2: 32 terms
+   IFI44: 32 terms
+
+📚 C8: Cell Type Signatures
+🏷️  Category: C8
+============================================================
+📊 Total terms: 866
+🧬 Unique genes: 20,531
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1770 genes
+   Average term size: 181.7 genes
+   Median term size: 118.0 genes
+   Standard deviation: 209.9 genes
+
+📊 Term Size Distribution:
+   small (1-10): 31 terms (3.6%)
+   medium (11-50): 174 terms (20.1%)
+   large (51-200): 417 terms (48.2%)
+   very_large (201-500): 184 terms (21.2%)
+   huge (500+): 60 terms (6.9%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 4,238
+   Genes appearing in 2-5 terms: 7,578
+   Genes appearing in 6-10 terms: 3,812
+   Genes appearing in 11-20 terms: 3,107
+   Genes appearing in 21-50 terms: 1,737
+   Genes appearing in 50+ terms: 59
+
+🏆 Top 10 most common genes:
+   IGFBP7: 75 terms
+   CD74: 72 terms
+   MT2A: 71 terms
+   ANXA1: 70 terms
+   B2M: 67 terms
+   HLA-B: 67 terms
+   VIM: 65 terms
+   TIMP1: 65 terms
+   S100A6: 65 terms
+   LGALS1: 64 terms
+
+📚 H: Hallmark Gene Sets
+🏷️  Category: H
+============================================================
+📊 Total terms: 50
+🧬 Unique genes: 4,384
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 32 genes
+   Largest term: 200 genes
+   Average term size: 146.4 genes
+   Median term size: 180.0 genes
+   Standard deviation: 62.3 genes
+
+📊 Term Size Distribution:
+   small (1-10): 0 terms (0.0%)
+   medium (11-50): 7 terms (14.0%)
+   large (51-200): 43 terms (86.0%)
+   very_large (201-500): 0 terms (0.0%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 2,671
+   Genes appearing in 2-5 terms: 1,659
+   Genes appearing in 6-10 terms: 54
+   Genes appearing in 11-20 terms: 0
+   Genes appearing in 21-50 terms: 0
+   Genes appearing in 50+ terms: 0
+
+🏆 Top 10 most common genes:
+   IL6: 10 terms
+   CDKN1A: 10 terms
+   MYC: 10 terms
+   SERPINE1: 9 terms
+   IDH1: 8 terms
+   RETSAT: 8 terms
+   PLAUR: 8 terms
+   BTG2: 8 terms
+   CD44: 8 terms
+   IRF1: 8 terms
+
+📚 All MSigDB gene sets
+🏷️  Category: Other
+============================================================
+📊 Total terms: 35,134
+🧬 Unique genes: 43,345
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 5 genes
+   Largest term: 1997 genes
+   Average term size: 116.4 genes
+   Median term size: 47.0 genes
+   Standard deviation: 189.5 genes
+
+📊 Term Size Distribution:
+   small (1-10): 6,500 terms (18.5%)
+   medium (11-50): 11,751 terms (33.4%)
+   large (51-200): 12,832 terms (36.5%)
+   very_large (201-500): 2,819 terms (8.0%)
+   huge (500+): 1,232 terms (3.5%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 10,417
+   Genes appearing in 2-5 terms: 8,623
+   Genes appearing in 6-10 terms: 2,277
+   Genes appearing in 11-20 terms: 2,358
+   Genes appearing in 21-50 terms: 2,685
+   Genes appearing in 50+ terms: 16,985
+
+🏆 Top 10 most common genes:
+   AKT1: 1755 terms
+   TGFB1: 1563 terms
+   PIK3CA: 1519 terms
+   CTNNB1: 1463 terms
+   TP53: 1432 terms
+   KRAS: 1407 terms
+   FGFR1: 1388 terms
+   PIK3R1: 1386 terms
+   MAPK1: 1349 terms
+   LMNA: 1346 terms
+
+📚 Protein Interaction
+🏷️  Category: Other
+============================================================
+📊 Total terms: 12,323
+🧬 Unique genes: 12,320
+🦠 Organism: Homo Sapiens
+
+📏 Term Size Statistics:
+   Smallest term: 1 genes
+   Largest term: 375 genes
+   Average term size: 16.4 genes
+   Median term size: 7.0 genes
+   Standard deviation: 26.3 genes
+
+📊 Term Size Distribution:
+   small (1-10): 7,385 terms (59.9%)
+   medium (11-50): 4,066 terms (33.0%)
+   large (51-200): 840 terms (6.8%)
+   very_large (201-500): 32 terms (0.3%)
+   huge (500+): 0 terms (0.0%)
+
+📈 Gene Frequency Analysis:
+   Genes appearing in 1 term: 1,928
+   Genes appearing in 2-5 terms: 3,376
+   Genes appearing in 6-10 terms: 2,079
+   Genes appearing in 11-20 terms: 2,179
+   Genes appearing in 21-50 terms: 1,887
+   Genes appearing in 50+ terms: 871
+
+🏆 Top 10 most common genes:
+   RPS27A: 375 terms
+   UBA52: 350 terms
+   FAU: 292 terms
+   TP53: 283 terms
+   RPS11: 276 terms
+   RPS18: 275 terms
+   RPS9: 251 terms
+   RPS6: 246 terms
+   UBC: 242 terms
+   RPS3: 238 terms
+
+🎯 OVERALL STATISTICS
+================================================================================
+📊 Total libraries analyzed: 35
+📊 Total terms across all libraries: 134,515
+🧬 Total unique genes across all libraries: 537,771
+📊 Average terms per library: 3843.3
+🧬 Average genes per library: 15364.9

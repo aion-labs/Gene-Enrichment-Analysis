@@ -1,0 +1,36 @@
+Category,Library,Original Name,Total Terms,Unique Genes,Avg Term Size,Median Term Size,Min Term Size,Max Term Size,Genes in 1 Term,Genes in 50+ Terms
+C1,C1: Positional gene sets,c1.all.v2025.1.Hs.symbols,302,43315,143.8,119.5,5,1205,43251,0
+C2,C2: Curated gene sets,c2.all.v2025.1.Hs.symbols,7561,22381,76.9,30.0,5,1964,2412,3121
+C2,C2: CGP: Chemical & genetic perturbations,c2.cgp.v2025.1.Hs.symbols,3538,21705,115.3,47.0,5,1964,2632,1585
+C2,C2: BioCarta,c2.cp.biocarta.v2025.1.Hs.symbols,292,1509,16.5,15.0,5,81,874,2
+C2,C2: KEGG Legacy,c2.cp.kegg_legacy.v2025.1.Hs.symbols,186,5245,68.8,52.5,10,389,2982,0
+C2,C2: KEGG MEDICUS,c2.cp.kegg_medicus.v2025.1.Hs.symbols,658,2788,14.7,11.5,5,92,1446,13
+C2,C2: Pathway Interaction Database,c2.cp.pid.v2025.1.Hs.symbols,196,2534,41.1,37.5,10,137,1242,5
+C2,C2: Reactome Pathways,c2.cp.reactome.v2025.1.Hs.symbols,1787,11369,54.6,23.0,5,1491,535,246
+C2,C2: Canonical pathways,c2.cp.v2025.1.Hs.symbols,4023,13868,43.1,21.0,5,1491,1842,612
+C2,C2: WikiPathways,c2.cp.wikipathways.v2025.1.Hs.symbols,885,9127,45.1,27.0,5,507,3483,55
+C3,C3: Regulatory target gene sets,c3.all.v2025.1.Hs.symbols,3713,28831,220.5,127.0,5,1997,5119,5411
+C3,C3: MicroRNA targets Legacy,c3.mir.mir_legacy.v2025.1.Hs.symbols,221,7450,154.6,113.0,5,728,2218,2
+C3,C3: MicroRNA Database (mirDB),c3.mir.mirdb.v2025.1.Hs.symbols,2377,16652,156.5,103.0,5,1071,781,1902
+C3,C3: microRNA targets,c3.mir.v2025.1.Hs.symbols,2598,16872,156.4,104.0,5,1071,852,2225
+C3,C3: TFT: Gene Regulon Database (GTRD),c3.tft.gtrd.v2025.1.Hs.symbols,505,26924,509.4,288.0,5,1997,6425,258
+C3,C3: Transcription Factor Targets: Legacy,c3.tft.tft_legacy.v2025.1.Hs.symbols,610,12779,254.4,249.0,6,1936,1450,346
+C3,C3: Transcription Factor Targets,c3.tft.v2025.1.Hs.symbols,1115,27964,369.9,250.0,5,1997,5675,1333
+C4,C4: 3CA: Curated Cancer Cell Atlas,c4.3ca.v2025.1.Hs.symbols,148,2992,49.8,50.0,47,50,1477,0
+C4,C4: Computational gene sets,c4.all.v2025.1.Hs.symbols,1006,10749,98.0,50.0,10,835,1857,55
+C4,C4: CGN: Cancer gene neighborhoods,c4.cgn.v2025.1.Hs.symbols,427,4883,99.5,71.0,24,423,904,13
+C4,C4: CM: Cancer modules,c4.cm.v2025.1.Hs.symbols,431,8359,112.9,45.0,10,835,1876,0
+C5,C5: Ontology gene sets,c5.all.v2025.1.Hs.symbols,16228,19548,83.9,20.0,5,1986,264,7474
+C5,C5: Gene Ontology: Biological Process,c5.go.bp.v2025.1.Hs.symbols,7583,17999,81.3,20.0,5,1986,1038,3564
+C5,C5: Gene Ontology: Cellular Component,c5.go.cc.v2025.1.Hs.symbols,1042,14868,98.8,17.0,5,1852,2287,9
+C5,C5: Gene Ontology: Molecular Function,c5.go.mf.v2025.1.Hs.symbols,1855,15698,60.8,14.0,5,1943,1169,7
+C5,C5: GO: Gene Ontology,c5.go.v2025.1.Hs.symbols,10480,19499,79.4,18.0,5,1986,270,5153
+C5,C5: Human Phenotype Ontology,c5.hpo.v2025.1.Hs.symbols,5748,5112,92.1,23.0,5,1759,18,3369
+C6,C6: Oncogenic Signatures,c6.all.v2025.1.Hs.symbols,189,10927,161.8,172.0,11,469,3905,0
+C7,C7: All Immunologic Signatures,c7.all.v2025.1.Hs.symbols,5219,21373,189.8,199.0,5,1991,1132,7999
+C7,C7: ImmuneSigDB: Immune Signatures Database,c7.immunesigdb.v2025.1.Hs.symbols,4872,20440,194.2,199.0,102,200,524,7565
+C7,C7: VAX: Vaccine response,c7.vax.v2025.1.Hs.symbols,347,13431,128.1,30.0,5,1991,4491,0
+C8,C8: Cell Type Signatures,c8.all.v2025.1.Hs.symbols,866,20531,181.7,118.0,5,1770,4238,59
+H,H: Hallmark Gene Sets,h.all.v2025.1.Hs.symbols,50,4384,146.4,180.0,32,200,2671,0
+Other,All MSigDB gene sets,msigdb.v2025.1.Hs.symbols,35134,43345,116.4,47.0,5,1997,10417,16985
+Other,Protein Interaction,stringdb_protein_interactions,12323,12320,16.4,7.0,1,375,1928,871
