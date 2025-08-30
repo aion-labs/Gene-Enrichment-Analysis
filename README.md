@@ -1,9 +1,9 @@
-# Transparent Gene Set Enrichment Analysis
+# Iterative Gene Enrichment Analysis
 
 ## Prerequisites
-- Have a text file with a list of newline-separated background genes in `/data/backgrounds`.
-- Place gene set library files in the [Gene Matrix Transposed format](https://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29) in `/data/libraries`.
-- `alias.json` files provides human-readable names for gene set libraries and background gene lists.
+- Have a list of genes for enrichment analysis in official human gene symbols or entrez IDs.
+- Unless you use all genes as a background, have a background file with all measured genes ready in the human gene symbols or entrez IDs.
+- You may add new gene set libraries in GMT format. Make sure they are properly listed in the data folder and added to the alias.json file.  
 - The NCBI gene information database (`Homo_sapiens.gene_info`) is automatically downloaded for Entrez ID support.
 
 ## Run the Application
@@ -75,12 +75,11 @@ Users have the flexibility to input their gene set in multiple ways:
 #### Gene Set Validation
 The app performs crucial validation steps to ensure the accuracy of the analysis:
 - **Format Validation**: Validates gene identifiers against the selected input format (symbols or Entrez IDs).
-- **Conversion**: Converts Entrez IDs to official gene symbols when using Entrez ID format.
+- **Conversion**: Converts Entrez IDs to official gene symbols when using Entrez ID format. In addition, converts old symbols to updated symbols when possible. 
 - **Duplicate Check**: Checks for any duplicate gene names within the input gene set.
 - **Background Check**: Validates the input gene set against a predefined background gene list, which helps in identifying any genes that might not be present in the background list.
 
 #### Results Display and Interaction
-- Interactive Chart: The results for each gene set library are displayed in an interactive chart, allowing users to engage with the data dynamically.
 - Interactive Bar Graph: An interactive bar graph provides a visual representation of the results for each gene set library.
 
 #### Data Export Options
@@ -101,7 +100,7 @@ The app offers various statistical methods to calculate p-values:
 - Hypergeometric Test.
 - Chi-Squared Test.
 
-**Important Note on P-values**: The p-value threshold used for filtering results is a **raw p-value**, not a corrected p-value (e.g., FDR-corrected). While FDR values are calculated and reported in the results, the filtering threshold applies to the raw p-values.
+**Important Note on P-values**: The p-value threshold used for filtering results are both **raw p-value** and FDR adjusted p-values. In Iterative mode, adjusted p-values are not relevant and thus not calculated. 
 
 #### Custom Reference Data Upload
 Background Gene List Upload: Users can upload their background gene lists as .txt files containing newline-separated gene names or Entrez IDs.
