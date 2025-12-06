@@ -65,6 +65,7 @@ class IterativeEnrichment:
             else f"{gene_set.name}_{gene_set_library.name}_{background_gene_set.name}_{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
         )
         self._iteration_enrichments: List[Enrichment] = []  # Store full enrichment results for each iteration
+        self._regular_enrichment: Optional[Enrichment] = None  # Store the first iteration (regular enrichment)
         
         # Use provided run ID or generate unique run ID for this session
         from datetime import datetime
@@ -225,13 +226,19 @@ class IterativeEnrichment:
             record: Dict[str, Any] = {
                 "Iteration": iteration,
                 "Term": format_term_name(top.get("term", "")),
+                "Term_raw": top.get("term", ""),  # Store raw term name for matching with regular enrichment
                 "Description": top.get("description", ""),
                 "Library": self.gene_set_library.name,
-                "p-value": pval,
-                "Overlap size": top.get("overlap_size", "0/0"),
-                "Genes": sorted(genes_in_term),
+                "iteration p-value": pval,
+                "iteration overlapping genes": top.get("overlap_size", "0/0"),
+                "Genes removed for next iteration": sorted(genes_in_term),
             }
             records.append(record)
+            
+            # Save the first iteration as regular enrichment (equivalent to regular enrichment mode)
+            if iteration == 1:
+                self._regular_enrichment = enr
+                logger.info("Saved first iteration as regular enrichment")
             
             # Save this iteration's enrichment results
             self._save_iteration_results(enr, iteration)
@@ -246,6 +253,72 @@ class IterativeEnrichment:
         if self.progress_callback:
             self.progress_callback(f"Completed iterative enrichment: {len(records)} iterations, {len(remaining)} genes remaining")
 
+        # Merge regular enrichment data into iterative results
+        records = self._merge_regular_enrichment_data(records)
+
+        return records
+
+    def _merge_regular_enrichment_data(self, records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Merge regular enrichment data into iterative enrichment records.
+        
+        For each term in iterative results, adds:
+        - Full list overlapping genes: overlap size from regular enrichment
+        - Full list p-value: p-value from regular enrichment
+        - Regular FDR: adjusted p-value (FDR) from regular enrichment
+        - Full list overlapping genes (gene names): list of gene names that overlap
+        
+        Args:
+            records: List of iterative enrichment records
+            
+        Returns:
+            Updated records with regular enrichment data added
+        """
+        if not self._regular_enrichment or not records:
+            # If no regular enrichment or no records, add empty columns
+            for record in records:
+                record["Full list overlapping genes"] = ""
+                record["Full list p-value"] = ""
+                record["Regular FDR"] = ""
+                record["Full list overlapping genes (gene names)"] = ""
+            return records
+        
+        # Create a lookup dictionary for regular enrichment results by raw term name
+        regular_lookup: Dict[str, Dict[str, Any]] = {}
+        for result in self._regular_enrichment.results:
+            term_name = result.get("term", "")  # Raw term name
+            overlap_genes = result.get("overlap", [])
+            if isinstance(overlap_genes, str):
+                overlap_genes = [g.strip() for g in overlap_genes.split(',') if g.strip()]
+            elif not isinstance(overlap_genes, list):
+                overlap_genes = []
+            
+            regular_lookup[term_name] = {
+                "overlap_size": result.get("overlap_size", ""),
+                "p-value": result.get("p-value", ""),
+                "fdr": result.get("fdr", ""),
+                "overlap_genes": sorted(overlap_genes) if overlap_genes else [],
+            }
+        
+        # Merge regular enrichment data into each record
+        for record in records:
+            # Get the raw term name from the record (stored as "Term_raw")
+            raw_term = record.get("Term_raw", "")
+            
+            # Look up in regular enrichment by raw term name
+            if raw_term in regular_lookup:
+                regular_data = regular_lookup[raw_term]
+                record["Full list overlapping genes"] = regular_data["overlap_size"]
+                record["Full list p-value"] = regular_data["p-value"]
+                record["Regular FDR"] = regular_data["fdr"]
+                record["Full list overlapping genes (gene names)"] = regular_data["overlap_genes"]
+            else:
+                # If no match found, add empty values
+                record["Full list overlapping genes"] = ""
+                record["Full list p-value"] = ""
+                record["Regular FDR"] = ""
+                record["Full list overlapping genes (gene names)"] = ""
+        
         return records
 
     def _save_iteration_results(self, enrichment: Enrichment, iteration: int) -> None:
@@ -478,33 +551,8 @@ class IterativeEnrichment:
         tsv_filename = f"{library_name}_iterative_enrichment_{timestamp}.tsv"
         tsv_filepath = results_dir / tsv_filename
         
-        # Create TSV with iteration summary data
-        import math
-        tsv_data = []
-        for record in self.results:
-            p_value = record.get("p-value", 0)
-            if isinstance(p_value, str):
-                try:
-                    p_value = float(p_value)
-                except ValueError:
-                    p_value = 0
-            
-            tsv_data.append({
-                "Library": record.get("Library", ""),
-                "Iteration": record.get("Iteration", ""),
-                "Term": record.get("Term", ""),
-                "Description": record.get("Description", ""),
-                "Overlap size": record.get("Overlap size", ""),
-                "p-value": record.get("p-value", ""),
-                "-log(p-value)": -math.log10(p_value) if p_value > 0 else 0,
-                "Genes": ", ".join(record.get("Genes", [])),
-            })
-        
-        import pandas as pd
-        df = pd.DataFrame(tsv_data)
-        # Reorder columns to put Library first, then Iteration, then Term, then Description, then add -log(p-value) after p-value
-        column_order = ["Library", "Iteration", "Term", "Description", "Overlap size", "p-value", "-log(p-value)", "Genes"]
-        df = df[column_order]
+        # Create TSV with iteration summary data (use to_dataframe to get all columns including regular enrichment)
+        df = self.to_dataframe()
         df.to_csv(tsv_filepath, sep="\t", index=False)
         
         logger.info(f"Saved iterative enrichment summary to {summary_filepath} and {tsv_filepath}")
@@ -521,15 +569,40 @@ class IterativeEnrichment:
         df = pd.DataFrame(self.results)
         
         # Convert genes from list format to comma-separated format
-        if not df.empty and 'Genes' in df.columns:
-            df['Genes'] = df['Genes'].apply(
+        if not df.empty and 'Genes removed for next iteration' in df.columns:
+            df['Genes removed for next iteration'] = df['Genes removed for next iteration'].apply(
                 lambda x: ', '.join(x) if isinstance(x, list) else str(x)
             )
         
+        # Convert full list overlapping genes from list format to comma-separated format
+        if not df.empty and 'Full list overlapping genes (gene names)' in df.columns:
+            df['Full list overlapping genes (gene names)'] = df['Full list overlapping genes (gene names)'].apply(
+                lambda x: ', '.join(x) if isinstance(x, list) else str(x)
+            )
+        
+        # Add -log(p-value) column if iteration p-value exists
+        if not df.empty and 'iteration p-value' in df.columns:
+            df['iteration -log(p-value)'] = df['iteration p-value'].apply(
+                lambda x: -math.log10(float(x)) if x != "" and float(x) > 0 else 0
+            )
+        
+        # Remove Term_raw column if it exists (it's only for internal matching)
+        if not df.empty and 'Term_raw' in df.columns:
+            df = df.drop(columns=['Term_raw'])
+        
         # Ensure correct column order if columns exist
         if not df.empty:
-            expected_columns = ["Library", "Iteration", "Term", "Description", "Overlap size", "p-value", "-log(p-value)", "Genes"]
+            expected_columns = [
+                "Library", "Iteration", "Term", "Description", 
+                "iteration overlapping genes", "iteration p-value", "iteration -log(p-value)",
+                "Genes removed for next iteration",
+                "Full list overlapping genes", "Full list p-value", "Regular FDR",
+                "Full list overlapping genes (gene names)"
+            ]
             existing_columns = [col for col in expected_columns if col in df.columns]
+            # Add any other columns that might exist (except Term_raw)
+            other_columns = [col for col in df.columns if col not in expected_columns and col != 'Term_raw']
+            existing_columns.extend(other_columns)
             if existing_columns:
                 df = df[existing_columns]
         return df
