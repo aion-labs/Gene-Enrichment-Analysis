@@ -26,6 +26,7 @@ from ui.rendering import (
     render_results,
     render_validation,
     generate_regular_enrichment_json_analysis,
+    render_ora_igea_comparison,
 )
 from ui.utils import download_link, download_file_link, update_aliases
 
@@ -208,18 +209,284 @@ def reset_app() -> None:
 
 
 def _build_iterative_tables_download(all_iter_results: Dict[str, List[dict]]) -> str:
-    rows = ["Library\tIteration\tTerm\tDescription\tOverlap size\tp-value\t-log(p-value)\tGenes"]
+    """
+    Build combined iterative enrichment results as TSV string.
+    Uses the same format as to_dataframe() to match Streamlit UI columns.
+    """
+    import pandas as pd
+    
+    all_rows = []
     for lib, records in all_iter_results.items():
         for rec in records:
-            p = rec.get("p-value", float("nan"))
-            overlap_size = rec.get("Overlap size", "0/0")
-            description = rec.get("Description", "")
-            genes = ', '.join(rec.get('Genes', []))
-            log_p = -math.log10(p) if p and p > 0 else 0
+            # Get Library from record, fallback to dict key
+            library_name = rec.get("Library", lib)
+            
+            # Get iteration p-value
+            iter_pval = rec.get("iteration p-value", rec.get("p-value", ""))
+            if isinstance(iter_pval, str) and iter_pval != "":
+                try:
+                    iter_pval_float = float(iter_pval)
+                except ValueError:
+                    iter_pval_float = 1.0
+            elif isinstance(iter_pval, (int, float)):
+                iter_pval_float = iter_pval
+            else:
+                iter_pval_float = 1.0
+            
+            # Calculate -log(p-value)
+            iter_log_pval = -math.log10(iter_pval_float) if iter_pval_float > 0 else 0
+            
+            # Get genes removed for next iteration
+            genes_removed = rec.get("Genes removed for next iteration", [])
+            if isinstance(genes_removed, list):
+                genes_removed_str = ', '.join(genes_removed)
+            elif isinstance(genes_removed, str):
+                genes_removed_str = genes_removed
+            else:
+                genes_removed_str = ""
+            
+            # Build row with all columns matching to_dataframe() format
+            row = {
+                "Library": library_name,
+                "Iteration": rec.get("Iteration", ""),
+                "Term": rec.get("Term", rec.get("term", "")),
+                "Description": rec.get("Description", rec.get("description", "")),
+                "iteration overlapping genes": rec.get("iteration overlapping genes", rec.get("Overlap size", "0/0")),
+                "iteration p-value": iter_pval_float,
+                "iteration -log(p-value)": iter_log_pval,
+                "Genes removed for next iteration": genes_removed_str,
+            }
+            
+            # Add optional columns if they exist
+            if "Full list overlapping genes" in rec:
+                row["Full list overlapping genes"] = rec["Full list overlapping genes"]
+            if "Full list p-value" in rec:
+                row["Full list p-value"] = rec["Full list p-value"]
+            if "Regular FDR" in rec:
+                row["Regular FDR"] = rec["Regular FDR"]
+            if "Full list overlapping genes (gene names)" in rec:
+                full_list_genes = rec["Full list overlapping genes (gene names)"]
+                if isinstance(full_list_genes, list):
+                    row["Full list overlapping genes (gene names)"] = ', '.join(full_list_genes)
+                else:
+                    row["Full list overlapping genes (gene names)"] = str(full_list_genes) if full_list_genes else ""
+            
+            all_rows.append(row)
+    
+    # Create DataFrame with proper column order
+    if not all_rows:
+        return ""
+    
+    df = pd.DataFrame(all_rows)
+    
+    # Define column order matching to_dataframe()
+    expected_columns = [
+        "Library", "Iteration", "Term", "Description", 
+        "iteration overlapping genes", "iteration p-value", "iteration -log(p-value)",
+        "Genes removed for next iteration",
+        "Full list overlapping genes", "Full list p-value", "Regular FDR",
+        "Full list overlapping genes (gene names)"
+    ]
+    
+    # Reorder columns to match expected order
+    existing_columns = [col for col in expected_columns if col in df.columns]
+    other_columns = [col for col in df.columns if col not in expected_columns]
+    column_order = existing_columns + other_columns
+    
+    df = df[column_order]
+    
+    return df.to_csv(sep="\t", index=False)
+
+
+def _extract_iteration_1_as_ora(iterative_enrichments: Dict[str, IterativeEnrichment]) -> Dict[str, List[dict]]:
+    """
+    Extract iteration 1 results from iterative enrichment and format as ORA.
+    
+    Args:
+        iterative_enrichments: Dictionary mapping library names to IterativeEnrichment objects
+        
+    Returns:
+        Dictionary mapping library names to list of ORA-formatted results (iteration 1 only)
+    """
+    ora_results = {}
+    
+    for lib_name, iter_enrich in iterative_enrichments.items():
+        if iter_enrich and iter_enrich.results:
+            # Get iteration 1 records
+            iteration_1_records = [r for r in iter_enrich.results if r.get("Iteration") == 1]
+            
+            # Convert to ORA format (similar to regular enrichment format)
+            # Use the _regular_enrichment object if available for accurate ORA data
+            ora_formatted = []
+            
+            # Try to get from _regular_enrichment first (most accurate)
+            if hasattr(iter_enrich, '_regular_enrichment') and iter_enrich._regular_enrichment:
+                regular_enrich = iter_enrich._regular_enrichment
+                for rank, result in enumerate(regular_enrich.results, start=1):
+                    overlap_genes = result.get("overlap", [])
+                    if isinstance(overlap_genes, str):
+                        genes_list = [g.strip() for g in overlap_genes.split(",") if g.strip()]
+                    elif isinstance(overlap_genes, list):
+                        genes_list = overlap_genes
+                    else:
+                        genes_list = []
+                    
+                    ora_formatted.append({
+                        "Library": lib_name,
+                        "Rank": rank,
+                        "Term": result.get("term", ""),
+                        "Description": result.get("description", ""),
+                        "Overlap size": result.get("overlap_size", "0/0"),
+                        "Genes": ", ".join(genes_list) if genes_list else "",
+                        "p-value": result.get("p-value", 1.0),
+                        "-log(p-value)": -math.log10(result.get("p-value", 1.0)) if result.get("p-value", 1.0) > 0 else 0,
+                        "FDR": result.get("fdr", result.get("p-value", 1.0)),
+                    })
+            else:
+                # Fallback: extract from iteration 1 records
+                for rank, record in enumerate(iteration_1_records, start=1):
+                    # Prefer "Full list overlapping genes (gene names)" if available (from merged data)
+                    genes_list = []
+                    full_list_genes = record.get("Full list overlapping genes (gene names)", [])
+                    if full_list_genes:
+                        if isinstance(full_list_genes, list):
+                            genes_list = full_list_genes
+                        elif isinstance(full_list_genes, str):
+                            genes_list = [g.strip() for g in full_list_genes.split(",") if g.strip()]
+                    
+                    # Fallback to "Genes removed for next iteration"
+                    if not genes_list:
+                        genes_removed = record.get("Genes removed for next iteration", [])
+                        if isinstance(genes_removed, str):
+                            genes_list = [g.strip() for g in genes_removed.split(",") if g.strip()]
+                        elif isinstance(genes_removed, list):
+                            genes_list = genes_removed
+                    
+                    # Get overlap size - prefer "Full list overlapping genes" if available
+                    overlap_size = record.get("Full list overlapping genes", record.get("iteration overlapping genes", "0/0"))
+                    
+                    # Get p-value - prefer "Full list p-value" if available
+                    pval = record.get("Full list p-value", record.get("iteration p-value", record.get("p-value", 1.0)))
+                    if isinstance(pval, str) and pval != "":
+                        try:
+                            pval = float(pval)
+                        except ValueError:
+                            pval = 1.0
+                    
+                    # Get FDR from merged data
+                    fdr = record.get("Regular FDR", record.get("fdr", pval))
+                    if isinstance(fdr, str) and fdr != "":
+                        try:
+                            fdr = float(fdr)
+                        except ValueError:
+                            fdr = pval
+                    
+                    ora_formatted.append({
+                        "Library": lib_name,
+                        "Rank": rank,
+                        "Term": record.get("Term", record.get("term", "")),
+                        "Description": record.get("Description", record.get("description", "")),
+                        "Overlap size": overlap_size,
+                        "Genes": ", ".join(genes_list) if genes_list else "",
+                        "p-value": pval,
+                        "-log(p-value)": -math.log10(pval) if pval > 0 else 0,
+                        "FDR": fdr,
+                    })
+            
+            if ora_formatted:
+                ora_results[lib_name] = ora_formatted
+    
+    return ora_results
+
+
+def _build_ora_tables_download(ora_results: Dict[str, List[dict]]) -> str:
+    """
+    Build combined ORA (iteration 1) results as TSV string.
+    
+    Args:
+        ora_results: Dictionary mapping library names to list of ORA-formatted results
+        
+    Returns:
+        TSV string with combined ORA results
+    """
+    rows = ["Library\tRank\tTerm\tDescription\tOverlap size\tp-value\t-log(p-value)\tFDR\tGenes"]
+    for lib, records in ora_results.items():
+        for rec in records:
             rows.append(
-                f"{lib}\t{rec['Iteration']}\t{rec['Term']}\t{description}\t{overlap_size}\t{p}\t{log_p}\t{genes}"
+                f"{rec['Library']}\t{rec['Rank']}\t{rec['Term']}\t{rec['Description']}\t"
+                f"{rec['Overlap size']}\t{rec['p-value']}\t{rec['-log(p-value)']}\t"
+                f"{rec['FDR']}\t{rec['Genes']}"
             )
     return "\n".join(rows)
+
+
+def _create_combined_ora_archive(iterative_enrichments: Dict[str, IterativeEnrichment]) -> str:
+    """
+    Create a single tar.gz archive containing all individual ORA (iteration 1) files.
+    
+    Args:
+        iterative_enrichments: Dictionary mapping library names to IterativeEnrichment objects
+        
+    Returns:
+        Path to the combined archive file
+    """
+    import tarfile
+    from datetime import datetime
+    import pandas as pd
+    
+    # Find the most recent run directory
+    results_dir = ROOT / "results"
+    results_dir.mkdir(exist_ok=True)
+    
+    if not results_dir.exists():
+        logger.warning("No results directory found")
+        return ""
+    
+    # Get all run directories and find the most recent one
+    run_dirs = [d for d in results_dir.iterdir() if d.is_dir() and d.name.startswith("run_")]
+    if not run_dirs:
+        logger.warning("No run directories found")
+        return ""
+    
+    # Sort by creation time and get the most recent
+    latest_run_dir = max(run_dirs, key=lambda d: d.stat().st_ctime)
+    logger.info(f"Using run directory: {latest_run_dir}")
+    
+    # Extract ORA results (iteration 1)
+    ora_results = _extract_iteration_1_as_ora(iterative_enrichments)
+    
+    if not ora_results:
+        logger.warning("No iteration 1 results found for ORA")
+        return ""
+    
+    # Create combined archive filename
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    combined_archive_name = f"all_ora_files_{timestamp}.tar.gz"
+    combined_archive_path = results_dir / combined_archive_name
+    
+    # Create tar.gz archive with all individual ORA files
+    with tarfile.open(combined_archive_path, "w:gz") as tar:
+        for lib_name, records in ora_results.items():
+            # Create DataFrame and save as TSV
+            df = pd.DataFrame(records)
+            # Reorder columns
+            column_order = ["Library", "Rank", "Term", "Description", "Overlap size", "p-value", "-log(p-value)", "FDR", "Genes"]
+            df = df[[col for col in column_order if col in df.columns]]
+            
+            # Create temporary file for this library's ORA results
+            import tempfile
+            with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.tsv') as tmp_file:
+                df.to_csv(tmp_file.name, sep='\t', index=False)
+                # Sanitize library name for filename
+                safe_lib_name = lib_name.replace(':', '_').replace(' ', '_').replace('-', '_').replace('/', '_')
+                arcname = f"{safe_lib_name}_ora_results.tsv"
+                tar.add(tmp_file.name, arcname=arcname)
+                logger.info(f"Added to archive: {arcname}")
+                # Clean up temp file
+                Path(tmp_file.name).unlink()
+    
+    logger.info(f"Created combined ORA files archive: {combined_archive_path}")
+    return str(combined_archive_path)
 
 
 def _create_combined_iteration_archive(iter_archives: Dict[str, str]) -> str:
@@ -270,6 +537,67 @@ def _create_combined_iteration_archive(iter_archives: Dict[str, str]) -> str:
             logger.info(f"Added to archive: {tsv_file.name}")
     
     logger.info(f"Created combined iteration files archive: {combined_archive_path}")
+    return str(combined_archive_path)
+
+
+def _create_combined_regular_archive(regular_enrichments: Dict[str, Enrichment]) -> str:
+    """
+    Create a single tar.gz archive containing all individual regular enrichment files.
+    
+    Args:
+        regular_enrichments: Dictionary mapping library names to Enrichment objects
+        
+    Returns:
+        Path to the combined archive file
+    """
+    import tarfile
+    from datetime import datetime
+    
+    # Find the most recent run directory (the one created in this session)
+    results_dir = ROOT / "results"
+    # Ensure results directory exists
+    results_dir.mkdir(exist_ok=True)
+    
+    if not results_dir.exists():
+        logger.warning("No results directory found")
+        return ""
+    
+    # Get all run directories and find the most recent one
+    run_dirs = [d for d in results_dir.iterdir() if d.is_dir() and d.name.startswith("run_")]
+    if not run_dirs:
+        logger.warning("No run directories found")
+        return ""
+    
+    # Sort by creation time and get the most recent
+    latest_run_dir = max(run_dirs, key=lambda d: d.stat().st_ctime)
+    logger.info(f"Using run directory: {latest_run_dir}")
+    
+    # Create combined archive filename
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    combined_archive_name = f"all_regular_enrichment_files_{timestamp}.tar.gz"
+    combined_archive_path = results_dir / combined_archive_name
+    
+    # Create tar.gz archive with all individual files from the latest run
+    with tarfile.open(combined_archive_path, "w:gz") as tar:
+        # Find all individual regular enrichment TSV files in the latest run directory
+        # Regular enrichment files are named like: {library_name}_regular_results.tsv
+        tsv_files = list(latest_run_dir.glob("*_regular_results.tsv"))
+        
+        # Also add JSON files if they exist
+        json_files = list(latest_run_dir.glob("*.json"))
+        
+        # Add all TSV files
+        for tsv_file in tsv_files:
+            tar.add(tsv_file, arcname=tsv_file.name)
+            logger.info(f"Added to archive: {tsv_file.name}")
+        
+        # Add JSON files (excluding iteration JSONs)
+        for json_file in json_files:
+            if "_iteration_" not in json_file.name:
+                tar.add(json_file, arcname=json_file.name)
+                logger.info(f"Added to archive: {json_file.name}")
+    
+    logger.info(f"Created combined regular enrichment files archive: {combined_archive_path}")
     return str(combined_archive_path)
 
 
@@ -861,14 +1189,28 @@ Results include ranked tables, bar charts, and network graphs."""
     if mode == "Regular" and state.results_ready:
         logger.info("Displaying regular results")
         
-
+        # Download section with combined and all individual files
+        st.markdown("**📥 Download Results:**")
         
-        # Always render results section
+        # 1. Combined regular enrichment TSV and JSON
+        combined_tsv = collect_results(state.enrich)
+        combined_json = generate_regular_enrichment_json_analysis(state.enrich)
         st.markdown(
-            f"Download all results as {download_link(collect_results(state.enrich), 'regular_enrichment_results','tsv')}, "
-            f"{download_link(generate_regular_enrichment_json_analysis(state.enrich), 'regular_enrichment_results','json')}",
+            f"📊 **Combined Results:** {download_link(combined_tsv, 'regular_enrichment_results', 'tsv')}, "
+            f"{download_link(combined_json, 'regular_enrichment_results', 'json')}",
             unsafe_allow_html=True,
         )
+        
+        # 2. All individual regular enrichment files as single archive
+        combined_archive_path = _create_combined_regular_archive(state.enrich)
+        if combined_archive_path:
+            combined_archive_name = Path(combined_archive_path).name
+            # Remove the .tar.gz extension since download_file_link will add it back
+            base_filename = combined_archive_name.replace('.tar.gz', '')
+            st.markdown(
+                f"📁 **All Individual Files:** {download_file_link(combined_archive_path, base_filename, 'tar.gz')}",
+                unsafe_allow_html=True,
+            )
         
         # Display results for each library in the same order as the checkbox list
         def sort_libraries(libraries):
@@ -1100,26 +1442,36 @@ Results include ranked tables, bar charts, and network graphs."""
 
     # Iterative rendering
     if mode == "Iterative" and state.iter_ready:
-        # Download section with just two links
+        # Download section as a table
         st.markdown("**📥 Download Results:**")
         
-        # 1. Combined iterative enrichment TSV
-        combined = _build_iterative_tables_download(state.iter_results)
-        st.markdown(
-            f"📊 **Combined Results:** {download_link(combined, 'iterative_enrichment_results', 'tsv')}",
-            unsafe_allow_html=True,
-        )
+        # Extract ORA results
+        ora_results = _extract_iteration_1_as_ora(state.iter_enrich)
+        combined_ora = _build_ora_tables_download(ora_results) if ora_results else None
+        ora_archive_path = _create_combined_ora_archive(state.iter_enrich) if ora_results else None
         
-        # 2. All individual iteration files as single archive
+        # Build iGEA results
+        combined_igea = _build_iterative_tables_download(state.iter_results)
         combined_archive_path = _create_combined_iteration_archive({})
-        if combined_archive_path:
-            combined_archive_name = Path(combined_archive_path).name
-            # Remove the .tar.gz extension since download_file_link will add it back
-            base_filename = combined_archive_name.replace('.tar.gz', '')
-            st.markdown(
-                f"📁 **All Individual Files:** {download_file_link(combined_archive_path, base_filename, 'tar.gz')}",
-                unsafe_allow_html=True,
-            )
+        
+        # Create table data
+        ora_combined_link = download_link(combined_ora, 'ora_enrichment_results', 'tsv') if combined_ora else "—"
+        ora_individual_link = download_file_link(ora_archive_path, Path(ora_archive_path).name.replace('.tar.gz', ''), 'tar.gz') if ora_archive_path else "—"
+        igea_combined_link = download_link(combined_igea, 'iterative_enrichment_results', 'tsv')
+        igea_individual_link = download_file_link(combined_archive_path, Path(combined_archive_path).name.replace('.tar.gz', ''), 'tar.gz') if combined_archive_path else "—"
+        
+        # Display as table using markdown
+        st.markdown("""
+        | | ORA | iGEA |
+        |---|---|---|
+        | **Combined** | {ora_combined} | {igea_combined} |
+        | **Individual library files** | {ora_individual} | {igea_individual} |
+        """.format(
+            ora_combined=ora_combined_link,
+            ora_individual=ora_individual_link,
+            igea_combined=igea_combined_link,
+            igea_individual=igea_individual_link
+        ), unsafe_allow_html=True)
 
         # callback to keep checkbox state in session
         def toggle_library(lib_name):
@@ -1171,6 +1523,40 @@ Results include ranked tables, bar charts, and network graphs."""
                 on_change=toggle_library,
                 args=(lib,)
             )
+        
+        # Display comparison statistics (ORA = iteration 1, iGEA = all iterations)
+        # No need for separate regular enrichment - iteration 1 IS the ORA
+        logger.info(f"Checking comparison display: iter_enrich={bool(state.iter_enrich)}, len(iter_enrich)={len(state.iter_enrich) if state.iter_enrich else 0}")
+        if state.iter_enrich and len(state.iter_enrich) > 0:
+            # Check if we have at least iteration 1
+            has_iteration_1 = any(
+                iter_enrich and iter_enrich.results and 
+                any(r.get("Iteration") == 1 for r in iter_enrich.results)
+                for iter_enrich in state.iter_enrich.values()
+            )
+            
+            if has_iteration_1:
+                logger.info("Displaying ORA vs iGEA comparison statistics (ORA = iteration 1)")
+                st.markdown("---")
+                st.markdown("## 📊 ORA vs iGEA Comparison")
+                st.caption("ORA = Iteration 1 | iGEA = All Iterations")
+                try:
+                    # Pass empty dict for regular_enrichments since we use iteration 1 as ORA
+                    render_ora_igea_comparison(
+                        {},  # No separate regular enrichment needed
+                        state.iter_enrich,
+                        p_threshold=state.iter_p_threshold,
+                        fdr_threshold=state.adjusted_p_threshold,
+                    )
+                except Exception as e:
+                    logger.error(f"Error displaying comparison: {e}")
+                    st.error(f"Error displaying comparison statistics: {e}")
+                    import traceback
+                    st.code(traceback.format_exc())
+            else:
+                logger.info("Comparison not displayed - no iteration 1 found")
+        else:
+            logger.info("Comparison not displayed - no iterative results")
 
         # Network section
         st.markdown("---")

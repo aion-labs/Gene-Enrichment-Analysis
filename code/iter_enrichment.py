@@ -470,7 +470,7 @@ class IterativeEnrichment:
             iteration_num = iteration_record["Iteration"]
             
             # Get the genes from the iteration record (same as used in main results)
-            genes_in_term = iteration_record.get("Genes", [])
+            genes_in_term = iteration_record.get("Genes removed for next iteration", [])
             
             # Get all results from this iteration's enrichment
             for result in enrichment.results:
@@ -541,7 +541,7 @@ class IterativeEnrichment:
             "max_term_size": self.max_term_size,
             "total_iterations": len(self.results),
             "iterations": self.results,
-            "final_remaining_genes": list(set(self.gene_set.genes) - set().union(*[set(record.get("Genes", [])) for record in self.results]))
+            "final_remaining_genes": list(set(self.gene_set.genes) - set().union(*[set(record.get("Genes removed for next iteration", [])) for record in self.results]))
         }
         
         with open(summary_filepath, "w") as f:
@@ -670,7 +670,7 @@ class IterativeEnrichment:
             )
             nodes.add(term_node)
 
-            for gene in rec.get("Genes", []):
+            for gene in rec.get("Genes removed for next iteration", []):
                 gene_id = _sanitize_id(f"gene_{gene}")
                 gene_node = f'"{gene_id}" [label="{gene}", type="gene"];'
                 nodes.add(gene_node)

@@ -18,19 +18,21 @@ class GeneConverter:
         
         Args:
             gene_info_path: Path to the Homo_sapiens.gene_info file. 
-                          If None, will look for it in the project root.
+                          If None, will look for it in the data/recent_release directory.
             gene_history_path: Path to the gene_history file.
-                             If None, will look for it in the recent_release directory.
+                             If None, will look for it in the data/recent_release directory.
         """
         if gene_info_path is None:
-            # Look for the file in the project root
+            # Look for the file in the data/recent_release directory
+            # Use __file__ to get path relative to this module, making it robust to working directory
             project_root = Path(__file__).resolve().parent.parent
-            gene_info_path = project_root / "Homo_sapiens.gene_info"
+            gene_info_path = project_root / "data" / "recent_release" / "Homo_sapiens.gene_info"
         
         self.gene_info_path = Path(gene_info_path)
         
         if gene_history_path is None:
-            # Look for the file in the recent_release directory
+            # Look for the file in the data/recent_release directory
+            # Use __file__ to get path relative to this module, making it robust to working directory
             project_root = Path(__file__).resolve().parent.parent
             gene_history_path = project_root / "data" / "recent_release" / "gene_history"
         

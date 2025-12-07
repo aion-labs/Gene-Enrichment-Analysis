@@ -1,5 +1,6 @@
 import logging
 from math import log10
+from typing import Dict, Set
 
 import numpy as np
 import pandas as pd
@@ -153,7 +154,7 @@ def render_validation() -> None:
     It then provides a feedback to the user in the Streamlit app on the validation results.
     """
     logger.info("Validating and rendering the input gene set information.")
-    if "gene_set" in state:
+    if "gene_set" in state and state.gene_set is not None:
         total = state.gene_set.size
         dups = len(state.gene_set.validation["duplicates"])
         non_gene = len(state.gene_set.validation["non_valid"])
@@ -205,28 +206,54 @@ def render_iter_table(result: pd.DataFrame) -> None:
     if 'Term' in df.columns and not df.empty:
         df['Term'] = df['Term'].fillna('').astype(str).str.replace('_', ' ', regex=False)
 
-    # Rename 'Genes' column for clarity
-    df = df.rename(columns={"Genes": "Genes removed"})
-
-    # Apply custom formatting to p-value column
+    # Apply custom formatting to p-value columns
     def custom_format(n):
-        if n > 0.001:
-            return f"{n:.3f}"
-        return f"{n:.2e}"
+        if n == "" or pd.isna(n):
+            return ""
+        try:
+            n = float(n)
+            if n > 0.001:
+                return f"{n:.3f}"
+            return f"{n:.2e}"
+        except (ValueError, TypeError):
+            return str(n)
 
-    styled = df.style.format({"p-value": custom_format})
+    # Format all p-value related columns
+    format_dict = {}
+    if "iteration p-value" in df.columns:
+        format_dict["iteration p-value"] = custom_format
+    if "Full list p-value" in df.columns:
+        format_dict["Full list p-value"] = custom_format
+    if "Regular FDR" in df.columns:
+        format_dict["Regular FDR"] = custom_format
+
+    styled = df.style.format(format_dict)
+
+    # Build column config
+    column_config = {
+        "Term": "Term",
+        "iteration p-value": "Iteration P-value",
+        "iteration overlapping genes": "Iteration Overlapping Genes",
+        "iteration -log(p-value)": "Iteration -log(p-value)",
+        "Genes removed for next iteration": "Genes Removed for Next Iteration",
+        "Description": None,
+        "Library": None,
+    }
+    
+    # Add regular enrichment columns if they exist
+    if "Full list overlapping genes" in df.columns:
+        column_config["Full list overlapping genes"] = "Full List Overlapping Genes"
+    if "Full list p-value" in df.columns:
+        column_config["Full list p-value"] = "Full List P-value"
+    if "Regular FDR" in df.columns:
+        column_config["Regular FDR"] = "Full List FDR"
+    if "Full list overlapping genes (gene names)" in df.columns:
+        column_config["Full list overlapping genes (gene names)"] = "Full List Overlapping Genes (Gene Names)"
 
     st.dataframe(
         styled,
         use_container_width=True,
-        column_config={
-            "Term": "Term",
-            "p-value": "P-value",
-            "Overlap size": "Overlap size",
-            "Genes removed": "Genes removed",
-            "Description": None,
-            "Library": None,
-        },
+        column_config=column_config,
     )
 
 
@@ -241,24 +268,27 @@ def render_iter_barchart(result: pd.DataFrame, file_name: str = "") -> None:
     """
     logger.info("Rendering iterative bar chart.")
 
-    # Prepare bar plot data
-    bar = result.reset_index()[["Iteration", "Term", "p-value"]].copy()
+    # Prepare bar plot data - use iteration p-value if available, otherwise fall back to p-value
+    p_value_col = "iteration p-value" if "iteration p-value" in result.columns else "p-value"
+    columns_to_select = ["Iteration", "Term", p_value_col]
+    bar = result.reset_index()[columns_to_select].copy()
     
     # Convert underscores to spaces in term names for better readability
     if not bar.empty:
         bar['Term'] = bar['Term'].fillna('').astype(str).str.replace('_', ' ', regex=False)
     
-    bar["-log10(p-value)"] = bar["p-value"].apply(
+    bar["-log10(p-value)"] = bar[p_value_col].apply(
         lambda x: -log10(x) if x and x > 0 else None
     )
-    bar = bar.sort_values(by=["p-value"], ascending=False)
+    bar = bar.sort_values(by=[p_value_col], ascending=False)
 
+    hover_col = p_value_col if p_value_col in bar.columns else "p-value"
     fig = px.bar(
         bar,
         x="-log10(p-value)",
         y="Term",
         orientation="h",
-        hover_data=["p-value"],
+        hover_data=[hover_col],
         labels={"Term": "Term", "-log10(p-value)": "-log10(p-value)"},
         title="Iterative Enrichment p-value per Iteration",
     )
@@ -331,6 +361,344 @@ def render_iter_results(result: IterativeEnrichment, file_name: str) -> None:
             f'{download_link(result.to_json(), file_name, "json")}',
             unsafe_allow_html=True,
         )
+
+
+def calculate_ora_igea_comparison(
+    regular_enrichments: Dict[str, Enrichment],
+    iterative_enrichments: Dict[str, IterativeEnrichment],
+    p_threshold: float = 0.01,
+    fdr_threshold: float = 0.05,
+) -> Dict:
+    """
+    Calculate comparison statistics between ORA (regular enrichment) and iGEA (iterative enrichment).
+    ORA is split into two sets: one based on raw p-value threshold and one based on FDR threshold.
+    
+    Args:
+        regular_enrichments: Dictionary mapping library names to Enrichment objects
+        iterative_enrichments: Dictionary mapping library names to IterativeEnrichment objects
+        p_threshold: P-value threshold for significance (default: 0.01)
+        fdr_threshold: FDR threshold for significance (default: 0.05)
+        
+    Returns:
+        Dictionary containing comparison statistics including:
+        - genes_ora_raw: set of unique genes in ORA (raw p-value)
+        - genes_ora_fdr: set of unique genes in ORA (FDR)
+        - genes_igea: set of unique genes in iGEA
+        - genes_overlap_raw: set of genes in both ORA (raw) and iGEA
+        - genes_overlap_fdr: set of genes in both ORA (FDR) and iGEA
+        - terms_ora_raw: set of significant terms in ORA (raw p-value)
+        - terms_ora_fdr: set of significant terms in ORA (FDR)
+        - terms_igea: set of significant terms in iGEA
+        - terms_overlap_raw: set of terms in both ORA (raw) and iGEA
+        - terms_overlap_fdr: set of terms in both ORA (FDR) and iGEA
+        - stats: dictionary with counts and percentages
+    """
+    # Collect genes and terms from regular enrichment (ORA) - split by raw p-value and FDR
+    # If regular enrichment is not available, use iteration 1 from iterative enrichment as ORA
+    genes_ora_raw: Set[str] = set()
+    terms_ora_raw: Set[str] = set()
+    genes_ora_fdr: Set[str] = set()
+    terms_ora_fdr: Set[str] = set()
+    
+    def _process_ora_result(result: dict, genes_raw: Set[str], terms_raw: Set[str], 
+                           genes_fdr: Set[str], terms_fdr: Set[str]) -> None:
+        """Helper function to process a single ORA result and add to appropriate sets."""
+        # Get p-value
+        pval = result.get("p-value", 1.0)
+        if isinstance(pval, str) and pval != "":
+            try:
+                pval_float = float(pval)
+            except ValueError:
+                pval_float = 1.0
+        elif isinstance(pval, (int, float)):
+            pval_float = pval
+        else:
+            pval_float = 1.0
+        
+        # Get FDR
+        fdr = result.get("fdr", 1.0)
+        if isinstance(fdr, str) and fdr != "":
+            try:
+                fdr_float = float(fdr)
+            except ValueError:
+                fdr_float = 1.0
+        elif isinstance(fdr, (int, float)):
+            fdr_float = fdr
+        else:
+            fdr_float = 1.0
+        
+        # Check significance using raw p-value threshold
+        is_significant_raw = pval_float <= p_threshold
+        
+        # Check significance using FDR threshold
+        is_significant_fdr = fdr_float <= fdr_threshold
+        
+        term_name = result.get("term", "")
+        if not term_name:
+            return
+        
+        # Extract genes from overlap
+        overlap_genes = result.get("overlap", [])
+        if isinstance(overlap_genes, str):
+            overlap_genes = [g.strip() for g in overlap_genes.split(",") if g.strip()]
+        elif not isinstance(overlap_genes, list):
+            overlap_genes = []
+        
+        # Add to raw p-value sets
+        if is_significant_raw:
+            terms_raw.add(term_name)
+            genes_raw.update(overlap_genes)
+        
+        # Add to FDR sets
+        if is_significant_fdr:
+            terms_fdr.add(term_name)
+            genes_fdr.update(overlap_genes)
+    
+    # First, try to get ORA from regular enrichment
+    if regular_enrichments:
+        for lib_name, enrich in regular_enrichments.items():
+            if enrich and enrich.results:
+                for result in enrich.results:
+                    _process_ora_result(result, genes_ora_raw, terms_ora_raw, genes_ora_fdr, terms_ora_fdr)
+    
+    # If no regular enrichment results, use iteration 1's full enrichment results as ORA
+    # ORA should include ALL significant terms from iteration 1, not just the top term
+    if not genes_ora_raw and iterative_enrichments:
+        for lib_name, iter_enrich in iterative_enrichments.items():
+            # Use _regular_enrichment which contains ALL terms from iteration 1
+            if iter_enrich and hasattr(iter_enrich, '_regular_enrichment') and iter_enrich._regular_enrichment:
+                regular_enrich = iter_enrich._regular_enrichment
+                if regular_enrich.results:
+                    for result in regular_enrich.results:
+                        _process_ora_result(result, genes_ora_raw, terms_ora_raw, genes_ora_fdr, terms_ora_fdr)
+    
+    # Collect genes from iterative enrichment (iGEA) - ALL iterations (including iteration 1)
+    # iGEA represents the combined output of all iterations
+    genes_igea: Set[str] = set()
+    terms_igea: Set[str] = set()
+    
+    for lib_name, iter_enrich in iterative_enrichments.items():
+        if iter_enrich and iter_enrich.results:
+            for record in iter_enrich.results:
+                # Include ALL iterations in iGEA (including iteration 1)
+                # Check if term is significant using raw p-value threshold only
+                iter_pval = record.get("iteration p-value", record.get("p-value", 1.0))
+                if isinstance(iter_pval, str) and iter_pval != "":
+                    try:
+                        iter_pval_float = float(iter_pval)
+                    except ValueError:
+                        iter_pval_float = 1.0
+                elif isinstance(iter_pval, (int, float)):
+                    iter_pval_float = iter_pval
+                else:
+                    iter_pval_float = 1.0
+                
+                # Use only p-value threshold (not FDR) for significance
+                is_significant = iter_pval_float <= p_threshold
+                
+                if is_significant:
+                    # Use Term_raw for matching with ORA (raw term names), fallback to term if not available
+                    term_name = record.get("Term_raw", record.get("term", ""))
+                    if not term_name:
+                        # If Term_raw is not available, try to get from Term (formatted) and convert back
+                        formatted_term = record.get("Term", "")
+                        if formatted_term:
+                            # Convert formatted term back to raw (spaces to underscores)
+                            # This is a fallback - Term_raw should always be present
+                            term_name = formatted_term.replace(" ", "_")
+                    if term_name:
+                        terms_igea.add(term_name)
+                    
+                    # Extract genes removed for next iteration (these are the genes in the term)
+                    genes_removed = record.get("Genes removed for next iteration", [])
+                    if isinstance(genes_removed, list):
+                        genes_igea.update(genes_removed)
+                    elif isinstance(genes_removed, str):
+                        # Handle comma-separated string
+                        genes_igea.update([g.strip() for g in genes_removed.split(",") if g.strip()])
+    
+    # Calculate overlaps - separate for raw p-value and FDR
+    genes_overlap_raw = genes_ora_raw & genes_igea
+    genes_overlap_fdr = genes_ora_fdr & genes_igea
+    genes_ora_raw_only = genes_ora_raw - genes_igea
+    genes_ora_fdr_only = genes_ora_fdr - genes_igea
+    genes_igea_only = genes_igea - (genes_ora_raw | genes_ora_fdr)
+    
+    terms_overlap_raw = terms_ora_raw & terms_igea
+    terms_overlap_fdr = terms_ora_fdr & terms_igea
+    terms_ora_raw_only = terms_ora_raw - terms_igea
+    terms_ora_fdr_only = terms_ora_fdr - terms_igea
+    terms_igea_only = terms_igea - (terms_ora_raw | terms_ora_fdr)
+    
+    # Debug logging to help diagnose counting issues
+    logger.info(f"ORA vs iGEA comparison (p_threshold={p_threshold}, fdr_threshold={fdr_threshold}):")
+    logger.info(f"  ORA (raw) terms: {len(terms_ora_raw)} (sample: {list(terms_ora_raw)[:3] if terms_ora_raw else []})")
+    logger.info(f"  ORA (FDR) terms: {len(terms_ora_fdr)} (sample: {list(terms_ora_fdr)[:3] if terms_ora_fdr else []})")
+    logger.info(f"  iGEA terms: {len(terms_igea)} (sample: {list(terms_igea)[:3] if terms_igea else []})")
+    logger.info(f"  Overlapping terms (raw): {len(terms_overlap_raw)} (sample: {list(terms_overlap_raw)[:3] if terms_overlap_raw else []})")
+    logger.info(f"  Overlapping terms (FDR): {len(terms_overlap_fdr)} (sample: {list(terms_overlap_fdr)[:3] if terms_overlap_fdr else []})")
+    
+    # Calculate statistics
+    total_genes_ora_raw = len(genes_ora_raw)
+    total_genes_ora_fdr = len(genes_ora_fdr)
+    total_genes_igea = len(genes_igea)
+    total_genes_overlap_raw = len(genes_overlap_raw)
+    total_genes_overlap_fdr = len(genes_overlap_fdr)
+    
+    total_terms_ora_raw = len(terms_ora_raw)
+    total_terms_ora_fdr = len(terms_ora_fdr)
+    total_terms_igea = len(terms_igea)
+    total_terms_overlap_raw = len(terms_overlap_raw)
+    total_terms_overlap_fdr = len(terms_overlap_fdr)
+    
+    stats = {
+        "genes": {
+            "ora_raw_total": total_genes_ora_raw,
+            "ora_fdr_total": total_genes_ora_fdr,
+            "igea_total": total_genes_igea,
+            "overlap_raw": total_genes_overlap_raw,
+            "overlap_fdr": total_genes_overlap_fdr,
+            "ora_raw_only": len(genes_ora_raw_only),
+            "ora_fdr_only": len(genes_ora_fdr_only),
+            "igea_only": len(genes_igea_only),
+        },
+        "terms": {
+            "ora_raw_total": total_terms_ora_raw,
+            "ora_fdr_total": total_terms_ora_fdr,
+            "igea_total": total_terms_igea,
+            "overlap_raw": total_terms_overlap_raw,
+            "overlap_fdr": total_terms_overlap_fdr,
+            "ora_raw_only": len(terms_ora_raw_only),
+            "ora_fdr_only": len(terms_ora_fdr_only),
+            "igea_only": len(terms_igea_only),
+        }
+    }
+    
+    return {
+        "genes_ora_raw": genes_ora_raw,
+        "genes_ora_fdr": genes_ora_fdr,
+        "genes_igea": genes_igea,
+        "genes_overlap_raw": genes_overlap_raw,
+        "genes_overlap_fdr": genes_overlap_fdr,
+        "genes_ora_raw_only": genes_ora_raw_only,
+        "genes_ora_fdr_only": genes_ora_fdr_only,
+        "genes_igea_only": genes_igea_only,
+        "terms_ora_raw": terms_ora_raw,
+        "terms_ora_fdr": terms_ora_fdr,
+        "terms_igea": terms_igea,
+        "terms_overlap_raw": terms_overlap_raw,
+        "terms_overlap_fdr": terms_overlap_fdr,
+        "terms_ora_raw_only": terms_ora_raw_only,
+        "terms_ora_fdr_only": terms_ora_fdr_only,
+        "terms_igea_only": terms_igea_only,
+        "stats": stats,
+    }
+
+
+def render_ora_igea_comparison(
+    regular_enrichments: Dict[str, Enrichment],
+    iterative_enrichments: Dict[str, IterativeEnrichment],
+    p_threshold: float = 0.01,
+    fdr_threshold: float = 0.05,
+) -> None:
+    """
+    Render comparison statistics between ORA and iGEA results.
+    
+    Args:
+        regular_enrichments: Dictionary mapping library names to Enrichment objects
+        iterative_enrichments: Dictionary mapping library names to IterativeEnrichment objects
+        p_threshold: P-value threshold for significance
+        fdr_threshold: FDR threshold for significance
+    """
+    # Check if we have iterative enrichment results (required)
+    if not iterative_enrichments:
+        st.info("ℹ️ Iterative enrichment results are required for comparison.")
+        return
+    
+    # Check if we have actual iterative results
+    has_iterative_results = any(
+        iter_enrich and iter_enrich.results 
+        for iter_enrich in iterative_enrichments.values()
+    )
+    
+    if not has_iterative_results:
+        st.info("ℹ️ Iterative enrichment results with data are required for comparison.")
+        return
+    
+    # Check if we have ORA data (either from regular enrichment or iteration 1)
+    has_regular_results = False
+    if regular_enrichments:
+        has_regular_results = any(
+            enrich and enrich.results 
+            for enrich in regular_enrichments.values()
+        )
+    
+    # If no regular enrichment, check if we have iteration 1 to use as ORA
+    if not has_regular_results:
+        has_iteration_1 = any(
+            iter_enrich and iter_enrich.results and 
+            any(r.get("Iteration") == 1 for r in iter_enrich.results)
+            for iter_enrich in iterative_enrichments.values()
+        )
+        if not has_iteration_1:
+            st.info("ℹ️ Either regular enrichment results or iterative enrichment with at least iteration 1 is required for comparison.")
+            return
+    
+    comparison = calculate_ora_igea_comparison(
+        regular_enrichments, iterative_enrichments, p_threshold, fdr_threshold
+    )
+    
+    stats = comparison["stats"]
+    
+    st.markdown("### 📊 ORA vs iGEA Comparison Statistics")
+    
+    # Create comparison table
+    gene_stats = stats["genes"]
+    term_stats = stats["terms"]
+    
+    # Display as expanded table with ORA split into raw p-value and FDR
+    st.markdown("""
+    | | ORA (raw p-value) | ORA (FDR) | iGEA | Overlap (raw) | Overlap (FDR) |
+    |---|---|---|---|---|---|
+    | **Genes** | {ora_raw_genes} | {ora_fdr_genes} | {igea_genes} | {overlap_raw_genes} | {overlap_fdr_genes} |
+    | **Terms** | {ora_raw_terms} | {ora_fdr_terms} | {igea_terms} | {overlap_raw_terms} | {overlap_fdr_terms} |
+    """.format(
+        ora_raw_genes=gene_stats["ora_raw_total"],
+        ora_fdr_genes=gene_stats["ora_fdr_total"],
+        igea_genes=gene_stats["igea_total"],
+        overlap_raw_genes=gene_stats["overlap_raw"],
+        overlap_fdr_genes=gene_stats["overlap_fdr"],
+        ora_raw_terms=term_stats["ora_raw_total"],
+        ora_fdr_terms=term_stats["ora_fdr_total"],
+        igea_terms=term_stats["igea_total"],
+        overlap_raw_terms=term_stats["overlap_raw"],
+        overlap_fdr_terms=term_stats["overlap_fdr"]
+    ))
+    
+    # Venn diagram data for download
+    st.markdown("---")
+    st.markdown("#### 📥 Venn Diagram Data")
+    
+    # Create TSV with Venn diagram data - expanded to include raw and FDR sets
+    venn_data_rows = [
+        "Category\tSet\tCount\tItems",
+        f"Genes\tORA (raw) Only\t{len(comparison['genes_ora_raw_only'])}\t{', '.join(sorted(comparison['genes_ora_raw_only']))}",
+        f"Genes\tORA (FDR) Only\t{len(comparison['genes_ora_fdr_only'])}\t{', '.join(sorted(comparison['genes_ora_fdr_only']))}",
+        f"Genes\tiGEA Only\t{len(comparison['genes_igea_only'])}\t{', '.join(sorted(comparison['genes_igea_only']))}",
+        f"Genes\tOverlap (raw)\t{len(comparison['genes_overlap_raw'])}\t{', '.join(sorted(comparison['genes_overlap_raw']))}",
+        f"Genes\tOverlap (FDR)\t{len(comparison['genes_overlap_fdr'])}\t{', '.join(sorted(comparison['genes_overlap_fdr']))}",
+        f"Terms\tORA (raw) Only\t{len(comparison['terms_ora_raw_only'])}\t{', '.join(sorted(comparison['terms_ora_raw_only']))}",
+        f"Terms\tORA (FDR) Only\t{len(comparison['terms_ora_fdr_only'])}\t{', '.join(sorted(comparison['terms_ora_fdr_only']))}",
+        f"Terms\tiGEA Only\t{len(comparison['terms_igea_only'])}\t{', '.join(sorted(comparison['terms_igea_only']))}",
+        f"Terms\tOverlap (raw)\t{len(comparison['terms_overlap_raw'])}\t{', '.join(sorted(comparison['terms_overlap_raw']))}",
+        f"Terms\tOverlap (FDR)\t{len(comparison['terms_overlap_fdr'])}\t{', '.join(sorted(comparison['terms_overlap_fdr']))}",
+    ]
+    venn_data_tsv = "\n".join(venn_data_rows)
+    
+    st.markdown(
+        f"Download Venn diagram data: {download_link(venn_data_tsv, 'ora_igea_venn_data', 'tsv')}",
+        unsafe_allow_html=True,
+    )
 
 
 def render_network(dot: str, title: str = "Iterative Enrichment Network") -> None:
