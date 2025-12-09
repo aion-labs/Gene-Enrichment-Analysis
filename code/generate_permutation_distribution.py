@@ -251,9 +251,29 @@ def run_single_permutation(
                 bg_path = alt_bg_path
                 logger.warning(f"Using alternative background path: {bg_path}")
             else:
-                raise FileNotFoundError(
-                    f"Background file not found in worker. Tried: {bg_path}, {alt_bg_path}"
-                )
+                # Try Code Ocean style path
+                code_ocean_path = Path("/data") / "backgrounds" / "all_genes.txt"
+                if code_ocean_path.exists():
+                    bg_path = code_ocean_path
+                    logger.warning(f"Using Code Ocean background path: {bg_path}")
+                else:
+                    raise FileNotFoundError(
+                        f"Background file not found in worker. Tried: {bg_path}, {alt_bg_path}, {code_ocean_path}"
+                    )
+        
+        # Check if file has content before loading
+        if bg_path.stat().st_size == 0:
+            raise ValueError(f"Background file is empty: {bg_path}")
+        
+        # Read first few lines to verify file format
+        try:
+            with open(bg_path, 'r') as f:
+                first_lines = [f.readline().strip() for _ in range(5) if f.readline()]
+            if not first_lines or all(not line for line in first_lines):
+                raise ValueError(f"Background file appears to be empty or invalid: {bg_path}")
+            logger.debug(f"Background file preview (first 3 lines): {first_lines[:3]}")
+        except Exception as e:
+            logger.warning(f"Could not preview background file: {e}")
         
         background = BackgroundGeneSet(
             str(bg_path),
@@ -263,9 +283,22 @@ def run_single_permutation(
         
         # Validate background was loaded correctly
         if background.size == 0 or len(background.genes) == 0:
+            # Try to read raw file to see what's in it
+            try:
+                with open(bg_path, 'r') as f:
+                    raw_lines = [line.strip() for line in f if line.strip()]
+                logger.error(
+                    f"Background loaded but is empty! Path: {bg_path}, "
+                    f"size: {background.size}, genes count: {len(background.genes)}, "
+                    f"raw file lines: {len(raw_lines)}, first 5 lines: {raw_lines[:5]}"
+                )
+            except Exception as e:
+                logger.error(f"Could not read background file for debugging: {e}")
+            
             raise ValueError(
                 f"Background loaded but is empty! Path: {bg_path}, "
-                f"size: {background.size}, genes count: {len(background.genes)}"
+                f"size: {background.size}, genes count: {len(background.genes)}. "
+                f"This might indicate the gene info file is not loaded correctly."
             )
         
         logger.debug(f"Worker loaded background: {background.size} genes from {bg_path}")
@@ -392,8 +425,35 @@ def run_permutations_for_size(
     background_path = str(BACKGROUNDS_DIR / "all_genes.txt")
     
     # Validate background path exists before starting workers
-    if not Path(background_path).exists():
-        raise FileNotFoundError(f"Background file not found: {background_path}")
+    bg_path_obj = Path(background_path)
+    if not bg_path_obj.exists():
+        # Try Code Ocean style path
+        code_ocean_bg = Path("/data") / "backgrounds" / "all_genes.txt"
+        if code_ocean_bg.exists():
+            background_path = str(code_ocean_bg)
+            logger.info(f"Using Code Ocean background path: {background_path}")
+        else:
+            raise FileNotFoundError(
+                f"Background file not found. Tried: {background_path}, {code_ocean_bg}"
+            )
+    
+    # Validate background file has content
+    bg_path_obj = Path(background_path)
+    if bg_path_obj.stat().st_size == 0:
+        raise ValueError(f"Background file is empty: {background_path}")
+    
+    # Test load background in main process to catch issues early
+    try:
+        test_bg = BackgroundGeneSet(str(background_path), name="all_genes", input_format="symbols")
+        if test_bg.size == 0:
+            raise ValueError(
+                f"Background file loaded but is empty: {background_path}. "
+                f"This might indicate the gene info file is not loaded correctly."
+            )
+        logger.info(f"Background validation successful: {test_bg.size} genes")
+    except Exception as e:
+        logger.error(f"Failed to load background in main process: {e}")
+        raise
     
     args_list = [
         (size, perm_idx, background_path, library_paths, params, size_dir)

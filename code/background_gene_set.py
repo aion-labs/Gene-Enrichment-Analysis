@@ -71,6 +71,25 @@ class BackgroundGeneSet:
         else:
             # Validate symbols
             converter = GeneConverter()
+            
+            # Check if converter has loaded gene data
+            # If gene info file wasn't loaded, converter will be empty and all symbols will be rejected
+            stats = converter.get_stats()
+            has_gene_data = stats.get('symbol_mappings', 0) > 0
+            
+            if not has_gene_data:
+                # Gene converter doesn't have data - likely gene info file not loaded
+                # For background files, we'll accept all symbols as-is (trusted source)
+                # This is safer than rejecting everything
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.warning(
+                    f"GeneConverter has no loaded data (gene info file may not be loaded). "
+                    f"Accepting all {len(raw_lines)} symbols from background file without validation."
+                )
+                # Return all non-empty lines as valid symbols
+                return set(line.strip().upper() for line in raw_lines if line.strip())
+            
             valid_symbols = []
             invalid_symbols = []
             
@@ -86,7 +105,21 @@ class BackgroundGeneSet:
             
             # Log validation results
             if invalid_symbols:
-                print(f"Warning: {len(invalid_symbols)} symbols not found in database: {invalid_symbols[:10]}{'...' if len(invalid_symbols) > 10 else ''}")
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.warning(
+                    f"{len(invalid_symbols)} symbols not found in database: {invalid_symbols[:10]}{'...' if len(invalid_symbols) > 10 else ''}"
+                )
+            
+            # If all symbols were invalid, this might indicate a problem
+            if len(valid_symbols) == 0 and len(raw_lines) > 0:
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.error(
+                    f"All {len(raw_lines)} symbols from background file were rejected by GeneConverter. "
+                    f"This likely indicates the gene info file is not loaded correctly. "
+                    f"First 5 symbols: {[line.strip() for line in raw_lines[:5]]}"
+                )
             
             return set(valid_symbols)
 
