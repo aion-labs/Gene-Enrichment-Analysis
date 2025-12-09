@@ -130,6 +130,7 @@ class Enrichment:
         max_term_size: int = 600,
         p_value_method_name="Fisher's Exact Test",
         name: str = None,
+        use_multiprocessing: bool = True,
     ):
         """
         Initialize the class with gene set, gene set library, and background gene set.
@@ -138,6 +139,11 @@ class Enrichment:
             gene_set: Input gene set
             gene_set_library: Gene set library
             background_gene_set: Background gene set
+            min_term_size: Minimum term size
+            max_term_size: Maximum term size
+            p_value_method_name: P-value calculation method
+            name: Name for the enrichment
+            use_multiprocessing: If False, run serially (useful when called from multiprocessing workers)
         """
         self.gene_set = gene_set
         self.gene_set_library = gene_set_library
@@ -145,6 +151,7 @@ class Enrichment:
         self.max_term_size = max_term_size
         self.background_gene_set = background_gene_set
         self.p_value_method_name = p_value_method_name
+        self.use_multiprocessing = use_multiprocessing
         self.name = (
             name
             if name
@@ -181,54 +188,58 @@ class Enrichment:
         """
         results = []
         logger.info(f"Calculating p-values for {self.gene_set_library.name}")
-        cpu_count = mp.cpu_count() - 2
-        parallel_results = []  # Initialize outside try block
         
-        with mp.Pool(cpu_count) as pool:
-            logger.info(f"Initializing the MP pool with {cpu_count} CPUs")
-            try:
-                # Filter terms by size range first
-                filtered_terms = [term for term in self.gene_set_library.library 
-                                 if self.min_term_size <= term["size"] <= self.max_term_size]
-                
-                # Calculate unique genes from filtered terms only
-                filtered_unique_genes = set()
-                for term in filtered_terms:
-                    filtered_unique_genes.update(term["genes"])
-                
-                # Calculate the size of the intersection between the background gene set and the filtered library's unique genes
-                library_background_size = len(self.background_gene_set.genes & filtered_unique_genes)
-                logger.info(f"Library-specific background size: {library_background_size} genes (intersection of {self.background_gene_set.size} background genes and {len(filtered_unique_genes)} filtered library genes from {len(filtered_terms)} terms within size range [{self.min_term_size}, {self.max_term_size}])")
-                
-                # Log the impact of filtering the input gene set
-                original_gene_set_size = self.gene_set.size
-                filtered_gene_set_size = len(self.gene_set.genes & filtered_unique_genes)
-                if original_gene_set_size != filtered_gene_set_size:
-                    logger.info(f"Input gene set filtered: {original_gene_set_size} → {filtered_gene_set_size} genes (intersected with library-specific background)")
-                else:
-                    logger.info(f"Input gene set size: {original_gene_set_size} genes (all genes present in library-specific background)")
-                
-                parallel_results = pool.map(
-                    compute_pvalue,
-                    [
-                        (
-                            self.gene_set,
-                            self.background_gene_set,
-                            term,
-                            self.p_value_method_name,
-                            library_background_size,
-                            filtered_unique_genes,
-                        )
-                        for term in filtered_terms
-                    ],
-                )
-            except Exception as e:
-                logging.exception("An error occurred: %s", e)
-                return results  # Return empty results if computation failed
-            finally:
-                pool.close()
-                pool.join()
-                logger.info(f"Releasing {cpu_count} CPUs from the MP pool")
+        # Filter terms by size range first
+        filtered_terms = [term for term in self.gene_set_library.library 
+                         if self.min_term_size <= term["size"] <= self.max_term_size]
+        
+        # Calculate unique genes from filtered terms only
+        filtered_unique_genes = set()
+        for term in filtered_terms:
+            filtered_unique_genes.update(term["genes"])
+        
+        # Calculate the size of the intersection between the background gene set and the filtered library's unique genes
+        library_background_size = len(self.background_gene_set.genes & filtered_unique_genes)
+        logger.info(f"Library-specific background size: {library_background_size} genes (intersection of {self.background_gene_set.size} background genes and {len(filtered_unique_genes)} filtered library genes from {len(filtered_terms)} terms within size range [{self.min_term_size}, {self.max_term_size}])")
+        
+        # Log the impact of filtering the input gene set
+        original_gene_set_size = self.gene_set.size
+        filtered_gene_set_size = len(self.gene_set.genes & filtered_unique_genes)
+        if original_gene_set_size != filtered_gene_set_size:
+            logger.info(f"Input gene set filtered: {original_gene_set_size} → {filtered_gene_set_size} genes (intersected with library-specific background)")
+        else:
+            logger.info(f"Input gene set size: {original_gene_set_size} genes (all genes present in library-specific background)")
+        
+        # Prepare arguments for compute_pvalue
+        compute_args = [
+            (
+                self.gene_set,
+                self.background_gene_set,
+                term,
+                self.p_value_method_name,
+                library_background_size,
+                filtered_unique_genes,
+            )
+            for term in filtered_terms
+        ]
+        
+        # Compute p-values either in parallel or serially
+        parallel_results = []
+        try:
+            if self.use_multiprocessing:
+                cpu_count = mp.cpu_count() - 2
+                with mp.Pool(cpu_count) as pool:
+                    logger.info(f"Initializing the MP pool with {cpu_count} CPUs")
+                    parallel_results = pool.map(compute_pvalue, compute_args)
+                    pool.close()
+                    pool.join()
+                    logger.info(f"Releasing {cpu_count} CPUs from the MP pool")
+            else:
+                logger.info("Running enrichment serially (multiprocessing disabled)")
+                parallel_results = [compute_pvalue(args) for args in compute_args]
+        except Exception as e:
+            logging.exception("An error occurred: %s", e)
+            return results  # Return empty results if computation failed
 
         # Check if we have results to process
         if not parallel_results:

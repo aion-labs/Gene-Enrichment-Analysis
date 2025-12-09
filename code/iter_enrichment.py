@@ -32,6 +32,7 @@ class IterativeEnrichment:
         min_overlap: int = 1,
         progress_callback: Optional[Callable[[str], None]] = None,
         run_id: Optional[str] = None,
+        use_multiprocessing: bool = True,
     ) -> None:
         """
         Initialize iterative enrichment.
@@ -47,6 +48,7 @@ class IterativeEnrichment:
         :param max_iterations: Maximum number of iterations (None for no limit)
         :param min_overlap: Minimum overlap size required for terms
         :param progress_callback: Optional callback function to report progress
+        :param use_multiprocessing: If False, run enrichment serially (useful when called from multiprocessing workers)
         """
         self.gene_set = gene_set
         self.gene_set_library = gene_set_library
@@ -58,6 +60,7 @@ class IterativeEnrichment:
         self.max_iterations: Optional[int] = max_iterations
         self.min_overlap: int = min_overlap
         self.progress_callback = progress_callback
+        self.use_multiprocessing = use_multiprocessing
         from datetime import datetime
         self.name = (
             name
@@ -153,6 +156,7 @@ class IterativeEnrichment:
                     max_term_size=self.max_term_size,
                     background_gene_set=self.background_gene_set,
                     p_value_method_name=self.p_value_method_name,
+                    use_multiprocessing=self.use_multiprocessing,
                 )
             except Exception as e:
                 logger.error(f"Enrichment failed at iteration {iteration}: {e}")

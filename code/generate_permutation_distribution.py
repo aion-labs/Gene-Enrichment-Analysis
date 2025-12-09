@@ -204,6 +204,7 @@ def run_igea_for_library(
             max_iterations=params["max_iterations"],
             min_overlap=params["min_overlap"],
             progress_callback=None,  # No progress callback for batch processing
+            use_multiprocessing=False,  # Disable multiprocessing when called from multiprocessing workers
         )
         
         if iter_enrich.results:
