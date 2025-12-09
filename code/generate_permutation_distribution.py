@@ -227,25 +227,62 @@ def run_single_permutation(
     Run a single permutation (all libraries for one random gene set).
     
     Args:
-        args: Tuple of (size, perm_idx, background_genes, library_paths, params, output_dir)
-              Note: background_genes is a set of gene symbols (picklable)
-              library_paths is a dict mapping library names to file paths
+        args: Tuple of (size, perm_idx, background_path, library_paths, params, output_dir)
+              Note: background_path is the absolute path to the background file (for multiprocessing)
+              library_paths is a dict mapping library names to absolute file path strings
         
     Returns:
         Tuple of (size, perm_idx, success, error_message)
     """
-    size, perm_idx, background_genes, library_paths, params, output_dir = args
+    size, perm_idx, background_path, library_paths, params, output_dir = args
     
     try:
+        # Recalculate paths in worker process (multiprocessing with 'spawn' starts fresh)
+        # Get the script's directory to resolve paths correctly
+        script_dir = Path(__file__).resolve().parent
+        project_root = script_dir.parent
+        
         # Reload background and libraries in worker process (for multiprocessing compatibility)
+        bg_path = Path(background_path)  # background_path is already absolute
+        if not bg_path.exists():
+            # Try alternative path resolution
+            alt_bg_path = project_root / "data" / "backgrounds" / "all_genes.txt"
+            if alt_bg_path.exists():
+                bg_path = alt_bg_path
+                logger.warning(f"Using alternative background path: {bg_path}")
+            else:
+                raise FileNotFoundError(
+                    f"Background file not found in worker. Tried: {bg_path}, {alt_bg_path}"
+                )
+        
         background = BackgroundGeneSet(
-            str(BACKGROUNDS_DIR / "all_genes.txt"),
+            str(bg_path),
             name="all_genes",
             input_format="symbols"
         )
         
+        # Validate background was loaded correctly
+        if background.size == 0 or len(background.genes) == 0:
+            raise ValueError(
+                f"Background loaded but is empty! Path: {bg_path}, "
+                f"size: {background.size}, genes count: {len(background.genes)}"
+            )
+        
+        logger.debug(f"Worker loaded background: {background.size} genes from {bg_path}")
+        
         libraries = {}
-        for lib_name, lib_path in library_paths.items():
+        for lib_name, lib_path_str in library_paths.items():
+            lib_path = Path(lib_path_str)  # Convert string back to Path
+            if not lib_path.exists():
+                # Try alternative path resolution
+                alt_lib_path = project_root / "data" / "libraries" / Path(lib_path_str).name
+                if alt_lib_path.exists():
+                    lib_path = alt_lib_path
+                    logger.warning(f"Using alternative library path for {lib_name}: {lib_path}")
+                else:
+                    logger.warning(f"Library file not found in worker: {lib_path_str} or {alt_lib_path}, skipping {lib_name}")
+                    continue
+            
             library = GeneSetLibrary(str(lib_path), name=lib_name)
             # Filter terms by size
             filtered_terms = [
@@ -345,16 +382,21 @@ def run_permutations_for_size(
         return {"success": n_permutations, "failed": 0, "skipped": 0}
     
     # Prepare arguments for parallel processing
-    # Convert libraries to paths for pickling (multiprocessing compatibility)
+    # Convert libraries to absolute paths for pickling (multiprocessing compatibility)
     library_paths = {
-        lib_name: LIBRARIES_DIR / filename
+        lib_name: str(LIBRARIES_DIR / filename)
         for lib_name, filename in LIBRARIES.items()
         if (LIBRARIES_DIR / filename).exists()
     }
-    background_genes = background.genes  # Set is picklable
+    # Use absolute path for background file (more reliable in multiprocessing)
+    background_path = str(BACKGROUNDS_DIR / "all_genes.txt")
+    
+    # Validate background path exists before starting workers
+    if not Path(background_path).exists():
+        raise FileNotFoundError(f"Background file not found: {background_path}")
     
     args_list = [
-        (size, perm_idx, background_genes, library_paths, params, size_dir)
+        (size, perm_idx, background_path, library_paths, params, size_dir)
         for perm_idx in sorted(remaining)
     ]
     
