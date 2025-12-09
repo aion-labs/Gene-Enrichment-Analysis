@@ -45,7 +45,15 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = PROJECT_ROOT / "data"
 LIBRARIES_DIR = DATA_DIR / "libraries"
 BACKGROUNDS_DIR = DATA_DIR / "backgrounds"
-RESULTS_DIR = PROJECT_ROOT / "results"
+
+# Detect Code Ocean environment - use /results if it exists, otherwise use project root
+# Code Ocean mounts results at /results/
+if Path("/results").exists() and Path("/results").is_dir():
+    # Running on Code Ocean
+    RESULTS_DIR = Path("/results")
+else:
+    # Running locally
+    RESULTS_DIR = PROJECT_ROOT / "results"
 OUTPUT_DIR = RESULTS_DIR / "permutation_results"
 
 # Add current directory (code/) to path for imports
@@ -238,6 +246,9 @@ def run_single_permutation(
     size, perm_idx, background_path, library_paths, params, output_dir = args
     
     try:
+        # Convert output_dir back to Path (it's passed as absolute string for multiprocessing)
+        output_dir = Path(output_dir)
+        
         # Recalculate paths in worker process (multiprocessing with 'spawn' starts fresh)
         # Get the script's directory to resolve paths correctly
         script_dir = Path(__file__).resolve().parent
@@ -399,6 +410,10 @@ def run_permutations_for_size(
     size_dir = output_dir / f"size_{size}"
     size_dir.mkdir(parents=True, exist_ok=True)
     
+    # Convert to absolute path string for multiprocessing compatibility
+    # This ensures workers use the same path regardless of their working directory
+    size_dir_abs = str(size_dir.resolve())
+    
     logger.info(f"\n{'='*60}")
     logger.info(f"Processing gene list size: {size}")
     logger.info(f"{'='*60}")
@@ -458,7 +473,7 @@ def run_permutations_for_size(
         raise
     
     args_list = [
-        (size, perm_idx, background_path, library_paths, params, size_dir)
+        (size, perm_idx, background_path, library_paths, params, size_dir_abs)
         for perm_idx in sorted(remaining)
     ]
     
