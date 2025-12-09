@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Set
 import numpy as np
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 from multiprocessing import Pool, cpu_count, set_start_method
 from functools import partial
 
@@ -351,6 +351,11 @@ def run_permutations_for_size(
     
     # Run permutations
     stats = {"success": len(completed), "failed": 0, "skipped": 0}
+    total_to_process = len(args_list)
+    start_time = datetime.now()
+    
+    # Progress reporting frequency: every 1% or every 50 permutations, whichever is more frequent
+    progress_interval = max(1, min(50, total_to_process // 100))
     
     if n_jobs == 1:
         # Sequential processing
@@ -363,20 +368,57 @@ def run_permutations_for_size(
             else:
                 stats["failed"] += 1
             
-            if i % 10 == 0:
-                logger.info(f"Progress: {i}/{len(args_list)} permutations completed")
+            # Report progress at intervals or on last item
+            if i % progress_interval == 0 or i == total_to_process:
+                elapsed = datetime.now() - start_time
+                elapsed_seconds = elapsed.total_seconds()
+                rate = i / elapsed_seconds if elapsed_seconds > 0 else 0
+                remaining = total_to_process - i
+                eta_seconds = remaining / rate if rate > 0 else 0
+                eta = datetime.now() + timedelta(seconds=eta_seconds)
+                
+                pct = (i / total_to_process) * 100
+                logger.info(
+                    f"Progress: {i}/{total_to_process} ({pct:.1f}%) | "
+                    f"Elapsed: {elapsed} | "
+                    f"Rate: {rate:.2f} perm/s | "
+                    f"ETA: {eta.strftime('%H:%M:%S')} | "
+                    f"Success: {stats['success']}, Failed: {stats['failed']}"
+                )
     else:
-        # Parallel processing
+        # Parallel processing with progress tracking
         with Pool(processes=n_jobs) as pool:
-            results = pool.map(run_single_permutation, args_list)
-        
-        for size_result, perm_idx, success, error in results:
-            if success:
-                stats["success"] += 1
-            else:
-                stats["failed"] += 1
+            completed_count = 0
+            for i, result in enumerate(pool.imap_unordered(run_single_permutation, args_list), 1):
+                size_result, perm_idx, success, error = result
+                
+                if success:
+                    stats["success"] += 1
+                else:
+                    stats["failed"] += 1
+                
+                completed_count += 1
+                
+                # Report progress at intervals or on last item
+                if completed_count % progress_interval == 0 or completed_count == total_to_process:
+                    elapsed = datetime.now() - start_time
+                    elapsed_seconds = elapsed.total_seconds()
+                    rate = completed_count / elapsed_seconds if elapsed_seconds > 0 else 0
+                    remaining = total_to_process - completed_count
+                    eta_seconds = remaining / rate if rate > 0 else 0
+                    eta = datetime.now() + timedelta(seconds=eta_seconds)
+                    
+                    pct = (completed_count / total_to_process) * 100
+                    logger.info(
+                        f"Progress: {completed_count}/{total_to_process} ({pct:.1f}%) | "
+                        f"Elapsed: {elapsed} | "
+                        f"Rate: {rate:.2f} perm/s | "
+                        f"ETA: {eta.strftime('%H:%M:%S')} | "
+                        f"Success: {stats['success']}, Failed: {stats['failed']}"
+                    )
     
-    logger.info(f"Size {size} completed: {stats['success']} successful, {stats['failed']} failed")
+    size_duration = datetime.now() - start_time
+    logger.info(f"Size {size} completed: {stats['success']} successful, {stats['failed']} failed in {size_duration}")
     return stats
 
 
@@ -460,9 +502,38 @@ def main():
     # Process each gene list size
     all_stats = {}
     start_time = datetime.now()
+    total_sizes = len(sizes_to_process)
     
+    # Calculate total permutations across all sizes for overall progress
+    total_permutations = 0
     for size in sizes_to_process:
+        size_dir = OUTPUT_DIR / f"size_{size}"
+        if resume:
+            completed = get_completed_permutations(OUTPUT_DIR, size)
+            remaining = n_permutations - len(completed)
+        else:
+            remaining = n_permutations
+        total_permutations += remaining
+    
+    logger.info(f"\nTotal permutations to process: {total_permutations:,} across {total_sizes} sizes")
+    logger.info("="*60)
+    
+    processed_permutations = 0
+    
+    for size_idx, size in enumerate(sizes_to_process, 1):
         size_start = datetime.now()
+        
+        # Calculate how many permutations this size will process
+        size_dir = OUTPUT_DIR / f"size_{size}"
+        if resume:
+            completed = get_completed_permutations(OUTPUT_DIR, size)
+            size_remaining = n_permutations - len(completed)
+        else:
+            size_remaining = n_permutations
+        
+        logger.info(f"\n[{size_idx}/{total_sizes}] Processing size {size} ({size_remaining} permutations)")
+        logger.info("-" * 60)
+        
         stats = run_permutations_for_size(
             size=size,
             n_permutations=n_permutations,
@@ -475,8 +546,24 @@ def main():
         )
         all_stats[size] = stats
         
+        processed_permutations += size_remaining
         size_duration = datetime.now() - size_start
-        logger.info(f"Size {size} took {size_duration}")
+        
+        # Overall progress
+        overall_elapsed = datetime.now() - start_time
+        overall_rate = processed_permutations / overall_elapsed.total_seconds() if overall_elapsed.total_seconds() > 0 else 0
+        remaining_permutations = total_permutations - processed_permutations
+        overall_eta_seconds = remaining_permutations / overall_rate if overall_rate > 0 else 0
+        overall_eta = datetime.now() + timedelta(seconds=overall_eta_seconds)
+        overall_pct = (processed_permutations / total_permutations) * 100 if total_permutations > 0 else 0
+        
+        logger.info(f"Size {size} completed in {size_duration}")
+        logger.info(
+            f"Overall progress: {processed_permutations:,}/{total_permutations:,} ({overall_pct:.1f}%) | "
+            f"Elapsed: {overall_elapsed} | "
+            f"Rate: {overall_rate:.2f} perm/s | "
+            f"ETA: {overall_eta.strftime('%Y-%m-%d %H:%M:%S')}"
+        )
     
     # Summary
     total_duration = datetime.now() - start_time
