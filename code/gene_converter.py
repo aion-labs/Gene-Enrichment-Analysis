@@ -24,17 +24,63 @@ class GeneConverter:
         """
         if gene_info_path is None:
             # Look for the file in the data/recent_release directory
-            # Use __file__ to get path relative to this module, making it robust to working directory
+            # Try multiple path resolution strategies for robustness in different environments
+            
+            # Strategy 1: Use __file__ to get path relative to this module
             project_root = Path(__file__).resolve().parent.parent
             gene_info_path = project_root / "data" / "recent_release" / "Homo_sapiens.gene_info"
+            
+            # Strategy 2: If not found, try relative to current working directory
+            if not gene_info_path.exists():
+                alt_path = Path.cwd() / "data" / "recent_release" / "Homo_sapiens.gene_info"
+                if alt_path.exists():
+                    gene_info_path = alt_path
+                else:
+                    # Strategy 3: Try one level up from current directory (if in code/ folder)
+                    alt_path2 = Path.cwd().parent / "data" / "recent_release" / "Homo_sapiens.gene_info"
+                    if alt_path2.exists():
+                        gene_info_path = alt_path2
+                    else:
+                        # Strategy 4: Try Code Ocean style path (if data is mounted at /data)
+                        code_ocean_path = Path("/data") / "recent_release" / "Homo_sapiens.gene_info"
+                        if code_ocean_path.exists():
+                            gene_info_path = code_ocean_path
+                        else:
+                            # Strategy 5: Try relative path from code/ directory
+                            code_dir_path = Path(__file__).resolve().parent / ".." / "data" / "recent_release" / "Homo_sapiens.gene_info"
+                            if code_dir_path.resolve().exists():
+                                gene_info_path = code_dir_path.resolve()
         
         self.gene_info_path = Path(gene_info_path)
         
         if gene_history_path is None:
             # Look for the file in the data/recent_release directory
-            # Use __file__ to get path relative to this module, making it robust to working directory
+            # Try multiple path resolution strategies for robustness in different environments
+            
+            # Strategy 1: Use __file__ to get path relative to this module
             project_root = Path(__file__).resolve().parent.parent
             gene_history_path = project_root / "data" / "recent_release" / "gene_history"
+            
+            # Strategy 2: If not found, try relative to current working directory
+            if not gene_history_path.exists():
+                alt_path = Path.cwd() / "data" / "recent_release" / "gene_history"
+                if alt_path.exists():
+                    gene_history_path = alt_path
+                else:
+                    # Strategy 3: Try one level up from current directory (if in code/ folder)
+                    alt_path2 = Path.cwd().parent / "data" / "recent_release" / "gene_history"
+                    if alt_path2.exists():
+                        gene_history_path = alt_path2
+                    else:
+                        # Strategy 4: Try Code Ocean style path (if data is mounted at /data)
+                        code_ocean_path = Path("/data") / "recent_release" / "gene_history"
+                        if code_ocean_path.exists():
+                            gene_history_path = code_ocean_path
+                        else:
+                            # Strategy 5: Try relative path from code/ directory
+                            code_dir_path = Path(__file__).resolve().parent / ".." / "data" / "recent_release" / "gene_history"
+                            if code_dir_path.resolve().exists():
+                                gene_history_path = code_dir_path.resolve()
         
         self.gene_history_path = Path(gene_history_path)
         
