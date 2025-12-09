@@ -14,7 +14,8 @@ class BackgroundGeneSet:
         background_file_path: str, 
         name: str = "", 
         organism: str = "Homo Sapiens",
-        input_format: str = "symbols"
+        input_format: str = "symbols",
+        skip_validation: bool = False
     ) -> None:
         """
         Initialize BackgroundGeneList object with a list of genes.
@@ -24,20 +25,22 @@ class BackgroundGeneSet:
             name: Name for the background gene list
             organism: Organism name
             input_format: Either 'symbols' or 'entrez_ids'
+            skip_validation: If True, skip gene symbol validation (faster, use for trusted sources)
         """
-        self.genes: Set[str] = self._load_from_file(background_file_path, input_format)
+        self.genes: Set[str] = self._load_from_file(background_file_path, input_format, skip_validation)
         self.size: int = len(self.genes)
         self.name = name if name else Path(background_file_path).stem
         self.organism = organism
         self.input_format = input_format
 
-    def _load_from_file(self, background_file_path: str, input_format: str = "symbols") -> Set[str]:
+    def _load_from_file(self, background_file_path: str, input_format: str = "symbols", skip_validation: bool = False) -> Set[str]:
         """
         Load background genes from a file with optional Entrez ID conversion
         
         Args:
             background_file_path: Path to the background file
             input_format: Either 'symbols' or 'entrez_ids'
+            skip_validation: If True, skip gene symbol validation (faster, use for trusted sources)
 
         Returns:
             Set of gene symbols representing the background
@@ -69,6 +72,14 @@ class BackgroundGeneSet:
             
             return set(converted_symbols)
         else:
+            # Skip validation if requested (faster, use for trusted sources like permutation tests)
+            if skip_validation:
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.debug(f"Skipping gene validation for background file (skip_validation=True)")
+                # Return all non-empty lines as valid symbols (uppercase for consistency)
+                return set(line.strip().upper() for line in raw_lines if line.strip())
+            
             # Validate symbols
             converter = GeneConverter()
             

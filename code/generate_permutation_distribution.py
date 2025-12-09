@@ -98,7 +98,7 @@ def load_background() -> BackgroundGeneSet:
         raise FileNotFoundError(f"Background file not found: {bg_path}")
     
     logger.info(f"Loading background: {bg_path}")
-    bg = BackgroundGeneSet(str(bg_path), name="all_genes", input_format="symbols")
+    bg = BackgroundGeneSet(str(bg_path), name="all_genes", input_format="symbols", skip_validation=True)
     logger.info(f"Loaded background: {bg.size} genes")
     return bg
 
@@ -278,7 +278,8 @@ def run_single_permutation(
         background = BackgroundGeneSet(
             str(bg_path),
             name="all_genes",
-            input_format="symbols"
+            input_format="symbols",
+            skip_validation=True  # Skip validation for permutation tests - genes are from trusted background
         )
         
         # Validate background was loaded correctly
@@ -444,7 +445,7 @@ def run_permutations_for_size(
     
     # Test load background in main process to catch issues early
     try:
-        test_bg = BackgroundGeneSet(str(background_path), name="all_genes", input_format="symbols")
+        test_bg = BackgroundGeneSet(str(background_path), name="all_genes", input_format="symbols", skip_validation=True)
         if test_bg.size == 0:
             raise ValueError(
                 f"Background file loaded but is empty: {background_path}. "
