@@ -6,10 +6,16 @@ This script generates random gene lists and runs iterative enrichment analysis (
 to create a null distribution of p-values for statistical validation.
 
 Usage:
-    python generate_permutation_distribution.py [--n-permutations N] [--n-jobs N] [--resume]
+    python code/generate_permutation_distribution.py [--n-permutations N] [--n-jobs N] [--resume]
+    
+    Or from the code/ directory:
+        cd code
+        python generate_permutation_distribution.py [options]
     
     Example for c6i.8xlarge (32 vCPUs):
-        python generate_permutation_distribution.py --n-jobs 32
+        python code/generate_permutation_distribution.py --n-jobs 32
+    
+    Results are saved to: results/permutation_results/
 """
 
 import argparse
@@ -33,8 +39,18 @@ except RuntimeError:
     # Already set, ignore
     pass
 
-# Add code directory to path
-sys.path.insert(0, str(Path(__file__).parent / "code"))
+# Configuration - define paths first
+# When script is in code/ folder, go up one level to project root
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DATA_DIR = PROJECT_ROOT / "data"
+LIBRARIES_DIR = DATA_DIR / "libraries"
+BACKGROUNDS_DIR = DATA_DIR / "backgrounds"
+RESULTS_DIR = PROJECT_ROOT / "results"
+OUTPUT_DIR = RESULTS_DIR / "permutation_results"
+
+# Add current directory (code/) to path for imports
+# When script is in code/ folder, imports work directly
+sys.path.insert(0, str(Path(__file__).parent))
 
 from background_gene_set import BackgroundGeneSet
 from gene_set import GeneSet
@@ -46,18 +62,11 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("permutation_distribution.log"),
+        logging.FileHandler(str(PROJECT_ROOT / "permutation_distribution.log")),
         logging.StreamHandler()
     ]
 )
 logger = logging.getLogger(__name__)
-
-# Configuration
-ROOT = Path(__file__).resolve().parent
-DATA_DIR = ROOT / "data"
-LIBRARIES_DIR = DATA_DIR / "libraries"
-BACKGROUNDS_DIR = DATA_DIR / "backgrounds"
-OUTPUT_DIR = ROOT / "permutation_results"
 
 # Library mapping (name -> filename)
 LIBRARIES = {

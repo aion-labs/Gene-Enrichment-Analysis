@@ -7,6 +7,12 @@ This script generates a null distribution of p-values for iterative enrichment a
 
 ### Basic Usage
 ```bash
+python code/generate_permutation_distribution.py
+```
+
+Or from the `code/` directory:
+```bash
+cd code
 python generate_permutation_distribution.py
 ```
 
@@ -15,10 +21,11 @@ This will:
 - Run 1000 permutations per size
 - Use all available CPU cores for parallel processing
 - Resume from already completed permutations
+- Save results to `results/permutation_results/`
 
 ### For c6i.8xlarge (32 vCPUs) - Recommended
 ```bash
-python generate_permutation_distribution.py --n-jobs 32
+python code/generate_permutation_distribution.py --n-jobs 32
 ```
 This will complete in approximately **~3.5 hours** with maximum parallelization.
 
@@ -26,16 +33,16 @@ This will complete in approximately **~3.5 hours** with maximum parallelization.
 
 ```bash
 # Use specific number of CPU cores
-python generate_permutation_distribution.py --n-jobs 8
+python code/generate_permutation_distribution.py --n-jobs 8
 
 # Process only specific gene list sizes
-python generate_permutation_distribution.py --sizes 50 100 200
+python code/generate_permutation_distribution.py --sizes 50 100 200
 
 # Overwrite existing results (don't resume)
-python generate_permutation_distribution.py --no-resume
+python code/generate_permutation_distribution.py --no-resume
 
 # Change number of permutations per size
-python generate_permutation_distribution.py --n-permutations 500
+python code/generate_permutation_distribution.py --n-permutations 500
 ```
 
 ## Command Line Arguments
@@ -49,7 +56,7 @@ python generate_permutation_distribution.py --n-permutations 500
 ## Output Structure
 
 ```
-permutation_results/
+results/permutation_results/
 ├── config.json                    # Configuration used for this run
 ├── summary.json                   # Summary statistics
 ├── permutation_distribution.log   # Log file
@@ -133,16 +140,16 @@ Progress is logged to:
 
 ```bash
 # 1. Start the full run (will take many hours)
-python generate_permutation_distribution.py --n-jobs 16
+python code/generate_permutation_distribution.py --n-jobs 16
 
 # 2. Check progress
 tail -f permutation_distribution.log
 
 # 3. If interrupted, resume (automatically skips completed)
-python generate_permutation_distribution.py --n-jobs 16
+python code/generate_permutation_distribution.py --n-jobs 16
 
 # 4. Check summary
-cat permutation_results/summary.json
+cat results/permutation_results/summary.json
 ```
 
 ## Troubleshooting
