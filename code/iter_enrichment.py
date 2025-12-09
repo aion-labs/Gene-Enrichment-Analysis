@@ -84,9 +84,15 @@ class IterativeEnrichment:
             Path to the run-specific results directory
         """
         from pathlib import Path
-        # Use absolute path to project root, same as regular enrichment
-        ROOT = Path(__file__).resolve().parent.parent
-        results_dir = ROOT / "results" / f"run_{self._run_id}"
+        # Detect Code Ocean environment - use /results if it exists, otherwise use project root
+        # Code Ocean mounts results at /results/
+        if Path("/results").exists() and Path("/results").is_dir():
+            # Running on Code Ocean
+            results_dir = Path("/results") / f"run_{self._run_id}"
+        else:
+            # Running locally - use absolute path to project root
+            ROOT = Path(__file__).resolve().parent.parent
+            results_dir = ROOT / "results" / f"run_{self._run_id}"
         return results_dir
 
     @property
