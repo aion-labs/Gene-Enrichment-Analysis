@@ -66,28 +66,84 @@ from gene_set_library import GeneSetLibrary
 from iter_enrichment import IterativeEnrichment
 
 # Configure logging
+# File handler: INFO level (detailed logs for debugging)
+file_handler = logging.FileHandler(str(PROJECT_ROOT / "permutation_distribution.log"))
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+
+# Console handler: WARNING level to suppress verbose child module output
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.WARNING)
+console_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler(str(PROJECT_ROOT / "permutation_distribution.log")),
-        logging.StreamHandler()
-    ]
+    handlers=[file_handler, console_handler]
 )
+
+# Get logger for this module and add a separate handler for progress messages
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# Add a console handler specifically for this module that shows INFO messages
+# This allows progress messages while suppressing verbose child module logs
+progress_console = logging.StreamHandler()
+progress_console.setLevel(logging.INFO)
+progress_console.setFormatter(logging.Formatter("%(message)s"))
+# Only show messages from this module
+progress_console.addFilter(lambda record: record.name == __name__)
+logger.addHandler(progress_console)
+
+# Suppress verbose logging from child modules on console (but still log to file)
+for module_name in ['gene_set_library', 'gene_set', 'enrichment', 'iter_enrichment', 'background_gene_set']:
+    module_logger = logging.getLogger(module_name)
+    module_logger.setLevel(logging.INFO)  # Still log to file at INFO level
+    # Ensure console handler filters them out (already set to WARNING)
 
 # Library mapping (name -> filename)
+# Include all libraries except C6, C7, C8, and "All" (aggregate) libraries
+# Excluded: C6 (Oncogenic), C7 (Immunologic), C8 (Cell Type), and all aggregate "*.all.*" and "msigdb" files
 LIBRARIES = {
-    "Reactome": "c2.cp.reactome.v2025.1.Hs.symbols.gmt",
-    "KEGG": "c2.cp.kegg_legacy.v2025.1.Hs.symbols.gmt",
-    "GO BP": "c5.go.bp.v2025.1.Hs.symbols.gmt",
-    "GO MF": "c5.go.mf.v2025.1.Hs.symbols.gmt",
-    "GO CC": "c5.go.cc.v2025.1.Hs.symbols.gmt",
+    # H: Hallmark
+    "H: Hallmark Gene Sets": "h.all.v2025.1.Hs.symbols.gmt",
+    
+    # C2: Curated (individual subcategories, not c2.all)
+    "C2: CGP: Chemical & genetic perturbations": "c2.cgp.v2025.1.Hs.symbols.gmt",
+    "C2: CP: Canonical pathways": "c2.cp.v2025.1.Hs.symbols.gmt",
+    "C2: CP: BioCarta": "c2.cp.biocarta.v2025.1.Hs.symbols.gmt",
+    "C2: CP: KEGG MEDICUS": "c2.cp.kegg_medicus.v2025.1.Hs.symbols.gmt",
+    "C2: CP: Pathway Interaction Database": "c2.cp.pid.v2025.1.Hs.symbols.gmt",
+    "C2: CP: Reactome Pathways": "c2.cp.reactome.v2025.1.Hs.symbols.gmt",
+    "C2: CP: WikiPathways": "c2.cp.wikipathways.v2025.1.Hs.symbols.gmt",
+    "C2: CP: KEGG Legacy": "c2.cp.kegg_legacy.v2025.1.Hs.symbols.gmt",
+    
+    # C3: Regulatory (individual subcategories, not c3.all)
+    "C3: MIR: microRNA targets": "c3.mir.v2025.1.Hs.symbols.gmt",
+    "C3: MIR: miRDB": "c3.mir.mirdb.v2025.1.Hs.symbols.gmt",
+    "C3: MIR: Legacy": "c3.mir.mir_legacy.v2025.1.Hs.symbols.gmt",
+    "C3: TFT: Transcription factor targets": "c3.tft.v2025.1.Hs.symbols.gmt",
+    "C3: TFT: GTRD": "c3.tft.gtrd.v2025.1.Hs.symbols.gmt",
+    "C3: TFT: Legacy": "c3.tft.tft_legacy.v2025.1.Hs.symbols.gmt",
+    
+    # C4: Computational (individual subcategories, not c4.all)
+    "C4: 3CA: Cancer cell lines": "c4.3ca.v2025.1.Hs.symbols.gmt",
+    "C4: CGN: Cancer gene neighborhoods": "c4.cgn.v2025.1.Hs.symbols.gmt",
+    "C4: CM: Cancer modules": "c4.cm.v2025.1.Hs.symbols.gmt",
+    
+    # C5: GO (individual subcategories, not c5.all)
+    "C5: GO: Gene Ontology": "c5.go.v2025.1.Hs.symbols.gmt",
+    "C5: GO: Biological Process": "c5.go.bp.v2025.1.Hs.symbols.gmt",
+    "C5: GO: Cellular Component": "c5.go.cc.v2025.1.Hs.symbols.gmt",
+    "C5: GO: Molecular Function": "c5.go.mf.v2025.1.Hs.symbols.gmt",
+    "C5: HPO: Human Phenotype Ontology": "c5.hpo.v2025.1.Hs.symbols.gmt",
+    
+    # Protein Interaction
+    "Protein Interaction": "stringdb_protein_interactions.gmt",
 }
 
 # Default parameters (matching Streamlit defaults)
 DEFAULT_PARAMS = {
-    "p_threshold": 0.05,  # User specified
+    "p_threshold": 0.01,  # User specified
     "min_overlap": 3,
     "min_term_size": 10,
     "max_term_size": 600,
@@ -246,6 +302,21 @@ def run_single_permutation(
     size, perm_idx, background_path, library_paths, params, output_dir = args
     
     try:
+        # Suppress verbose logging in worker processes - only show warnings/errors
+        # This reduces terminal output significantly
+        worker_logger = logging.getLogger()
+        for handler in worker_logger.handlers[:]:
+            if isinstance(handler, logging.StreamHandler) and not isinstance(handler, logging.FileHandler):
+                handler.setLevel(logging.WARNING)
+        
+        # Also suppress logging from child modules in worker processes
+        for module_name in ['gene_set_library', 'gene_set', 'enrichment', 'iter_enrichment', 'background_gene_set']:
+            module_logger = logging.getLogger(module_name)
+            module_logger.setLevel(logging.WARNING)
+            for handler in module_logger.handlers[:]:
+                if isinstance(handler, logging.StreamHandler) and not isinstance(handler, logging.FileHandler):
+                    handler.setLevel(logging.WARNING)
+        
         # Convert output_dir back to Path (it's passed as absolute string for multiprocessing)
         output_dir = Path(output_dir)
         
