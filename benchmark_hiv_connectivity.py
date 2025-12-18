@@ -1,0 +1,722 @@
+#!/usr/bin/env python3
+"""
+Benchmark HIV gene list network connectivity against null distribution.
+
+This script:
+1. Loads HIV gene list
+2. Runs iGEA for 5 libraries (GO BP, GO CC, GO MF, KEGG, Reactome)
+3. Computes network connectivity metrics
+4. Benchmarks against null distribution from permutations
+5. Displays results
+"""
+
+import sys
+import logging
+from pathlib import Path
+from typing import Dict, List
+import json
+import pandas as pd
+
+# Add code directory to path
+PROJECT_ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(PROJECT_ROOT / "code"))
+
+from background_gene_set import BackgroundGeneSet
+from gene_set import GeneSet
+from gene_set_library import GeneSetLibrary
+from iter_enrichment import IterativeEnrichment
+from gene_converter import GeneConverter
+from network_connectivity_benchmark import (
+    NetworkConnectivityAnalyzer,
+    benchmark_real_results
+)
+from parallel_null_distribution import (
+    find_intersection_libraries,
+    compute_null_distribution_parallel
+)
+import threading
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
+
+# Paths
+DATA_DIR = PROJECT_ROOT / "data"
+LIBRARIES_DIR = DATA_DIR / "libraries"
+BACKGROUNDS_DIR = DATA_DIR / "backgrounds"
+GENE_LISTS_DIR = DATA_DIR / "gene_lists"
+NULL_DIST_FILE = PROJECT_ROOT / "results" / "connectivity_null_distribution.json"
+PARQUET_DIR = PROJECT_ROOT / "results" / "permutation_cluster_statistics_parquet"
+
+# Libraries to use (matching permutation data)
+LIBRARIES = {
+    "Reactome": "c2.cp.reactome.v2025.1.Hs.symbols.gmt",
+    "KEGG": "c2.cp.kegg_legacy.v2025.1.Hs.symbols.gmt",
+    "GO BP": "c5.go.bp.v2025.1.Hs.symbols.gmt",
+    "GO MF": "c5.go.mf.v2025.1.Hs.symbols.gmt",
+    "GO CC": "c5.go.cc.v2025.1.Hs.symbols.gmt",
+}
+
+# iGEA parameters
+PARAMS = {
+    "p_threshold": 0.05,
+    "min_overlap": 3,
+    "min_term_size": 10,
+    "max_term_size": 600,
+    "max_iterations": 10,
+    "p_value_method": "Fisher's Exact Test",
+}
+
+
+def load_hiv_gene_list() -> List[str]:
+    """Load HIV gene list and convert Entrez IDs to gene symbols."""
+    logger.info("Loading HIV gene list...")
+    
+    hiv_file = GENE_LISTS_DIR / "HIV.InputGeneList.txt"
+    if not hiv_file.exists():
+        raise FileNotFoundError(f"HIV gene list not found: {hiv_file}")
+    
+    # Read Entrez IDs
+    with open(hiv_file, 'r') as f:
+        entrez_ids = [line.strip() for line in f if line.strip()]
+    
+    logger.info(f"Loaded {len(entrez_ids)} Entrez IDs from HIV gene list")
+    
+    # Convert to gene symbols
+    converter = GeneConverter()
+    gene_symbols = []
+    failed = []
+    
+    for entrez_id in entrez_ids:
+        symbol = converter.get_symbol(entrez_id)
+        if symbol:
+            gene_symbols.append(symbol)
+        else:
+            failed.append(entrez_id)
+    
+    if failed:
+        logger.warning(f"Failed to convert {len(failed)} Entrez IDs to symbols")
+    
+    logger.info(f"Converted to {len(gene_symbols)} gene symbols")
+    return gene_symbols
+
+
+def load_libraries() -> Dict[str, GeneSetLibrary]:
+    """Load the 5 libraries for which we have permutation data."""
+    logger.info("Loading gene set libraries...")
+    libraries = {}
+    
+    for lib_name, filename in LIBRARIES.items():
+        lib_path = LIBRARIES_DIR / filename
+        if not lib_path.exists():
+            logger.warning(f"Library file not found: {lib_path}, skipping {lib_name}")
+            continue
+        
+        logger.info(f"Loading library: {lib_name}")
+        library = GeneSetLibrary(str(lib_path), name=lib_name)
+        
+        # Filter terms by size
+        filtered_terms = [
+            t for t in library.library
+            if PARAMS["min_term_size"] <= t["size"] <= PARAMS["max_term_size"]
+        ]
+        library.library = filtered_terms
+        library.num_terms = len(filtered_terms)
+        library.unique_genes = library.compute_unique_genes()
+        library.size = len(library.unique_genes)
+        
+        libraries[lib_name] = library
+        logger.info(f"  {lib_name}: {library.num_terms} terms, {library.size} unique genes")
+    
+    return libraries
+
+
+def load_background() -> BackgroundGeneSet:
+    """Load the background gene set."""
+    bg_path = BACKGROUNDS_DIR / "all_genes.txt"
+    if not bg_path.exists():
+        raise FileNotFoundError(f"Background file not found: {bg_path}")
+    
+    logger.info(f"Loading background: {bg_path}")
+    bg = BackgroundGeneSet(str(bg_path), name="all_genes", input_format="symbols", skip_validation=True)
+    logger.info(f"Loaded background: {bg.size} genes")
+    return bg
+
+
+def run_igea_for_library(
+    gene_set: GeneSet,
+    library: GeneSetLibrary,
+    background: BackgroundGeneSet
+) -> IterativeEnrichment:
+    """Run iGEA for a single library."""
+    logger.info(f"Running iGEA for {library.name}...")
+    
+    iter_enrich = IterativeEnrichment(
+        gene_set=gene_set,
+        gene_set_library=library,
+        background_gene_set=background,
+        min_term_size=PARAMS["min_term_size"],
+        max_term_size=PARAMS["max_term_size"],
+        p_value_method_name=PARAMS["p_value_method"],
+        p_threshold=PARAMS["p_threshold"],
+        max_iterations=PARAMS["max_iterations"],
+        min_overlap=PARAMS["min_overlap"],
+        progress_callback=None,
+        use_multiprocessing=True,
+    )
+    
+    logger.info(f"  {library.name}: {len(iter_enrich.results)} iterations")
+    return iter_enrich
+
+
+# Removed: compute_connectivity_for_library - not needed since we only analyze combined network
+
+
+def print_benchmark_results(benchmark: Dict, library_name: str):
+    """Print benchmark results in a readable format."""
+    print("\n" + "=" * 80)
+    print(f"Library: {library_name}")
+    print("=" * 80)
+    
+    if not benchmark or 'comparison' not in benchmark:
+        print("No benchmark results available")
+        return
+    
+    real_metrics = benchmark.get('real_metrics', {})
+    comparison = benchmark.get('comparison', {})
+    
+    print(f"\nNetwork Summary:")
+    print(f"  Genes: {real_metrics.get('n_genes', 0)}")
+    print(f"  Terms: {real_metrics.get('n_terms', 0)}")
+    print(f"  Edges: {real_metrics.get('n_edges', 0)}")
+    
+    # Show size information
+    if 'size_difference' in benchmark:
+        print(f"\nSize Matching:")
+        print(f"  Real gene list size: {benchmark.get('gene_list_size', 'N/A')}")
+        if benchmark.get('size_difference', 0) == 0:
+            print(f"  ✓ Exact match with null distribution size: {benchmark.get('nearest_null_size', 'N/A')}")
+        else:
+            print(f"  Interpolated between sizes: {benchmark.get('nearest_null_size', 'N/A')} (diff: {benchmark.get('size_difference', 0)} genes, {benchmark.get('size_difference_pct', 0):.1f}%)")
+            if benchmark.get('size_difference', 0) > 25:
+                print(f"  ⚠ Warning: Large size difference - results may be less accurate")
+    
+    print(f"\n{'Metric':<35} {'Real Value':<15} {'Null Mean':<15} {'Z-score':<12} {'Percentile':<12} {'Better?':<10}")
+    print("-" * 100)
+    
+    metrics_order = [
+        'avg_connections_per_gene',
+        'network_density',
+        'n_connected_components',
+        'largest_component_size',
+        'gene_centrality_max',
+        'clustering_coefficient',
+    ]
+    
+    for metric in metrics_order:
+        if metric not in comparison:
+            continue
+        
+        comp = comparison[metric]
+        real_val = comp['real_value']
+        null_mean = comp['null_mean']
+        z_score = comp['z_score']
+        percentile = comp['percentile']
+        is_better = "✓ YES" if comp['is_better'] else "✗ NO"
+        
+        # Format based on metric type
+        if metric == 'n_connected_components':
+            # Lower is better for components
+            is_better = "✓ YES" if real_val < null_mean else "✗ NO"
+        
+        print(f"{metric:<35} {real_val:<15.4f} {null_mean:<15.4f} {z_score:<12.2f} {percentile:<12.1f}% {is_better:<10}")
+    
+    # Summary
+    better_count = sum(1 for comp in comparison.values() if comp['is_better'])
+    total_count = len(comparison)
+    
+    # Special handling for n_connected_components (lower is better)
+    if 'n_connected_components' in comparison:
+        comp = comparison['n_connected_components']
+        if comp['real_value'] < comp['null_mean']:
+            better_count += 1
+        total_count += 1
+    
+    print("\n" + "-" * 100)
+    print(f"Summary: {better_count}/{total_count} metrics are better than null")
+    
+    if better_count == total_count:
+        print("✓ Network connectivity is SIGNIFICANTLY BETTER than random!")
+    elif better_count >= total_count * 0.7:
+        print("⚠ Network connectivity is MODERATELY BETTER than random")
+    else:
+        print("✗ Network connectivity is NOT significantly better than random")
+
+
+def main():
+    """Main function."""
+    print("\n" + "=" * 80)
+    print("HIV Gene List - Network Connectivity Benchmarking")
+    print("=" * 80)
+    
+    # 1. Load HIV gene list
+    print("\n[1/5] Loading HIV gene list...")
+    hiv_genes = load_hiv_gene_list()
+    print(f"✓ Loaded {len(hiv_genes)} genes")
+    
+    # 2. Load background
+    print("\n[2/5] Loading background gene set...")
+    background = load_background()
+    print(f"✓ Loaded background: {background.size} genes")
+    
+    # 3. Create gene set
+    print("\n[3/5] Creating gene set...")
+    gene_set = GeneSet(
+        gene_list=hiv_genes,
+        validation_set=background.genes,
+        hgcn=False,
+        format=False
+    )
+    print(f"✓ Gene set created: {gene_set.size} genes")
+    
+    # 4. Load libraries
+    print("\n[4/6] Loading gene set libraries...")
+    libraries = load_libraries()
+    print(f"✓ Loaded {len(libraries)} libraries")
+    
+    # 5. Check which libraries have permutation data
+    print("\n[5/6] Checking libraries with permutation data...")
+    user_selected_libraries = list(libraries.keys())
+    libraries_with_data, libraries_without_data = find_intersection_libraries(
+        user_selected_libraries,
+        PARQUET_DIR
+    )
+    
+    if not libraries_with_data:
+        raise ValueError(
+            f"None of the selected libraries have permutation data available. "
+            f"Selected: {user_selected_libraries}. "
+            f"Please ensure Parquet files exist in {PARQUET_DIR}"
+        )
+    
+    print(f"✓ Libraries with permutation data: {len(libraries_with_data)}")
+    print(f"  {', '.join(libraries_with_data)}")
+    if libraries_without_data:
+        print(f"⚠ Libraries without permutation data (included in enrichment, excluded from statistics):")
+        print(f"  {', '.join(libraries_without_data)}")
+    
+    # 6. Start null distribution computation in parallel thread
+    print("\n[6/6] Starting parallel null distribution computation...")
+    null_dist_result = {
+        'null_distribution': None,
+        'status': 'running',
+        'libraries_used': libraries_with_data,
+        'error': None
+    }
+    null_dist_lock = threading.Lock()
+    
+    null_dist_thread = threading.Thread(
+        target=compute_null_distribution_parallel,
+        args=(
+            PARQUET_DIR,
+            gene_set.size,
+            libraries_with_data,
+            null_dist_result,
+            null_dist_lock
+        ),
+        daemon=True
+    )
+    null_dist_thread.start()
+    print(f"✓ Null distribution computation started in parallel thread")
+    
+    # 7. Run iGEA for each library (only to combine later, no individual analysis)
+    print("\n" + "=" * 80)
+    print("Running iGEA for each library...")
+    print("=" * 80)
+    print(f"Note: All {len(libraries)} libraries will be included in enrichment results.")
+    if libraries_without_data:
+        print(f"      However, statistics will only be computed for {len(libraries_with_data)} libraries.")
+    print()
+    
+    all_results = {}
+    
+    for lib_name, library in libraries.items():
+        try:
+            iter_enrich = run_igea_for_library(gene_set, library, background)
+            all_results[lib_name] = iter_enrich
+            print(f"✓ {lib_name}: {len(iter_enrich.results)} iterations")
+        except Exception as e:
+            logger.error(f"Error processing {lib_name}: {e}", exc_info=True)
+            all_results[lib_name] = None
+    
+    # Wait for null distribution computation to complete
+    print("\n" + "=" * 80)
+    print("Waiting for null distribution computation...")
+    print("=" * 80)
+    null_dist_thread.join(timeout=30)  # Wait up to 30 seconds
+    
+    if null_dist_result['status'] == 'error':
+        raise RuntimeError(f"Null distribution computation failed: {null_dist_result.get('error', 'Unknown error')}")
+    elif null_dist_result['status'] == 'running':
+        logger.warning("Null distribution computation still running after timeout, proceeding anyway...")
+    
+    # Get null distribution (convert to expected format)
+    if null_dist_result['null_distribution']:
+        null_distribution = null_dist_result['null_distribution']
+        print(f"✓ Null distribution computed for {len(null_distribution)} gene list size(s)")
+    else:
+        raise RuntimeError("Null distribution computation did not complete")
+    
+    # 7. Combined network analysis (FULL network with all libraries)
+    print("\n" + "=" * 80)
+    print("COMBINED NETWORK ANALYSIS (All Libraries)")
+    print("=" * 80)
+    print()
+    print("Note: Individual libraries are not analyzed separately because")
+    print("      by design, terms in a single library are not connected.")
+    print("      Only the combined network across all libraries has meaningful clusters.")
+    print()
+    
+    # Combine ALL iGEA results (full network for user)
+    combined_analyzer = NetworkConnectivityAnalyzer()
+    for lib_name, iter_enrich in all_results.items():
+        if iter_enrich is None:
+            continue
+        
+        results = []
+        for record in iter_enrich.results:
+            genes_removed = record.get("Genes removed for next iteration", [])
+            if isinstance(genes_removed, str):
+                genes_removed = [g.strip() for g in genes_removed.split(",") if g.strip()]
+            
+            results.append({
+                'Term': f"{lib_name}: {record.get('Term', '')}",
+                'Iteration': record.get("Iteration", 1),
+                'Library': lib_name,  # Add library name for diversity tracking
+                'Genes removed for next iteration': genes_removed,
+            })
+        
+        combined_analyzer.add_igea_results(results)
+    
+    # Get clusters from FULL network (sorted by size, largest first)
+    clusters_full = combined_analyzer.get_clusters()
+    
+    print(f"Found {len(clusters_full)} clusters in FULL combined network (all {len(libraries)} libraries)")
+    print()
+    
+    # 8. Create filtered network for statistics (only libraries with permutation data)
+    print("=" * 80)
+    print("STATISTICAL BENCHMARKING")
+    print("=" * 80)
+    print()
+    print(f"⚠ IMPORTANT: Statistics computed using only {len(libraries_with_data)} libraries with permutation data:")
+    print(f"   {', '.join(libraries_with_data)}")
+    if libraries_without_data:
+        print(f"\n   Libraries included in enrichment but EXCLUDED from statistics:")
+        print(f"   {', '.join(libraries_without_data)}")
+        print(f"   (Permutation data not available for these libraries)")
+    print()
+    
+    # Create filtered analyzer with only libraries that have permutation data
+    filtered_analyzer = NetworkConnectivityAnalyzer()
+    for lib_name, iter_enrich in all_results.items():
+        if iter_enrich is None:
+            continue
+        # Only include libraries with permutation data
+        if lib_name not in libraries_with_data:
+            continue
+        
+        results = []
+        for record in iter_enrich.results:
+            genes_removed = record.get("Genes removed for next iteration", [])
+            if isinstance(genes_removed, str):
+                genes_removed = [g.strip() for g in genes_removed.split(",") if g.strip()]
+            
+            results.append({
+                'Term': f"{lib_name}: {record.get('Term', '')}",
+                'Iteration': record.get("Iteration", 1),
+                'Library': lib_name,
+                'Genes removed for next iteration': genes_removed,
+            })
+        
+        filtered_analyzer.add_igea_results(results)
+    
+    # Get clusters from filtered network (for statistics)
+    clusters_filtered = filtered_analyzer.get_clusters()
+    
+    print(f"Filtered network: {len(clusters_filtered)} clusters (using {len(libraries_with_data)} libraries)")
+    print()
+    
+    # Convert filtered results to benchmark format
+    filtered_results = []
+    for lib_name, iter_enrich in all_results.items():
+        if iter_enrich is None or lib_name not in libraries_with_data:
+            continue
+        for record in iter_enrich.results:
+            genes_removed = record.get("Genes removed for next iteration", [])
+            if isinstance(genes_removed, str):
+                genes_removed = [g.strip() for g in genes_removed.split(",") if g.strip()]
+            filtered_results.append({
+                'Term': f"{lib_name}: {record.get('Term', '')}",
+                'Iteration': record.get("Iteration", 1),
+                'Library': lib_name,
+                'Genes removed for next iteration': genes_removed,
+            })
+    
+    # Get filtered network metrics for benchmarking
+    filtered_metrics = filtered_analyzer.compute_metrics(include_library_diversity=True)
+    filtered_benchmark = benchmark_real_results(
+        filtered_results,
+        gene_set.size,
+        null_distribution,
+        use_interpolation=True
+    )
+    
+    # Print filtered network benchmark
+    print("=" * 80)
+    print("NETWORK BENCHMARK (Statistics Libraries Only)")
+    print("=" * 80)
+    print_benchmark_results(filtered_benchmark, f"FILTERED NETWORK ({len(libraries_with_data)} libraries)")
+    
+    # 9. Generate cluster-by-cluster statistical report
+    # Use FULL network clusters but filter to only those containing statistics libraries
+    print("\n" + "=" * 80)
+    print("CLUSTER-BY-CLUSTER STATISTICAL REPORT")
+    print("=" * 80)
+    print()
+    print(f"Note: Statistics computed using {len(libraries_with_data)} libraries: {', '.join(libraries_with_data)}")
+    if libraries_without_data:
+        print(f"      Full network includes {len(libraries)} libraries total (including {', '.join(libraries_without_data)})")
+    print()
+    
+    # Import benchmark function
+    from code.network_connectivity_benchmark import benchmark_cluster
+    
+    # Filter clusters to only those that contain at least one library with permutation data
+    clusters_for_stats = []
+    for cluster in clusters_full:
+        # Check if cluster contains any library with permutation data
+        libraries_in_cluster = set()
+        for term in cluster['terms']:
+            library = combined_analyzer.term_to_library.get(term, "Unknown")
+            libraries_in_cluster.add(library)
+        
+        # Only include clusters that have at least one library with permutation data
+        if any(lib in libraries_with_data for lib in libraries_in_cluster):
+            clusters_for_stats.append(cluster)
+    
+    print(f"Analyzing {len(clusters_for_stats)} clusters (from {len(clusters_full)} total) that contain statistics libraries")
+    print()
+    
+    # Build cluster statistics table with benchmark results
+    cluster_rows = []
+    for cluster in clusters_for_stats:
+        # Get terms in this cluster (with library info)
+        term_list = []
+        libraries_in_cluster = set()
+        for term in cluster['terms']:
+            library = combined_analyzer.term_to_library.get(term, "Unknown")
+            libraries_in_cluster.add(library)
+            # Extract term name (remove library prefix if present)
+            term_name = term.split(": ", 1)[-1] if ": " in term else term
+            term_list.append(f"{library}:{term_name}")
+        
+        # Benchmark this cluster
+        cluster_benchmark = benchmark_cluster(
+            cluster,
+            null_distribution,
+            gene_set.size,
+            use_interpolation=True
+        )
+        
+        # Extract benchmark statistics
+        size_bench = cluster_benchmark.get('cluster_size', {})
+        genes_bench = cluster_benchmark.get('cluster_genes', {})
+        terms_bench = cluster_benchmark.get('cluster_terms', {})
+        edges_bench = cluster_benchmark.get('cluster_edges', {})
+        density_bench = cluster_benchmark.get('cluster_density', {})
+        lib_bench = cluster_benchmark.get('cluster_libraries', {})
+        
+        cluster_rows.append({
+            'Cluster_Number': cluster['cluster_number'],
+            'Cluster_Size': cluster['size'],
+            'Cluster_Size_Z': size_bench.get('z_score', 0.0),
+            'Cluster_Size_Pct': size_bench.get('percentile', 50.0),
+            'N_Genes': cluster['n_genes'],
+            'N_Genes_Z': genes_bench.get('z_score', 0.0),
+            'N_Genes_Pct': genes_bench.get('percentile', 50.0),
+            'N_Terms': cluster['n_terms'],
+            'N_Terms_Z': terms_bench.get('z_score', 0.0),
+            'N_Terms_Pct': terms_bench.get('percentile', 50.0),
+            'N_Edges': cluster['n_edges'],
+            'N_Edges_Z': edges_bench.get('z_score', 0.0),
+            'N_Edges_Pct': edges_bench.get('percentile', 50.0),
+            'Cluster_Density': cluster['density'],
+            'Cluster_Density_Z': density_bench.get('z_score', 0.0),
+            'Cluster_Density_Pct': density_bench.get('percentile', 50.0),
+            'N_Libraries': len(libraries_in_cluster),
+            'N_Libraries_Z': lib_bench.get('z_score', 0.0),
+            'N_Libraries_Pct': lib_bench.get('percentile', 50.0),
+            'Libraries': ', '.join(sorted(libraries_in_cluster)),
+            'Terms': '; '.join(term_list[:10]) + ('...' if len(term_list) > 10 else ''),
+            'N_Terms_Total': len(term_list),
+        })
+    
+    # Create DataFrame
+    cluster_df = pd.DataFrame(cluster_rows)
+    
+    # Print cluster table with statistics
+    print("Clusters with Statistical Benchmarks (ordered by size, largest first):")
+    print("=" * 120)
+    print()
+    
+    # Format for display
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.width', None)
+    pd.set_option('display.max_colwidth', 50)
+    
+    # Print summary table (key metrics)
+    summary_cols = ['Cluster_Number', 'Cluster_Size', 'Cluster_Size_Z', 'Cluster_Size_Pct',
+                    'N_Genes', 'N_Genes_Z', 'N_Terms', 'N_Terms_Z',
+                    'Cluster_Density', 'Cluster_Density_Z', 'N_Libraries', 'N_Libraries_Z']
+    summary_df = cluster_df[summary_cols].copy()
+    
+    # Format columns for better readability
+    for col in summary_df.columns:
+        if col.endswith('_Z'):
+            summary_df[col] = summary_df[col].apply(lambda x: f"{x:>6.2f}")
+        elif col.endswith('_Pct'):
+            summary_df[col] = summary_df[col].apply(lambda x: f"{x:>5.1f}%")
+        elif 'Density' in col:
+            summary_df[col] = summary_df[col].apply(lambda x: f"{x:>6.4f}")
+        else:
+            summary_df[col] = summary_df[col].apply(lambda x: f"{x:>6.0f}" if pd.notna(x) and isinstance(x, (int, float)) else str(x))
+    
+    print(summary_df.to_string(index=False))
+    print()
+    
+    # Print full table
+    print("=" * 120)
+    print("Full Cluster Statistics:")
+    print("-" * 120)
+    print(cluster_df.to_string(index=False))
+    print()
+    
+    # 9. Save results
+    print("=" * 80)
+    print("Saving results...")
+    print("=" * 80)
+    
+    output_dir = PROJECT_ROOT / "results" / "hiv_connectivity_benchmark"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Save cluster-by-cluster results (with statistics)
+    cluster_file = output_dir / "hiv_clusters_by_size.tsv"
+    cluster_df.to_csv(cluster_file, sep="\t", index=False)
+    print(f"✓ Saved cluster-by-cluster statistical report to: {cluster_file}")
+    
+    # Also save a summary version (key metrics only)
+    summary_file = output_dir / "hiv_clusters_summary.tsv"
+    summary_cols = ['Cluster_Number', 'Cluster_Size', 'Cluster_Size_Z', 'Cluster_Size_Pct',
+                    'N_Genes', 'N_Genes_Z', 'N_Terms', 'N_Terms_Z',
+                    'Cluster_Density', 'Cluster_Density_Z', 'N_Libraries', 'N_Libraries_Z',
+                    'Libraries']
+    summary_df = cluster_df[summary_cols].copy()
+    summary_df.to_csv(summary_file, sep="\t", index=False)
+    print(f"✓ Saved cluster summary (key metrics) to: {summary_file}")
+    
+    # Generate formatted statistical report
+    try:
+        from generate_cluster_statistical_report import generate_cluster_report
+        report_file = output_dir / "hiv_clusters_statistical_report.txt"
+        generate_cluster_report(str(cluster_file), str(report_file), gene_list_name="HIV Gene List")
+        print(f"✓ Generated formatted statistical report: {report_file}")
+        
+        # Add library information note to report
+        with open(report_file, 'r') as f:
+            report_content = f.read()
+        
+        # Add note about libraries used for statistics
+        library_note = f"""
+====================================================================================================
+IMPORTANT: Library Information for Statistical Analysis
+====================================================================================================
+
+Statistics were computed using {len(libraries_with_data)} libraries with permutation data:
+  {', '.join(libraries_with_data)}
+
+"""
+        if libraries_without_data:
+            library_note += f"""Libraries included in enrichment but EXCLUDED from statistics:
+  {', '.join(libraries_without_data)}
+  (Permutation data not available for these libraries)
+
+"""
+        library_note += """The full network visualization includes all selected libraries.
+However, statistical benchmarks are only computed for libraries with available
+permutation data to ensure accurate comparison against the null distribution.
+
+====================================================================================================
+
+"""
+        
+        # Insert note after the header
+        lines = report_content.split('\n')
+        insert_pos = 0
+        for i, line in enumerate(lines):
+            if 'Gene List:' in line or 'Total Clusters:' in line:
+                insert_pos = i + 3
+                break
+        
+        # Insert library note
+        for i, note_line in enumerate(library_note.strip().split('\n')):
+            lines.insert(insert_pos + i, note_line)
+        
+        with open(report_file, 'w') as f:
+            f.write('\n'.join(lines))
+        
+        print(f"✓ Added library information note to report")
+    except Exception as e:
+        logger.warning(f"Could not generate formatted report: {e}")
+        import traceback
+        traceback.print_exc()
+    
+    # Save overall benchmark results
+    benchmark_file = output_dir / "hiv_connectivity_benchmark.json"
+    benchmark_data = {
+        "gene_list_size": gene_set.size,
+        "libraries_selected": user_selected_libraries,
+        "libraries_with_permutation_data": libraries_with_data,
+        "libraries_without_permutation_data": libraries_without_data,
+        "note": "Full network includes all selected libraries. Statistics computed using only libraries with permutation data.",
+        "full_network": {
+            "n_clusters": len(clusters_full),
+            "metrics": combined_analyzer.compute_metrics(include_library_diversity=True),
+        },
+        "filtered_network": {
+            "n_clusters": len(clusters_filtered),
+            "metrics": filtered_metrics,
+            "benchmark": filtered_benchmark,
+        },
+        "clusters": cluster_rows,
+    }
+    with open(benchmark_file, 'w') as f:
+        json.dump(benchmark_data, f, indent=2, default=str)
+    print(f"✓ Saved benchmark results to: {benchmark_file}")
+    
+    print("\n" + "=" * 80)
+    print("Benchmarking complete!")
+    print("=" * 80)
+    print()
+    print(f"Summary:")
+    print(f"  Full network: {len(clusters_full)} clusters (all {len(libraries)} libraries)")
+    print(f"  Statistics network: {len(clusters_filtered)} clusters ({len(libraries_with_data)} libraries with permutation data)")
+    if clusters_for_stats:
+        print(f"  Largest cluster: {clusters_for_stats[0]['size']} nodes ({clusters_for_stats[0]['n_genes']} genes, {clusters_for_stats[0]['n_terms']} terms)")
+    print(f"         See {cluster_file} for detailed cluster-by-cluster statistics")
+
+
+if __name__ == "__main__":
+    main()

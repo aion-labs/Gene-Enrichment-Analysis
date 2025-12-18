@@ -1,0 +1,42 @@
+Permutation Analysis Archive Summary
+=====================================
+
+Date Archived: December 13, 2025
+
+Contents:
+---------
+
+SCRIPTS (72K):
+- generate_permutation_distribution.py - Main permutation generation script
+- code/generate_permutation_distribution.py - Code version
+- check_permutation_progress.py - Progress checking utility
+- merge_permutation_results.py - Results merging script
+- pvalue_corrector.py - P-value correction implementation
+- run_permutations.sh - Shell script for running permutations
+
+RESULTS (493M):
+- permutation_results/merged_permutation_results.tsv - 1.25M permutation results
+- permutation_results/results-*.zip - Original permutation data zip
+- permutation_results/Analyze Permutation Results.twbx - Tableau workbook
+- permutation_distribution.log - Generation log file
+
+DOCUMENTATION (76K):
+- PERMUTATION_SCRIPT_PLAN.md - Initial planning document
+- PERMUTATION_SCRIPT_README.md - Script usage guide
+- P_VALUE_CORRECTION_RECOMMENDATIONS.md - Detailed correction approach
+- P_VALUE_CORRECTION_SUMMARY.md - Summary of correction method
+- PVALUE_CORRECTOR_INTEGRATION.md - Integration guide
+- GENE_LIST_SIZE_HANDLING.md - Gene list size handling approach
+- STATISTICAL_CONCEPTS_EXPLAINED.md - Concepts explanation
+- EXPLANATION_STRATUM_CDF.md - Additional explanations
+
+SIMULATION (60K):
+- simulate_hiv_pvalue_correction.py - HIV gene list simulation
+- example_pvalue_correction.py - Usage examples
+- hiv_simulation/hiv_igea_with_correction.tsv - Corrected results
+- hiv_simulation/hiv_igea_raw.tsv - Raw results
+
+Total Archive Size: ~493MB
+
+Status: Archived for future reference - results showed unexpected behavior
+and require further investigation.
