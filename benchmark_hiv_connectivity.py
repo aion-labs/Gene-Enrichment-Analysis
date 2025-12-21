@@ -681,7 +681,7 @@ def main():
             genes_bench = cluster_benchmark.get('cluster_genes', {})
             terms_bench = cluster_benchmark.get('cluster_terms', {})
             edges_bench = cluster_benchmark.get('cluster_edges', {})
-            density_bench = cluster_benchmark.get('cluster_density', {})
+            density_bench = cluster_benchmark.get('cluster_avg_edges_per_gene', cluster_benchmark.get('cluster_density', {}))
             lib_bench = cluster_benchmark.get('cluster_libraries', {})
             
             cluster_rows.append({
@@ -706,7 +706,13 @@ def main():
                 'N_Edges_Pct': edges_bench.get('percentile', 50.0),
                 'N_Edges_Mean': edges_bench.get('null_mean', 0.0),
                 'N_Edges_Std': edges_bench.get('null_std', 0.0),
-                'Cluster_Density': cluster['density'],
+                'Average_Edges_per_Gene': cluster.get('avg_edges_per_gene', cluster.get('density', 0)),
+                'Average_Edges_per_Gene_Z': density_bench.get('z_score', 0.0),
+                'Average_Edges_per_Gene_Pct': density_bench.get('percentile', 50.0),
+                'Average_Edges_per_Gene_Mean': density_bench.get('null_mean', 0.0),
+                'Average_Edges_per_Gene_Std': density_bench.get('null_std', 0.0),
+                # Keep old column names for backward compatibility
+                'Cluster_Density': cluster.get('avg_edges_per_gene', cluster.get('density', 0)),
                 'Cluster_Density_Z': density_bench.get('z_score', 0.0),
                 'Cluster_Density_Pct': density_bench.get('percentile', 50.0),
                 'Cluster_Density_Mean': density_bench.get('null_mean', 0.0),

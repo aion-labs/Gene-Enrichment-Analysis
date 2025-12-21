@@ -70,8 +70,13 @@ def get_available_libraries_from_parquet(parquet_dir: Path) -> Set[str]:
             lib_name = 'GO MF'
         elif 'go ' in lib_name.lower():
             lib_name = lib_name.replace('Go ', 'GO ')
+        elif 'kegg legacy' in lib_name.lower() or 'kegg_legacy' in lib_name.lower():
+            lib_name = 'KEGG Legacy'
+        elif 'kegg medicus' in lib_name.lower() or 'kegg_medicus' in lib_name.lower():
+            lib_name = 'KEGG MEDICUS'
         elif 'kegg' in lib_name.lower():
-            lib_name = 'KEGG'
+            # Default to Legacy if just "KEGG" (most common case, and the one with permutation data)
+            lib_name = 'KEGG Legacy'
         available_libraries.add(lib_name)
     
     # If we found libraries from the data, use those (more accurate)
@@ -80,6 +85,59 @@ def get_available_libraries_from_parquet(parquet_dir: Path) -> Set[str]:
     
     logger.info(f"Found {len(available_libraries)} libraries with permutation data: {sorted(available_libraries)}")
     return available_libraries
+
+
+def normalize_library_name(lib_name: str) -> str:
+    """
+    Normalize library name for matching.
+    Handles various formats like "H: Hallmark Gene Sets", "C5: Gene Ontology: Biological Process", etc.
+    
+    Args:
+        lib_name: Library name in various formats
+        
+    Returns:
+        Normalized library name
+    """
+    lib_lower = lib_name.lower().strip()
+    
+    # Map common patterns to standard names
+    if 'hallmark' in lib_lower or lib_lower.startswith('h:'):
+        return 'Hallmark'
+    elif 'reactome' in lib_lower:
+        return 'Reactome'
+    elif 'kegg legacy' in lib_lower or 'kegg_legacy' in lib_lower:
+        return 'KEGG Legacy'
+    elif 'kegg medicus' in lib_lower or 'kegg_medicus' in lib_lower:
+        return 'KEGG MEDICUS'
+    elif 'kegg' in lib_lower:
+        # Default to Legacy if just "KEGG" (most common case, and the one with permutation data)
+        return 'KEGG Legacy'
+    elif 'go bp' in lib_lower or 'biological process' in lib_lower or lib_lower.startswith('c5:') and 'bp' in lib_lower:
+        return 'GO BP'
+    elif 'go cc' in lib_lower or 'cellular component' in lib_lower:
+        return 'GO CC'
+    elif 'go mf' in lib_lower or 'molecular function' in lib_lower:
+        return 'GO MF'
+    elif 'go ' in lib_lower and 'bp' in lib_lower:
+        return 'GO BP'
+    elif 'go ' in lib_lower and 'cc' in lib_lower:
+        return 'GO CC'
+    elif 'go ' in lib_lower and 'mf' in lib_lower:
+        return 'GO MF'
+    
+    # Remove common prefixes
+    lib_clean = lib_lower
+    for prefix in ['c2:', 'c5:', 'h:', 'c3:', 'c4:', 'c6:', 'c7:', 'c8:']:
+        if lib_clean.startswith(prefix):
+            lib_clean = lib_clean[len(prefix):].strip()
+    
+    # Remove common suffixes
+    for suffix in [' gene sets', ' pathways', ' pathway']:
+        if lib_clean.endswith(suffix):
+            lib_clean = lib_clean[:-len(suffix)].strip()
+    
+    # Title case
+    return lib_clean.title()
 
 
 def find_intersection_libraries(
@@ -98,33 +156,32 @@ def find_intersection_libraries(
     """
     available_libraries = get_available_libraries_from_parquet(parquet_dir)
     
-    # Normalize library names for comparison (case-insensitive)
-    available_normalized = {lib.lower().strip() for lib in available_libraries}
-    user_normalized = {lib.lower().strip() for lib in user_selected_libraries}
+    # Normalize available libraries
+    available_normalized = {normalize_library_name(lib): lib for lib in available_libraries}
     
     # Find intersection
     libraries_with_data = []
     libraries_without_data = []
     
     for lib in user_selected_libraries:
-        lib_normalized = lib.lower().strip()
-        # Try exact match first
-        if lib_normalized in available_normalized:
-            # Find the actual name from available libraries
-            for avail_lib in available_libraries:
-                if avail_lib.lower().strip() == lib_normalized:
-                    libraries_with_data.append(avail_lib)
-                    break
-        else:
-            # Try partial match (e.g., "Reactome" vs "C2: CP: Reactome Pathways")
-            matched = False
-            for avail_lib in available_libraries:
-                if lib_normalized in avail_lib.lower() or avail_lib.lower() in lib_normalized:
-                    libraries_with_data.append(avail_lib)
-                    matched = True
-                    break
-            if not matched:
-                libraries_without_data.append(lib)
+        normalized = normalize_library_name(lib)
+        
+        # Try to find match
+        matched = False
+        for norm_key, orig_lib in available_normalized.items():
+            # Check if normalized names match
+            if normalized == norm_key:
+                libraries_with_data.append(orig_lib)
+                matched = True
+                break
+            # Also try direct substring match
+            elif normalized in norm_key.lower() or norm_key.lower() in normalized.lower():
+                libraries_with_data.append(orig_lib)
+                matched = True
+                break
+        
+        if not matched:
+            libraries_without_data.append(lib)
     
     logger.info(f"Libraries with permutation data: {libraries_with_data}")
     if libraries_without_data:
@@ -234,12 +291,12 @@ def compute_null_distribution_from_raw_permutations(
             'largest_cluster_genes',
             'largest_cluster_terms',
             'largest_cluster_edges',
-            'largest_cluster_density',
+            'largest_cluster_avg_edges_per_gene',
             'largest_cluster_libraries',  # Added for library diversity benchmarking
             'largest_component_size',
             'n_connected_components',
             'avg_cluster_size',
-            'avg_cluster_density',
+            'avg_cluster_avg_edges_per_gene',
             'avg_cluster_libraries',  # Added for library diversity benchmarking
             'fraction_in_largest_cluster',
         ]
@@ -385,12 +442,12 @@ def compute_null_distribution_from_raw_permutations(
                 'largest_cluster_genes': largest_cluster['n_genes'],
                 'largest_cluster_terms': largest_cluster['n_terms'],
                 'largest_cluster_edges': largest_cluster['n_edges'],
-                'largest_cluster_density': largest_cluster['density'],
+                'largest_cluster_avg_edges_per_gene': largest_cluster.get('avg_edges_per_gene', largest_cluster.get('density', 0)),
                 'largest_cluster_libraries': largest_cluster.get('n_libraries', 0),
                 'largest_component_size': largest_cluster['size'],
                 'n_connected_components': len(clusters),
                 'avg_cluster_size': np.mean([c['size'] for c in clusters]) if clusters else 0,
-                'avg_cluster_density': np.mean([c['density'] for c in clusters]) if clusters else 0,
+                'avg_cluster_avg_edges_per_gene': np.mean([c.get('avg_edges_per_gene', c.get('density', 0)) for c in clusters]) if clusters else 0,
                 'avg_cluster_libraries': avg_cluster_libraries,
                 'fraction_in_largest_cluster': network_metrics.get('fraction_in_largest_cluster', 0.0),
             })
@@ -401,12 +458,12 @@ def compute_null_distribution_from_raw_permutations(
                 'largest_cluster_genes': 0,
                 'largest_cluster_terms': 0,
                 'largest_cluster_edges': 0,
-                'largest_cluster_density': 0.0,
+                'largest_cluster_avg_edges_per_gene': 0.0,
                 'largest_cluster_libraries': 0,
                 'largest_component_size': 0,
                 'n_connected_components': 0,
                 'avg_cluster_size': 0,
-                'avg_cluster_density': 0.0,
+                'avg_cluster_avg_edges_per_gene': 0.0,
                 'avg_cluster_libraries': 0.0,
                 'fraction_in_largest_cluster': 0.0,
             })
@@ -522,12 +579,12 @@ def compute_null_distribution_from_parquet(
             'largest_cluster_genes',
             'largest_cluster_terms',
             'largest_cluster_edges',
-            'largest_cluster_density',
+            'largest_cluster_avg_edges_per_gene',
             'largest_cluster_libraries',  # Added for library diversity benchmarking
             'largest_component_size',
             'n_connected_components',
             'avg_cluster_size',
-            'avg_cluster_density',
+            'avg_cluster_avg_edges_per_gene',
             'avg_cluster_libraries',  # Added for library diversity benchmarking
             'fraction_in_largest_cluster',
         ]
@@ -598,9 +655,10 @@ def compute_null_distribution_from_parquet(
                 lambda x: get_largest_cluster_metric(x, 'n_edges')
             )
             values = largest_per_perm.values
-        elif metric == 'largest_cluster_density':
+        elif metric == 'largest_cluster_avg_edges_per_gene':
+            # Try new column name first, fallback to 'density' for backward compatibility
             largest_per_perm = df.groupby('filename', group_keys=False).apply(
-                lambda x: get_largest_cluster_metric(x, 'density')
+                lambda x: get_largest_cluster_metric(x, 'avg_edges_per_gene') if 'avg_edges_per_gene' in x.columns else get_largest_cluster_metric(x, 'density')
             )
             values = largest_per_perm.values
         elif metric == 'largest_component_size':
@@ -615,10 +673,14 @@ def compute_null_distribution_from_parquet(
         elif metric == 'avg_cluster_size':
             avg_per_perm = df.groupby('filename')['cluster_size'].mean()
             values = avg_per_perm.values
-        elif metric == 'avg_cluster_density':
-            avg_per_perm = df.groupby('filename')['density'].mean()
+        elif metric == 'avg_cluster_avg_edges_per_gene':
+            # Try new column name first, fallback to 'density' for backward compatibility
+            if 'avg_edges_per_gene' in df.columns:
+                avg_per_perm = df.groupby('filename')['avg_edges_per_gene'].mean()
+            else:
+                avg_per_perm = df.groupby('filename')['density'].mean()
             values = avg_per_perm.values
-        elif metric == 'weighted_avg_cluster_density':
+        elif metric == 'weighted_avg_cluster_avg_edges_per_gene':
             # Weighted by cluster size
             def weighted_density(group):
                 if len(group) == 0:

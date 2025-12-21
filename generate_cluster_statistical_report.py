@@ -96,7 +96,7 @@ def generate_cluster_report(
         lines.append(f"  Number of Genes:     {int(row['N_Genes'])}")
         lines.append(f"  Number of Terms:     {int(row['N_Terms'])}")
         lines.append(f"  Number of Edges:     {int(row['N_Edges'])}")
-        lines.append(f"  Cluster Density:     {row['Cluster_Density']:.4f}")
+        lines.append(f"  Average Edges per Gene:     {row.get('Average_Edges_per_Gene', row.get('Cluster_Density', 0)):.4f}")
         lines.append(f"  Number of Libraries: {int(row['N_Libraries'])}")
         lines.append(f"  Libraries:           {row['Libraries']}")
         lines.append("")

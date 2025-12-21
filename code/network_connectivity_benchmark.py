@@ -127,12 +127,12 @@ class NetworkConnectivityAnalyzer:
                 "largest_cluster_genes": 0,
                 "largest_cluster_terms": 0,
                 "largest_cluster_edges": 0,
-                "largest_cluster_density": 0.0,
+                "largest_cluster_avg_edges_per_gene": 0.0,
                 "avg_cluster_size": 0.0,
                 "median_cluster_size": 0.0,
                 "cluster_size_std": 0.0,
-                "avg_cluster_density": 0.0,
-                "weighted_avg_cluster_density": 0.0,
+                "avg_cluster_avg_edges_per_gene": 0.0,
+                "weighted_avg_cluster_avg_edges_per_gene": 0.0,
                 "fraction_in_largest_cluster": 0.0,
                 "fraction_edges_in_largest_cluster": 0.0,
                 "clustering_coefficient": 0.0,
@@ -164,7 +164,7 @@ class NetworkConnectivityAnalyzer:
         # Cluster-based metrics
         if clusters:
             cluster_sizes = [c['size'] for c in clusters]
-            cluster_densities = [c['density'] for c in clusters]
+            cluster_densities = [c.get('avg_edges_per_gene', c.get('density', 0)) for c in clusters]
             cluster_libraries = [c['n_libraries'] for c in clusters]
             
             # Find largest cluster
@@ -175,12 +175,12 @@ class NetworkConnectivityAnalyzer:
             median_cluster_size = np.median(cluster_sizes) if cluster_sizes else 0.0
             cluster_size_std = np.std(cluster_sizes) if cluster_sizes else 0.0
             
-            # Cluster density metrics
-            avg_cluster_density = np.mean(cluster_densities) if cluster_densities else 0.0
+            # Average edges per gene metrics
+            avg_cluster_avg_edges_per_gene = np.mean(cluster_densities) if cluster_densities else 0.0
             # Weighted average (by cluster size)
             total_cluster_size = sum(cluster_sizes)
-            weighted_avg_cluster_density = (
-                sum(c['density'] * c['size'] for c in clusters) / total_cluster_size
+            weighted_avg_cluster_avg_edges_per_gene = (
+                sum(c.get('avg_edges_per_gene', c.get('density', 0)) * c['size'] for c in clusters) / total_cluster_size
                 if total_cluster_size > 0 else 0.0
             )
             
@@ -188,7 +188,7 @@ class NetworkConnectivityAnalyzer:
             largest_cluster_genes = largest_cluster['n_genes']
             largest_cluster_terms = largest_cluster['n_terms']
             largest_cluster_edges = largest_cluster['n_edges']
-            largest_cluster_density = largest_cluster['density']
+            largest_cluster_avg_edges_per_gene = largest_cluster.get('avg_edges_per_gene', largest_cluster.get('density', 0))
             
             # Library diversity metrics (only if requested and libraries are tracked)
             if include_library_diversity and self.term_to_library:
@@ -208,12 +208,12 @@ class NetworkConnectivityAnalyzer:
             avg_cluster_size = 0.0
             median_cluster_size = 0.0
             cluster_size_std = 0.0
-            avg_cluster_density = 0.0
-            weighted_avg_cluster_density = 0.0
+            avg_cluster_avg_edges_per_gene = 0.0
+            weighted_avg_cluster_avg_edges_per_gene = 0.0
             largest_cluster_genes = 0
             largest_cluster_terms = 0
             largest_cluster_edges = 0
-            largest_cluster_density = 0.0
+            largest_cluster_avg_edges_per_gene = 0.0
             fraction_in_largest_cluster = 0.0
             fraction_edges_in_largest_cluster = 0.0
             hub_genes_count = 0
@@ -254,12 +254,12 @@ class NetworkConnectivityAnalyzer:
             "largest_cluster_genes": largest_cluster_genes,
             "largest_cluster_terms": largest_cluster_terms,
             "largest_cluster_edges": largest_cluster_edges,
-            "largest_cluster_density": largest_cluster_density,
+            "largest_cluster_avg_edges_per_gene": largest_cluster_avg_edges_per_gene,
             "avg_cluster_size": avg_cluster_size,
             "median_cluster_size": median_cluster_size,
             "cluster_size_std": cluster_size_std,
-            "avg_cluster_density": avg_cluster_density,
-            "weighted_avg_cluster_density": weighted_avg_cluster_density,
+            "avg_cluster_avg_edges_per_gene": avg_cluster_avg_edges_per_gene,
+            "weighted_avg_cluster_avg_edges_per_gene": weighted_avg_cluster_avg_edges_per_gene,
             "fraction_in_largest_cluster": fraction_in_largest_cluster,
             "fraction_edges_in_largest_cluster": fraction_edges_in_largest_cluster,
             
@@ -330,10 +330,15 @@ class NetworkConnectivityAnalyzer:
                             cluster_libraries.add(self.term_to_library[term])
                     n_libraries = len(cluster_libraries)
                     
-                    # Density calculation: In iGEA, each gene can connect to at most 1 term per library
-                    # So max possible edges = cluster_genes × n_libraries_in_cluster
-                    max_possible_edges = len(cluster_genes) * n_libraries if n_libraries > 0 else 0
-                    cluster_density = cluster_edges / max_possible_edges if max_possible_edges > 0 else 0.0
+                    # Average edges per gene: Average gene connectivity
+                    # Formula: edges / genes
+                    # This represents: average number of connections per gene
+                    # Example: If a cluster has 10 genes and 15 edges:
+                    #   avg_edges_per_gene = 15/10 = 1.5 (each gene connects to 1.5 terms on average)
+                    if len(cluster_genes) > 0:
+                        avg_edges_per_gene = cluster_edges / len(cluster_genes)
+                    else:
+                        avg_edges_per_gene = 0.0
                     
                     components.append({
                         'genes': cluster_genes,
@@ -342,7 +347,8 @@ class NetworkConnectivityAnalyzer:
                         'n_genes': len(cluster_genes),
                         'n_terms': len(cluster_terms),
                         'n_edges': cluster_edges,
-                        'density': cluster_density,
+                        'density': avg_edges_per_gene,  # Keep 'density' key for backward compatibility
+                        'avg_edges_per_gene': avg_edges_per_gene,  # New key name
                         'n_libraries': n_libraries,
                     })
         
@@ -523,15 +529,15 @@ def build_null_distribution(
             'largest_cluster_genes',           # Number of genes in largest cluster
             'largest_cluster_terms',           # Number of terms in largest cluster
             'largest_cluster_edges',           # Number of edges in largest cluster
-            'largest_cluster_density',         # Density within largest cluster
+            'largest_cluster_avg_edges_per_gene',  # Average edges per gene in largest cluster
             'largest_component_size',          # Total nodes in largest cluster
             'fraction_in_largest_cluster',     # Coverage of largest cluster
             'fraction_edges_in_largest_cluster', # Edge coverage in largest cluster
             # TIER 2: Cluster distribution
             'n_connected_components',         # Number of clusters (lower is better)
             'avg_cluster_size',                # Average cluster size
-            'weighted_avg_cluster_density',   # Size-weighted average density
-            'avg_cluster_density',             # Average cluster density
+            'weighted_avg_cluster_avg_edges_per_gene',  # Size-weighted average edges per gene
+            'avg_cluster_avg_edges_per_gene',  # Average edges per gene across clusters
             # TIER 3: Gene connectivity (within clusters)
             'hub_genes_count',                 # Genes connecting ≥3 terms
             'avg_connections_per_gene',         # Average terms per gene
@@ -655,15 +661,15 @@ def benchmark_real_results(
         'largest_cluster_genes',           # Number of genes in largest cluster
         'largest_cluster_terms',           # Number of terms in largest cluster
         'largest_cluster_edges',           # Number of edges in largest cluster
-        'largest_cluster_density',         # Density within largest cluster
+        'largest_cluster_avg_edges_per_gene',  # Average edges per gene in largest cluster
         'largest_component_size',          # Total nodes in largest cluster
         'fraction_in_largest_cluster',     # Coverage of largest cluster
         'fraction_edges_in_largest_cluster', # Edge coverage in largest cluster
         # TIER 2: Cluster distribution
         'n_connected_components',         # Number of clusters (lower is better)
         'avg_cluster_size',                # Average cluster size
-        'weighted_avg_cluster_density',   # Size-weighted average density
-        'avg_cluster_density',             # Average cluster density
+        'weighted_avg_cluster_avg_edges_per_gene',  # Size-weighted average edges per gene
+        'avg_cluster_avg_edges_per_gene',  # Average edges per gene across clusters
         # TIER 3: Gene connectivity (within clusters)
         'hub_genes_count',                 # Genes connecting ≥3 terms
         'avg_connections_per_gene',         # Average terms per gene
@@ -760,9 +766,9 @@ def _interpolate_null_distribution(
         'avg_connections_per_gene', 'gene_centrality_max', 'hub_genes_count',
         'n_connected_components', 'largest_component_size',
         'largest_cluster_genes', 'largest_cluster_terms', 'largest_cluster_edges',
-        'largest_cluster_density',
-        'avg_cluster_size', 'avg_cluster_density',
-        'weighted_avg_cluster_density',
+        'largest_cluster_avg_edges_per_gene',
+        'avg_cluster_size', 'avg_cluster_avg_edges_per_gene',
+        'weighted_avg_cluster_avg_edges_per_gene',
         'fraction_in_largest_cluster',
         'fraction_edges_in_largest_cluster', 'clustering_coefficient',
         # Optional library diversity metrics
@@ -842,7 +848,7 @@ def benchmark_cluster(
         'cluster_genes': cluster['n_genes'],
         'cluster_terms': cluster['n_terms'],
         'cluster_edges': cluster['n_edges'],
-        'cluster_density': cluster['density'],
+        'cluster_avg_edges_per_gene': cluster.get('avg_edges_per_gene', cluster.get('density', 0)),
         'cluster_libraries': cluster.get('n_libraries', 0),
     }
     
@@ -858,7 +864,7 @@ def benchmark_cluster(
         'cluster_genes': 'largest_cluster_genes',  # May not be in old null distributions
         'cluster_terms': 'largest_cluster_terms',  # May not be in old null distributions
         'cluster_edges': 'largest_cluster_edges',  # May not be in old null distributions
-        'cluster_density': 'largest_cluster_density',  # May not be in old null distributions
+        'cluster_avg_edges_per_gene': 'largest_cluster_avg_edges_per_gene',  # May not be in old null distributions
         'cluster_libraries': 'largest_cluster_libraries',  # May not be in old null distributions
     }
     

@@ -2,32 +2,39 @@
 
 ## Overview
 
-Density is computed **per cluster** (connected component), not at the network level. This is because in iGEA networks, not all gene-term connections are possible - each term has a fixed gene set from its library.
+Density is computed **per cluster** (connected component) as **average gene connectivity**. This is a simple and intuitive measure: the average number of connections per gene.
 
 ## Formula
 
 For each cluster:
 
 ```
-cluster_density = cluster_edges / max_possible_edges
+cluster_density = cluster_edges / n_genes
 ```
 
 Where:
 - **`cluster_edges`**: Actual number of gene-term connections within the cluster
-- **`max_possible_edges`**: Maximum possible edges in the cluster
+- **`n_genes`**: Number of unique genes in the cluster
 
-## Maximum Possible Edges Calculation
+## Why This Formula?
 
-The key insight is that **in iGEA, each gene can connect to at most 1 term per library**.
+### Simple and Intuitive
 
-Therefore:
-```
-max_possible_edges = cluster_genes × n_libraries_in_cluster
-```
+This formula represents the **average number of connections per gene** in the cluster. It's:
+- **Simple**: Easy to understand and interpret
+- **Intuitive**: Directly measures how well-connected genes are
+- **Comparable**: Can be compared across clusters (though larger clusters may naturally have different connectivity patterns)
 
-Where:
-- **`cluster_genes`**: Number of unique genes in the cluster
-- **`n_libraries_in_cluster`**: Number of different libraries represented in the cluster
+### Example
+
+If a cluster has:
+- 10 genes
+- 15 edges total
+
+Then:
+- Density = 15 / 10 = 1.5
+
+This means: On average, each gene connects to 1.5 terms.
 
 ## Why This Formula?
 
@@ -42,11 +49,12 @@ In iGEA's iterative enrichment process:
 
 If a cluster has:
 - 10 genes
-- 3 libraries (Reactome, KEGG, GO BP)
-- Maximum possible edges = 10 × 3 = 30
+- 15 edges total
 
-If the cluster actually has 15 edges, then:
-- Density = 15 / 30 = 0.5 (50% of maximum possible connections)
+Then:
+- Density = 15 / 10 = 1.5
+
+This means: On average, each gene connects to 1.5 terms.
 
 ## Implementation Details
 
@@ -59,16 +67,11 @@ cluster_edges = sum(
     for g in cluster_genes
 )
 
-# Count unique libraries in this cluster
-cluster_libraries = set()
-for term in cluster_terms:
-    if term in self.term_to_library:
-        cluster_libraries.add(self.term_to_library[term])
-n_libraries = len(cluster_libraries)
-
-# Density calculation
-max_possible_edges = len(cluster_genes) * n_libraries if n_libraries > 0 else 0
-cluster_density = cluster_edges / max_possible_edges if max_possible_edges > 0 else 0.0
+# Density calculation: Average gene connectivity
+if len(cluster_genes) > 0:
+    cluster_density = cluster_edges / len(cluster_genes)
+else:
+    cluster_density = 0.0
 ```
 
 ## Density Metrics Used
@@ -79,9 +82,17 @@ cluster_density = cluster_edges / max_possible_edges if max_possible_edges > 0 e
 
 ## Interpretation
 
-- **Density = 1.0**: Every gene is connected to a term from every library in the cluster (maximum connectivity)
-- **Density = 0.5**: Half of the maximum possible connections exist
+- **Density = 1.0**: On average, each gene connects to 1 term
+- **Density = 2.0**: On average, each gene connects to 2 terms
+- **Density = 0.5**: On average, each gene connects to 0.5 terms (some genes have connections, some don't)
 - **Density = 0.0**: No connections (shouldn't happen if it's a valid cluster)
+
+## Advantages of This Approach
+
+1. **Simple**: Easy to understand and compute
+2. **Intuitive**: Directly measures average gene connectivity
+3. **Interpretable**: Clear meaning (average connections per gene)
+4. **Comparable**: Can be compared across clusters (though cluster size may affect connectivity patterns)
 
 ## Why Not Global Network Density?
 

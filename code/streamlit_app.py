@@ -8,6 +8,7 @@ from typing import Dict, List, Set
 from datetime import datetime
 
 import streamlit as st
+import pandas as pd
 from PIL import Image
 from streamlit import session_state as state
 
@@ -29,6 +30,11 @@ from ui.rendering import (
     render_ora_igea_comparison,
 )
 from ui.utils import download_link, download_file_link, update_aliases
+from ui.benchmarking import (
+    compute_benchmark_for_streamlit,
+    extract_benchmark_table_data,
+    generate_statistical_report_text
+)
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -1436,7 +1442,16 @@ Results include ranked tables, bar charts, and network graphs."""
             progress_bar.empty()
             status_text.empty()
             
-
+            # Reset benchmarking when new iGEA results are computed
+            # This ensures benchmarking recomputes when iGEA is rerun with different parameters
+            if 'benchmark_computed' in state:
+                state.benchmark_computed = False
+                state.benchmark_data = None
+                state.benchmark_report_text = None
+                state.libraries_with_data = []
+                state.libraries_without_data = []
+                if 'last_enrich_hash' in state:
+                    del state.last_enrich_hash
             
             state.iter_ready = True
 
@@ -1638,6 +1653,152 @@ Results include ranked tables, bar charts, and network graphs."""
                     render_network(state.last_merged_dot)
         elif state.network_generated and state.selected_dot_paths:
             render_network(state.last_merged_dot)
+        
+        # Statistical Benchmarking Section
+        st.markdown("---")
+        st.header("📊 Statistical Benchmarking")
+        st.caption("Compare your network connectivity against random gene lists of similar size")
+        
+        # Check if we have results to benchmark
+        if state.iter_enrich and len(state.iter_enrich) > 0:
+            # Check if benchmarking needs to be computed or recomputed
+            gene_list_size = state.gene_set.size if state.gene_set else 0
+            p_threshold = state.iter_p_threshold
+            
+            # Get a hash of the current iter_enrich to detect if it changed
+            # This ensures benchmarking recomputes when iGEA is rerun
+            current_enrich_hash = hash(tuple(sorted(state.iter_enrich.keys()))) if state.iter_enrich else 0
+            
+            # Check if we need to recompute (e.g., if gene list size, p-threshold, or iGEA results changed)
+            needs_computation = (
+                'benchmark_computed' not in state or
+                not state.benchmark_computed or
+                state.get('last_benchmark_gene_list_size') != gene_list_size or
+                state.get('last_benchmark_p_threshold') != p_threshold or
+                state.get('last_enrich_hash') != current_enrich_hash
+            )
+            
+            if needs_computation:
+                with st.spinner("Computing statistical benchmark... This may take a minute."):
+                    try:
+                        # Set up paths
+                        parquet_dir = ROOT / "results" / "permutation_cluster_statistics_parquet"
+                        
+                        # Compute benchmark
+                        null_dist, cluster_benchmarks, libs_with_data, libs_without_data, actual_size_used = compute_benchmark_for_streamlit(
+                            state.iter_enrich,
+                            gene_list_size,
+                            p_threshold,
+                            parquet_dir
+                        )
+                        
+                        if null_dist and cluster_benchmarks:
+                            state.benchmark_computed = True
+                            state.benchmark_data = {
+                                'null_distribution': null_dist,
+                                'cluster_benchmarks': cluster_benchmarks
+                            }
+                            state.libraries_with_data = libs_with_data
+                            state.libraries_without_data = libs_without_data
+                            state.actual_size_used = actual_size_used
+                            state.last_benchmark_gene_list_size = gene_list_size
+                            state.last_benchmark_p_threshold = p_threshold
+                            state.last_enrich_hash = current_enrich_hash
+                            
+                            # Generate report text
+                            gene_list_name = state.gene_set_name if hasattr(state, 'gene_set_name') and state.gene_set_name else "Gene List"
+                            state.benchmark_report_text = generate_statistical_report_text(
+                                cluster_benchmarks,
+                                gene_list_name,
+                                libs_with_data,
+                                libs_without_data
+                            )
+                        else:
+                            if not libs_with_data:
+                                st.warning("⚠️ No libraries with permutation data available for benchmarking. Please ensure Parquet files exist in the results directory.")
+                            else:
+                                st.warning("⚠️ Failed to compute benchmark. Please check the logs for details.")
+                    except Exception as e:
+                        logger.error(f"Error computing benchmark: {e}", exc_info=True)
+                        st.error(f"Error computing benchmark: {str(e)}")
+            
+            # Display benchmark results if computed
+            if state.benchmark_computed and state.benchmark_data:
+                cluster_benchmarks = state.benchmark_data['cluster_benchmarks']
+                
+                if cluster_benchmarks:
+                    # Gene list size information
+                    actual_size = state.get('actual_size_used', gene_list_size)
+                    size_info = f"**Gene list size:** {gene_list_size} genes"
+                    if actual_size != gene_list_size:
+                        size_info += f" (using permutation data for size {actual_size})"
+                    else:
+                        size_info += f" (exact match with permutation data)"
+                    st.info(size_info)
+                    
+                    # Library information - improved message
+                    if state.libraries_with_data:
+                        libs_msg = f"**Libraries used for statistical benchmarking (based on permutation data availability):** {', '.join(state.libraries_with_data)} ({len(state.libraries_with_data)} librar"
+                        if len(state.libraries_with_data) != 1:
+                            libs_msg += "ies"
+                        else:
+                            libs_msg += "y"
+                        libs_msg += ")"
+                        st.info(libs_msg)
+                    
+                    if state.libraries_without_data:
+                        # Check if excluded libraries actually have data in the cluster
+                        excluded_msg = f"**Note:** The following libraries were included in your enrichment analysis but excluded from statistical benchmarking (no permutation data available): {', '.join(state.libraries_without_data)}"
+                        st.warning(excluded_msg)
+                    
+                    # Extract table data for largest cluster
+                    table_data = extract_benchmark_table_data(cluster_benchmarks)
+                    
+                    if table_data:
+                        st.subheader("Statistical Benchmarks vs Random Gene Lists")
+                        st.caption("Comparison of largest cluster metrics against null distribution from random gene lists")
+                        
+                        # Create DataFrame for display
+                        df = pd.DataFrame(table_data)
+                        
+                        # Display table
+                        st.dataframe(
+                            df,
+                            use_container_width=True,
+                            hide_index=True
+                        )
+                        
+                        # Interpretation guide
+                        with st.expander("📖 How to interpret these results"):
+                            st.markdown("""
+                            **Z-score and Percentile:**
+                            - **Z-score > 2.0 and Percentile > 95%**: ✓✓ SIGNIFICANTLY BETTER (top 5%)
+                            - **Z-score > 1.0 and Percentile > 84%**: ✓ BETTER (top 16%)
+                            - **Z-score ~ 0.0 and Percentile ~ 50%**: ~ SIMILAR to random
+                            - **Z-score < -1.0 and Percentile < 16%**: ✗ WORSE than random
+                            
+                            **What this means:**
+                            - Higher values (genes, terms, edges, density) indicate better network connectivity
+                            - Your gene list is compared against thousands of random gene lists of similar size
+                            - Significant results suggest biological coherence in your gene list
+                            """)
+                        
+                        # Download link for full report
+                        if state.benchmark_report_text:
+                            st.markdown("---")
+                            st.markdown("**📄 Download Full Statistical Report:**")
+                            st.download_button(
+                                label="Download Statistical Report (Text)",
+                                data=state.benchmark_report_text,
+                                file_name=f"{state.gene_set_name if hasattr(state, 'gene_set_name') and state.gene_set_name else 'statistical_report'}.txt",
+                                mime="text/plain"
+                            )
+                else:
+                    st.warning("No clusters found in the network. Benchmarking requires at least one cluster.")
+            elif state.benchmark_computed:
+                st.warning("Benchmark computation completed but no cluster data available.")
+        else:
+            st.info("Run iterative enrichment analysis first to enable statistical benchmarking.")
 
     logger.info("Finishing the Streamlit app")
 
