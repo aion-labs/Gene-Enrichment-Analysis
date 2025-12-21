@@ -139,15 +139,39 @@ def load_cluster_stats_for_size(
     available_sizes: List[int]
 ) -> pd.DataFrame:
     """Load cluster statistics for the nearest gene list size."""
-    # Find nearest size
-    nearest = min(available_sizes, key=lambda x: abs(x - gene_list_size))
+    # Round up to next increment of 50, cap at 1000
+    original_size = gene_list_size
+    if gene_list_size not in available_sizes:
+        if gene_list_size > 1000:
+            gene_list_size = 1000
+            logger.warning(
+                f"Gene list size {original_size} exceeds maximum permutation data size (1000). "
+                f"Using size 1000 for null distribution comparison. "
+                f"Note: Permutation data is only available up to size 1000."
+            )
+        else:
+            # Round up to next multiple of 50
+            gene_list_size = ((gene_list_size + 49) // 50) * 50
+            logger.debug(
+                f"Gene list size {original_size} not found, rounding up to nearest increment of 50: {gene_list_size}"
+            )
+        
+        # Verify the rounded size exists
+        if gene_list_size not in available_sizes:
+            # Fallback: find nearest available size
+            fallback_size = min(available_sizes, key=lambda x: abs(x - gene_list_size))
+            logger.warning(
+                f"Rounded size {gene_list_size} not found in Parquet data. "
+                f"Using nearest available size: {fallback_size}"
+            )
+            gene_list_size = fallback_size
     
-    parquet_file = parquet_dir / f"cluster_stats_size_{nearest}.parquet"
+    parquet_file = parquet_dir / f"cluster_stats_size_{gene_list_size}.parquet"
     if not parquet_file.exists():
         raise FileNotFoundError(f"Parquet file not found: {parquet_file}")
     
     df = pd.read_parquet(parquet_file)
-    logger.debug(f"Loaded {len(df):,} clusters from size {nearest} (target: {gene_list_size})")
+    logger.debug(f"Loaded {len(df):,} clusters from size {gene_list_size} (target: {original_size})")
     return df
 
 
@@ -179,40 +203,332 @@ def filter_by_libraries(
     return filtered_df
 
 
+def compute_null_distribution_from_raw_permutations(
+    merged_permutation_file: Path,
+    gene_list_size: int,
+    selected_libraries: List[str],
+    user_p_threshold: float,
+    metrics: List[str] = None
+) -> Dict[str, Dict[str, float]]:
+    """
+    Compute null distribution from raw permutation results, filtering by user's p-value threshold.
+    
+    Args:
+        merged_permutation_file: Path to merged permutation results TSV file
+        gene_list_size: Target gene list size
+        selected_libraries: Libraries to filter by
+        user_p_threshold: User's p-value threshold (must be <= 0.05)
+        metrics: List of metric names to compute
+        
+    Returns:
+        Dictionary: {gene_list_size: {metric_name: {'mean': float, 'std': float, ...}}}
+    """
+    from code.network_connectivity_benchmark import NetworkConnectivityAnalyzer
+    
+    if user_p_threshold > 0.05:
+        raise ValueError(f"User p-value threshold ({user_p_threshold}) exceeds 0.05. "
+                        f"Statistical benchmarking is only available for p-value thresholds <= 0.05.")
+    
+    if metrics is None:
+        metrics = [
+            'largest_cluster_genes',
+            'largest_cluster_terms',
+            'largest_cluster_edges',
+            'largest_cluster_density',
+            'largest_cluster_libraries',  # Added for library diversity benchmarking
+            'largest_component_size',
+            'n_connected_components',
+            'avg_cluster_size',
+            'avg_cluster_density',
+            'avg_cluster_libraries',  # Added for library diversity benchmarking
+            'fraction_in_largest_cluster',
+        ]
+    
+    logger.info(f"Loading raw permutation results from {merged_permutation_file}")
+    df = pd.read_csv(merged_permutation_file, sep='\t')
+    logger.info(f"Loaded {len(df):,} permutation result rows")
+    
+    # Find available gene list sizes
+    available_sizes = sorted(df['gene_list_size'].unique())
+    logger.info(f"Available gene list sizes in permutation data: {available_sizes}")
+    
+    # Find matching size: round UP to next increment of 50, cap at 1000
+    original_size = gene_list_size
+    if gene_list_size not in available_sizes:
+        # Round up to next increment of 50
+        if gene_list_size > 1000:
+            # Cap at 1000 and warn
+            gene_list_size = 1000
+            logger.warning(
+                f"Gene list size {original_size} exceeds maximum permutation data size (1000). "
+                f"Using size 1000 for null distribution comparison. "
+                f"Note: Permutation data is only available up to size 1000."
+            )
+        else:
+            # Round up to next multiple of 50
+            gene_list_size = ((gene_list_size + 49) // 50) * 50
+            size_diff = gene_list_size - original_size
+            logger.info(
+                f"Gene list size {original_size} not found, rounding up to nearest increment of 50: "
+                f"{gene_list_size} (difference: {size_diff})"
+            )
+        
+        # Verify the rounded size exists in available sizes
+        if gene_list_size not in available_sizes:
+            # Fallback: find nearest available size
+            nearest_size = min(available_sizes, key=lambda x: abs(x - gene_list_size))
+            logger.warning(
+                f"Rounded size {gene_list_size} not found in permutation data. "
+                f"Using nearest available size: {nearest_size}"
+            )
+            gene_list_size = nearest_size
+    
+    # Filter by gene list size (now using nearest)
+    df = df[df['gene_list_size'] == gene_list_size].copy()
+    logger.info(f"Filtered to {len(df):,} rows for gene list size {gene_list_size}")
+    
+    # Filter by p-value threshold
+    # Handle different possible column names for p-value
+    p_value_col = None
+    for col in ['iteration p-value', 'p-value', 'p_value', 'P-value', 'P_value', 'Full list p-value']:
+        if col in df.columns:
+            p_value_col = col
+            break
+    
+    if p_value_col is None:
+        raise ValueError("Could not find p-value column in permutation results. "
+                        f"Available columns: {list(df.columns)}")
+    
+    # Convert p-value to float and filter
+    df[p_value_col] = pd.to_numeric(df[p_value_col], errors='coerce')
+    df = df[df[p_value_col] <= user_p_threshold].copy()
+    logger.info(f"Filtered to {len(df):,} rows with p-value <= {user_p_threshold}")
+    
+    # Filter by selected libraries
+    if selected_libraries:
+        df = df[df['Library'].isin(selected_libraries)].copy()
+        logger.info(f"Filtered to {len(df):,} rows for selected libraries")
+    
+    # Get unique permutations
+    unique_permutations = df.groupby('filename').size().reset_index()
+    n_permutations = len(unique_permutations)
+    logger.info(f"Processing {n_permutations} permutations")
+    
+    if n_permutations == 0:
+        error_msg = (
+            f"No permutation data available after filtering "
+            f"(size={gene_list_size}, p<={user_p_threshold}, libraries={selected_libraries}). "
+            f"This may occur if the p-value threshold is too strict. "
+            f"Permutation data was generated with p-value threshold 0.05, so very few results may pass stricter thresholds."
+        )
+        raise ValueError(error_msg)
+    
+    # Initialize analyzer
+    analyzer = NetworkConnectivityAnalyzer()
+    
+    # Process each permutation and compute cluster statistics
+    all_cluster_stats = []
+    for idx, (_, perm_info) in enumerate(unique_permutations.iterrows(), 1):
+        filename = perm_info['filename']
+        
+        # Get data for this permutation
+        perm_data = df[df['filename'] == filename]
+        
+        # Reset analyzer
+        analyzer.reset()
+        
+        # Convert to iGEA results format
+        results = []
+        for _, row in perm_data.iterrows():
+            # Try multiple possible column names for genes removed
+            genes_removed = None
+            for col in ['Genes removed for next iteration', 'Genes', 'genes_removed']:
+                if col in row.index:
+                    genes_removed = row.get(col, '')
+                    break
+            
+            if genes_removed is None:
+                genes_list = []
+            elif isinstance(genes_removed, str):
+                genes_list = [g.strip() for g in genes_removed.split(',') if g.strip()]
+            elif isinstance(genes_removed, list):
+                genes_list = genes_removed
+            else:
+                genes_list = []
+            
+            results.append({
+                'Term': row.get('Term', ''),
+                'Iteration': row.get('Iteration', 1),
+                'Library': row.get('Library', ''),
+                'Genes removed for next iteration': genes_list,
+            })
+        
+        # Add to analyzer
+        analyzer.add_igea_results(results)
+        
+        # Compute network-wide metrics (needed for fraction_in_largest_cluster)
+        # This must be done before getting clusters to ensure metrics are available
+        network_metrics = analyzer.compute_metrics(include_library_diversity=True)
+        
+        # Get clusters
+        clusters = analyzer.get_clusters()
+        
+        # Store cluster statistics for this permutation
+        if clusters:
+            largest_cluster = clusters[0]  # Already sorted by size
+            # Compute average cluster libraries
+            cluster_libraries = [c.get('n_libraries', 0) for c in clusters]
+            avg_cluster_libraries = np.mean(cluster_libraries) if cluster_libraries else 0.0
+            
+            all_cluster_stats.append({
+                'filename': filename,
+                'largest_cluster_genes': largest_cluster['n_genes'],
+                'largest_cluster_terms': largest_cluster['n_terms'],
+                'largest_cluster_edges': largest_cluster['n_edges'],
+                'largest_cluster_density': largest_cluster['density'],
+                'largest_cluster_libraries': largest_cluster.get('n_libraries', 0),
+                'largest_component_size': largest_cluster['size'],
+                'n_connected_components': len(clusters),
+                'avg_cluster_size': np.mean([c['size'] for c in clusters]) if clusters else 0,
+                'avg_cluster_density': np.mean([c['density'] for c in clusters]) if clusters else 0,
+                'avg_cluster_libraries': avg_cluster_libraries,
+                'fraction_in_largest_cluster': network_metrics.get('fraction_in_largest_cluster', 0.0),
+            })
+        else:
+            # No clusters - all metrics are 0
+            all_cluster_stats.append({
+                'filename': filename,
+                'largest_cluster_genes': 0,
+                'largest_cluster_terms': 0,
+                'largest_cluster_edges': 0,
+                'largest_cluster_density': 0.0,
+                'largest_cluster_libraries': 0,
+                'largest_component_size': 0,
+                'n_connected_components': 0,
+                'avg_cluster_size': 0,
+                'avg_cluster_density': 0.0,
+                'avg_cluster_libraries': 0.0,
+                'fraction_in_largest_cluster': 0.0,
+            })
+        
+        if idx % 100 == 0:
+            logger.info(f"Processed {idx}/{n_permutations} permutations...")
+    
+    # Convert to DataFrame for easier statistics computation
+    stats_df = pd.DataFrame(all_cluster_stats)
+    
+    # Compute statistics for each metric
+    null_stats = {}
+    for metric in metrics:
+        if metric in stats_df.columns:
+            values = stats_df[metric].dropna().values
+            if len(values) > 0:
+                null_stats[metric] = {
+                    'mean': float(np.mean(values)),
+                    'std': float(np.std(values)),
+                    'n': int(len(values)),
+                    'min': float(np.min(values)),
+                    'max': float(np.max(values)),
+                    'median': float(np.median(values))
+                }
+            else:
+                logger.warning(f"No data for metric '{metric}'")
+        else:
+            logger.warning(f"Metric '{metric}' not found in cluster statistics")
+    
+    # The actual size used (may have been rounded)
+    # Use the rounded gene_list_size, not the original
+    actual_size = gene_list_size  # This is the rounded size after processing
+    return null_stats, actual_size  # Return both stats and the actual size used
+
+
 def compute_null_distribution_from_parquet(
     parquet_dir: Path,
     gene_list_size: int,
     selected_libraries: List[str],
-    metrics: List[str] = None
+    metrics: List[str] = None,
+    user_p_threshold: float = None,
+    merged_permutation_file: Path = None
 ) -> Dict[str, Dict[str, float]]:
     """
     Compute null distribution statistics from Parquet cluster statistics.
+    
+    If user_p_threshold is provided and <= 0.05, filters raw permutation results by p-value.
+    Otherwise, uses pre-computed Parquet cluster statistics (generated with p-value 0.05).
     
     Args:
         parquet_dir: Directory containing Parquet files
         gene_list_size: Target gene list size
         selected_libraries: Libraries to filter by
         metrics: List of metric names to compute (default: all cluster metrics)
+        user_p_threshold: User's p-value threshold (if provided and <= 0.05, uses raw permutation filtering)
+        merged_permutation_file: Path to merged permutation results TSV (required if user_p_threshold is provided)
         
     Returns:
         Dictionary: {gene_list_size: {metric_name: {'mean': float, 'std': float, ...}}}
     """
+    # Check if user p-value threshold is provided and valid
+    if user_p_threshold is not None:
+        if user_p_threshold > 0.05:
+            raise ValueError(
+                f"User p-value threshold ({user_p_threshold}) exceeds 0.05. "
+                f"Statistical benchmarking is only available for p-value thresholds <= 0.05. "
+                f"Permutation data was generated with p-value threshold 0.05."
+            )
+        
+        # If user threshold is exactly 0.05, use Parquet (faster, pre-computed)
+        if user_p_threshold == 0.05:
+            logger.info("User p-value threshold is 0.05, using pre-computed Parquet cluster statistics")
+            # Continue to Parquet processing below
+        else:
+            # User threshold < 0.05, need to filter raw permutation results
+            if merged_permutation_file is None:
+                # Try to find merged permutation file
+                project_root = parquet_dir.parent.parent
+                possible_paths = [
+                    project_root / "results" / "permutation_results" / "merged_permutation_results.tsv",
+                    project_root / "archive" / "permutation_analysis" / "results" / "permutation_results" / "merged_permutation_results.tsv",
+                    project_root / "merged_permutation_results.tsv",
+                    parquet_dir.parent / "merged_permutation_results.tsv",
+                ]
+                
+                merged_permutation_file = None
+                for path in possible_paths:
+                    if path.exists():
+                        merged_permutation_file = path
+                        logger.info(f"Found merged permutation file: {merged_permutation_file}")
+                        break
+                
+                if merged_permutation_file is None:
+                    raise FileNotFoundError(
+                        f"Could not find merged permutation results file. "
+                        f"Required for p-value filtering. Tried: {possible_paths}"
+                    )
+            
+            logger.info(f"Using raw permutation results with p-value filtering (threshold: {user_p_threshold})")
+            null_stats, actual_size = compute_null_distribution_from_raw_permutations(
+                merged_permutation_file,
+                gene_list_size,
+                selected_libraries,
+                user_p_threshold,
+                metrics
+            )
+            # Return the actual size used (may have been rounded)
+            return null_stats, actual_size
+    
+    # Use pre-computed Parquet cluster statistics (generated with p-value 0.05)
     if metrics is None:
         metrics = [
-            'cluster_size',
-            'n_genes',
-            'n_terms',
-            'n_edges',
-            'density',
-            'n_libraries',
             'largest_cluster_genes',
             'largest_cluster_terms',
             'largest_cluster_edges',
             'largest_cluster_density',
+            'largest_cluster_libraries',  # Added for library diversity benchmarking
             'largest_component_size',
             'n_connected_components',
             'avg_cluster_size',
             'avg_cluster_density',
+            'avg_cluster_libraries',  # Added for library diversity benchmarking
             'fraction_in_largest_cluster',
         ]
     
@@ -225,8 +541,23 @@ def compute_null_distribution_from_parquet(
     if not available_sizes:
         raise FileNotFoundError(f"No Parquet files found in {parquet_dir}")
     
-    # Load cluster statistics
+    # Load cluster statistics (this will round up to nearest increment of 50)
+    original_size = gene_list_size
     df = load_cluster_stats_for_size(parquet_dir, gene_list_size, available_sizes)
+    
+    # Get the actual size used (may have been rounded)
+    # The load_cluster_stats_for_size function rounds internally, so we need to determine
+    # what size was actually loaded by checking what parquet file exists
+    actual_size = original_size
+    if original_size not in available_sizes:
+        if original_size > 1000:
+            actual_size = 1000
+        else:
+            actual_size = ((original_size + 49) // 50) * 50
+        if actual_size not in available_sizes:
+            actual_size = min(available_sizes, key=lambda x: abs(x - actual_size))
+        if actual_size != original_size:
+            logger.info(f"Using null distribution from size {actual_size} (rounded from {original_size})")
     
     # Filter by libraries
     if selected_libraries:
@@ -356,7 +687,7 @@ def compute_null_distribution_from_parquet(
         else:
             logger.warning(f"No data for metric '{metric}'")
     
-    return null_stats
+    return null_stats, actual_size  # Return both stats and the actual size used
 
 
 def compute_null_distribution_parallel(
@@ -364,7 +695,9 @@ def compute_null_distribution_parallel(
     gene_list_size: int,
     selected_libraries: List[str],
     result_dict: Dict,
-    lock: threading.Lock
+    lock: threading.Lock,
+    user_p_threshold: float = None,
+    merged_permutation_file: Path = None
 ) -> None:
     """
     Compute null distribution in a separate thread and store result in shared dictionary.
@@ -375,21 +708,57 @@ def compute_null_distribution_parallel(
         selected_libraries: Libraries to filter by
         result_dict: Shared dictionary to store results
         lock: Thread lock for safe dictionary access
+        user_p_threshold: User's p-value threshold (if > 0.05, benchmarking unavailable)
+        merged_permutation_file: Path to merged permutation results TSV (for p-value filtering)
     """
     try:
         logger.info(f"Computing null distribution for size {gene_list_size} with libraries: {selected_libraries}")
-        null_stats = compute_null_distribution_from_parquet(
+        
+        # Check if user p-value threshold is too high
+        if user_p_threshold is not None and user_p_threshold > 0.05:
+            with lock:
+                result_dict['status'] = 'unavailable'
+                result_dict['error'] = (
+                    f"Statistical benchmarking is not available for p-value thresholds > 0.05. "
+                    f"Your threshold: {user_p_threshold}. "
+                    f"Permutation data was generated with p-value threshold 0.05."
+                )
+            logger.warning(result_dict['error'])
+            return
+        
+        if user_p_threshold is not None:
+            logger.info(f"User p-value threshold: {user_p_threshold} (filtering permutation data)")
+        else:
+            logger.info(f"Using pre-computed cluster statistics (permutation data generated with 0.05)")
+        
+        # Compute null distribution (may round up the size)
+        original_size = gene_list_size
+        null_stats, actual_size = compute_null_distribution_from_parquet(
             parquet_dir,
             gene_list_size,
-            selected_libraries
+            selected_libraries,
+            user_p_threshold=user_p_threshold,
+            merged_permutation_file=merged_permutation_file
         )
         
         with lock:
-            result_dict['null_distribution'] = {str(gene_list_size): null_stats}
+            # Store with the actual size used (may be rounded up)
+            result_dict['null_distribution'] = {str(actual_size): null_stats}
+            result_dict['original_gene_list_size'] = original_size
+            result_dict['null_distribution_size'] = actual_size
             result_dict['status'] = 'completed'
             result_dict['libraries_used'] = selected_libraries
+            result_dict['permutation_p_threshold'] = 0.05  # Permutations always generated with 0.05
+            if user_p_threshold is not None:
+                result_dict['user_p_threshold'] = user_p_threshold
         
         logger.info(f"✓ Null distribution computation completed")
+    except ValueError as e:
+        # Handle p-value threshold errors
+        logger.error(f"Error: {e}")
+        with lock:
+            result_dict['status'] = 'unavailable'
+            result_dict['error'] = str(e)
     except Exception as e:
         logger.error(f"Error computing null distribution: {e}", exc_info=True)
         with lock:

@@ -122,7 +122,7 @@ We generate permutations for **different gene list sizes** (50, 100, 150, 200, 2
 - **~20,000 permutations** total
 - **Multiple gene list sizes**: 50, 100, 150, 200, 250, 300, 400, 500, 750, 1000
 - **Multiple libraries**: Reactome, KEGG, GO Biological Process, GO Molecular Function, GO Cellular Component
-- **Strict p-value threshold**: 0.01 (only highly significant enrichments)
+- **P-value threshold**: 0.05 (captures all possible enrichments for flexible benchmarking)
 
 ---
 

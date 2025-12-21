@@ -103,64 +103,109 @@ def generate_cluster_report(
         
         # Statistical benchmarks
         lines.append("Statistical Benchmarks vs Random Gene Lists:")
-        lines.append("  Metric                    Value      Z-score   Percentile   Status")
-        lines.append("  " + "-" * 90)
+        lines.append("  Metric                    Value      Null Mean   Null Std    Z-score   Percentile   Status")
+        lines.append("  " + "-" * 110)
         
         # Cluster Size
         size_z = row.get('Cluster_Size_Z', 0.0)
         size_pct = row.get('Cluster_Size_Pct', 50.0)
+        size_mean = row.get('Cluster_Size_Mean', 0.0)
+        size_std = row.get('Cluster_Size_Std', 0.0)
         size_available = not (size_z == 0.0 and size_pct == 50.0)
         size_status = format_status(size_z, size_pct, size_available)
-        lines.append(f"  Cluster Size              {int(row['Cluster_Size']):>8}  {size_z:>8.2f}  {size_pct:>8.1f}%  {size_status}")
+        if size_available and size_mean > 0:
+            lines.append(f"  Cluster Size              {int(row['Cluster_Size']):>8}  {size_mean:>10.2f}  {size_std:>10.2f}  {size_z:>8.2f}  {size_pct:>8.1f}%  {size_status}")
+        else:
+            lines.append(f"  Cluster Size              {int(row['Cluster_Size']):>8}  {'N/A':>10}  {'N/A':>10}  {size_z:>8.2f}  {size_pct:>8.1f}%  {size_status}")
         
         # Number of Genes
         genes_z = row.get('N_Genes_Z', 0.0)
         genes_pct = row.get('N_Genes_Pct', 50.0)
+        genes_mean = row.get('N_Genes_Mean', 0.0)
+        genes_std = row.get('N_Genes_Std', 0.0)
         genes_available = not (genes_z == 0.0 and genes_pct == 50.0)
         genes_status = format_status(genes_z, genes_pct, genes_available)
-        lines.append(f"  Number of Genes           {int(row['N_Genes']):>8}  {genes_z:>8.2f}  {genes_pct:>8.1f}%  {genes_status}")
+        if genes_available and genes_mean > 0:
+            lines.append(f"  Number of Genes           {int(row['N_Genes']):>8}  {genes_mean:>10.2f}  {genes_std:>10.2f}  {genes_z:>8.2f}  {genes_pct:>8.1f}%  {genes_status}")
+        else:
+            lines.append(f"  Number of Genes           {int(row['N_Genes']):>8}  {'N/A':>10}  {'N/A':>10}  {genes_z:>8.2f}  {genes_pct:>8.1f}%  {genes_status}")
         
         # Number of Terms
         terms_z = row.get('N_Terms_Z', 0.0)
         terms_pct = row.get('N_Terms_Pct', 50.0)
+        terms_mean = row.get('N_Terms_Mean', 0.0)
+        terms_std = row.get('N_Terms_Std', 0.0)
         terms_available = not (terms_z == 0.0 and terms_pct == 50.0)
         terms_status = format_status(terms_z, terms_pct, terms_available)
-        lines.append(f"  Number of Terms           {int(row['N_Terms']):>8}  {terms_z:>8.2f}  {terms_pct:>8.1f}%  {terms_status}")
+        if terms_available and terms_mean > 0:
+            lines.append(f"  Number of Terms           {int(row['N_Terms']):>8}  {terms_mean:>10.2f}  {terms_std:>10.2f}  {terms_z:>8.2f}  {terms_pct:>8.1f}%  {terms_status}")
+        else:
+            lines.append(f"  Number of Terms           {int(row['N_Terms']):>8}  {'N/A':>10}  {'N/A':>10}  {terms_z:>8.2f}  {terms_pct:>8.1f}%  {terms_status}")
         
         # Number of Edges
         edges_z = row.get('N_Edges_Z', 0.0)
         edges_pct = row.get('N_Edges_Pct', 50.0)
+        edges_mean = row.get('N_Edges_Mean', 0.0)
+        edges_std = row.get('N_Edges_Std', 0.0)
         edges_available = not (edges_z == 0.0 and edges_pct == 50.0)
         edges_status = format_status(edges_z, edges_pct, edges_available)
-        lines.append(f"  Number of Edges           {int(row['N_Edges']):>8}  {edges_z:>8.2f}  {edges_pct:>8.1f}%  {edges_status}")
+        if edges_available and edges_mean > 0:
+            lines.append(f"  Number of Edges           {int(row['N_Edges']):>8}  {edges_mean:>10.2f}  {edges_std:>10.2f}  {edges_z:>8.2f}  {edges_pct:>8.1f}%  {edges_status}")
+        else:
+            lines.append(f"  Number of Edges           {int(row['N_Edges']):>8}  {'N/A':>10}  {'N/A':>10}  {edges_z:>8.2f}  {edges_pct:>8.1f}%  {edges_status}")
         
         # Cluster Density
         density_z = row.get('Cluster_Density_Z', 0.0)
         density_pct = row.get('Cluster_Density_Pct', 50.0)
+        density_mean = row.get('Cluster_Density_Mean', 0.0)
+        density_std = row.get('Cluster_Density_Std', 0.0)
         density_available = not (density_z == 0.0 and density_pct == 50.0)
         density_status = format_status(density_z, density_pct, density_available)
-        lines.append(f"  Cluster Density        {row['Cluster_Density']:>8.4f}  {density_z:>8.2f}  {density_pct:>8.1f}%  {density_status}")
+        if density_available and density_mean > 0:
+            lines.append(f"  Cluster Density        {row['Cluster_Density']:>8.4f}  {density_mean:>10.4f}  {density_std:>10.4f}  {density_z:>8.2f}  {density_pct:>8.1f}%  {density_status}")
+        else:
+            lines.append(f"  Cluster Density        {row['Cluster_Density']:>8.4f}  {'N/A':>10}  {'N/A':>10}  {density_z:>8.2f}  {density_pct:>8.1f}%  {density_status}")
         
         # Number of Libraries
         lib_z = row.get('N_Libraries_Z', 0.0)
         lib_pct = row.get('N_Libraries_Pct', 50.0)
+        lib_mean = row.get('N_Libraries_Mean', 0.0)
+        lib_std = row.get('N_Libraries_Std', 0.0)
         lib_available = not (lib_z == 0.0 and lib_pct == 50.0)
         lib_status = format_status(lib_z, lib_pct, lib_available)
-        lines.append(f"  Number of Libraries       {int(row['N_Libraries']):>8}  {lib_z:>8.2f}  {lib_pct:>8.1f}%  {lib_status}")
+        if lib_available and lib_mean > 0:
+            lines.append(f"  Number of Libraries       {int(row['N_Libraries']):>8}  {lib_mean:>10.2f}  {lib_std:>10.2f}  {lib_z:>8.2f}  {lib_pct:>8.1f}%  {lib_status}")
+        else:
+            lines.append(f"  Number of Libraries       {int(row['N_Libraries']):>8}  {'N/A':>10}  {'N/A':>10}  {lib_z:>8.2f}  {lib_pct:>8.1f}%  {lib_status}")
         
         lines.append("")
         
-        # Terms in cluster
+        # Terms in cluster (ranked by centrality)
         terms_str = row.get('Terms', '')
+        term_centralities_str = row.get('Term_Centralities', '')
         if terms_str and pd.notna(terms_str):
             terms_list = [t.strip() for t in terms_str.split(';') if t.strip()]
             n_terms_total = int(row.get('N_Terms_Total', len(terms_list)))
             
-            lines.append(f"Terms in Cluster ({n_terms_total} total):")
-            for i, term in enumerate(terms_list[:20], 1):  # Show first 20 terms
-                lines.append(f"  {i:2d}. {term}")
-            if len(terms_list) > 20:
-                lines.append(f"  ... and {len(terms_list) - 20} more terms")
+            # Parse term centralities if available
+            term_centrality_map = {}
+            if term_centralities_str and pd.notna(term_centralities_str):
+                for item in term_centralities_str.split(';'):
+                    if ':' in item:
+                        term_name, centrality = item.rsplit(':', 1)
+                        try:
+                            term_centrality_map[term_name.strip()] = int(centrality.strip())
+                        except ValueError:
+                            pass
+            
+            lines.append(f"Terms in Cluster ({n_terms_total} total, ranked by centrality):")
+            lines.append("  Rank  Term                                                          Centrality (genes)")
+            lines.append("  " + "-" * 90)
+            for i, term in enumerate(terms_list[:30], 1):  # Show top 30 terms
+                centrality = term_centrality_map.get(term, 0)
+                lines.append(f"  {i:2d}.   {term:<70} {centrality:>3d}")
+            if len(terms_list) > 30:
+                lines.append(f"  ... and {len(terms_list) - 30} more terms")
             lines.append("")
     
     # Footer

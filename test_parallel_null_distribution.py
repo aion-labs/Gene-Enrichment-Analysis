@@ -245,7 +245,8 @@ def main():
             gene_set.size,
             libraries_with_data,
             null_dist_result,
-            null_dist_lock
+            null_dist_lock,
+            PARAMS["p_threshold"]  # Pass user's p-value threshold
         ),
         daemon=True
     )
@@ -282,7 +283,14 @@ def main():
     # Get null distribution (convert to expected format)
     if null_dist_result['null_distribution']:
         null_distribution = null_dist_result['null_distribution']
+        permutation_p_threshold = null_dist_result.get('permutation_p_threshold', 0.05)
+        user_p_threshold = null_dist_result.get('user_p_threshold', PARAMS["p_threshold"])
+        
         print(f"✓ Null distribution computed for {len(null_distribution)} gene list size(s)")
+        if user_p_threshold != permutation_p_threshold:
+            print(f"  Note: Permutation data generated with p-value threshold {permutation_p_threshold}")
+            print(f"        Your analysis uses p-value threshold {user_p_threshold}")
+            print(f"        Comparison is valid but may be conservative (your network may be smaller)")
     else:
         raise RuntimeError("Null distribution computation did not complete")
     

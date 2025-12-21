@@ -141,9 +141,13 @@ LIBRARIES = {
     "Protein Interaction": "stringdb_protein_interactions.gmt",
 }
 
-# Default parameters (matching Streamlit defaults)
+# Default parameters for permutation generation
+# Note: Permutations are generated with p_threshold=0.05 to capture all possible enrichments
+# This allows benchmarking with user-defined thresholds (0.01, 0.05, etc.)
+# The permutation data includes all pathways with p <= 0.05, which can be used for
+# benchmarking regardless of the user's chosen threshold.
 DEFAULT_PARAMS = {
-    "p_threshold": 0.01,  # User specified
+    "p_threshold": 0.05,  # Generate permutations with 0.05 to capture all enrichments
     "min_overlap": 3,
     "min_term_size": 10,
     "max_term_size": 600,
