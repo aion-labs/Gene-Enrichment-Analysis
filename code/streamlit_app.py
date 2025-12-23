@@ -150,6 +150,18 @@ def _ensure_base_state():
         state.iter_max_iter = 10
     if "iter_min_term_size" not in state:
         state.iter_min_term_size = 10
+    if "benchmark_computed" not in state:
+        state.benchmark_computed = False
+    if "benchmark_data" not in state:
+        state.benchmark_data = None
+    if "libraries_with_data" not in state:
+        state.libraries_with_data = []
+    if "libraries_without_data" not in state:
+        state.libraries_without_data = []
+    if "actual_size_used" not in state:
+        state.actual_size_used = None
+    if "benchmark_report_text" not in state:
+        state.benchmark_report_text = None
     if "p_val_method" not in state:
         state.p_val_method = "Fisher's Exact Test"
     if "select_all_libraries" not in state:
@@ -1487,6 +1499,16 @@ Results include ranked tables, bar charts, and network graphs."""
             igea_combined=igea_combined_link,
             igea_individual=igea_individual_link
         ), unsafe_allow_html=True)
+        
+        # Download validated gene symbols
+        if hasattr(state, 'gene_set') and state.gene_set and state.gene_set.genes:
+            validated_genes = sorted(list(state.gene_set.genes))
+            validated_genes_text = '\n'.join(validated_genes)
+            gene_set_name = state.gene_set_name if hasattr(state, 'gene_set_name') and state.gene_set_name else 'validated_genes'
+            st.markdown(
+                f"**📋 Validated Gene Symbols:** {download_link(validated_genes_text, gene_set_name, 'txt')}",
+                unsafe_allow_html=True
+            )
 
         # callback to keep checkbox state in session
         def toggle_library(lib_name):
@@ -1684,12 +1706,18 @@ Results include ranked tables, bar charts, and network graphs."""
                         # Set up paths
                         parquet_dir = ROOT / "results" / "permutation_cluster_statistics_parquet"
                         
+                        # Get user's max_iterations (cap at 30 for permutation data)
+                        user_max_iter = state.iter_max_iter if state.iter_max_iter > 0 else None
+                        if user_max_iter is not None:
+                            user_max_iter = min(user_max_iter, 30)  # Cap at 30 (permutation data max)
+                        
                         # Compute benchmark
-                        null_dist, cluster_benchmarks, libs_with_data, libs_without_data, actual_size_used = compute_benchmark_for_streamlit(
+                        null_dist, cluster_benchmarks, libs_with_data, libs_without_data, actual_size_used, analyzer = compute_benchmark_for_streamlit(
                             state.iter_enrich,
                             gene_list_size,
                             p_threshold,
-                            parquet_dir
+                            parquet_dir,
+                            user_max_iter
                         )
                         
                         if null_dist and cluster_benchmarks:
@@ -1704,6 +1732,7 @@ Results include ranked tables, bar charts, and network graphs."""
                             state.last_benchmark_gene_list_size = gene_list_size
                             state.last_benchmark_p_threshold = p_threshold
                             state.last_enrich_hash = current_enrich_hash
+                            state.benchmark_analyzer = analyzer  # Store analyzer for report generation
                             
                             # Generate report text
                             gene_list_name = state.gene_set_name if hasattr(state, 'gene_set_name') and state.gene_set_name else "Gene List"
@@ -1711,16 +1740,27 @@ Results include ranked tables, bar charts, and network graphs."""
                                 cluster_benchmarks,
                                 gene_list_name,
                                 libs_with_data,
-                                libs_without_data
+                                libs_without_data,
+                                analyzer
                             )
                         else:
                             if not libs_with_data:
                                 st.warning("⚠️ No libraries with permutation data available for benchmarking. Please ensure Parquet files exist in the results directory.")
+                            elif null_dist is None:
+                                st.warning("⚠️ Failed to compute null distribution. This may occur if:\n"
+                                          "- P-value threshold is too strict (> 0.05)\n"
+                                          "- No permutation data matches your gene list size\n"
+                                          "- Permutation data files are missing or corrupted")
+                            elif cluster_benchmarks is None or len(cluster_benchmarks) == 0:
+                                st.warning("⚠️ No clusters found in your network. Benchmarking requires at least one cluster.")
                             else:
                                 st.warning("⚠️ Failed to compute benchmark. Please check the logs for details.")
                     except Exception as e:
                         logger.error(f"Error computing benchmark: {e}", exc_info=True)
-                        st.error(f"Error computing benchmark: {str(e)}")
+                        import traceback
+                        error_details = traceback.format_exc()
+                        logger.error(f"Full traceback: {error_details}")
+                        st.error(f"❌ Error computing benchmark: {str(e)}\n\nCheck the terminal/console for detailed error logs.")
             
             # Display benchmark results if computed
             if state.benchmark_computed and state.benchmark_data:
@@ -1750,6 +1790,59 @@ Results include ranked tables, bar charts, and network graphs."""
                         # Check if excluded libraries actually have data in the cluster
                         excluded_msg = f"**Note:** The following libraries were included in your enrichment analysis but excluded from statistical benchmarking (no permutation data available): {', '.join(state.libraries_without_data)}"
                         st.warning(excluded_msg)
+                    
+                    # Add comprehensive note about filtering and parameters
+                    filter_notes = []
+                    if state.last_benchmark_p_threshold is not None:
+                        filter_notes.append(f"p-value ≤ {state.last_benchmark_p_threshold}")
+                    
+                    user_max_iter = state.iter_max_iter if state.iter_max_iter > 0 else None
+                    if user_max_iter is not None:
+                        max_iter_display = min(user_max_iter, 30)  # Cap at 30
+                        filter_notes.append(f"max iterations ≤ {max_iter_display}")
+                    else:
+                        filter_notes.append("max iterations ≤ 30 (permutation data maximum)")
+                    
+                    # Check if user parameters differ from permutation defaults
+                    permutation_defaults = {
+                        'min_overlap': 3,
+                        'min_term_size': 10,
+                        'max_term_size': 600
+                    }
+                    
+                    user_params = {
+                        'min_overlap': state.iter_min_overlap,
+                        'min_term_size': state.iter_min_term_size,
+                        'max_term_size': state.iter_max_term_size
+                    }
+                    
+                    param_warnings = []
+                    if user_params['min_overlap'] != permutation_defaults['min_overlap']:
+                        param_warnings.append(f"Minimum overlap: {user_params['min_overlap']} (permutation default: {permutation_defaults['min_overlap']})")
+                    if user_params['min_term_size'] != permutation_defaults['min_term_size']:
+                        param_warnings.append(f"Minimum term size: {user_params['min_term_size']} (permutation default: {permutation_defaults['min_term_size']})")
+                    if user_params['max_term_size'] != permutation_defaults['max_term_size']:
+                        param_warnings.append(f"Maximum term size: {user_params['max_term_size']} (permutation default: {permutation_defaults['max_term_size']})")
+                    
+                    # Build comprehensive info message
+                    info_parts = []
+                    if filter_notes:
+                        info_parts.append(f"**Statistical filtering:** Permutation data was filtered to match your analysis parameters: {', '.join(filter_notes)}.")
+                    
+                    if param_warnings:
+                        info_parts.append("\n\n⚠️ **Parameter mismatch:** Your analysis uses different parameters than the permutation data:")
+                        info_parts.append("\n".join(f"- {w}" for w in param_warnings))
+                        info_parts.append(
+                            f"\n\nFor more accurate statistical analysis, consider using the default parameters "
+                            f"(min overlap: {permutation_defaults['min_overlap']}, "
+                            f"min term size: {permutation_defaults['min_term_size']}, "
+                            f"max term size: {permutation_defaults['max_term_size']}) "
+                            "that were used to generate the permutation data."
+                        )
+                    
+                    if info_parts:
+                        info_msg = "".join(info_parts)
+                        st.info(info_msg)
                     
                     # Extract table data for largest cluster
                     table_data = extract_benchmark_table_data(cluster_benchmarks)

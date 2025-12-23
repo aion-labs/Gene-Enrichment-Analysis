@@ -20,3 +20,8 @@ data/recent_release/
 # Local launcher files (user-specific)
 launch_gene_enrichment.sh
 Gene_Enrichment.command
+# Test results
+cli_test_results/
+cli_test_results_benchmark/
+benchmarking.log
+test_benchmarking_debug.py

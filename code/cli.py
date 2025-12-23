@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Dict
 import json
 import logging
 from datetime import datetime
@@ -7,11 +7,11 @@ from datetime import datetime
 import typer
 import pandas as pd
 
-from code.background_gene_set import BackgroundGeneSet
-from code.enrichment import Enrichment
-from code.gene_set import GeneSet
-from code.gene_set_library import GeneSetLibrary
-from code.iter_enrichment import IterativeEnrichment
+from background_gene_set import BackgroundGeneSet
+from enrichment import Enrichment
+from gene_set import GeneSet
+from gene_set_library import GeneSetLibrary
+from iter_enrichment import IterativeEnrichment
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -39,6 +39,7 @@ def run_enrichment(
     max_term_size: int,
     max_iterations: int,
     output_dir: Path,
+    benchmark: bool = False,
 ):
     """Run enrichment analysis for the given parameters."""
     
@@ -78,7 +79,7 @@ def run_enrichment(
         # Handle gene format conversion
         if gene_format == "entrez_ids":
             # Convert Entrez IDs to gene symbols
-            from code.gene_converter import GeneConverter
+            from gene_converter import GeneConverter
             converter = GeneConverter()
             gene_symbols = []
             unrecognized_entrez = []
@@ -95,7 +96,7 @@ def run_enrichment(
                 logger.warning(f"Warning: {len(unrecognized_entrez)} Entrez IDs not found in database")
         else:
             # Use gene symbols directly
-            from code.gene_converter import GeneConverter
+            from gene_converter import GeneConverter
             converter = GeneConverter()
             gene_symbols = []
             unrecognized_symbols = []
@@ -143,7 +144,7 @@ def run_enrichment(
             run_iterative_enrichment(
                 gene_set, gene_set_libraries, background_gene_set,
                 p_value_method, p_threshold, min_overlap, min_term_size, max_term_size,
-                max_iterations, gene_set_output_dir
+                max_iterations, gene_set_output_dir, compute_benchmark=benchmark
             )
 
 
@@ -305,6 +306,282 @@ def _combine_dot_files(all_iter_results: dict) -> str:
     return combined_dot
 
 
+def compute_benchmark_for_cli(
+    iter_enrich_objects: Dict[str, IterativeEnrichment],
+    gene_list_size: int,
+    p_threshold: float,
+    user_max_iterations: Optional[int],
+    output_dir: Path,
+    gene_set_name: str,
+):
+    """
+    Compute statistical benchmarks for CLI (non-threaded version).
+    
+    Args:
+        iter_enrich_objects: Dictionary of IterativeEnrichment objects by library name
+        gene_list_size: Size of the input gene list
+        p_threshold: P-value threshold used for enrichment
+        user_max_iterations: User's max iterations (will be capped at 30)
+        output_dir: Output directory for benchmark results
+        gene_set_name: Name of the gene set
+    """
+    from parallel_null_distribution import (
+        find_intersection_libraries,
+        compute_null_distribution_parallel,
+        normalize_library_name
+    )
+    from network_connectivity_benchmark import NetworkConnectivityAnalyzer
+    from ui.benchmarking import generate_statistical_report_text, extract_benchmark_table_data
+    
+    # Find permutation data directory
+    ROOT = Path(__file__).resolve().parent.parent
+    parquet_dir = ROOT / "results" / "permutation_cluster_statistics_parquet"
+    
+    if not parquet_dir.exists():
+        logger.warning(f"Permutation data directory not found: {parquet_dir}")
+        logger.warning("Statistical benchmarking requires permutation data. Skipping benchmarks.")
+        return
+    
+    # Get all library names from iter_enrich_objects
+    user_selected_libraries = list(iter_enrich_objects.keys())
+    
+    # Find which libraries have permutation data
+    libraries_with_data, libraries_without_data = find_intersection_libraries(
+        user_selected_libraries,
+        parquet_dir
+    )
+    
+    if not libraries_with_data:
+        logger.warning("No libraries with permutation data available for benchmarking")
+        logger.warning(f"Libraries in analysis: {user_selected_libraries}")
+        logger.warning("Skipping benchmarks.")
+        return
+    
+    logger.info(f"Found permutation data for {len(libraries_with_data)} libraries: {libraries_with_data}")
+    if libraries_without_data:
+        logger.warning(f"Libraries without permutation data (excluded from benchmarks): {libraries_without_data}")
+    
+    # Check if p-value threshold is valid for benchmarking
+    if p_threshold > 0.05:
+        logger.warning(f"P-value threshold {p_threshold} > 0.05, benchmarking may be unavailable")
+    
+    # Cap max iterations at 30 (permutation data maximum)
+    if user_max_iterations is not None:
+        user_max_iter = min(user_max_iterations, 30)
+    else:
+        user_max_iter = 30
+    
+    # Try to find merged permutation file
+    merged_permutation_file = None
+    possible_paths = [
+        parquet_dir.parent / "permutation_results" / "merged_permutation_results.tsv",
+        ROOT / "results" / "permutation_results" / "merged_permutation_results.tsv",
+        ROOT / "merged_permutation_results.tsv",
+    ]
+    for path in possible_paths:
+        if path.exists():
+            merged_permutation_file = path
+            logger.info(f"Found merged permutation file: {merged_permutation_file}")
+            break
+    
+    # Compute null distribution (non-threaded version)
+    logger.info("Computing null distribution from permutation data...")
+    null_dist_result = {
+        'null_distribution': None,
+        'status': 'running',
+        'libraries_used': libraries_with_data,
+        'error': None
+    }
+    import threading
+    null_dist_lock = threading.Lock()
+    
+    # Call the parallel function directly (it will handle threading internally)
+    compute_null_distribution_parallel(
+        parquet_dir,
+        gene_list_size,
+        libraries_with_data,
+        null_dist_result,
+        null_dist_lock,
+        p_threshold,
+        user_max_iter,
+        merged_permutation_file
+    )
+    
+    # Check status
+    final_status = null_dist_result.get('status', 'unknown')
+    error_msg = null_dist_result.get('error', 'No error message')
+    
+    if final_status == 'error':
+        logger.error(f"Failed to compute null distribution: {error_msg}")
+        return
+    elif final_status == 'unavailable':
+        logger.warning(f"Statistical benchmarking unavailable: {error_msg}")
+        return
+    elif final_status != 'completed':
+        logger.error(f"Unexpected status '{final_status}': {error_msg}")
+        return
+    
+    null_distribution = null_dist_result.get('null_distribution')
+    actual_size_used = null_dist_result.get('null_distribution_size', gene_list_size)
+    
+    if not null_distribution:
+        logger.error("Null distribution is None")
+        return
+    
+    # Verify the actual size is in the distribution
+    actual_size_key = str(actual_size_used)
+    if actual_size_key not in null_distribution:
+        logger.warning(f"Size {actual_size_used} not found in null_distribution")
+        size_keys = sorted([int(k) for k in null_distribution.keys()])
+        if size_keys:
+            actual_size_key = str(size_keys[0])
+            actual_size_used = int(size_keys[0])
+            logger.info(f"Using available size {actual_size_used} instead")
+        else:
+            logger.error("No sizes available in null distribution")
+            return
+    
+    logger.info(f"Successfully computed null distribution for size {actual_size_used}")
+    
+    # Build combined network from ONLY libraries with permutation data
+    combined_analyzer = NetworkConnectivityAnalyzer()
+    
+    # Create a mapping from normalized library names to original names
+    lib_name_mapping = {}
+    for lib_name in iter_enrich_objects.keys():
+        normalized = normalize_library_name(lib_name)
+        lib_name_mapping[lib_name] = normalized
+    
+    # Find which libraries from iter_enrich_objects match libraries_with_data
+    libraries_to_use = []
+    for lib_name in iter_enrich_objects.keys():
+        normalized_user = lib_name_mapping[lib_name]
+        for lib_with_data in libraries_with_data:
+            normalized_data = normalize_library_name(lib_with_data)
+            if (normalized_user == normalized_data or 
+                normalized_user in normalized_data.lower() or 
+                normalized_data in normalized_user.lower()):
+                if lib_name not in libraries_to_use:
+                    libraries_to_use.append(lib_name)
+                    break
+    
+    if not libraries_to_use:
+        logger.warning("No matching libraries found between analysis and permutation data")
+        return
+    
+    logger.info(f"Using {len(libraries_to_use)} libraries for network analysis: {libraries_to_use}")
+    
+    # Add results from matching libraries to combined analyzer
+    for lib_name in libraries_to_use:
+        iter_enrich = iter_enrich_objects[lib_name]
+        
+        # Filter results by iteration if needed
+        if user_max_iter is not None:
+            filtered_results = [
+                r for r in iter_enrich.results 
+                if r.get('Iteration', 0) <= user_max_iter
+            ]
+        else:
+            filtered_results = iter_enrich.results
+        
+        # Add each result to the analyzer
+        for result in filtered_results:
+            term = result.get('Term', '')
+            genes = result.get('Genes', [])
+            p_value = result.get('p-value', 1.0)
+            
+            if term and genes and p_value <= p_threshold:
+                combined_analyzer.add_enrichment_result(
+                    library=lib_name,
+                    term=term,
+                    genes=genes,
+                    p_value=p_value
+                )
+    
+    # Get clusters
+    clusters = combined_analyzer.get_clusters()
+    
+    if not clusters:
+        logger.warning("No clusters found in the network. Benchmarking requires at least one cluster.")
+        return
+    
+    logger.info(f"Found {len(clusters)} clusters in the network")
+    
+    # Benchmark each cluster
+    cluster_benchmarks = []
+    for cluster in clusters:
+        benchmark = combined_analyzer.benchmark_cluster(
+            cluster,
+            null_distribution,
+            actual_size_used,
+            use_interpolation=False
+        )
+        cluster_benchmarks.append({
+            'cluster': cluster,
+            'benchmark': benchmark
+        })
+    
+    # Sort by cluster size (largest first)
+    cluster_benchmarks.sort(key=lambda x: x['cluster']['size'], reverse=True)
+    
+    logger.info(f"Computed benchmarks for {len(cluster_benchmarks)} clusters")
+    
+    # Save benchmark results
+    # 1. Save JSON with benchmark data
+    benchmark_json_file = output_dir / "statistical_benchmarks.json"
+    benchmark_json_data = {
+        "gene_set_name": gene_set_name,
+        "gene_set_size": gene_list_size,
+        "actual_size_used": actual_size_used,
+        "p_threshold": p_threshold,
+        "max_iterations": user_max_iter,
+        "libraries_with_data": libraries_with_data,
+        "libraries_without_data": libraries_without_data,
+        "n_clusters": len(cluster_benchmarks),
+        "cluster_benchmarks": cluster_benchmarks,
+        "null_distribution_summary": {
+            size_key: {
+                metric: {
+                    'mean': stats.get('mean'),
+                    'std': stats.get('std'),
+                    'n': stats.get('n')
+                }
+                for metric, stats in size_stats.items()
+            }
+            for size_key, size_stats in null_distribution.items()
+        },
+        "timestamp": datetime.now().isoformat()
+    }
+    
+    with open(benchmark_json_file, 'w') as f:
+        json.dump(benchmark_json_data, f, indent=2)
+    logger.info(f"Saved benchmark JSON to {benchmark_json_file}")
+    
+    # 2. Generate and save text report
+    report_text = generate_statistical_report_text(
+        cluster_benchmarks,
+        gene_set_name,
+        libraries_with_data,
+        libraries_without_data,
+        combined_analyzer
+    )
+    
+    report_file = output_dir / f"{gene_set_name}_statistical_report.txt"
+    with open(report_file, 'w') as f:
+        f.write(report_text)
+    logger.info(f"Saved statistical report to {report_file}")
+    
+    # 3. Save benchmark table as TSV
+    table_data = extract_benchmark_table_data(cluster_benchmarks)
+    if table_data:
+        table_df = pd.DataFrame(table_data)
+        table_file = output_dir / "statistical_benchmarks_table.tsv"
+        table_df.to_csv(table_file, sep='\t', index=False)
+        logger.info(f"Saved benchmark table to {table_file}")
+    
+    logger.info("✅ Statistical benchmarking completed successfully!")
+
+
 def run_iterative_enrichment(
     gene_set: GeneSet,
     gene_set_libraries: List[GeneSetLibrary],
@@ -316,6 +593,7 @@ def run_iterative_enrichment(
     max_term_size: int,
     max_iterations: int,
     output_dir: Path,
+    compute_benchmark: bool = False,
 ):
     """Run iterative enrichment analysis."""
     logger.info("Running iterative enrichment analysis")
@@ -325,6 +603,7 @@ def run_iterative_enrichment(
     logger.info(f"Generated shared run ID: {shared_run_id}")
     
     all_iter_results = {}
+    all_iter_enrich_objects = {}  # Store IterativeEnrichment objects for benchmarking
     
     for library in gene_set_libraries:
         logger.info(f"Processing library: {library.name}")
@@ -363,6 +642,10 @@ def run_iterative_enrichment(
                     'results': it.results,
                     'dot_content': dot_content
                 }
+                
+                # Store IterativeEnrichment object for benchmarking if needed
+                if compute_benchmark:
+                    all_iter_enrich_objects[library.name] = it
             
         except Exception as e:
             logger.error(f"Error processing library {library.name}: {e}")
@@ -408,7 +691,7 @@ def run_iterative_enrichment(
             
             # Generate and save AI analysis prompt for combined network
             try:
-                from code.ui.rendering import generate_ai_analysis_prompt
+                from ui.rendering import generate_ai_analysis_prompt
                 
                 # Enhanced prompt format
                 enhanced_prompt = generate_ai_analysis_prompt(combined_dot_content)
@@ -447,6 +730,22 @@ def run_iterative_enrichment(
                 "timestamp": datetime.now().isoformat()
             }, f, indent=2)
         logger.info(f"Saved metadata to {json_file}")
+        
+        # Compute statistical benchmarks if requested
+        if compute_benchmark and all_iter_enrich_objects:
+            logger.info("Computing statistical benchmarks...")
+            try:
+                compute_benchmark_for_cli(
+                    all_iter_enrich_objects,
+                    gene_set.size,
+                    p_threshold,
+                    max_iterations if max_iterations > 0 else None,
+                    output_dir,
+                    gene_set.name
+                )
+            except Exception as e:
+                logger.error(f"Error computing benchmarks: {e}")
+                logger.warning("Benchmarking failed, but enrichment analysis completed successfully")
 
 
 @app.command(help="Run gene set enrichment analysis from the command line")
@@ -527,6 +826,11 @@ def main(
         "--output-dir",
         "-o",
         help="Output directory for results",
+    ),
+    benchmark: bool = typer.Option(
+        False,
+        "--benchmark",
+        help="Compute statistical benchmarks against permutation data (iterative mode only)",
     ),
 ):
     """
@@ -630,6 +934,7 @@ def main(
     typer.echo(f"Term Size Range: {min_term_size}-{max_term_size}")
     if mode == "iterative":
         typer.echo(f"Max Iterations: {max_iterations}")
+        typer.echo(f"Statistical Benchmarking: {'Enabled' if benchmark else 'Disabled'}")
     typer.echo(f"Output Directory: {output_dir}")
     typer.echo("")
 
@@ -648,6 +953,7 @@ def main(
             max_term_size=max_term_size,
             max_iterations=max_iterations,
             output_dir=output_dir,
+            benchmark=benchmark,
         )
         typer.echo(f"✅ Analysis completed successfully! Results saved to {output_dir}")
     except Exception as e:

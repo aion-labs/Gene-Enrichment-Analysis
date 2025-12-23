@@ -16,7 +16,7 @@ This script:
 import sys
 import logging
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 import pandas as pd
 import numpy as np
 from collections import defaultdict
@@ -92,10 +92,18 @@ def process_permutation_data(
     df: pd.DataFrame,
     gene_list_size: int,
     p_value_threshold: float,
-    p_value_col: str
+    p_value_col: str,
+    max_iterations: Optional[int] = None
 ) -> Tuple[List[Dict], int]:
     """
     Process permutation data for a specific size and p-value threshold.
+    
+    Args:
+        df: Permutation data DataFrame
+        gene_list_size: Gene list size to filter by
+        p_value_threshold: P-value threshold to filter by
+        p_value_col: Name of p-value column
+        max_iterations: Maximum iteration count to filter by (capped at 30, permutation data max)
     
     Returns:
         (list of cluster records, number of permutations processed)
@@ -115,6 +123,17 @@ def process_permutation_data(
             f"No data for gene list size {gene_list_size} with p-value <= {p_value_threshold}"
         )
         return [], 0
+    
+    # Filter by iteration count if specified
+    if max_iterations is not None:
+        # Cap at 30 (permutation data maximum)
+        max_iter_filter = min(max_iterations, 30)
+        if 'Iteration' in filtered_df.columns:
+            filtered_df['Iteration'] = pd.to_numeric(filtered_df['Iteration'], errors='coerce')
+            filtered_df = filtered_df[filtered_df['Iteration'] <= max_iter_filter].copy()
+            logger.info(f"Filtered to {len(filtered_df):,} rows with iteration <= {max_iter_filter}")
+        else:
+            logger.warning("Iteration column not found in permutation data, skipping iteration filter")
     
     # Get unique permutations
     unique_permutations = filtered_df['filename'].unique()

@@ -19,7 +19,16 @@ from parallel_null_distribution import (
     normalize_library_name
 )
 
+# Setup logging with file handler for debugging
 logger = logging.getLogger(__name__)
+# Add file handler if not already present
+if not any(isinstance(h, logging.FileHandler) for h in logger.handlers):
+    log_file = Path(__file__).parent.parent.parent / "benchmarking.log"
+    file_handler = logging.FileHandler(str(log_file))
+    file_handler.setLevel(logging.DEBUG)
+    file_handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+    logger.addHandler(file_handler)
+    logger.setLevel(logging.DEBUG)
 
 
 def format_status(z_score: float, percentile: float, is_available: bool = True) -> str:
@@ -54,8 +63,9 @@ def compute_benchmark_for_streamlit(
     gene_list_size: int,
     p_threshold: float,
     parquet_dir: Path,
+    user_max_iterations: Optional[int] = None,
     merged_permutation_file: Optional[Path] = None
-) -> Tuple[Optional[Dict], Optional[List[Dict]], List[str], List[str]]:
+    ) -> Tuple[Optional[Dict], Optional[List[Dict]], List[str], List[str], int, Optional[NetworkConnectivityAnalyzer]]:
     """
     Compute benchmarking for Streamlit app.
     
@@ -67,9 +77,10 @@ def compute_benchmark_for_streamlit(
         merged_permutation_file: Optional path to merged permutation TSV file
         
     Returns:
-        Tuple of (null_distribution, cluster_benchmarks, libraries_with_data, libraries_without_data, actual_size_used)
+        Tuple of (null_distribution, cluster_benchmarks, libraries_with_data, libraries_without_data, actual_size_used, analyzer)
         Returns None for null_distribution and cluster_benchmarks if benchmarking unavailable
         actual_size_used: The gene list size from permutation data that was actually used
+        analyzer: NetworkConnectivityAnalyzer instance used for the analysis
     """
     # Get all library names from iter_enrich
     user_selected_libraries = list(iter_enrich.keys())
@@ -82,7 +93,7 @@ def compute_benchmark_for_streamlit(
     
     if not libraries_with_data:
         logger.warning("No libraries with permutation data available for benchmarking")
-        return None, None, [], user_selected_libraries, gene_list_size
+        return None, None, [], user_selected_libraries, gene_list_size, None
     
     # Check if p-value threshold is valid for benchmarking
     if p_threshold > 0.05:
@@ -124,6 +135,7 @@ def compute_benchmark_for_streamlit(
             null_dist_result,
             null_dist_lock,
             p_threshold,
+            user_max_iterations,
             merged_permutation_file
         ),
         daemon=True
@@ -131,27 +143,84 @@ def compute_benchmark_for_streamlit(
     null_dist_thread.start()
     
     # Wait for null distribution computation
+    logger.info(f"Waiting for null distribution computation (timeout: 120 seconds)...")
     null_dist_thread.join(timeout=120)  # Wait up to 2 minutes
+    
+    # Check if thread is still alive
+    if null_dist_thread.is_alive():
+        logger.warning(f"Thread is still alive after timeout - computation may still be running")
+    else:
+        logger.info(f"Thread completed (alive: {null_dist_thread.is_alive()})")
     
     # Check status
     final_status = null_dist_result.get('status', 'unknown')
+    error_msg = null_dist_result.get('error', 'No error message')
+    
+    logger.debug(f"Null distribution computation status: {final_status}")
+    logger.debug(f"Result dict keys: {list(null_dist_result.keys())}")
+    logger.debug(f"Result dict: {null_dist_result}")
+    
     if final_status == 'error':
-        logger.error(f"Null distribution computation failed: {null_dist_result.get('error', 'Unknown error')}")
-        return None, None, libraries_with_data, libraries_without_data, gene_list_size
+        logger.error(f"Null distribution computation failed: {error_msg}")
+        logger.error(f"Error details: {null_dist_result}")
+        logger.error(f"Full result dict: {null_dist_result}")
+        return None, None, libraries_with_data, libraries_without_data, gene_list_size, None
     elif final_status == 'unavailable':
-        logger.warning(f"Statistical benchmarking unavailable: {null_dist_result.get('error', 'Unknown reason')}")
-        return None, None, libraries_with_data, libraries_without_data, gene_list_size
+        logger.warning(f"Statistical benchmarking unavailable: {error_msg}")
+        logger.warning(f"Full result dict: {null_dist_result}")
+        return None, None, libraries_with_data, libraries_without_data, gene_list_size, None
     elif final_status == 'running':
-        logger.warning("Null distribution computation still running after timeout")
-        return None, None, libraries_with_data, libraries_without_data, gene_list_size
+        logger.warning("Null distribution computation still running after timeout (120 seconds)")
+        logger.warning(f"Result dict: {null_dist_result}")
+        logger.warning(f"This may indicate the computation is taking longer than expected or is stuck")
+        return None, None, libraries_with_data, libraries_without_data, gene_list_size, None
     elif final_status == 'completed':
         null_distribution = null_dist_result.get('null_distribution')
-        if not null_distribution or len(null_distribution) == 0:
+        actual_size_used = null_dist_result.get('null_distribution_size', gene_list_size)
+        
+        # null_distribution is stored as {str(actual_size): {metric_name: {mean, std, ...}}}
+        if not null_distribution:
             logger.warning("Null distribution computation completed but result is empty")
-            return None, None, libraries_with_data, libraries_without_data, gene_list_size
+            logger.warning(f"Result dict keys: {list(null_dist_result.keys())}")
+            logger.warning(f"Null distribution value: {null_distribution}")
+            return None, None, libraries_with_data, libraries_without_data, gene_list_size, None
+        
+        # Verify structure
+        if not isinstance(null_distribution, dict):
+            logger.warning(f"Unexpected null_distribution type: {type(null_distribution)}")
+            return None, None, libraries_with_data, libraries_without_data, gene_list_size, None
+        
+        # Check if it has the expected structure {str(size): stats}
+        # The structure should be: {"200": {metric_name: {mean, std, ...}}}
+        size_keys = [k for k in null_distribution.keys() if str(k).isdigit()]
+        if not size_keys:
+            logger.warning(f"Null distribution does not have size keys. Keys: {list(null_distribution.keys())}")
+            logger.warning(f"Expected structure: {{str(size): {{metric: stats}}}}")
+            return None, None, libraries_with_data, libraries_without_data, gene_list_size, None
+        
+        # Verify the actual size is in the distribution
+        actual_size_key = str(actual_size_used)
+        if actual_size_key not in null_distribution:
+            logger.warning(f"Size {actual_size_used} not found in null_distribution. Available sizes: {size_keys}")
+            # Try to use the first available size
+            if size_keys:
+                actual_size_key = str(size_keys[0])
+                actual_size_used = int(size_keys[0])
+                logger.info(f"Using available size {actual_size_used} instead")
+            else:
+                return None, None, libraries_with_data, libraries_without_data, gene_list_size, None
+        
+        # Get stats for this size
+        stats_for_size = null_distribution[actual_size_key]
+        if not stats_for_size or len(stats_for_size) == 0:
+            logger.warning(f"Null distribution stats for size {actual_size_used} is empty")
+            return None, None, libraries_with_data, libraries_without_data, gene_list_size, None
+        
+        logger.info(f"Successfully computed null distribution for size {actual_size_used} with {len(stats_for_size)} metrics")
     else:
         logger.warning(f"Unexpected status: {final_status}")
-        return None, None, libraries_with_data, libraries_without_data, gene_list_size
+        logger.warning(f"Result dict: {null_dist_result}")
+        return None, None, libraries_with_data, libraries_without_data, gene_list_size, None
     
     # Build combined network from ONLY libraries with permutation data
     # This ensures fair comparison: real network uses same libraries as null distribution
@@ -190,6 +259,27 @@ def compute_benchmark_for_streamlit(
     logger.info(f"Filtering iGEA results: Using {len(libraries_to_use)} libraries for benchmarking "
                f"(matching {len(libraries_with_data)} libraries with permutation data): {libraries_to_use}")
     
+    # Determine iteration filter (cap at 30 to match permutation data)
+    # Always cap at 30 iterations max (permutation data maximum)
+    # If user specified max_iterations, use that (capped at 30)
+    # If user didn't specify but has more than 30 iterations, cap at 30
+    max_iter_filter = 30  # Always cap at 30 for fair comparison with permutation data
+    if user_max_iterations is not None:
+        max_iter_filter = min(user_max_iterations, 30)
+        logger.info(f"Filtering iGEA results to iteration <= {max_iter_filter} (user requested {user_max_iterations}, capped at 30)")
+    else:
+        # Check if user's results have more than 30 iterations
+        max_user_iter = 0
+        for lib_name in libraries_to_use:
+            iter_enrich_obj = iter_enrich.get(lib_name)
+            if iter_enrich_obj and iter_enrich_obj.results:
+                for record in iter_enrich_obj.results:
+                    iteration = record.get("Iteration", 1)
+                    if isinstance(iteration, (int, float)):
+                        max_user_iter = max(max_user_iter, int(iteration))
+        if max_user_iter > 30:
+            logger.info(f"User's results have {max_user_iter} iterations, trimming to 30 for fair comparison with permutation data")
+    
     for lib_name in libraries_to_use:
         iter_enrich_obj = iter_enrich.get(lib_name)
         if iter_enrich_obj is None:
@@ -197,13 +287,30 @@ def compute_benchmark_for_streamlit(
         
         results = []
         for record in iter_enrich_obj.results:
+            # Filter by iteration count (always cap at 30)
+            iteration = record.get("Iteration", 1)
+            # Convert to int if needed
+            if isinstance(iteration, str):
+                try:
+                    iteration = int(iteration)
+                except (ValueError, TypeError):
+                    iteration = 1
+            elif not isinstance(iteration, (int, float)):
+                iteration = 1
+            else:
+                iteration = int(iteration)
+            
+            # Filter: iteration must be <= max_iter_filter (which is always <= 30)
+            if iteration > max_iter_filter:
+                continue
+            
             genes_removed = record.get("Genes removed for next iteration", [])
             if isinstance(genes_removed, str):
                 genes_removed = [g.strip() for g in genes_removed.split(",") if g.strip()]
             
             results.append({
                 'Term': f"{lib_name}: {record.get('Term', '')}",
-                'Iteration': record.get("Iteration", 1),
+                'Iteration': iteration,
                 'Library': lib_name,
                 'Genes removed for next iteration': genes_removed,
             })
@@ -221,23 +328,30 @@ def compute_benchmark_for_streamlit(
             available_sizes = sorted([int(k) for k in null_distribution.keys()])
             if available_sizes:
                 actual_size_used = min(available_sizes, key=lambda x: abs(x - gene_list_size))
-        return null_distribution, [], libraries_with_data, libraries_without_data, actual_size_used
+        return null_distribution, [], libraries_with_data, libraries_without_data, actual_size_used, combined_analyzer
     
     # Benchmark each cluster
     cluster_benchmarks = []
     for cluster in clusters:
-        benchmark = benchmark_cluster(
-            cluster,
-            null_distribution,
-            gene_list_size,
-            use_interpolation=True
-        )
-        
-        if benchmark:
-            cluster_benchmarks.append({
-                'cluster': cluster,
-                'benchmark': benchmark
-            })
+        try:
+            benchmark = benchmark_cluster(
+                cluster,
+                null_distribution,
+                gene_list_size,
+                use_interpolation=True
+            )
+            
+            if benchmark:
+                cluster_benchmarks.append({
+                    'cluster': cluster,
+                    'benchmark': benchmark
+                })
+            else:
+                logger.warning(f"benchmark_cluster returned empty result for cluster with {cluster.get('n_genes', 0)} genes, {cluster.get('n_terms', 0)} terms")
+        except Exception as e:
+            logger.error(f"Error benchmarking cluster: {e}", exc_info=True)
+            # Continue with other clusters
+            continue
     
     # Get the actual size used from null distribution
     actual_size_used = gene_list_size
@@ -246,7 +360,7 @@ def compute_benchmark_for_streamlit(
         if available_sizes:
             actual_size_used = min(available_sizes, key=lambda x: abs(x - gene_list_size))
     
-    return null_distribution, cluster_benchmarks, libraries_with_data, libraries_without_data, actual_size_used
+    return null_distribution, cluster_benchmarks, libraries_with_data, libraries_without_data, actual_size_used, combined_analyzer
 
 
 def extract_benchmark_table_data(cluster_benchmarks: List[Dict]) -> List[Dict]:
@@ -322,7 +436,8 @@ def generate_statistical_report_text(
     cluster_benchmarks: List[Dict],
     gene_list_name: str,
     libraries_with_data: List[str],
-    libraries_without_data: List[str]
+    libraries_without_data: List[str],
+    analyzer: Optional[NetworkConnectivityAnalyzer] = None
 ) -> str:
     """
     Generate full statistical report text (same format as generate_cluster_statistical_report.py).
@@ -332,6 +447,7 @@ def generate_statistical_report_text(
         gene_list_name: Name of the gene list
         libraries_with_data: Libraries used for statistics
         libraries_without_data: Libraries excluded from statistics
+        analyzer: Optional NetworkConnectivityAnalyzer to calculate term centralities
         
     Returns:
         Full report text as string
@@ -394,7 +510,7 @@ def generate_statistical_report_text(
         lines.append(f"  Number of Genes:     {cluster['n_genes']}")
         lines.append(f"  Number of Terms:     {cluster['n_terms']}")
         lines.append(f"  Number of Edges:     {cluster['n_edges']}")
-        lines.append(f"  Cluster Density:     {cluster['density']:.4f}")
+        lines.append(f"  Average Edges per Gene: {cluster.get('avg_edges_per_gene', cluster.get('density', 0.0)):.4f}")
         lines.append(f"  Number of Libraries: {cluster.get('n_libraries', 0)}")
         if 'libraries' in cluster:
             lines.append(f"  Libraries:           {', '.join(cluster['libraries'])}")
@@ -441,6 +557,37 @@ def generate_statistical_report_text(
                     lines.append(f"  {metric_name:<25} {real_value:>8.4f}  {'N/A':>10}  {'N/A':>10}  {z_score:>8.2f}  {percentile:>8.1f}%  {status}")
         
         lines.append("")
+        
+        # Terms in cluster (ranked by centrality)
+        if analyzer is not None and 'terms' in cluster:
+            terms = list(cluster['terms'])
+            if terms:
+                # Calculate term centralities (number of genes connected to each term)
+                term_data = []
+                for term in terms:
+                    # Get library for this term
+                    library = analyzer.term_to_library.get(term, "Unknown")
+                    # Extract term name (remove library prefix if present)
+                    term_name = term.split(": ", 1)[-1] if ": " in term else term
+                    # Calculate term centrality (degree = number of genes connected to this term)
+                    centrality = len(analyzer.term_to_genes.get(term, set()))
+                    term_data.append({
+                        'term': f"{library}:{term_name}",
+                        'centrality': centrality,
+                        'original_term': term
+                    })
+                
+                # Rank terms by centrality (highest first)
+                term_data.sort(key=lambda x: x['centrality'], reverse=True)
+                
+                lines.append(f"Terms in Cluster ({len(term_data)} total, ranked by centrality):")
+                lines.append("  Rank  Term                                                          Centrality (genes)")
+                lines.append("  " + "-" * 90)
+                for i, term_info in enumerate(term_data[:30], 1):  # Show top 30 terms
+                    lines.append(f"  {i:2d}.   {term_info['term']:<70} {term_info['centrality']:>3d}")
+                if len(term_data) > 30:
+                    lines.append(f"  ... and {len(term_data) - 30} more terms")
+                lines.append("")
     
     # Footer
     lines.append("=" * 100)

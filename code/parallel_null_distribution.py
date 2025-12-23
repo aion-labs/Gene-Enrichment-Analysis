@@ -265,22 +265,24 @@ def compute_null_distribution_from_raw_permutations(
     gene_list_size: int,
     selected_libraries: List[str],
     user_p_threshold: float,
+    user_max_iterations: Optional[int] = None,
     metrics: List[str] = None
 ) -> Dict[str, Dict[str, float]]:
     """
-    Compute null distribution from raw permutation results, filtering by user's p-value threshold.
+    Compute null distribution from raw permutation results, filtering by user's p-value threshold and iteration count.
     
     Args:
         merged_permutation_file: Path to merged permutation results TSV file
         gene_list_size: Target gene list size
         selected_libraries: Libraries to filter by
         user_p_threshold: User's p-value threshold (must be <= 0.05)
+        user_max_iterations: User's max iterations (permutation data will be filtered to this, capped at 30)
         metrics: List of metric names to compute
         
     Returns:
         Dictionary: {gene_list_size: {metric_name: {'mean': float, 'std': float, ...}}}
     """
-    from code.network_connectivity_benchmark import NetworkConnectivityAnalyzer
+    from network_connectivity_benchmark import NetworkConnectivityAnalyzer
     
     if user_p_threshold > 0.05:
         raise ValueError(f"User p-value threshold ({user_p_threshold}) exceeds 0.05. "
@@ -342,7 +344,10 @@ def compute_null_distribution_from_raw_permutations(
     
     # Filter by gene list size (now using nearest)
     df = df[df['gene_list_size'] == gene_list_size].copy()
-    logger.info(f"Filtered to {len(df):,} rows for gene list size {gene_list_size}")
+    logger.info(f"After size filter: {len(df):,} rows for gene list size {gene_list_size}")
+    
+    if len(df) == 0:
+        raise ValueError(f"No permutation data found for gene list size {gene_list_size}")
     
     # Filter by p-value threshold
     # Handle different possible column names for p-value
@@ -358,13 +363,53 @@ def compute_null_distribution_from_raw_permutations(
     
     # Convert p-value to float and filter
     df[p_value_col] = pd.to_numeric(df[p_value_col], errors='coerce')
+    rows_before_pval = len(df)
     df = df[df[p_value_col] <= user_p_threshold].copy()
-    logger.info(f"Filtered to {len(df):,} rows with p-value <= {user_p_threshold}")
+    logger.info(f"After p-value filter (<= {user_p_threshold}): {len(df):,} rows (was {rows_before_pval:,})")
+    
+    if len(df) == 0:
+        raise ValueError(f"No permutation data found after p-value filtering (threshold: {user_p_threshold}). "
+                        f"Permutation data was generated with p-value threshold 0.05, so very few results may pass stricter thresholds.")
     
     # Filter by selected libraries
     if selected_libraries:
+        rows_before_lib = len(df)
         df = df[df['Library'].isin(selected_libraries)].copy()
-        logger.info(f"Filtered to {len(df):,} rows for selected libraries")
+        logger.info(f"After library filter: {len(df):,} rows (was {rows_before_lib:,}) for libraries: {selected_libraries}")
+        
+        if len(df) == 0:
+            raise ValueError(f"No permutation data found after library filtering. "
+                            f"Selected libraries: {selected_libraries}")
+    
+    # Filter by iteration count
+    # Permutation data has max 30 iterations, cap user's filter at 30
+    # Always apply iteration filter to match user's selection (or cap at 30 if user has more)
+    if 'Iteration' in df.columns:
+        rows_before_iter = len(df)
+        df['Iteration'] = pd.to_numeric(df['Iteration'], errors='coerce')
+        
+        # Check iteration range in data
+        if len(df) > 0:
+            iter_min = df['Iteration'].min()
+            iter_max = df['Iteration'].max()
+            logger.info(f"Iteration range in data: {iter_min} to {iter_max}")
+        
+        if user_max_iterations is not None:
+            # Cap at 30 (permutation data maximum)
+            max_iter_filter = min(user_max_iterations, 30)
+            df = df[df['Iteration'] <= max_iter_filter].copy()
+            logger.info(f"After iteration filter (<= {max_iter_filter}): {len(df):,} rows (was {rows_before_iter:,}, user requested {user_max_iterations}, capped at 30)")
+        else:
+            # If user didn't specify, still cap at 30 (permutation data maximum)
+            max_iter_filter = 30
+            df = df[df['Iteration'] <= max_iter_filter].copy()
+            logger.info(f"After iteration filter (<= {max_iter_filter}): {len(df):,} rows (was {rows_before_iter:,}, permutation data maximum)")
+        
+        if len(df) == 0:
+            raise ValueError(f"No permutation data found after iteration filtering (max_iterations: {user_max_iterations or 'None'}, capped at 30). "
+                            f"Data had iterations in range {iter_min} to {iter_max}.")
+    else:
+        logger.warning("Iteration column not found in permutation data, skipping iteration filter")
     
     # Get unique permutations
     unique_permutations = df.groupby('filename').size().reset_index()
@@ -373,10 +418,12 @@ def compute_null_distribution_from_raw_permutations(
     
     if n_permutations == 0:
         error_msg = (
-            f"No permutation data available after filtering "
-            f"(size={gene_list_size}, p<={user_p_threshold}, libraries={selected_libraries}). "
-            f"This may occur if the p-value threshold is too strict. "
-            f"Permutation data was generated with p-value threshold 0.05, so very few results may pass stricter thresholds."
+            f"No permutation data available after all filtering steps. "
+            f"Filters applied: size={gene_list_size}, p<={user_p_threshold}, "
+            f"max_iterations={user_max_iterations if user_max_iterations is not None else 'None (capped at 30)'}, "
+            f"libraries={selected_libraries}. "
+            f"This may occur if: (1) p-value threshold is too strict (> 0.05), "
+            f"(2) iteration filter is too restrictive, or (3) no matching libraries found."
         )
         raise ValueError(error_msg)
     
@@ -505,6 +552,7 @@ def compute_null_distribution_from_parquet(
     selected_libraries: List[str],
     metrics: List[str] = None,
     user_p_threshold: float = None,
+    user_max_iterations: Optional[int] = None,
     merged_permutation_file: Path = None
 ) -> Dict[str, Dict[str, float]]:
     """
@@ -568,6 +616,7 @@ def compute_null_distribution_from_parquet(
                 gene_list_size,
                 selected_libraries,
                 user_p_threshold,
+                user_max_iterations,
                 metrics
             )
             # Return the actual size used (may have been rounded)
@@ -759,6 +808,7 @@ def compute_null_distribution_parallel(
     result_dict: Dict,
     lock: threading.Lock,
     user_p_threshold: float = None,
+    user_max_iterations: Optional[int] = None,
     merged_permutation_file: Path = None
 ) -> None:
     """
@@ -800,6 +850,7 @@ def compute_null_distribution_parallel(
             gene_list_size,
             selected_libraries,
             user_p_threshold=user_p_threshold,
+            user_max_iterations=user_max_iterations,
             merged_permutation_file=merged_permutation_file
         )
         
@@ -823,6 +874,9 @@ def compute_null_distribution_parallel(
             result_dict['error'] = str(e)
     except Exception as e:
         logger.error(f"Error computing null distribution: {e}", exc_info=True)
+        import traceback
+        error_traceback = traceback.format_exc()
+        logger.error(f"Full traceback:\n{error_traceback}")
         with lock:
             result_dict['status'] = 'error'
-            result_dict['error'] = str(e)
+            result_dict['error'] = f"{str(e)}\n\nTraceback:\n{error_traceback}"
