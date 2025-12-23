@@ -33,6 +33,7 @@ class IterativeEnrichment:
         progress_callback: Optional[Callable[[str], None]] = None,
         run_id: Optional[str] = None,
         use_multiprocessing: bool = True,
+        save_iteration_results: bool = True,
     ) -> None:
         """
         Initialize iterative enrichment.
@@ -49,6 +50,7 @@ class IterativeEnrichment:
         :param min_overlap: Minimum overlap size required for terms
         :param progress_callback: Optional callback function to report progress
         :param use_multiprocessing: If False, run enrichment serially (useful when called from multiprocessing workers)
+        :param save_iteration_results: If False, skip saving individual iteration JSON/TSV files (default: True)
         """
         self.gene_set = gene_set
         self.gene_set_library = gene_set_library
@@ -61,6 +63,7 @@ class IterativeEnrichment:
         self.min_overlap: int = min_overlap
         self.progress_callback = progress_callback
         self.use_multiprocessing = use_multiprocessing
+        self.save_iteration_results = save_iteration_results
         from datetime import datetime
         self.name = (
             name
@@ -339,6 +342,10 @@ class IterativeEnrichment:
             enrichment: The Enrichment object for this iteration
             iteration: The iteration number
         """
+        # Skip saving if disabled (e.g., for permutation generation)
+        if not self.save_iteration_results:
+            return
+        
         import json
         from pathlib import Path
         

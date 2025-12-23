@@ -5,6 +5,14 @@ Generate permutation distribution of p-values for iGEA analysis.
 This script generates random gene lists and runs iterative enrichment analysis (iGEA)
 to create a null distribution of p-values for statistical validation.
 
+Storage Strategy:
+    - Individual run files are saved to /scratch/permutation_results/ (temporary storage)
+    - Final results are copied to /results/permutation_results/ (persistent storage)
+    - Only essential columns are saved to reduce file size:
+      * Library, Iteration, Term (for network analysis)
+      * p-value column (for filtering)
+      * Genes removed for next iteration (for network connectivity)
+
 Usage:
     python code/generate_permutation_distribution.py [--n-permutations N] [--n-jobs N] [--resume]
     
@@ -15,13 +23,15 @@ Usage:
     Example for c6i.8xlarge (32 vCPUs):
         python code/generate_permutation_distribution.py --n-jobs 32
     
-    Results are saved to: results/permutation_results/
+    Results are saved to: /results/permutation_results/ (Code Ocean) or results/permutation_results/ (local)
+    Temporary files during runs: /scratch/permutation_results/ (Code Ocean) or scratch/permutation_results/ (local)
 """
 
 import argparse
 import json
 import logging
 import random
+import shutil
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Set
@@ -47,14 +57,18 @@ LIBRARIES_DIR = DATA_DIR / "libraries"
 BACKGROUNDS_DIR = DATA_DIR / "backgrounds"
 
 # Detect Code Ocean environment - use /results if it exists, otherwise use project root
-# Code Ocean mounts results at /results/
+# Code Ocean mounts results at /results/ and scratch at /scratch/
 if Path("/results").exists() and Path("/results").is_dir():
     # Running on Code Ocean
     RESULTS_DIR = Path("/results")
+    # Use /scratch for individual run files (temporary storage)
+    SCRATCH_DIR = Path("/scratch") if Path("/scratch").exists() else PROJECT_ROOT / "scratch"
 else:
     # Running locally
     RESULTS_DIR = PROJECT_ROOT / "results"
+    SCRATCH_DIR = PROJECT_ROOT / "scratch"
 OUTPUT_DIR = RESULTS_DIR / "permutation_results"
+SCRATCH_OUTPUT_DIR = SCRATCH_DIR / "permutation_results"
 
 # Add current directory (code/) to path for imports
 # When script is in code/ folder, imports work directly
@@ -273,6 +287,7 @@ def run_igea_for_library(
             min_overlap=params["min_overlap"],
             progress_callback=None,  # No progress callback for batch processing
             use_multiprocessing=False,  # Disable multiprocessing when called from multiprocessing workers
+            save_iteration_results=False,  # Don't save individual iteration files for permutations
         )
         
         if iter_enrich.results:
@@ -431,7 +446,47 @@ def run_single_permutation(
         if all_results:
             combined_df = pd.concat(all_results, ignore_index=True)
             
-            # Save to TSV
+            # Filter to only essential columns to reduce file size
+            # Essential columns needed for downstream analysis:
+            # - Library, Iteration, Term (for network analysis)
+            # - p-value column (for filtering by threshold)
+            # - Genes removed (for network connectivity analysis)
+            # We drop: Description, Rank, Overlap size, -log(p-value), Full list data, etc.
+            essential_columns = []
+            
+            # Always include these core columns if they exist
+            for col in ['Library', 'Iteration', 'Term']:
+                if col in combined_df.columns:
+                    essential_columns.append(col)
+            
+            # Prioritize 'iteration p-value' as it's the primary p-value used in iterative enrichment
+            # Fall back to other p-value column names if needed
+            p_value_col = None
+            p_value_priority = ['iteration p-value', 'p-value', 'p_value', 'P-value', 'P_value', 
+                                'iteration_p-value', 'Full list p-value']
+            for col in p_value_priority:
+                if col in combined_df.columns:
+                    p_value_col = col
+                    essential_columns.append(col)
+                    break
+            
+            # Include genes removed column (needed for network connectivity)
+            # This column contains the genes removed at each iteration, essential for building the network
+            for col in ['Genes removed for next iteration', 'Genes', 'genes_removed']:
+                if col in combined_df.columns:
+                    essential_columns.append(col)
+                    break
+            
+            # Filter DataFrame to only essential columns (reduces file size significantly)
+            if essential_columns:
+                # Only keep columns that exist in the dataframe
+                existing_essential = [col for col in essential_columns if col in combined_df.columns]
+                combined_df = combined_df[existing_essential]
+                logger.debug(f"Filtered to {len(existing_essential)} essential columns: {existing_essential}")
+            else:
+                logger.warning(f"No essential columns found! Keeping all columns. Available: {list(combined_df.columns)}")
+            
+            # Save to scratch directory (temporary storage)
             output_file = output_dir / f"permutation_{perm_idx:04d}.tsv"
             combined_df.to_csv(output_file, sep="\t", index=False)
             
@@ -448,20 +503,32 @@ def run_single_permutation(
         return (size, perm_idx, False, error_msg)
 
 
-def get_completed_permutations(output_dir: Path, size: int) -> Set[int]:
-    """Get set of already completed permutation indices for a given size."""
-    size_dir = output_dir / f"size_{size}"
-    if not size_dir.exists():
-        return set()
-    
+def get_completed_permutations(scratch_dir: Path, output_dir: Path, size: int) -> Set[int]:
+    """
+    Get set of already completed permutation indices for a given size.
+    Checks both scratch and final output directories.
+    """
     completed = set()
-    for tsv_file in size_dir.glob("permutation_*.tsv"):
-        try:
-            # Extract permutation index from filename
-            perm_idx = int(tsv_file.stem.split("_")[1])
-            completed.add(perm_idx)
-        except (ValueError, IndexError):
-            continue
+    
+    # Check scratch directory first (where files are written during runs)
+    scratch_size_dir = scratch_dir / f"size_{size}"
+    if scratch_size_dir.exists():
+        for tsv_file in scratch_size_dir.glob("permutation_*.tsv"):
+            try:
+                perm_idx = int(tsv_file.stem.split("_")[1])
+                completed.add(perm_idx)
+            except (ValueError, IndexError):
+                continue
+    
+    # Also check final output directory (in case files were already copied)
+    final_size_dir = output_dir / f"size_{size}"
+    if final_size_dir.exists():
+        for tsv_file in final_size_dir.glob("permutation_*.tsv"):
+            try:
+                perm_idx = int(tsv_file.stem.split("_")[1])
+                completed.add(perm_idx)
+            except (ValueError, IndexError):
+                continue
     
     return completed
 
@@ -473,17 +540,27 @@ def run_permutations_for_size(
     libraries: Dict[str, GeneSetLibrary],
     params: Dict,
     output_dir: Path,
+    scratch_dir: Path,
     n_jobs: int = 1,
     resume: bool = True
 ) -> Dict[str, int]:
     """
     Run all permutations for a given gene list size.
     
+    Args:
+        output_dir: Directory in /results for final permutation_results
+        scratch_dir: Directory in /scratch for temporary individual run files
+    
     Returns:
         Dictionary with success/failure counts
     """
-    size_dir = output_dir / f"size_{size}"
+    # Use scratch directory for individual run files
+    size_dir = scratch_dir / f"size_{size}"
     size_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Final output directory in /results (for copying files later)
+    final_size_dir = output_dir / f"size_{size}"
+    final_size_dir.mkdir(parents=True, exist_ok=True)
     
     # Convert to absolute path string for multiprocessing compatibility
     # This ensures workers use the same path regardless of their working directory
@@ -495,7 +572,7 @@ def run_permutations_for_size(
     
     # Check for already completed permutations
     if resume:
-        completed = get_completed_permutations(output_dir, size)
+        completed = get_completed_permutations(scratch_dir, output_dir, size)
         remaining = set(range(1, n_permutations + 1)) - completed
         logger.info(f"Found {len(completed)} completed permutations, {len(remaining)} remaining")
     else:
@@ -622,6 +699,50 @@ def run_permutations_for_size(
     
     size_duration = datetime.now() - start_time
     logger.info(f"Size {size} completed: {stats['success']} successful, {stats['failed']} failed in {size_duration}")
+    
+    # Copy completed files from scratch to final output directory
+    # Only copy files that don't already exist in results (for resume safety)
+    logger.info(f"Copying files from scratch to results directory...")
+    copied_count = 0
+    skipped_count = 0
+    for tsv_file in size_dir.glob("permutation_*.tsv"):
+        try:
+            dest_file = final_size_dir / tsv_file.name
+            # Only copy if file doesn't exist or scratch file is newer
+            if not dest_file.exists() or tsv_file.stat().st_mtime > dest_file.stat().st_mtime:
+                shutil.copy2(tsv_file, dest_file)
+                copied_count += 1
+            else:
+                skipped_count += 1
+        except Exception as e:
+            logger.warning(f"Failed to copy {tsv_file} to {dest_file}: {e}")
+    
+    if copied_count > 0:
+        logger.info(f"Copied {copied_count} files to {final_size_dir}")
+    if skipped_count > 0:
+        logger.info(f"Skipped {skipped_count} files (already exist in results)")
+    
+    # Clear scratch directory for this size after copying to free up space
+    try:
+        if size_dir.exists():
+            shutil.rmtree(size_dir)
+            logger.info(f"Cleared scratch directory: {size_dir}")
+    except Exception as e:
+        logger.warning(f"Failed to clear scratch directory {size_dir}: {e}")
+    
+    # Clear all run_* folders from scratch (iteration result folders that may have been created)
+    try:
+        if scratch_dir.exists():
+            run_folders = [d for d in scratch_dir.iterdir() if d.is_dir() and d.name.startswith("run_")]
+            for run_folder in run_folders:
+                try:
+                    shutil.rmtree(run_folder)
+                    logger.info(f"Cleared run folder: {run_folder}")
+                except Exception as e:
+                    logger.warning(f"Failed to clear run folder {run_folder}: {e}")
+    except Exception as e:
+        logger.warning(f"Failed to clear run folders from scratch: {e}")
+    
     return stats
 
 
@@ -676,12 +797,14 @@ def main():
     logger.info(f"Permutations per size: {n_permutations}")
     logger.info(f"Parallel jobs: {n_jobs}")
     logger.info(f"Resume mode: {resume}")
-    logger.info(f"Output directory: {OUTPUT_DIR}")
+    logger.info(f"Output directory (results): {OUTPUT_DIR}")
+    logger.info(f"Scratch directory (temporary): {SCRATCH_OUTPUT_DIR}")
     logger.info(f"Parameters: {DEFAULT_PARAMS}")
     logger.info("="*60)
     
-    # Create output directory
+    # Create output directories
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    SCRATCH_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     
     # Save configuration
     config = {
@@ -710,9 +833,8 @@ def main():
     # Calculate total permutations across all sizes for overall progress
     total_permutations = 0
     for size in sizes_to_process:
-        size_dir = OUTPUT_DIR / f"size_{size}"
         if resume:
-            completed = get_completed_permutations(OUTPUT_DIR, size)
+            completed = get_completed_permutations(SCRATCH_OUTPUT_DIR, OUTPUT_DIR, size)
             remaining = n_permutations - len(completed)
         else:
             remaining = n_permutations
@@ -727,9 +849,8 @@ def main():
         size_start = datetime.now()
         
         # Calculate how many permutations this size will process
-        size_dir = OUTPUT_DIR / f"size_{size}"
         if resume:
-            completed = get_completed_permutations(OUTPUT_DIR, size)
+            completed = get_completed_permutations(SCRATCH_OUTPUT_DIR, OUTPUT_DIR, size)
             size_remaining = n_permutations - len(completed)
         else:
             size_remaining = n_permutations
@@ -744,6 +865,7 @@ def main():
             libraries=libraries,
             params=DEFAULT_PARAMS,
             output_dir=OUTPUT_DIR,
+            scratch_dir=SCRATCH_OUTPUT_DIR,
             n_jobs=n_jobs,
             resume=resume
         )
