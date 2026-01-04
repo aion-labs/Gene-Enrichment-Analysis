@@ -1,0 +1,5 @@
+term	rank	description	overlap	overlap_size	p-value	fdr	library
+HALLMARK_ADIPOGENESIS	1	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HALLMARK_ADIPOGENESIS	['CAT', 'DDT', 'FAH', 'GBE1', 'GPHN', 'HIBCH', 'LIFR', 'SCP2']	8/200	0.00979472277236316	0.07509287458811756	h.all.v2025.1.Hs.symbols
+HALLMARK_HEME_METABOLISM	2	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HALLMARK_HEME_METABOLISM	['ALDH6A1', 'ARHGEF12', 'CAT', 'FBXO9', 'FECH', 'FN3K', 'KLF1', 'NR3C1']	8/200	0.00979472277236316	0.07509287458811756	h.all.v2025.1.Hs.symbols
+HALLMARK_XENOBIOTIC_METABOLISM	3	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HALLMARK_XENOBIOTIC_METABOLISM	['ADH5', 'CAT', 'DDT', 'DHRS1', 'ENTPD5', 'FAH', 'GNMT', 'NFS1']	8/200	0.00979472277236316	0.07509287458811756	h.all.v2025.1.Hs.symbols
+HALLMARK_OXIDATIVE_PHOSPHORYLATION	4	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HALLMARK_OXIDATIVE_PHOSPHORYLATION	['ALDH6A1', 'COX15', 'CPT1A', 'MDH1', 'MRPL35', 'NDUFB6', 'NDUFV1']	7/200	0.030380698050170796	0.16543302729067452	h.all.v2025.1.Hs.symbols

@@ -90,17 +90,21 @@ def get_available_libraries_from_parquet(parquet_dir: Path) -> Set[str]:
 def normalize_library_name(lib_name: str) -> str:
     """
     Normalize library name for matching.
-    Handles various formats like "H: Hallmark Gene Sets", "C5: Gene Ontology: Biological Process", etc.
+    Handles display names from alias.json like "H: Hallmark Gene Sets", "C5: Gene Ontology: Biological Process",
+    and parquet library names like "C2: CP: Reactome Pathways".
+    
+    Since library names are now always from alias.json, this function normalizes those display names
+    to match with parquet library names.
     
     Args:
-        lib_name: Library name in various formats
+        lib_name: Library name (should be from alias.json "name" field or parquet library name)
         
     Returns:
-        Normalized library name
+        Normalized library name for matching
     """
     lib_lower = lib_name.lower().strip()
     
-    # Map common patterns to standard names
+    # Map common patterns to standard names (for display names from alias.json and parquet names)
     if 'hallmark' in lib_lower or lib_lower.startswith('h:'):
         return 'Hallmark'
     elif 'reactome' in lib_lower:
@@ -112,7 +116,7 @@ def normalize_library_name(lib_name: str) -> str:
     elif 'kegg' in lib_lower:
         # Default to Legacy if just "KEGG" (most common case, and the one with permutation data)
         return 'KEGG Legacy'
-    elif 'go bp' in lib_lower or 'biological process' in lib_lower or lib_lower.startswith('c5:') and 'bp' in lib_lower:
+    elif 'go bp' in lib_lower or 'biological process' in lib_lower or (lib_lower.startswith('c5:') and 'bp' in lib_lower):
         return 'GO BP'
     elif 'go cc' in lib_lower or 'cellular component' in lib_lower:
         return 'GO CC'
@@ -124,12 +128,24 @@ def normalize_library_name(lib_name: str) -> str:
         return 'GO CC'
     elif 'go ' in lib_lower and 'mf' in lib_lower:
         return 'GO MF'
+    elif 'biocarta' in lib_lower:
+        return 'BioCarta'
+    elif 'wikipathways' in lib_lower:
+        return 'WikiPathways'
+    elif 'pathway interaction database' in lib_lower or 'pid' in lib_lower:
+        return 'Pathway Interaction Database'
+    elif 'canonical pathways' in lib_lower or (lib_lower.startswith('c2:') and 'canonical' in lib_lower):
+        return 'Canonical pathways'
     
     # Remove common prefixes
     lib_clean = lib_lower
     for prefix in ['c2:', 'c5:', 'h:', 'c3:', 'c4:', 'c6:', 'c7:', 'c8:']:
         if lib_clean.startswith(prefix):
             lib_clean = lib_clean[len(prefix):].strip()
+    
+    # Also remove "cp:" prefix (common in parquet library names like "C2: CP: Reactome Pathways")
+    if lib_clean.startswith('cp:'):
+        lib_clean = lib_clean[len('cp:'):].strip()
     
     # Remove common suffixes
     for suffix in [' gene sets', ' pathways', ' pathway']:
@@ -142,7 +158,8 @@ def normalize_library_name(lib_name: str) -> str:
 
 def find_intersection_libraries(
     user_selected_libraries: List[str],
-    parquet_dir: Path
+    parquet_dir: Path,
+    use_all_available: bool = False
 ) -> tuple[List[str], List[str]]:
     """
     Find intersection between user-selected libraries and libraries with permutation data.
@@ -150,11 +167,19 @@ def find_intersection_libraries(
     Args:
         user_selected_libraries: List of library names selected by user
         parquet_dir: Directory containing Parquet cluster statistics files
+        use_all_available: If True, use all available libraries from parquet files instead of filtering by user selection
         
     Returns:
         Tuple of (libraries_with_data, libraries_without_data)
     """
     available_libraries = get_available_libraries_from_parquet(parquet_dir)
+    
+    # If use_all_available is True, return all available libraries
+    if use_all_available:
+        libraries_with_data = sorted(list(available_libraries))
+        libraries_without_data = []
+        logger.info(f"Using all {len(libraries_with_data)} libraries available in parquet files: {libraries_with_data}")
+        return libraries_with_data, libraries_without_data
     
     # Normalize available libraries
     available_normalized = {normalize_library_name(lib): lib for lib in available_libraries}
@@ -826,14 +851,16 @@ def compute_null_distribution_parallel(
     try:
         logger.info(f"Computing null distribution for size {gene_list_size} with libraries: {selected_libraries}")
         
-        # Check if user p-value threshold is too high
-        if user_p_threshold is not None and user_p_threshold > 0.05:
+        # Require p-value threshold <= 0.01 for benchmarking
+        # This ensures statistical rigor and matches the permutation data generation
+        if user_p_threshold is not None and user_p_threshold > 0.01:
             with lock:
                 result_dict['status'] = 'unavailable'
                 result_dict['error'] = (
-                    f"Statistical benchmarking is not available for p-value thresholds > 0.05. "
+                    f"Benchmarking requires p-value threshold <= 0.01. "
                     f"Your threshold: {user_p_threshold}. "
-                    f"Permutation data was generated with p-value threshold 0.05."
+                    f"Permutation data was generated with p-value threshold 0.05, "
+                    f"but benchmarking requires <= 0.01 for statistical rigor."
                 )
             logger.warning(result_dict['error'])
             return

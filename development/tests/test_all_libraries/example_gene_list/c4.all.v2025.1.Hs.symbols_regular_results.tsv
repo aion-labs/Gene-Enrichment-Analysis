@@ -1,0 +1,36 @@
+term	rank	description	overlap	overlap_size	p-value	fdr	library
+MODULE_43	1	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MODULE_43	['ACO1', 'CAT', 'GBE1', 'GYS2', 'MDH1', 'NDUFV1']	6/99	0.004201816821215557	1.0	c4.all.v2025.1.Hs.symbols
+MORF_EIF3S6	2	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MORF_EIF3S6	['LYPLA1', 'MDH1', 'MRPL9', 'NAP1L1', 'NDUFV1', 'PSMB1']	6/122	0.011374132638991502	1.0	c4.all.v2025.1.Hs.symbols
+MODULE_237	3	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MODULE_237	['ASF1A', 'DMXL1', 'SF1', 'USP34']	4/58	0.01209784184744811	1.0	c4.all.v2025.1.Hs.symbols
+MORF_RAB6A	4	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MORF_RAB6A	['ATXN2', 'LYPLA1', 'MDH1', 'MRPL9']	4/67	0.019661298529987083	1.0	c4.all.v2025.1.Hs.symbols
+GCM_CHUK	5	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GCM_CHUK	['ASCC1', 'COQ10A', 'SPTLC1', 'YME1L1']	4/71	0.02378272575040645	1.0	c4.all.v2025.1.Hs.symbols
+MODULE_244	6	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MODULE_244	['PEX1', 'PMS1', 'POLRMT', 'PSMC6', 'SEPHS2', 'TIMM44', 'TRAP1']	7/187	0.025592508898696836	1.0	c4.all.v2025.1.Hs.symbols
+GNF2_MAP2K3	7	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GNF2_MAP2K3	['CAT', 'FBXO9', 'FECH', 'KLF1']	4/75	0.028391432376344665	1.0	c4.all.v2025.1.Hs.symbols
+MODULE_257	8	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MODULE_257	['ATXN2', 'LRRC61', 'LRRC8A', 'MGAT1', 'NAGLU', 'PTTG1IP']	6/156	0.033546741177759486	1.0	c4.all.v2025.1.Hs.symbols
+MODULE_212	9	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MODULE_212	['ACO1', 'ADK', 'CHPT1', 'DDT', 'FAH', 'GLO1', 'GYS2', 'HPN', 'MDH1', 'TM7SF3']	10/329	0.03640192161018385	1.0	c4.all.v2025.1.Hs.symbols
+MODULE_40	10	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MODULE_40	['ALDH6A1', 'FAH', 'GSTZ1', 'SCP2']	4/82	0.03765516287069707	1.0	c4.all.v2025.1.Hs.symbols
+MORF_SKP1A	11	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MORF_SKP1A	['LYPLA1', 'MDH1', 'MRPL9', 'NDUFV1', 'PSMB1', 'PSMC6', 'YME1L1']	7/204	0.038399182936309166	1.0	c4.all.v2025.1.Hs.symbols
+GAVISH_3CA_MALIGNANT_METAPROGRAM_40_PDAC_RELATED	12	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GAVISH_3CA_MALIGNANT_METAPROGRAM_40_PDAC_RELATED	['ALDH1A3', 'CD55', 'LRRC8A']	3/50	0.04159125520324967	1.0	c4.all.v2025.1.Hs.symbols
+MORF_PRDX3	13	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MORF_PRDX3	['EI24', 'LYPLA1', 'MDH1', 'NDUFV1']	4/85	0.0420976080404671	1.0	c4.all.v2025.1.Hs.symbols
+MORF_ACP1	14	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MORF_ACP1	['LYPLA1', 'MRPL9', 'NAGLU', 'NAP1L1', 'NDUFV1', 'PSMB1', 'YME1L1']	7/211	0.044714515166800514	1.0	c4.all.v2025.1.Hs.symbols
+MORF_CTBP1	15	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MORF_CTBP1	['FBXO9', 'LYPLA1', 'MDH1', 'MRPL9', 'NDUFV1', 'PSMB1']	6/168	0.04547361924267698	1.0	c4.all.v2025.1.Hs.symbols
+MORF_PPP1CA	16	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MORF_PPP1CA	['LYPLA1', 'MDH1', 'MRPL9', 'NDUFV1', 'PSMB1', 'PSMC6']	6/168	0.04547361924267698	1.0	c4.all.v2025.1.Hs.symbols
+MODULE_273	17	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MODULE_273	['ATP6V1B2', 'NDUFV1', 'NR3C1']	3/52	0.04587560190540938	1.0	c4.all.v2025.1.Hs.symbols
+MODULE_62	18	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MODULE_62	['ATP6V1B2', 'NDUFB6', 'NDUFV1', 'SLC9A6']	4/89	0.04846297496019955	1.0	c4.all.v2025.1.Hs.symbols
+MORF_PPP2CA	19	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MORF_PPP2CA	['C1D', 'LYPLA1', 'MDH1', 'MRPL9', 'PSMB1']	5/129	0.049099569760528025	1.0	c4.all.v2025.1.Hs.symbols
+MORF_HAT1	20	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MORF_HAT1	['EI24', 'LYPLA1', 'MDH1', 'MRPL9', 'NDUFV1', 'UBE2E1']	6/175	0.053514905070338376	1.0	c4.all.v2025.1.Hs.symbols
+GCM_RAB10	21	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GCM_RAB10	['GORASP1', 'LRRC8A', 'SCRN3', 'SPTLC1', 'TMEM30A', 'VPS13B']	6/176	0.054730017394004175	1.0	c4.all.v2025.1.Hs.symbols
+GCM_NUMA1	22	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GCM_NUMA1	['COQ10A', 'GORASP1', 'SPTLC1']	3/56	0.055070268627515115	1.0	c4.all.v2025.1.Hs.symbols
+MODULE_93	23	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MODULE_93	['ALDH1A3', 'ALDH6A1', 'CAT', 'GSTZ1', 'MDH1', 'NDUFV1']	6/182	0.06237144234808263	1.0	c4.all.v2025.1.Hs.symbols
+MORF_FBL	24	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MORF_FBL	['LYPLA1', 'MRPL9', 'NAP1L1', 'NDUFV1', 'PSMB1']	5/140	0.06522445662216318	1.0	c4.all.v2025.1.Hs.symbols
+MODULE_220	25	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MODULE_220	['NEO1']	1/333	0.06624801772988567	1.0	c4.all.v2025.1.Hs.symbols
+MORF_EI24	26	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MORF_EI24	['EI24', 'GLO1', 'LYPLA1', 'MDH1', 'NDUFV1']	5/143	0.07008126550246122	1.0	c4.all.v2025.1.Hs.symbols
+MORF_PRKAR1A	27	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MORF_PRKAR1A	['ATXN2', 'LYPLA1', 'MDH1', 'SEPHS2', 'TOR1A']	5/143	0.07008126550246122	1.0	c4.all.v2025.1.Hs.symbols
+GNF2_FBL	28	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GNF2_FBL	['MRPL9', 'NAP1L1', 'NOL7', 'PMPCB', 'SF1']	5/146	0.07513313630304058	1.0	c4.all.v2025.1.Hs.symbols
+GNF2_TST	29	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GNF2_TST	['FAH', 'GNMT', 'GSTZ1', 'HPN']	4/104	0.07676860314618557	1.0	c4.all.v2025.1.Hs.symbols
+MORF_RAB1A	30	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MORF_RAB1A	['ATXN2', 'C1D', 'DHRS1', 'MDH1', 'MRPL9', 'SEPHS2']	6/193	0.07794572735454718	1.0	c4.all.v2025.1.Hs.symbols
+MORF_SOD1	31	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MORF_SOD1	['EI24', 'GLO1', 'LYPLA1', 'MDH1', 'MRPL9', 'NDUFV1', 'PSMB1', 'UBE2E1']	8/278	0.07819614285023599	1.0	c4.all.v2025.1.Hs.symbols
+GCM_ERBB2IP	32	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GCM_ERBB2IP	['GORASP1', 'SCRN3', 'VPS13B']	3/65	0.07865808639322024	1.0	c4.all.v2025.1.Hs.symbols
+GNF2_GSTM1	33	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GNF2_GSTM1	['FAH', 'GNMT', 'GSTZ1', 'HPN']	4/109	0.08770847592871726	1.0	c4.all.v2025.1.Hs.symbols
+GNF2_RBBP6	34	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GNF2_RBBP6	['CDK5RAP1', 'PMPCB', 'RBM39']	3/70	0.09336975605745247	1.0	c4.all.v2025.1.Hs.symbols
+MODULE_321	35	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MODULE_321	['ACO1', 'GBE1', 'LRRC8A', 'PTTG1IP']	4/112	0.09461619187142052	1.0	c4.all.v2025.1.Hs.symbols

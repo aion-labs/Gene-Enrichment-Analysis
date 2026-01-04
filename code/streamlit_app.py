@@ -621,10 +621,14 @@ def _create_combined_regular_archive(regular_enrichments: Dict[str, Enrichment])
 
 def main() -> None:
     logger.info("Starting the Streamlit app")
-    st.sidebar.image(
-        Image.open(ROOT / "code" / "static" / "logo.png"),
-        caption="Iterative Enrichment Analysis",
-    )
+    logo_path = ROOT / "code" / "static" / "logo.png"
+    if logo_path.exists():
+        st.sidebar.image(
+            Image.open(logo_path),
+            caption="Iterative Enrichment Analysis",
+        )
+    else:
+        logger.warning(f"Logo not found at {logo_path}")
     st.sidebar.title("Enrichment analysis")
     st.sidebar.write(
         """This app tests the input gene list against selected pathway libraries. 
@@ -845,13 +849,29 @@ Results include ranked tables, bar charts, and network graphs."""
             
             # Load selected libraries
             if state.libraries:
-                state.gene_set_libraries = [
-                    GeneSetLibrary(
-                        str(ROOT / "data" / "libraries" / state.lib_mapper[lib]),
-                        name=lib,
-                    )
-                    for lib in state.libraries
-                ]
+                from ui.utils import get_library_name_from_alias
+                state.gene_set_libraries = []
+                for lib in state.libraries:
+                    try:
+                        lib_filename = state.lib_mapper.get(lib)
+                        if not lib_filename:
+                            logger.warning(f"Library '{lib}' not found in lib_mapper")
+                            continue
+                        lib_path = ROOT / "data" / "libraries" / lib_filename
+                        if not lib_path.exists():
+                            logger.error(f"Library file not found: {lib_path}")
+                            st.error(f"❌ Library file not found: {lib_filename}")
+                            continue
+                        lib_name = get_library_name_from_alias(lib_path)
+                        state.gene_set_libraries.append(
+                            GeneSetLibrary(
+                                str(lib_path),
+                                name=lib_name,
+                            )
+                        )
+                    except Exception as e:
+                        logger.error(f"Error loading library '{lib}': {e}")
+                        st.error(f"❌ Error loading library '{lib}': {e}")
             else:
                 state.gene_set_libraries = []
             # Always load background gene set
@@ -859,10 +879,21 @@ Results include ranked tables, bar charts, and network graphs."""
             bg_file_path, bg_format = get_background_info(state.background_set)
             
             if bg_file_path:
-                state.background_gene_set = BackgroundGeneSet(
-                    bg_file_path,
-                    input_format=bg_format  # Use format from alias file
-                )
+                bg_path = Path(bg_file_path)
+                if not bg_path.exists():
+                    logger.error(f"Background file not found: {bg_path}")
+                    st.error(f"❌ Background file not found: {bg_path.name}")
+                    state.background_gene_set = None
+                else:
+                    try:
+                        state.background_gene_set = BackgroundGeneSet(
+                            bg_file_path,
+                            input_format=bg_format  # Use format from alias file
+                        )
+                    except Exception as e:
+                        logger.error(f"Error loading background: {e}")
+                        st.error(f"❌ Error loading background: {e}")
+                        state.background_gene_set = None
             else:
                 st.error(f"❌ Could not load background: {state.background_set}")
                 state.background_gene_set = None
@@ -1704,7 +1735,7 @@ Results include ranked tables, bar charts, and network graphs."""
                 with st.spinner("Computing statistical benchmark... This may take a minute."):
                     try:
                         # Set up paths
-                        parquet_dir = ROOT / "results" / "permutation_cluster_statistics_parquet"
+                        parquet_dir = ROOT / "permutations" / "permutation_cluster_statistics_parquet"
                         
                         # Get user's max_iterations (cap at 30 for permutation data)
                         user_max_iter = state.iter_max_iter if state.iter_max_iter > 0 else None

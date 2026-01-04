@@ -1,0 +1,5 @@
+term	rank	description	overlap	overlap_size	p-value	fdr	library
+KEGG_PEROXISOME	1	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_PEROXISOME	['CAT', 'NUDT12', 'PEX1', 'SCP2']	4/78	0.032211091126742156	1.0	c2.cp.kegg_legacy.v2025.1.Hs.symbols
+KEGG_STARCH_AND_SUCROSE_METABOLISM	2	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_STARCH_AND_SUCROSE_METABOLISM	['GBE1', 'GYS2', 'PGM2']	3/52	0.04634529365104238	1.0	c2.cp.kegg_legacy.v2025.1.Hs.symbols
+KEGG_GLYCOLYSIS_GLUCONEOGENESIS	3	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_GLYCOLYSIS_GLUCONEOGENESIS	['ADH5', 'ALDH1A3', 'PGM2']	3/62	0.07121354910159243	1.0	c2.cp.kegg_legacy.v2025.1.Hs.symbols
+KEGG_METABOLISM_OF_XENOBIOTICS_BY_CYTOCHROME_P450	4	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_METABOLISM_OF_XENOBIOTICS_BY_CYTOCHROME_P450	['ADH5', 'ALDH1A3', 'GSTZ1']	3/70	0.09461547985521325	1.0	c2.cp.kegg_legacy.v2025.1.Hs.symbols

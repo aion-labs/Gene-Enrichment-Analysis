@@ -23,7 +23,9 @@ from parallel_null_distribution import (
 logger = logging.getLogger(__name__)
 # Add file handler if not already present
 if not any(isinstance(h, logging.FileHandler) for h in logger.handlers):
-    log_file = Path(__file__).parent.parent.parent / "benchmarking.log"
+    ROOT = Path(__file__).resolve().parent.parent.parent
+    log_file = ROOT / "sandbox" / "benchmarking.log"
+    log_file.parent.mkdir(exist_ok=True)  # Ensure sandbox directory exists
     file_handler = logging.FileHandler(str(log_file))
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
@@ -83,22 +85,44 @@ def compute_benchmark_for_streamlit(
         analyzer: NetworkConnectivityAnalyzer instance used for the analysis
     """
     # Get all library names from iter_enrich
+    # NOTE: All user-selected libraries are shown in enrichment results.
+    # However, for statistical benchmarking, we only use libraries that match
+    # between user selection and available permutation data in parquet files.
     user_selected_libraries = list(iter_enrich.keys())
     
-    # Find which libraries have permutation data
+    # Find which user-selected libraries have matching permutation data
+    # Statistics will only use libraries that match exactly between user selection and parquet files
     libraries_with_data, libraries_without_data = find_intersection_libraries(
         user_selected_libraries,
-        parquet_dir
+        parquet_dir,
+        use_all_available=False  # Match user-selected libraries with available libraries
     )
+    
+    # Require minimum of 3 matching libraries for benchmarking
+    # This ensures statistical robustness of the null distribution comparison
+    MIN_MATCHING_LIBRARIES = 3
+    if len(libraries_with_data) < MIN_MATCHING_LIBRARIES:
+        logger.warning(
+            f"Benchmarking requires at least {MIN_MATCHING_LIBRARIES} matching libraries. "
+            f"Found {len(libraries_with_data)} matching libraries: {libraries_with_data}. "
+            f"User selected: {user_selected_libraries}. "
+            f"Skipping benchmarking."
+        )
+        return None, None, libraries_with_data, libraries_without_data, gene_list_size, None
     
     if not libraries_with_data:
         logger.warning("No libraries with permutation data available for benchmarking")
         return None, None, [], user_selected_libraries, gene_list_size, None
     
-    # Check if p-value threshold is valid for benchmarking
-    if p_threshold > 0.05:
-        logger.warning(f"P-value threshold {p_threshold} > 0.05, benchmarking may be unavailable")
-        # Still try to compute, but warn user
+    # Require p-value threshold <= 0.01 for benchmarking
+    # This ensures statistical rigor and matches the permutation data generation
+    if p_threshold > 0.01:
+        logger.warning(
+            f"Benchmarking requires p-value threshold <= 0.01. "
+            f"Your threshold: {p_threshold}. "
+            f"Skipping benchmarking."
+        )
+        return None, None, libraries_with_data, libraries_without_data, gene_list_size, None
     
     # Compute null distribution in parallel
     null_dist_result = {
@@ -113,6 +137,8 @@ def compute_benchmark_for_streamlit(
     if merged_permutation_file is None:
         # Try multiple possible locations
         possible_paths = [
+            parquet_dir.parent / "merged_permutation_results.tsv",  # New location in permutations folder
+            parquet_dir.parent.parent / "permutations" / "merged_permutation_results.tsv",
             parquet_dir.parent / "permutation_results" / "merged_permutation_results.tsv",
             parquet_dir.parent.parent / "archive" / "permutation_analysis" / "results" / "permutation_results" / "merged_permutation_results.tsv",
             parquet_dir.parent.parent / "merged_permutation_results.tsv",
@@ -222,42 +248,38 @@ def compute_benchmark_for_streamlit(
         logger.warning(f"Result dict: {null_dist_result}")
         return None, None, libraries_with_data, libraries_without_data, gene_list_size, None
     
-    # Build combined network from ONLY libraries with permutation data
+    # Build combined network from ONLY matching libraries (libraries_with_data)
     # This ensures fair comparison: real network uses same libraries as null distribution
-    # We filter iGEA results to match the libraries used in the null distribution
+    # NOTE: All user-selected libraries are shown in enrichment results (handled by UI layer).
+    # Here we filter iGEA results to only use matching libraries for statistical benchmarking.
+    # This ensures the comparison is valid: same libraries, same p-value threshold, same max iterations.
+    # Need to match user library names (e.g., "Reactome") to parquet library names (e.g., "C2: CP: Reactome Pathways")
     combined_analyzer = NetworkConnectivityAnalyzer()
     
-    # Create a mapping from normalized library names to original names for matching
-    # Map user library names (from iter_enrich) to permutation library names (from libraries_with_data)
-    lib_name_mapping = {}
-    for lib_name in iter_enrich.keys():
-        normalized = normalize_library_name(lib_name)
-        lib_name_mapping[lib_name] = normalized
+    # Create a mapping from user library names to parquet library names
+    user_to_parquet_mapping = {}
+    for user_lib in iter_enrich.keys():
+        normalized_user = normalize_library_name(user_lib)
+        for parquet_lib in libraries_with_data:
+            normalized_parquet = normalize_library_name(parquet_lib)
+            if (normalized_user == normalized_parquet or 
+                normalized_user in normalized_parquet.lower() or 
+                normalized_parquet in normalized_user.lower()):
+                user_to_parquet_mapping[user_lib] = parquet_lib
+                logger.info(f"Matched user library '{user_lib}' to parquet library '{parquet_lib}'")
+                break
     
-    # Find which libraries from iter_enrich match libraries_with_data
-    libraries_to_use = []
-    for lib_name in iter_enrich.keys():
-        normalized_user = lib_name_mapping[lib_name]
-        # Check if this library matches any library with permutation data
-        for lib_with_data in libraries_with_data:
-            normalized_data = normalize_library_name(lib_with_data)
-            # Match if normalized names are the same or one contains the other
-            if (normalized_user == normalized_data or 
-                normalized_user in normalized_data.lower() or 
-                normalized_data in normalized_user.lower()):
-                if lib_name not in libraries_to_use:
-                    libraries_to_use.append(lib_name)
-                    break
+    if not user_to_parquet_mapping:
+        logger.warning("No matching libraries found between analysis and permutation data")
+        logger.warning(f"User libraries: {list(iter_enrich.keys())}")
+        logger.warning(f"Parquet libraries: {libraries_with_data}")
+        return None, None, libraries_with_data, libraries_without_data, gene_list_size, None
     
-    if not libraries_to_use:
-        logger.warning(f"Could not match any libraries from iter_enrich to libraries with permutation data. "
-                      f"User libraries: {list(iter_enrich.keys())}, "
-                      f"Permutation libraries: {libraries_with_data}")
-        # Fallback: try to use all libraries_with_data (but this might not work if names don't match)
-        libraries_to_use = list(iter_enrich.keys())
-    
+    libraries_to_use = list(user_to_parquet_mapping.keys())
     logger.info(f"Filtering iGEA results: Using {len(libraries_to_use)} libraries for benchmarking "
-               f"(matching {len(libraries_with_data)} libraries with permutation data): {libraries_to_use}")
+               f"(matched to {len(user_to_parquet_mapping)} parquet libraries):")
+    for user_lib, parquet_lib in user_to_parquet_mapping.items():
+        logger.info(f"  - {user_lib} → {parquet_lib}")
     
     # Determine iteration filter (cap at 30 to match permutation data)
     # Always cap at 30 iterations max (permutation data maximum)
@@ -330,28 +352,34 @@ def compute_benchmark_for_streamlit(
                 actual_size_used = min(available_sizes, key=lambda x: abs(x - gene_list_size))
         return null_distribution, [], libraries_with_data, libraries_without_data, actual_size_used, combined_analyzer
     
-    # Benchmark each cluster
+    # Benchmark only the largest cluster (null distribution is built from largest clusters only)
+    # Clusters are already sorted by size (largest first)
+    largest_cluster = clusters[0]
+    
+    logger.info(f"Benchmarking largest cluster: {largest_cluster['size']} nodes "
+               f"({largest_cluster['n_genes']} genes, {largest_cluster['n_terms']} terms)")
+    logger.info(f"Note: Only the largest cluster is benchmarked against null distribution "
+               f"(which is built from largest clusters in each permutation)")
+    
     cluster_benchmarks = []
-    for cluster in clusters:
-        try:
-            benchmark = benchmark_cluster(
-                cluster,
-                null_distribution,
-                gene_list_size,
-                use_interpolation=True
-            )
-            
-            if benchmark:
-                cluster_benchmarks.append({
-                    'cluster': cluster,
-                    'benchmark': benchmark
-                })
-            else:
-                logger.warning(f"benchmark_cluster returned empty result for cluster with {cluster.get('n_genes', 0)} genes, {cluster.get('n_terms', 0)} terms")
-        except Exception as e:
-            logger.error(f"Error benchmarking cluster: {e}", exc_info=True)
-            # Continue with other clusters
-            continue
+    try:
+        benchmark = benchmark_cluster(
+            largest_cluster,
+            null_distribution,
+            gene_list_size,
+            use_interpolation=True
+        )
+        
+        if benchmark:
+            cluster_benchmarks.append({
+                'cluster': largest_cluster,
+                'benchmark': benchmark
+            })
+        else:
+            logger.warning(f"benchmark_cluster returned empty result for largest cluster "
+                         f"with {largest_cluster.get('n_genes', 0)} genes, {largest_cluster.get('n_terms', 0)} terms")
+    except Exception as e:
+        logger.error(f"Error benchmarking largest cluster: {e}", exc_info=True)
     
     # Get the actual size used from null distribution
     actual_size_used = gene_list_size
@@ -460,7 +488,8 @@ def generate_statistical_report_text(
     lines.append("=" * 100)
     lines.append("")
     lines.append(f"Gene List: {gene_list_name}")
-    lines.append(f"Total Clusters: {len(cluster_benchmarks)}")
+    lines.append(f"Total Clusters in Network: {len(cluster_benchmarks) if cluster_benchmarks else 0}")
+    lines.append(f"Note: Only the largest cluster is benchmarked (null distribution built from largest clusters only)")
     lines.append("")
     
     # Library information
@@ -482,8 +511,10 @@ def generate_statistical_report_text(
     lines.append("")
     lines.append("=" * 100)
     lines.append("")
-    lines.append("This report shows each cluster with benchmark statistics comparing")
+    lines.append("This report shows the largest cluster with benchmark statistics comparing")
     lines.append("against random gene lists of similar size.")
+    lines.append("Note: Only the largest cluster is benchmarked, as the null distribution")
+    lines.append("is built from the largest cluster in each permutation.")
     lines.append("")
     lines.append("Interpretation:")
     lines.append("  • Z-score > 2.0 and Percentile > 95%: Significantly better than random (top 5%)")
@@ -500,7 +531,7 @@ def generate_statistical_report_text(
         benchmark = cluster_data['benchmark']
         
         lines.append("-" * 100)
-        lines.append(f"CLUSTER {idx} (Ranked by Size)")
+        lines.append(f"LARGEST CLUSTER")
         lines.append("-" * 100)
         lines.append("")
         

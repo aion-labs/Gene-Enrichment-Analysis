@@ -14,12 +14,12 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 
 
 def input_example() -> None:
-    """Input an example gene set from the example_gene_list.txt file."""
+    """Input an example gene set from the hypoxia-genes.symbols.txt file."""
     if not hasattr(state, 'gene_input_format'):
         state.gene_input_format = 'symbols'
     
-    # Read from the example_gene_list.txt file
-    example_file_path = ROOT / "data" / "gene_lists" / "example_gene_list.txt"
+    # Read from the hypoxia-genes.symbols.txt file
+    example_file_path = ROOT / "data" / "gene_lists" / "hypoxia-genes.symbols.txt"
     
     try:
         with open(example_file_path, "r") as f:

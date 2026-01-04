@@ -1,0 +1,3 @@
+term	rank	description	overlap	overlap_size	p-value	fdr	library
+TCATCTC_MIR143	1	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/TCATCTC_MIR143	['CNTD1', 'HOXA7', 'MIPOL1', 'MYO6', 'ZBTB44']	5/148	0.07519450826374056	1.0	c3.mir.mir_legacy.v2025.1.Hs.symbols
+TGTATGA_MIR4853P	2	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/TGTATGA_MIR4853P	['ENY2', 'MAT2B', 'NR3C1', 'NSMCE4A', 'TMEM30A']	5/155	0.08768132968422145	1.0	c3.mir.mir_legacy.v2025.1.Hs.symbols

@@ -34,6 +34,7 @@ class IterativeEnrichment:
         run_id: Optional[str] = None,
         use_multiprocessing: bool = True,
         save_iteration_results: bool = True,
+        output_dir: Optional["Path"] = None,
     ) -> None:
         """
         Initialize iterative enrichment.
@@ -51,6 +52,7 @@ class IterativeEnrichment:
         :param progress_callback: Optional callback function to report progress
         :param use_multiprocessing: If False, run enrichment serially (useful when called from multiprocessing workers)
         :param save_iteration_results: If False, skip saving individual iteration JSON/TSV files (default: True)
+        :param output_dir: Optional output directory for results. If None, uses default location.
         """
         self.gene_set = gene_set
         self.gene_set_library = gene_set_library
@@ -64,6 +66,7 @@ class IterativeEnrichment:
         self.progress_callback = progress_callback
         self.use_multiprocessing = use_multiprocessing
         self.save_iteration_results = save_iteration_results
+        self._output_dir = output_dir
         from datetime import datetime
         self.name = (
             name
@@ -87,13 +90,16 @@ class IterativeEnrichment:
             Path to the run-specific results directory
         """
         from pathlib import Path
+        # If output_dir was provided, use it (allows CLI to override default location)
+        if self._output_dir is not None:
+            results_dir = Path(self._output_dir) / f"run_{self._run_id}"
         # Detect Code Ocean environment - use /results if it exists, otherwise use project root
         # Code Ocean mounts results at /results/
-        if Path("/results").exists() and Path("/results").is_dir():
+        elif Path("/results").exists() and Path("/results").is_dir():
             # Running on Code Ocean
             results_dir = Path("/results") / f"run_{self._run_id}"
         else:
-            # Running locally - use absolute path to project root
+            # Running locally - use absolute path to project root (default behavior)
             ROOT = Path(__file__).resolve().parent.parent
             results_dir = ROOT / "results" / f"run_{self._run_id}"
         return results_dir
@@ -346,7 +352,6 @@ class IterativeEnrichment:
         if not self.save_iteration_results:
             return
         
-        import json
         from pathlib import Path
         
         # Ensure results directory exists
@@ -362,25 +367,8 @@ class IterativeEnrichment:
         # Collapse multiple consecutive dots into a single dot
         import re
         library_name = re.sub(r'\.+', '.', library_name)
-        filename = f"{library_name}_iteration_{iteration:03d}.json"
-        filepath = self._get_run_results_dir() / filename
         
-        # Create a snapshot with iteration information
-        snapshot = enrichment.to_snapshot()
-        snapshot["iteration"] = iteration
-        # Get the term from the top result of this enrichment
-        top_result = enrichment.results[0] if enrichment.results else {"term": "Unknown"}
-        snapshot["iteration_term"] = top_result.get("term", "Unknown")
-        
-        # Add iteration number to each result
-        for result in snapshot[self.gene_set_library.name]:
-            result["iteration"] = iteration
-        
-        # Save to file
-        with open(filepath, "w") as f:
-            json.dump(snapshot, f, indent=2)
-        
-        # Also save as TSV with iteration number as first column
+        # Save as TSV with iteration number as first column (JSON removed - only TSV kept)
         tsv_filename = f"{library_name}_iteration_{iteration:03d}.tsv"
         tsv_filepath = self._get_run_results_dir() / tsv_filename
         
@@ -429,7 +417,7 @@ class IterativeEnrichment:
         df = df[column_order]
         df.to_csv(tsv_filepath, sep="\t", index=False)
         
-        logger.info(f"Saved iteration {iteration} results to {filepath} and {tsv_filepath}")
+        logger.info(f"Saved iteration {iteration} results to {tsv_filepath}")
 
     def create_iteration_results_archive(self) -> str:
         """
@@ -455,11 +443,8 @@ class IterativeEnrichment:
         # Create tar.gz archive
         with tarfile.open(archive_path, "w:gz") as tar:
             # Find all iteration files for this library (both JSON and TSV)
-            json_pattern = f"{library_name}_iteration_*.json"
             tsv_pattern = f"{library_name}_iteration_*.tsv"
             
-            for file_path in results_dir.glob(json_pattern):
-                tar.add(file_path, arcname=file_path.name)
             for file_path in results_dir.glob(tsv_pattern):
                 tar.add(file_path, arcname=file_path.name)
         
@@ -540,31 +525,7 @@ class IterativeEnrichment:
         library_name = re.sub(r'\.+', '.', library_name)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         
-        # 1. Save main iterative enrichment summary as JSON
-        summary_filename = f"{library_name}_iterative_enrichment_{timestamp}.json"
-        summary_filepath = results_dir / summary_filename
-        
-        summary_data = {
-            "input_gene_set": list(self.gene_set.genes),
-            "background": self.background_gene_set.name,
-            "background_size": self.background_gene_set.size,
-            "library": self.gene_set_library.name,
-            "library_size": self.gene_set_library.size,
-            "p_value_method": self.p_value_method_name,
-            "p_threshold": self.p_threshold,
-            "max_iterations": self.max_iterations,
-            "min_overlap": self.min_overlap,
-            "min_term_size": self.min_term_size,
-            "max_term_size": self.max_term_size,
-            "total_iterations": len(self.results),
-            "iterations": self.results,
-            "final_remaining_genes": list(set(self.gene_set.genes) - set().union(*[set(record.get("Genes removed for next iteration", [])) for record in self.results]))
-        }
-        
-        with open(summary_filepath, "w") as f:
-            json.dump(summary_data, f, indent=2)
-        
-        # 2. Save main iterative enrichment summary as TSV
+        # Save main iterative enrichment summary as TSV (JSON removed - only TSV kept)
         tsv_filename = f"{library_name}_iterative_enrichment_{timestamp}.tsv"
         tsv_filepath = results_dir / tsv_filename
         
@@ -572,7 +533,7 @@ class IterativeEnrichment:
         df = self.to_dataframe()
         df.to_csv(tsv_filepath, sep="\t", index=False)
         
-        logger.info(f"Saved iterative enrichment summary to {summary_filepath} and {tsv_filepath}")
+        logger.info(f"Saved iterative enrichment summary to {tsv_filepath}")
 
     def to_dataframe(self) -> pd.DataFrame:
         """

@@ -29,9 +29,9 @@ echo "🔧 Activating virtual environment..."
 source .venv/bin/activate
 
 # Check if example files exist
-if [ ! -f "data/gene_lists/example_gene_list.txt" ]; then
+if [ ! -f "data/gene_lists/hypoxia-genes.symbols.txt" ]; then
     echo "❌ Error: Example gene list not found"
-    echo "   Expected: data/gene_lists/example_gene_list.txt"
+    echo "   Expected: data/gene_lists/hypoxia-genes.symbols.txt"
     exit 1
 fi
 
@@ -46,11 +46,11 @@ echo ""
 # Example 1: Basic usage with defaults (all libraries)
 echo "🔬 Example 1: Basic Analysis (All Libraries)"
 echo "--------------------------------------------"
-echo "Running: python code/cli.py --gene-sets data/gene_lists/example_gene_list.txt"
+echo "Running: python code/cli.py --genelist data/gene_lists/hypoxia-genes.symbols.txt"
 echo ""
 
 python code/cli.py \
-    --gene-sets data/gene_lists/example_gene_list.txt \
+    --genelist data/gene_lists/hypoxia-genes.symbols.txt \
     --output-dir "${EXAMPLE_OUTPUT_DIR}/example1_basic"
 
 echo ""
@@ -65,7 +65,7 @@ echo ""
 
 python code/cli.py \
     --mode regular \
-    --gene-sets data/gene_lists/example_gene_list.txt \
+    --genelist data/gene_lists/hypoxia-genes.symbols.txt \
     --libraries data/libraries/h.all.v2025.1.Hs.symbols.gmt data/libraries/c5.go.bp.v2025.1.Hs.symbols.gmt \
     --p-threshold 0.01 \
     --min-overlap 3 \
@@ -83,7 +83,7 @@ echo ""
 
 python code/cli.py \
     --mode iterative \
-    --gene-sets data/gene_lists/example_gene_list.txt \
+    --genelist data/gene_lists/hypoxia-genes.symbols.txt \
     --libraries data/libraries/h.all.v2025.1.Hs.symbols.gmt \
     --p-threshold 0.01 \
     --min-overlap 3 \
@@ -102,7 +102,7 @@ echo ""
 
 python code/cli.py \
     --mode regular \
-    --gene-sets data/gene_lists/example_gene_list.txt \
+    --genelist data/gene_lists/hypoxia-genes.symbols.txt \
     --libraries data/libraries/c2.cp.reactome.v2025.1.Hs.symbols.gmt \
     --method "Hypergeometric Test" \
     --p-threshold 0.05 \
@@ -122,11 +122,11 @@ echo "Creating a second test gene list and running analysis on both..."
 echo ""
 
 # Create a second test gene list (first 50 genes from example)
-head -50 data/gene_lists/example_gene_list.txt > temp_gene_list2.txt
+head -50 data/gene_lists/hypoxia-genes.symbols.txt > temp_gene_list2.txt
 
 python code/cli.py \
     --mode regular \
-    --gene-sets data/gene_lists/example_gene_list.txt temp_gene_list2.txt \
+    --genelist data/gene_lists/hypoxia-genes.symbols.txt temp_gene_list2.txt \
     --libraries data/libraries/h.all.v2025.1.Hs.symbols.gmt \
     --p-threshold 0.01 \
     --output-dir "${EXAMPLE_OUTPUT_DIR}/example5_multiple"
@@ -157,7 +157,7 @@ echo "   - Network files (*_network.dot) for iterative mode"
 echo ""
 echo "🔍 To examine results:"
 echo "   ls -la ${EXAMPLE_OUTPUT_DIR}/"
-echo "   head -20 ${EXAMPLE_OUTPUT_DIR}/example1_basic/example_gene_list/combined_regular_results.tsv"
+echo "   head -20 ${EXAMPLE_OUTPUT_DIR}/example1_basic/hypoxia-genes/combined_regular_results.tsv"
 echo ""
 echo "💡 CLI Usage Tips:"
 echo "   - Use --help to see all options: python code/cli.py --help"

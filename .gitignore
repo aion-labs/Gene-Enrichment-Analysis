@@ -25,3 +25,7 @@ cli_test_results/
 cli_test_results_benchmark/
 benchmarking.log
 test_benchmarking_debug.py
+
+# Sandbox folder (generated files)
+sandbox/
+!sandbox/.gitignore

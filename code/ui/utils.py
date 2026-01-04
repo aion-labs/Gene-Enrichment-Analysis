@@ -4,7 +4,7 @@ import logging
 import re
 from pathlib import Path
 from pprint import pformat
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Optional
 
 import streamlit as st
 
@@ -13,6 +13,49 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parent.parent.parent
+
+
+def get_library_name_from_alias(library_file_path: Path) -> str:
+    """
+    Get the library display name from alias.json based on the library file path.
+    
+    Args:
+        library_file_path: Path to the library .gmt file (can be absolute or relative)
+        
+    Returns:
+        Display name from alias.json, or the filename stem if not found
+    """
+    try:
+        alias_file = ROOT / "data" / "libraries" / "alias.json"
+        if not alias_file.exists():
+            logger.warning(f"alias.json not found at {alias_file}, using filename stem")
+            return Path(library_file_path).stem
+        
+        with open(alias_file, 'r') as f:
+            aliases = json.load(f)
+        
+        # Get the filename (handle both absolute and relative paths)
+        lib_filename = Path(library_file_path).name
+        
+        # Find matching alias by filename
+        for alias in aliases:
+            alias_filename = alias.get("file", "")
+            if alias_filename == lib_filename:
+                return alias.get("name", lib_filename)
+        
+        # If not found, try without .gmt extension
+        lib_stem = Path(library_file_path).stem
+        for alias in aliases:
+            alias_filename = alias.get("file", "")
+            if alias_filename.replace(".gmt", "") == lib_stem or alias_filename == lib_stem:
+                return alias.get("name", lib_stem)
+        
+        logger.warning(f"Library {lib_filename} not found in alias.json, using filename stem")
+        return lib_stem
+        
+    except Exception as e:
+        logger.warning(f"Could not load library name from alias.json for {library_file_path}: {e}")
+        return Path(library_file_path).stem
 
 
 def update_aliases(directory: str, alias_file: str = "alias.json") -> Dict[str, str]:

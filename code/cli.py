@@ -12,6 +12,7 @@ from enrichment import Enrichment
 from gene_set import GeneSet
 from gene_set_library import GeneSetLibrary
 from iter_enrichment import IterativeEnrichment
+from ui.utils import get_library_name_from_alias
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -43,8 +44,9 @@ def run_enrichment(
 ):
     """Run enrichment analysis for the given parameters."""
     
-    # Ensure output directory exists
-    output_dir.mkdir(exist_ok=True)
+    # Ensure output directory exists (only if provided)
+    if output_dir is not None:
+        output_dir.mkdir(exist_ok=True)
     
     # Load background gene set
     logger.info(f"Loading background gene set: {background}")
@@ -54,7 +56,8 @@ def run_enrichment(
     logger.info(f"Loading {len(libraries)} gene set libraries")
     gene_set_libraries = []
     for lib_path in libraries:
-        lib_name = lib_path.stem
+        # Get library name from alias.json
+        lib_name = get_library_name_from_alias(lib_path)
         library = GeneSetLibrary(str(lib_path), name=lib_name)
         # Filter terms by size (same as Streamlit app)
         filtered_terms = [
@@ -130,8 +133,14 @@ def run_enrichment(
         # Create unique results directory for this run with timestamp
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         unique_folder_name = f"{gene_set_name}_{timestamp}"
-        gene_set_output_dir = output_dir / unique_folder_name
-        gene_set_output_dir.mkdir(exist_ok=True)
+        
+        # Use output_dir if provided, otherwise use default results/ directory
+        if output_dir is not None:
+            gene_set_output_dir = output_dir / unique_folder_name
+        else:
+            gene_set_output_dir = ROOT / "results" / unique_folder_name
+        
+        gene_set_output_dir.mkdir(parents=True, exist_ok=True)
         logger.info(f"Created unique output directory: {unique_folder_name}")
         
         if mode == "regular":
@@ -141,10 +150,12 @@ def run_enrichment(
                 gene_set_output_dir
             )
         elif mode == "iterative":
+            # Pass output_dir (may be None) to IterativeEnrichment for intermediate files
+            # Pass gene_set_output_dir for final combined results
             run_iterative_enrichment(
                 gene_set, gene_set_libraries, background_gene_set,
                 p_value_method, p_threshold, min_overlap, min_term_size, max_term_size,
-                max_iterations, gene_set_output_dir, compute_benchmark=benchmark
+                max_iterations, output_dir, gene_set_output_dir, compute_benchmark=benchmark
             )
 
 
@@ -239,71 +250,87 @@ def run_regular_enrichment(
         combined_df.to_csv(combined_file, sep='\t', index=False)
         logger.info(f"Saved combined results to {combined_file}")
         
-        # Save JSON snapshot
-        json_file = output_dir / "regular_enrichment_snapshot.json"
-        with open(json_file, 'w') as f:
-            json.dump({
-                "gene_set_name": gene_set.name,
-                "gene_set_size": gene_set.size,
-                "background_name": background_gene_set.name,
-                "background_size": background_gene_set.size,
-                "libraries": [lib.name for lib in gene_set_libraries],
-                "parameters": {
-                    "p_value_method": p_value_method,
-                    "p_threshold": p_threshold,
-                    "min_overlap": min_overlap,
-                },
-                "total_results": len(all_results),
-                "timestamp": datetime.now().isoformat()
-            }, f, indent=2)
-        logger.info(f"Saved metadata to {json_file}")
+        # Metadata is included in the text report files
+
+
+def _get_library_display_name(library_name: str) -> str:
+    """
+    Return library display name. Since library.name is now always from alias.json,
+    this function just returns it as-is for consistency.
+    
+    Args:
+        library_name: Library name (should already be from alias.json "name" field)
+        
+    Returns:
+        The library name (should already be the display name from alias.json)
+    """
+    # Since we now always use names from alias.json when creating GeneSetLibrary,
+    # the library.name should already be the display name from alias.json
+    return library_name
 
 
 def _combine_dot_files(all_iter_results: dict) -> str:
     """
-    Combine DOT files from multiple libraries into a single DOT file.
+    Combine DOT files from multiple libraries into a single DOT file with colors.
+    Uses the same coloring mechanism as the Streamlit app.
     
     Args:
-        all_iter_results: Dictionary with library names as keys and dict with 'results' and 'dot_content' as values
+        all_iter_results: Dictionary with library names (filenames) as keys and dict with 'results' and 'dot_content' as values
         
     Returns:
-        Combined DOT content as string
+        Combined DOT content as string with colors applied
     """
-    # Start with the DOT header
-    combined_dot = "graph iterative_enrichment {\n"
-    combined_dot += "  graph [layout=neato];\n"
-    combined_dot += "  node [shape=ellipse];\n"
-    
-    # Collect all nodes and edges
-    all_nodes = set()
-    all_edges = set()
-    
-    for lib_name, data in all_iter_results.items():
-        dot_content = data['dot_content']
+    try:
+        from ui.dot_utils import merge_iterative_dot
         
-        # Parse the DOT content to extract nodes and edges
-        lines = dot_content.split('\n')
-        for line in lines:
-            line = line.strip()
-            if line.startswith('"') and '[' in line and ']' in line:
-                # This is a node definition
-                all_nodes.add(line)
-            elif line.startswith('"') and ' -- ' in line:
-                # This is an edge definition
-                all_edges.add(line)
-    
-    # Add all nodes
-    for node in sorted(all_nodes):
-        combined_dot += f"  {node}\n"
-    
-    # Add all edges
-    for edge in sorted(all_edges):
-        combined_dot += f"  {edge}\n"
-    
-    # Close the graph
-    combined_dot += "}\n"
-    
-    return combined_dot
+        # Map library names to display names for color matching
+        # Since library.name is now always from alias.json, we can use it directly
+        per_lib_dots = {}
+        for lib_name, data in all_iter_results.items():
+            # Library name is already from alias.json, use it directly
+            per_lib_dots[lib_name] = data['dot_content']
+        
+        # Use the same merge function as Streamlit app
+        combined_dot = merge_iterative_dot(per_lib_dots)
+        return combined_dot
+        
+    except ImportError as e:
+        logger.warning(f"Could not import merge_iterative_dot, using simple combination: {e}")
+        # Fallback to simple combination without colors
+        combined_dot = "graph iterative_enrichment {\n"
+        combined_dot += "  graph [layout=neato];\n"
+        combined_dot += "  node [shape=ellipse];\n"
+        
+        # Collect all nodes and edges
+        all_nodes = set()
+        all_edges = set()
+        
+        for lib_name, data in all_iter_results.items():
+            dot_content = data['dot_content']
+            
+            # Parse the DOT content to extract nodes and edges
+            lines = dot_content.split('\n')
+            for line in lines:
+                line = line.strip()
+                if line.startswith('"') and '[' in line and ']' in line:
+                    # This is a node definition
+                    all_nodes.add(line)
+                elif line.startswith('"') and ' -- ' in line:
+                    # This is an edge definition
+                    all_edges.add(line)
+        
+        # Add all nodes
+        for node in sorted(all_nodes):
+            combined_dot += f"  {node}\n"
+        
+        # Add all edges
+        for edge in sorted(all_edges):
+            combined_dot += f"  {edge}\n"
+        
+        # Close the graph
+        combined_dot += "}\n"
+        
+        return combined_dot
 
 
 def compute_benchmark_for_cli(
@@ -335,7 +362,7 @@ def compute_benchmark_for_cli(
     
     # Find permutation data directory
     ROOT = Path(__file__).resolve().parent.parent
-    parquet_dir = ROOT / "results" / "permutation_cluster_statistics_parquet"
+    parquet_dir = ROOT / "permutations" / "permutation_cluster_statistics_parquet"
     
     if not parquet_dir.exists():
         logger.warning(f"Permutation data directory not found: {parquet_dir}")
@@ -343,13 +370,30 @@ def compute_benchmark_for_cli(
         return
     
     # Get all library names from iter_enrich_objects
+    # NOTE: All user-selected libraries are shown in enrichment results.
+    # However, for statistical benchmarking, we only use libraries that match
+    # between user selection and available permutation data in parquet files.
     user_selected_libraries = list(iter_enrich_objects.keys())
     
-    # Find which libraries have permutation data
+    # Find which user-selected libraries have matching permutation data
+    # Statistics will only use libraries that match exactly between user selection and parquet files
     libraries_with_data, libraries_without_data = find_intersection_libraries(
         user_selected_libraries,
-        parquet_dir
+        parquet_dir,
+        use_all_available=False  # Match user-selected libraries with available libraries
     )
+    
+    # Require minimum of 3 matching libraries for benchmarking
+    # This ensures statistical robustness of the null distribution comparison
+    MIN_MATCHING_LIBRARIES = 3
+    if len(libraries_with_data) < MIN_MATCHING_LIBRARIES:
+        logger.warning(
+            f"Benchmarking requires at least {MIN_MATCHING_LIBRARIES} matching libraries. "
+            f"Found {len(libraries_with_data)} matching libraries: {libraries_with_data}. "
+            f"User selected: {user_selected_libraries}. "
+            f"Skipping benchmarks."
+        )
+        return
     
     if not libraries_with_data:
         logger.warning("No libraries with permutation data available for benchmarking")
@@ -361,9 +405,15 @@ def compute_benchmark_for_cli(
     if libraries_without_data:
         logger.warning(f"Libraries without permutation data (excluded from benchmarks): {libraries_without_data}")
     
-    # Check if p-value threshold is valid for benchmarking
-    if p_threshold > 0.05:
-        logger.warning(f"P-value threshold {p_threshold} > 0.05, benchmarking may be unavailable")
+    # Require p-value threshold <= 0.01 for benchmarking
+    # This ensures statistical rigor and matches the permutation data generation
+    if p_threshold > 0.01:
+        logger.warning(
+            f"Benchmarking requires p-value threshold <= 0.01. "
+            f"Your threshold: {p_threshold}. "
+            f"Skipping benchmarks."
+        )
+        return
     
     # Cap max iterations at 30 (permutation data maximum)
     if user_max_iterations is not None:
@@ -374,7 +424,8 @@ def compute_benchmark_for_cli(
     # Try to find merged permutation file
     merged_permutation_file = None
     possible_paths = [
-        parquet_dir.parent / "permutation_results" / "merged_permutation_results.tsv",
+        parquet_dir.parent / "merged_permutation_results.tsv",
+        ROOT / "permutations" / "merged_permutation_results.tsv",
         ROOT / "results" / "permutation_results" / "merged_permutation_results.tsv",
         ROOT / "merged_permutation_results.tsv",
     ]
@@ -443,121 +494,260 @@ def compute_benchmark_for_cli(
     
     logger.info(f"Successfully computed null distribution for size {actual_size_used}")
     
-    # Build combined network from ONLY libraries with permutation data
+    # Build combined network from ALL libraries to find clusters
+    # (Clusters need all connections, but benchmarking will only use libraries with permutation data)
     combined_analyzer = NetworkConnectivityAnalyzer()
     
-    # Create a mapping from normalized library names to original names
-    lib_name_mapping = {}
-    for lib_name in iter_enrich_objects.keys():
-        normalized = normalize_library_name(lib_name)
-        lib_name_mapping[lib_name] = normalized
+    # Determine iteration filter (cap at 30 to match permutation data)
+    max_iter_filter = 30  # Always cap at 30 for fair comparison with permutation data
+    if user_max_iter is not None:
+        max_iter_filter = min(user_max_iter, 30)
+        logger.info(f"Filtering iGEA results to iteration <= {max_iter_filter} (user requested {user_max_iter}, capped at 30)")
+    else:
+        # Check if user's results have more than 30 iterations
+        max_user_iter = 0
+        for iter_enrich in iter_enrich_objects.values():
+            if iter_enrich.results:
+                for record in iter_enrich.results:
+                    iteration = record.get("Iteration", 1)
+                    if isinstance(iteration, (int, float)):
+                        max_user_iter = max(max_user_iter, int(iteration))
+        if max_user_iter > 30:
+            logger.info(f"User's results have {max_user_iter} iterations, trimming to 30 for fair comparison with permutation data")
     
-    # Find which libraries from iter_enrich_objects match libraries_with_data
-    libraries_to_use = []
-    for lib_name in iter_enrich_objects.keys():
-        normalized_user = lib_name_mapping[lib_name]
-        for lib_with_data in libraries_with_data:
-            normalized_data = normalize_library_name(lib_with_data)
-            if (normalized_user == normalized_data or 
-                normalized_user in normalized_data.lower() or 
-                normalized_data in normalized_user.lower()):
-                if lib_name not in libraries_to_use:
-                    libraries_to_use.append(lib_name)
-                    break
+    # Add results from ALL libraries to build the full network
+    logger.info(f"Building network from all {len(iter_enrich_objects)} libraries to find clusters")
+    for lib_name, iter_enrich in iter_enrich_objects.items():
+        results = []
+        for record in iter_enrich.results:
+            # Filter by iteration count (always cap at 30)
+            iteration = record.get("Iteration", 1)
+            # Convert to int if needed
+            if isinstance(iteration, str):
+                try:
+                    iteration = int(iteration)
+                except (ValueError, TypeError):
+                    iteration = 1
+            elif not isinstance(iteration, (int, float)):
+                iteration = 1
+            else:
+                iteration = int(iteration)
+            
+            # Filter: iteration must be <= max_iter_filter (which is always <= 30)
+            if iteration > max_iter_filter:
+                continue
+            
+            # Filter by p-value threshold
+            # Try both 'p-value' and 'iteration p-value' field names
+            p_value = record.get('p-value', record.get('iteration p-value', 1.0))
+            if isinstance(p_value, str):
+                try:
+                    p_value = float(p_value)
+                except (ValueError, TypeError):
+                    p_value = 1.0
+            if not isinstance(p_value, (int, float)):
+                p_value = 1.0
+            if p_value > p_threshold:
+                continue
+            
+            # Get genes removed for this iteration (genes in the term)
+            genes_removed = record.get("Genes removed for next iteration", [])
+            if isinstance(genes_removed, str):
+                genes_removed = [g.strip() for g in genes_removed.split(",") if g.strip()]
+            elif not isinstance(genes_removed, list):
+                # Fallback: try to get from 'Genes' field
+                genes = record.get('Genes', [])
+                if isinstance(genes, str):
+                    genes_removed = [g.strip() for g in genes.split(",") if g.strip()]
+                elif isinstance(genes, list):
+                    genes_removed = genes
+                else:
+                    continue
+            
+            results.append({
+                'Term': f"{lib_name}: {record.get('Term', '')}",
+                'Iteration': iteration,
+                'Library': lib_name,
+                'Genes removed for next iteration': genes_removed,
+            })
+        
+        if results:
+            combined_analyzer.add_igea_results(results)
     
-    if not libraries_to_use:
+    # Create a mapping from user library names to parquet library names (for benchmarking)
+    user_to_parquet_mapping = {}
+    for user_lib in iter_enrich_objects.keys():
+        normalized_user = normalize_library_name(user_lib)
+        for parquet_lib in libraries_with_data:
+            normalized_parquet = normalize_library_name(parquet_lib)
+            if (normalized_user == normalized_parquet or 
+                normalized_user in normalized_parquet.lower() or 
+                normalized_parquet in normalized_user.lower()):
+                user_to_parquet_mapping[user_lib] = parquet_lib
+                logger.info(f"Matched user library '{user_lib}' to parquet library '{parquet_lib}'")
+                break
+    
+    if not user_to_parquet_mapping:
         logger.warning("No matching libraries found between analysis and permutation data")
+        logger.warning(f"User libraries: {list(iter_enrich_objects.keys())}")
+        logger.warning(f"Parquet libraries: {libraries_with_data}")
         return
     
-    logger.info(f"Using {len(libraries_to_use)} libraries for network analysis: {libraries_to_use}")
-    
-    # Add results from matching libraries to combined analyzer
-    for lib_name in libraries_to_use:
-        iter_enrich = iter_enrich_objects[lib_name]
-        
-        # Filter results by iteration if needed
-        if user_max_iter is not None:
-            filtered_results = [
-                r for r in iter_enrich.results 
-                if r.get('Iteration', 0) <= user_max_iter
-            ]
-        else:
-            filtered_results = iter_enrich.results
-        
-        # Add each result to the analyzer
-        for result in filtered_results:
-            term = result.get('Term', '')
-            genes = result.get('Genes', [])
-            p_value = result.get('p-value', 1.0)
-            
-            if term and genes and p_value <= p_threshold:
-                combined_analyzer.add_enrichment_result(
-                    library=lib_name,
-                    term=term,
-                    genes=genes,
-                    p_value=p_value
-                )
+    logger.info(f"Network built from all libraries. Benchmarking will use {len(user_to_parquet_mapping)} libraries with permutation data")
     
     # Get clusters
     clusters = combined_analyzer.get_clusters()
     
     if not clusters:
         logger.warning("No clusters found in the network. Benchmarking requires at least one cluster.")
+        # Generate a text report explaining the situation
+        report_text = f"""Statistical Benchmarking Report
+{'=' * 80}
+
+Gene Set: {gene_set_name}
+Gene Set Size: {gene_list_size}
+Actual Size Used for Null Distribution: {actual_size_used}
+P-value Threshold: {p_threshold}
+Max Iterations: {user_max_iter if user_max_iter else 'Unlimited'}
+
+Libraries with Permutation Data: {len(libraries_with_data)}
+{', '.join(libraries_with_data) if libraries_with_data else 'None'}
+
+Libraries without Permutation Data: {len(libraries_without_data)}
+{', '.join(libraries_without_data) if libraries_without_data else 'None'}
+
+{'=' * 80}
+
+STATUS: No Clusters Found
+
+Benchmarking requires at least one cluster in the network to compare against 
+the null distribution. A cluster is formed when enriched terms from different 
+libraries share common genes, creating a connected subgraph in the network.
+
+In this analysis, no clusters were detected, which means:
+- The enriched terms from different libraries do not share enough common genes
+- The network consists of isolated nodes (terms and genes) without connections
+- The iterative enrichment process found terms, but they don't form connected clusters
+
+This can occur when:
+- The gene list has diverse functions that don't overlap across libraries
+- The p-value threshold is too strict, resulting in few enriched terms
+- The libraries used have minimal overlap in their gene sets
+
+Null Distribution Summary:
+The null distribution was successfully computed from {len(null_distribution)} gene list sizes.
+However, without clusters to benchmark, statistical comparison cannot be performed.
+
+{'=' * 80}
+Report generated: {datetime.now().isoformat()}
+"""
+        
+        report_file = output_dir / f"{gene_set_name}_statistical_report.txt"
+        with open(report_file, 'w') as f:
+            f.write(report_text)
+        logger.info(f"Saved statistical report (no clusters) to {report_file}")
+        
+        # Create an empty table file to indicate benchmarking was attempted
+        table_file = output_dir / "statistical_benchmarks_table.tsv"
+        table_df = pd.DataFrame([{
+            "Status": "No clusters found",
+            "Message": "Benchmarking requires at least one cluster in the network"
+        }])
+        table_df.to_csv(table_file, sep='\t', index=False)
+        logger.info(f"Saved benchmark table (no clusters) to {table_file}")
+        
+        logger.warning("Benchmarking files generated but no clusters were found to benchmark")
         return
     
     logger.info(f"Found {len(clusters)} clusters in the network")
     
-    # Benchmark each cluster
+    # Benchmark only the largest cluster (null distribution is built from largest clusters only)
+    # Clusters are already sorted by size (largest first)
+    largest_cluster = clusters[0]
+    
+    logger.info(f"Benchmarking largest cluster: {largest_cluster['size']} nodes "
+               f"({largest_cluster['n_genes']} genes, {largest_cluster['n_terms']} terms)")
+    logger.info(f"Note: Only the largest cluster is benchmarked against null distribution "
+               f"(which is built from largest clusters in each permutation)")
+    
+    # Benchmark the largest cluster
+    # But only if it contains at least one library with permutation data
     cluster_benchmarks = []
-    for cluster in clusters:
-        benchmark = combined_analyzer.benchmark_cluster(
-            cluster,
+    
+    # Check if the largest cluster contains any libraries with permutation data
+    # Get libraries from the analyzer's term_to_library mapping (most reliable)
+    cluster_libraries = set()
+    for term in largest_cluster.get('terms', []):
+        # Get library from the analyzer's term_to_library mapping
+        if term in combined_analyzer.term_to_library:
+            lib_name = combined_analyzer.term_to_library[term]
+            cluster_libraries.add(lib_name)
+        else:
+            # Fallback: Extract library name from term (format: "library_name: term_name")
+            # Try to match against known library names first (to handle full names with colons)
+            matched = False
+            for lib_name in iter_enrich_objects.keys():
+                if term.startswith(f"{lib_name}:"):
+                    cluster_libraries.add(lib_name)
+                    matched = True
+                    break
+            if not matched and ':' in term:
+                # If no match, just take the first part before colon (less reliable)
+                lib_name = term.split(':', 1)[0]
+                cluster_libraries.add(lib_name)
+    
+    # Check if any cluster library matches libraries with permutation data
+    cluster_has_benchmarkable_libs = False
+    for cluster_lib in cluster_libraries:
+        normalized_cluster = normalize_library_name(cluster_lib)
+        for parquet_lib in libraries_with_data:
+            normalized_parquet = normalize_library_name(parquet_lib)
+            if (normalized_cluster == normalized_parquet or 
+                normalized_cluster in normalized_parquet.lower() or 
+                normalized_parquet in normalized_cluster.lower()):
+                cluster_has_benchmarkable_libs = True
+                break
+        if cluster_has_benchmarkable_libs:
+            break
+    
+    if cluster_has_benchmarkable_libs:
+        from network_connectivity_benchmark import benchmark_cluster
+        benchmark = benchmark_cluster(
+            largest_cluster,
             null_distribution,
             actual_size_used,
             use_interpolation=False
         )
-        cluster_benchmarks.append({
-            'cluster': cluster,
-            'benchmark': benchmark
-        })
-    
-    # Sort by cluster size (largest first)
-    cluster_benchmarks.sort(key=lambda x: x['cluster']['size'], reverse=True)
+        if benchmark:
+            # Convert sets to lists for JSON serialization
+            cluster_for_json = {
+                'cluster_number': largest_cluster.get('cluster_number'),
+                'size': largest_cluster.get('size'),
+                'n_genes': largest_cluster.get('n_genes'),
+                'n_terms': largest_cluster.get('n_terms'),
+                'n_edges': largest_cluster.get('n_edges'),
+                'density': largest_cluster.get('density'),
+                'avg_edges_per_gene': largest_cluster.get('avg_edges_per_gene'),
+                'n_libraries': largest_cluster.get('n_libraries'),
+                'genes': sorted(list(largest_cluster.get('genes', []))),
+                'terms': sorted(list(largest_cluster.get('terms', []))),
+            }
+            cluster_benchmarks.append({
+                'cluster': cluster_for_json,
+                'benchmark': benchmark
+            })
+        else:
+            logger.warning(f"benchmark_cluster returned empty result for largest cluster "
+                         f"with {largest_cluster.get('n_genes', 0)} genes, {largest_cluster.get('n_terms', 0)} terms")
+    else:
+        logger.warning(f"Largest cluster does not contain any libraries with permutation data. "
+                      f"Cluster libraries: {cluster_libraries}, "
+                      f"Libraries with data: {libraries_with_data}")
     
     logger.info(f"Computed benchmarks for {len(cluster_benchmarks)} clusters")
     
     # Save benchmark results
-    # 1. Save JSON with benchmark data
-    benchmark_json_file = output_dir / "statistical_benchmarks.json"
-    benchmark_json_data = {
-        "gene_set_name": gene_set_name,
-        "gene_set_size": gene_list_size,
-        "actual_size_used": actual_size_used,
-        "p_threshold": p_threshold,
-        "max_iterations": user_max_iter,
-        "libraries_with_data": libraries_with_data,
-        "libraries_without_data": libraries_without_data,
-        "n_clusters": len(cluster_benchmarks),
-        "cluster_benchmarks": cluster_benchmarks,
-        "null_distribution_summary": {
-            size_key: {
-                metric: {
-                    'mean': stats.get('mean'),
-                    'std': stats.get('std'),
-                    'n': stats.get('n')
-                }
-                for metric, stats in size_stats.items()
-            }
-            for size_key, size_stats in null_distribution.items()
-        },
-        "timestamp": datetime.now().isoformat()
-    }
-    
-    with open(benchmark_json_file, 'w') as f:
-        json.dump(benchmark_json_data, f, indent=2)
-    logger.info(f"Saved benchmark JSON to {benchmark_json_file}")
-    
-    # 2. Generate and save text report
+    # Generate and save text report
     report_text = generate_statistical_report_text(
         cluster_benchmarks,
         gene_set_name,
@@ -592,7 +782,8 @@ def run_iterative_enrichment(
     min_term_size: int,
     max_term_size: int,
     max_iterations: int,
-    output_dir: Path,
+    output_dir: Optional[Path],  # For IterativeEnrichment intermediate files (None = use default results/)
+    final_output_dir: Path,  # For final combined results
     compute_benchmark: bool = False,
 ):
     """Run iterative enrichment analysis."""
@@ -613,6 +804,9 @@ def run_iterative_enrichment(
             def progress_callback(message: str):
                 logger.info(f"Library {library.name}: {message}")
             
+            # Pass output_dir to IterativeEnrichment
+            # If None, IterativeEnrichment will use its default results/ directory
+            # If provided, it will use that directory for intermediate files
             it = IterativeEnrichment(
                 gene_set=gene_set,
                 gene_set_library=library,
@@ -625,6 +819,7 @@ def run_iterative_enrichment(
                 min_overlap=min_overlap,
                 progress_callback=progress_callback,
                 run_id=shared_run_id,
+                output_dir=output_dir,  # None = use default results/ directory
             )
             
             # Save individual library results
@@ -632,7 +827,7 @@ def run_iterative_enrichment(
                 # Use the same formatting as Streamlit app
                 results_df = it.to_dataframe()
                 
-                output_file = output_dir / f"{library.name}_iterative_results.tsv"
+                output_file = final_output_dir / f"{library.name}_iterative_results.tsv"
                 results_df.to_csv(output_file, sep='\t', index=False)
                 logger.info(f"Saved {len(it.results)} iterations to {output_file}")
                 
@@ -677,14 +872,14 @@ def run_iterative_enrichment(
             if not combined_df.empty:
                 combined_df = combined_df[column_order]
             
-            combined_file = output_dir / "combined_iterative_results.tsv"
+            combined_file = final_output_dir / "combined_iterative_results.tsv"
             combined_df.to_csv(combined_file, sep='\t', index=False)
             logger.info(f"Saved combined iterative results to {combined_file}")
         
         # Generate combined DOT file
         try:
             combined_dot_content = _combine_dot_files(all_iter_results)
-            combined_dot_file = output_dir / "combined_network.dot"
+            combined_dot_file = final_output_dir / "combined_network.dot"
             with open(combined_dot_file, 'w') as f:
                 f.write(combined_dot_content)
             logger.info(f"Saved combined network DOT to {combined_dot_file}")
@@ -695,7 +890,7 @@ def run_iterative_enrichment(
                 
                 # Enhanced prompt format
                 enhanced_prompt = generate_ai_analysis_prompt(combined_dot_content)
-                enhanced_file = output_dir / "combined_ai_analysis_prompt_enhanced.txt"
+                enhanced_file = final_output_dir / "combined_ai_analysis_prompt_enhanced.txt"
                 with open(enhanced_file, 'w') as f:
                     f.write(enhanced_prompt)
                 logger.info(f"Saved combined enhanced AI prompt to {enhanced_file}")
@@ -708,28 +903,7 @@ def run_iterative_enrichment(
         except Exception as e:
             logger.warning(f"Error generating combined DOT file: {e}")
         
-        # Save metadata
-        json_file = output_dir / "iterative_enrichment_snapshot.json"
-        with open(json_file, 'w') as f:
-            json.dump({
-                "gene_set_name": gene_set.name,
-                "gene_set_size": gene_set.size,
-                "background_name": background_gene_set.name,
-                "background_size": background_gene_set.size,
-                "libraries": list(all_iter_results.keys()),
-                "parameters": {
-                    "p_value_method": p_value_method,
-                    "p_threshold": p_threshold,
-                    "min_overlap": min_overlap,
-                    "min_term_size": min_term_size,
-                    "max_term_size": max_term_size,
-                    "max_iterations": max_iterations,
-                },
-                "total_iterations": sum(len(data['results']) for data in all_iter_results.values()),
-                "run_id": shared_run_id,
-                "timestamp": datetime.now().isoformat()
-            }, f, indent=2)
-        logger.info(f"Saved metadata to {json_file}")
+        # Metadata is included in the text report files
         
         # Compute statistical benchmarks if requested
         if compute_benchmark and all_iter_enrich_objects:
@@ -740,7 +914,7 @@ def run_iterative_enrichment(
                     gene_set.size,
                     p_threshold,
                     max_iterations if max_iterations > 0 else None,
-                    output_dir,
+                    final_output_dir,
                     gene_set.name
                 )
             except Exception as e:
@@ -821,8 +995,8 @@ def main(
         "--max-iterations",
         help="Maximum iterations for iterative mode (0 = no limit)",
     ),
-    output_dir: Path = typer.Option(
-        Path("cli_results"),
+    output_dir: Optional[Path] = typer.Option(
+        None,
         "--output-dir",
         "-o",
         help="Output directory for results",
@@ -935,9 +1109,16 @@ def main(
     if mode == "iterative":
         typer.echo(f"Max Iterations: {max_iterations}")
         typer.echo(f"Statistical Benchmarking: {'Enabled' if benchmark else 'Disabled'}")
-    typer.echo(f"Output Directory: {output_dir}")
+    # Determine output directory
+    # If not provided, use None to let IterativeEnrichment use default results/ directory
+    # If provided, use it for both final results and IterativeEnrichment's internal directory
+    final_output_dir = output_dir
+    if output_dir is not None:
+        typer.echo(f"Output Directory: {output_dir}")
+    else:
+        typer.echo(f"Output Directory: {ROOT / 'results'} (default)")
     typer.echo("")
-
+    
     # Run the enrichment analysis
     try:
         run_enrichment(
@@ -952,10 +1133,13 @@ def main(
             min_term_size=min_term_size,
             max_term_size=max_term_size,
             max_iterations=max_iterations,
-            output_dir=output_dir,
+            output_dir=final_output_dir,  # None = use default results/ directory
             benchmark=benchmark,
         )
-        typer.echo(f"✅ Analysis completed successfully! Results saved to {output_dir}")
+        if final_output_dir is not None:
+            typer.echo(f"✅ Analysis completed successfully! Results saved to {final_output_dir}")
+        else:
+            typer.echo(f"✅ Analysis completed successfully! Results saved to {ROOT / 'results'}")
     except Exception as e:
         typer.echo(f"❌ Error during analysis: {e}", err=True)
         raise typer.Exit(code=1)

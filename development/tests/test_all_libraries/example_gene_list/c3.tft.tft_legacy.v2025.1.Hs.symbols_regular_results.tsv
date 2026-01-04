@@ -1,0 +1,7 @@
+term	rank	description	overlap	overlap_size	p-value	fdr	library
+PXR_Q2	1	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/PXR_Q2	['ARHGAP18', 'CABLES1', 'GPHN', 'HPN', 'OVOL1', 'PRKACA', 'RPS6KA5', 'RWDD3']	8/260	0.029606494822956703	1.0	c3.tft.tft_legacy.v2025.1.Hs.symbols
+FOXJ2_02	2	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/FOXJ2_02	['ARSG', 'HOXA7', 'LIFR', 'NEO1', 'RBM39', 'TASP1', 'UBE2E1']	7/243	0.08570942319719685	1.0	c3.tft.tft_legacy.v2025.1.Hs.symbols
+FOXO4_01	3	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/FOXO4_01	['CREBL2', 'KLF12', 'LRRC1', 'NEO1', 'NR3C1', 'PITPNC1', 'VLDLR']	7/246	0.08735444482008929	1.0	c3.tft.tft_legacy.v2025.1.Hs.symbols
+FOXO1_02	4	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/FOXO1_02	['CREBL2', 'KLF12', 'LIFR', 'PITPNC1', 'RBM39', 'SCRN3', 'SLC25A39']	7/249	0.08915445515671429	1.0	c3.tft.tft_legacy.v2025.1.Hs.symbols
+HNF1_C	5	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HNF1_C	['ANXA13', 'CNTD1', 'FGFR4', 'KALRN', 'LRRC19', 'NEO1', 'SLC25A40']	7/249	0.08915445515671429	1.0	c3.tft.tft_legacy.v2025.1.Hs.symbols
+TGIF_01	6	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/TGIF_01	['GPHN', 'METTL8', 'NR3C1', 'PARP16', 'RBM39', 'RPS6KB1', 'VAMP8']	7/254	0.09249366995370742	1.0	c3.tft.tft_legacy.v2025.1.Hs.symbols

@@ -44,7 +44,7 @@ python code/cli.py --help
 - Gene format support (symbols or Entrez IDs)
 - Configurable statistical parameters
 
-For detailed CLI documentation, see [CLI_README.md](CLI_README.md).
+For detailed CLI documentation, see [CLI_README.md](documentation/CLI_README.md).
 
 ### Choosing Between Web Interface and CLI
 
