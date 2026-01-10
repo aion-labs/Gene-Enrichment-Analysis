@@ -128,6 +128,8 @@ def _ensure_base_state():
         state.gene_set_input = ""
     if "gene_set_name" not in state:
         state.gene_set_name = ""
+    if "selected_file" not in state:
+        state.selected_file = "Select ..."
     if "gene_input_format" not in state:
         state.gene_input_format = 'symbols'
     if "bg_input_format" not in state:
@@ -203,6 +205,8 @@ def reset_app() -> None:
     state.background_set = None
     state.gene_set_input = ""
     state.gene_set_name = ""
+    # Reset file selection dropdown to "Select ..."
+    state.selected_file = "Select ..."
     
     # Clear any results and network state
     state.results_ready = False
@@ -639,6 +643,54 @@ def main() -> None:
 
 Results include ranked tables, bar charts, and network graphs."""
     )
+    
+    # Documentation button
+    st.sidebar.markdown("---")
+    
+    # Try to determine the best URL for the documentation
+    # Priority: 1) Local file if exists, 2) GitHub raw URL
+    user_guide_path = ROOT / "documentation" / "STREAMLIT_USER_GUIDE.html"
+    
+    # Default GitHub repository info (can be overridden via environment variables)
+    import os
+    github_owner = os.getenv("GITHUB_OWNER", "aion-labs")
+    github_repo = os.getenv("GITHUB_REPO", "Gene-Enrichment-Analysis")
+    github_branch = os.getenv("GITHUB_BRANCH", "main")
+    
+    if user_guide_path.exists():
+        # Use local file:// URL for local development
+        file_url = f"file://{user_guide_path.absolute()}"
+        logger.info(f"Using local documentation file: {file_url}")
+    else:
+        # Use GitHub raw URL for deployed/remote access
+        file_url = f"https://raw.githubusercontent.com/{github_owner}/{github_repo}/{github_branch}/documentation/STREAMLIT_USER_GUIDE.html"
+        logger.info(f"Using GitHub raw URL for documentation: {file_url}")
+    
+    st.sidebar.markdown(
+        f'''
+        <div style="margin: 0.5rem 0;">
+            <a href="{file_url}" target="_blank" style="text-decoration: none; display: block;">
+                <button style="
+                    background-color: #FF4B4B;
+                    color: white;
+                    padding: 0.75rem 1rem;
+                    border: none;
+                    border-radius: 0.5rem;
+                    cursor: pointer;
+                    width: 100%;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    transition: background-color 0.3s;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                " onmouseover="this.style.backgroundColor='#FF6B6B'" 
+                   onmouseout="this.style.backgroundColor='#FF4B4B'">
+                    📚 Documentation
+                </button>
+            </a>
+        </div>
+        ''',
+        unsafe_allow_html=True
+    )
 
     _ensure_base_state()
 
@@ -687,9 +739,9 @@ Results include ranked tables, bar charts, and network graphs."""
             
             # Gene input area
             placeholder_text = (
-                "Enter gene symbols (e.g., TP53, BRCA1) - one per line (max 500 genes)" 
+                "Enter gene symbols (e.g., TP53, BRCA1) - one per line (max 800 genes)" 
                 if state.gene_input_format == 'symbols' 
-                else "Enter Entrez IDs (e.g., 7157, 672) - one per line (max 500 genes)"
+                else "Enter Entrez IDs (e.g., 7157, 672) - one per line (max 800 genes)"
             )
             
             st.text_area(
@@ -699,7 +751,7 @@ Results include ranked tables, bar charts, and network graphs."""
                 placeholder=placeholder_text,
                 label_visibility="collapsed",
             )
-            st.caption("📝 **Note:** Maximum 500 genes allowed for optimal performance")
+            st.caption("📝 **Note:** Maximum 800 genes allowed for optimal performance")
             
             # Auto-generate gene set name if not provided
             if not state.gene_set_name or state.gene_set_name.strip() == "":
@@ -1152,8 +1204,8 @@ Results include ranked tables, bar charts, and network graphs."""
         elif state.gene_set.size < 20:
             st.error(f"❌ **Gene validation failed!** Your input contains {state.gene_set.size} validated genes, but at least 20 genes are required. Please add more genes and try again.")
             validation_passed = False
-        elif state.gene_set.size > 500:
-            st.error(f"❌ **Gene validation failed!** Your input contains {state.gene_set.size} validated genes, but the maximum allowed is 500 genes. Please reduce your gene list size and try again.")
+        elif state.gene_set.size > 800:
+            st.error(f"❌ **Gene validation failed!** Your input contains {state.gene_set.size} validated genes, but the maximum allowed is 800 genes. Please reduce your gene list size and try again.")
             validation_passed = False
         
         # Check 2: Background is valid
@@ -1274,105 +1326,6 @@ Results include ranked tables, bar charts, and network graphs."""
         available_libraries = sort_libraries(list(state.enrich.keys()))
         for lib in available_libraries:
             render_results(state.enrich[lib], lib, n_results)
-        
-        # Initialize network selection state if not exists
-        if not hasattr(state, 'selected_regular_libraries'):
-            state.selected_regular_libraries = []
-        if not hasattr(state, 'regular_network_generated'):
-            state.regular_network_generated = False
-        if not hasattr(state, 'last_regular_network'):
-            state.last_regular_network = ""
-        
-        # AI prompt construction section for regular enrichment
-        st.markdown("---")
-        st.header("Construction of AI Prompt")
-        
-        # callback to keep checkbox state in session
-        def toggle_regular_library(lib_name):
-            # Sanitize library name for widget key (replace special characters)
-            safe_lib_name = lib_name.replace(':', '_').replace(' ', '_').replace('-', '_')
-            if state[f"regular_network_select_{safe_lib_name}"]:
-                if lib_name not in state.selected_regular_libraries:
-                    state.selected_regular_libraries.append(lib_name)
-            else:
-                if lib_name in state.selected_regular_libraries:
-                    state.selected_regular_libraries.remove(lib_name)
-            # Clear network when selection changes
-            state.regular_network_generated = False
-            state.last_regular_network = ""
-        
-        # Interactive library selection interface
-        st.subheader("Library Selection for AI Prompt")
-        
-        # Get all available libraries in specific order: Hallmark, C2 (alphabetical), C5 (alphabetical), Protein Interaction
-        def sort_libraries(libraries):
-            hallmark = [lib for lib in libraries if lib.startswith("H:")]
-            c2_libs = sorted([lib for lib in libraries if lib.startswith("C2:")])
-            c5_libs = sorted([lib for lib in libraries if lib.startswith("C5:")])
-            protein_interaction = [lib for lib in libraries if lib.startswith("Protein Interaction")]
-            other = sorted([lib for lib in libraries if not any(lib.startswith(prefix) for prefix in ["H:", "C2:", "C5:", "Protein Interaction"])])
-            
-            return hallmark + c2_libs + c5_libs + protein_interaction + other
-        
-        available_libraries = sort_libraries(list(state.enrich.keys()))
-        
-        # Create columns for better layout
-        col1, col2 = st.columns([3, 1])
-        
-        with col1:
-            # Interactive list with checkboxes for each library
-            st.write("**Available Libraries:**")
-            for lib in available_libraries:
-                # Check if this library has any enrichment results
-                has_results = not state.enrich[lib].to_dataframe().empty
-                
-                # Sanitize library name for widget key (replace special characters)
-                safe_lib_name = lib.replace(':', '_').replace(' ', '_').replace('-', '_')
-                
-                if has_results:
-                    st.checkbox(
-                        lib,
-                        value=lib in state.selected_regular_libraries,
-                        key=f"regular_network_select_{safe_lib_name}",
-                        on_change=toggle_regular_library,
-                        args=(lib,)
-                    )
-                else:
-                    # Gray out libraries with no results
-                    st.markdown(f"~~{lib}~~ *(no enrichment results)*")
-        
-        with col2:
-            # Quick selection controls
-            st.write("**Quick Actions:**")
-            
-            if st.button("Select All", key="regular_select_all"):
-                # Only select libraries that have results
-                libraries_with_results = [lib for lib in available_libraries if not state.enrich[lib].to_dataframe().empty]
-                state.selected_regular_libraries = libraries_with_results.copy()
-                # Clear network when selection changes
-                state.regular_network_generated = False
-                state.last_regular_network = ""
-                st.rerun()
-            
-            if st.button("Clear All", key="regular_clear_all"):
-                state.selected_regular_libraries = []
-                # Clear network when selection changes
-                state.regular_network_generated = False
-                state.last_regular_network = ""
-                st.rerun()
-
-        # Generate AI prompt
-        if st.button("Generate AI Prompt", key="regular_generate_network"):
-            if not state.selected_regular_libraries:
-                st.error("Please select at least one library for AI prompt generation.")
-            else:
-                state.regular_network_generated = True
-                # Generate JSON network from regular enrichment results
-                network_json = generate_regular_network_json(state.enrich, state.selected_regular_libraries)
-                state.last_regular_network = network_json
-                render_regular_network_analysis(network_json, state.selected_regular_libraries)
-        elif state.regular_network_generated and state.selected_regular_libraries:
-            render_regular_network_analysis(state.last_regular_network, state.selected_regular_libraries)
 
     # Iterative execution
     if mode == "Iterative" and "bt_iter" in locals() and bt_iter:
@@ -1402,8 +1355,8 @@ Results include ranked tables, bar charts, and network graphs."""
         elif state.gene_set.size < 20:
             st.error(f"❌ **Gene input verfication failed!** Your input contains {state.gene_set.size} validated genes, but the minimum required is 20 genes. Please add more genes and try again.")
             validation_passed = False
-        elif state.gene_set.size > 500:
-            st.error(f"❌ **Gene input verfication failed!** Your input contains {state.gene_set.size} validated genes, but the maximum allowed is 500 genes. Please reduce your gene list size and try again.")
+        elif state.gene_set.size > 800:
+            st.error(f"❌ **Gene input verfication failed!** Your input contains {state.gene_set.size} validated genes, but the maximum allowed is 800 genes. Please reduce your gene list size and try again.")
             validation_passed = False
         
         # Check 2: Background is valid
@@ -1628,7 +1581,7 @@ Results include ranked tables, bar charts, and network graphs."""
 
         # Network section
         st.markdown("---")
-        st.header("Network")
+        st.header("Generate network for conversational AI systems")
         
         # Interactive library selection interface
         st.subheader("Library Selection for Network")
@@ -1703,9 +1656,15 @@ Results include ranked tables, bar charts, and network graphs."""
                 else:
                     selected_dots = {lib: state.iter_dot[lib] for lib in chosen}
                     state.last_merged_dot = merge_iterative_dot(selected_dots)
-                    render_network(state.last_merged_dot)
+                    # Get gene count and library list for AI prompt
+                    gene_count = state.gene_set.size if hasattr(state, 'gene_set') and state.gene_set else None
+                    library_list = chosen if chosen else None
+                    render_network(state.last_merged_dot, gene_count=gene_count, library_list=library_list)
         elif state.network_generated and state.selected_dot_paths:
-            render_network(state.last_merged_dot)
+            # Get gene count and library list for AI prompt
+            gene_count = state.gene_set.size if hasattr(state, 'gene_set') and state.gene_set else None
+            library_list = state.selected_dot_paths if state.selected_dot_paths else None
+            render_network(state.last_merged_dot, gene_count=gene_count, library_list=library_list)
         
         # Statistical Benchmarking Section
         st.markdown("---")
@@ -1772,7 +1731,9 @@ Results include ranked tables, bar charts, and network graphs."""
                                 gene_list_name,
                                 libs_with_data,
                                 libs_without_data,
-                                analyzer
+                                analyzer,
+                                gene_list_size=gene_list_size,
+                                actual_size_used=actual_size_used
                             )
                         else:
                             if not libs_with_data:
@@ -1925,169 +1886,6 @@ Results include ranked tables, bar charts, and network graphs."""
             st.info("Run iterative enrichment analysis first to enable statistical benchmarking.")
 
     logger.info("Finishing the Streamlit app")
-
-
-def generate_regular_network_json(enrich_results, selected_libraries):
-    """
-    Generate a lightweight JSON representation from regular enrichment results.
-    This provides only essential data: Library, Term, Rank, Genes.
-    
-    :param enrich_results: Dictionary of enrichment results by library
-    :param selected_libraries: List of selected library names
-    :return: JSON string with lightweight format
-    """
-    import json
-    
-    # Extract data from enrichment results for selected libraries only
-    results = []
-    
-    for lib_name in selected_libraries:
-        if lib_name in enrich_results:
-            enrich = enrich_results[lib_name]
-            
-            # Get the DataFrame with all results
-            df = enrich.to_dataframe()
-            
-            # Extract only the required columns: Library, Term, Rank, Genes
-            for _, row in df.iterrows():
-                # Convert genes string back to list
-                genes = [gene.strip() for gene in row['Genes'].split(',') if gene.strip()]
-                
-                results.append({
-                    "library": row['Library'],
-                    "term": row['Term'],
-                    "rank": int(row['Rank']),
-                    "genes": genes
-                })
-    
-    # Create the lightweight JSON structure
-    analysis_data = {
-        "analysis_type": "over_representation_analysis",
-        "results": results
-    }
-    
-    return json.dumps(analysis_data, indent=2)
-
-
-def render_regular_network_analysis(network_json, selected_libraries):
-    """
-    Render the network analysis for regular enrichment results.
-    
-    :param network_json: JSON network content
-    :param selected_libraries: List of selected library names
-    """
-    st.subheader("AI Analysis")
-    
-    # Generate AI prompt for regular enrichment
-    ai_prompt = generate_regular_ai_prompt(network_json, selected_libraries)
-    
-    # Display the prompt in an expander
-    with st.expander("📋 AI Analysis Prompt", expanded=False):
-        st.text_area(
-            "Copy this prompt to use with AI analysis tools:",
-            value=ai_prompt,
-            height=400,
-            key="regular_ai_prompt"
-        )
-    
-    # Offer download
-    st.markdown(
-        f'Download {download_link(ai_prompt, "regular_ai_analysis_prompt", "txt")} for AI analysis',
-        unsafe_allow_html=True,
-    )
-
-
-def generate_regular_ai_prompt(network_json, selected_libraries):
-    """
-    Generate AI analysis prompt for regular enrichment results.
-    
-    :param network_json: JSON enrichment data
-    :param selected_libraries: List of selected library names
-    :return: Formatted AI analysis prompt
-    """
-    import json
-    
-    # Parse the JSON data
-    analysis_data = json.loads(network_json)
-    
-    prompt = f"""# OVER-REPRESENTATION ANALYSIS (ORA)
-# Ranked List of Enriched Biological Terms
-
-## ANALYSIS CONTEXT
-You are a computational biologist analyzing over-representation analysis (ORA) results. This analysis identifies biological pathways, processes, and functions that are significantly enriched in a given gene set compared to a background gene set. The results are provided as a ranked list of enriched terms, where each term contains a list of genes that are over-represented in that biological process.
-
-**DATA STRUCTURE:**
-- **Ranked List**: Terms are ranked by statistical significance (lower rank = more significant)
-- **Gene Lists**: Each term contains the specific genes that are enriched in that biological process
-- **Library Sources**: Different databases provide complementary biological context
-- **Table Format**: Results are organized as a table rather than a network structure
-
-## ENRICHMENT DATA (JSON Format)
-```json
-{network_json}
-```
-
-## LIBRARY SOURCES AND THEIR BIOLOGICAL CONTEXT:
-"""
-    
-    # Add library descriptions only for selected libraries
-    library_descriptions = {
-        "H: Hallmark Gene Sets": "Curated gene sets representing well-defined biological states or processes",
-        "C2: BioCarta": "Canonical pathways from BioCarta database",
-        "C2: KEGG MEDICUS": "Metabolic and signaling pathways from KEGG",
-        "C2: Pathway Interaction Database": "Curated human signaling pathways",
-        "C2: Reactome Pathways": "Expert-curated biological pathways",
-        "C2: WikiPathways": "Community-curated biological pathways",
-        "C5: Gene Ontology: Biological Process": "Biological processes from Gene Ontology",
-        "C5: Gene Ontology: Cellular Component": "Cellular components from Gene Ontology",
-        "C5: Gene Ontology: Molecular Function": "Molecular functions from Gene Ontology",
-        "C5: Human Phenotype Ontology": "Human phenotypes and diseases",
-        "Protein Interaction": "Protein-protein interaction networks"
-    }
-    
-    for lib in selected_libraries:
-        description = library_descriptions.get(lib, "Biological pathway/process database")
-        prompt += f"- **{lib}**: {description}\n"
-    
-    prompt += """
-## ANALYSIS REQUEST:
-
-Please analyze this ranked list of enriched terms and provide:
-
-1. **Key Biological Insights:**
-   - What are the most significant biological processes/pathways identified?
-   - Which genes appear in multiple terms and may be central to the biological response?
-
-2. **Ranked List Analysis:**
-   - How do the top-ranked terms relate to each other biologically?
-   - Are there patterns in the gene composition across different terms?
-   - What does the ranking suggest about the hierarchy of biological processes?
-
-3. **Biological Hypothesis:**
-   - Based on the ranked list structure, what biological hypothesis can you generate?
-   - How do the different library sources support or complement each other?
-   - Try to formulate one coherent hypothesis that explains as many terms as possible and generates a coherent biological story.
-   
-4. **Estimated Experimental Context**
-   - Can you hypothesize on what was the experiment that generated this result?
-
-## RESPONSE STRUCTURE:
-- **Executive Summary** (2-3 sentences)
-- **Key Biological Processes Identified** (by library source and rank)
-- **Gene-Term Relationship Analysis**
-- **Proposed Biological Hypothesis** (coherent story explaining multiple terms)
-- **Estimated Experimental Context**
-
-## IMPORTANT NOTES:
-- Focus on biological interpretation, not just statistical significance
-- Consider the functional relationships between genes within and across terms
-- Look for genes that appear in multiple terms as potential key regulators
-- Consider the broader biological context and literature
-- Different library sources may provide complementary biological insights
-- Build a coherent story that explains as many terms as possible rather than treating them in isolation
-- The goal is to find a unifying biological hypothesis that connects the enriched terms into a meaningful narrative"""
-    
-    return prompt
 
 
 if __name__ == "__main__":

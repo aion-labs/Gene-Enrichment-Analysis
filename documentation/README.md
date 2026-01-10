@@ -5,6 +5,7 @@ This directory contains all documentation for the Iterative Gene Enrichment Anal
 ## Documentation Files
 
 ### User Guides
+- **[STREAMLIT_USER_GUIDE.md](STREAMLIT_USER_GUIDE.md)** - Complete guide to using the Streamlit web interface
 - **[CLI_README.md](CLI_README.md)** - Complete guide to using the Command Line Interface
 - **[ENTREZ_ID_SUPPORT.md](ENTREZ_ID_SUPPORT.md)** - Guide for using Entrez IDs instead of gene symbols
 - **[LINUX_INSTALLATION.md](LINUX_INSTALLATION.md)** - Installation instructions for Linux systems
