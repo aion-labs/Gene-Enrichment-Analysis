@@ -644,27 +644,14 @@ def main() -> None:
 Results include ranked tables, bar charts, and network graphs."""
     )
     
-    # Documentation button
-    st.sidebar.markdown("---")
-    
-    # Try to determine the best URL for the documentation
-    # Priority: 1) Local file if exists, 2) GitHub raw URL
-    user_guide_path = ROOT / "documentation" / "STREAMLIT_USER_GUIDE.html"
-    
-    # Default GitHub repository info (can be overridden via environment variables)
+    # Documentation button — opens rendered HTML on GitHub via htmlpreview.github.io
     import os
     github_owner = os.getenv("GITHUB_OWNER", "aion-labs")
     github_repo = os.getenv("GITHUB_REPO", "Gene-Enrichment-Analysis")
-    github_branch = os.getenv("GITHUB_BRANCH", "main")
+    github_branch = os.getenv("GITHUB_BRANCH", "streamlit-cloud")
     
-    if user_guide_path.exists():
-        # Use local file:// URL for local development
-        file_url = f"file://{user_guide_path.absolute()}"
-        logger.info(f"Using local documentation file: {file_url}")
-    else:
-        # Use GitHub raw URL for deployed/remote access
-        file_url = f"https://raw.githubusercontent.com/{github_owner}/{github_repo}/{github_branch}/documentation/STREAMLIT_USER_GUIDE.html"
-        logger.info(f"Using GitHub raw URL for documentation: {file_url}")
+    raw_url = f"https://raw.githubusercontent.com/{github_owner}/{github_repo}/{github_branch}/documentation/STREAMLIT_USER_GUIDE.html"
+    file_url = f"https://htmlpreview.github.io/?{raw_url}"
     
     st.sidebar.markdown(
         f'''
@@ -682,7 +669,7 @@ Results include ranked tables, bar charts, and network graphs."""
                     font-weight: 600;
                     transition: background-color 0.3s;
                     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                " onmouseover="this.style.backgroundColor='#FF6B6B'" 
+                " onmouseover="this.style.backgroundColor='#FF6B6B'"
                    onmouseout="this.style.backgroundColor='#FF4B4B'">
                     📚 Documentation
                 </button>

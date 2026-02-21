@@ -11,11 +11,16 @@ sandbox.py
 
 # Generated results and data files
 results/
-data/recent_release/
 
 # Large data files that exceed GitHub's file size limits
 *.gz
 *.zip
+
+# Keep gene info and history files (needed for Streamlit Cloud)
+# but ignore backups and compressed versions in recent_release
+data/recent_release/*.backup
+data/recent_release/*.gz
+data/recent_release/*.zip
 
 # Local launcher files (user-specific)
 launch_gene_enrichment.sh

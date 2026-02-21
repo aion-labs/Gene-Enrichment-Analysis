@@ -465,7 +465,9 @@ def generate_statistical_report_text(
     gene_list_name: str,
     libraries_with_data: List[str],
     libraries_without_data: List[str],
-    analyzer: Optional[NetworkConnectivityAnalyzer] = None
+    analyzer: Optional[NetworkConnectivityAnalyzer] = None,
+    gene_list_size: Optional[int] = None,
+    actual_size_used: Optional[int] = None
 ) -> str:
     """
     Generate full statistical report text (same format as generate_cluster_statistical_report.py).
@@ -476,6 +478,8 @@ def generate_statistical_report_text(
         libraries_with_data: Libraries used for statistics
         libraries_without_data: Libraries excluded from statistics
         analyzer: Optional NetworkConnectivityAnalyzer to calculate term centralities
+        gene_list_size: Original size of the input gene list
+        actual_size_used: Gene list size from permutation data that was actually used for null distribution
         
     Returns:
         Full report text as string
@@ -488,6 +492,13 @@ def generate_statistical_report_text(
     lines.append("=" * 100)
     lines.append("")
     lines.append(f"Gene List: {gene_list_name}")
+    if gene_list_size is not None:
+        lines.append(f"Gene List Size: {gene_list_size}")
+    if actual_size_used is not None:
+        if actual_size_used != gene_list_size:
+            lines.append(f"Actual Size Used for Null Distribution: {actual_size_used} (rounded from {gene_list_size})")
+        else:
+            lines.append(f"Actual Size Used for Null Distribution: {actual_size_used}")
     lines.append(f"Total Clusters in Network: {len(cluster_benchmarks) if cluster_benchmarks else 0}")
     lines.append(f"Note: Only the largest cluster is benchmarked (null distribution built from largest clusters only)")
     lines.append("")

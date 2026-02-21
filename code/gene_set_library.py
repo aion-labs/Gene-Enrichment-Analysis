@@ -2,10 +2,29 @@ import logging
 from pathlib import Path
 from typing import Dict, List, Set
 
+import streamlit as st
+
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
+
+
+@st.cache_data(show_spinner="Loading gene set library...")
+def _cached_load_gmt(gmt_file_path: str) -> List[Dict[str, object]]:
+    """Load and cache GMT file parsing. Returns raw library data."""
+    library = []
+    with open(gmt_file_path, "r") as file:
+        for line in file:
+            parts = line.strip().split("\t")
+            term = {
+                "name": parts[0],
+                "description": parts[1],
+                "genes": parts[2:],
+                "size": len(parts[2:]),
+            }
+            library.append(term)
+    return library
 
 
 class GeneSetLibrary:
@@ -33,25 +52,14 @@ class GeneSetLibrary:
 
     def _load_from_gmt(self, gmt_file_path: str) -> List[Dict[str, List[str]]]:
         """
-        Load library from a .gmt file
+        Load library from a .gmt file (cached across Streamlit reruns).
         Args:
             gmt_file_path: Path to the .gmt file
 
         Returns:
             List of dictionaries representing the library
         """
-        library = []
-        with open(gmt_file_path, "r") as file:
-            for line in file:
-                parts = line.strip().split("\t")
-                term = {
-                    "name": parts[0],
-                    "description": parts[1],
-                    "genes": parts[2:],
-                    "size": len(parts[2:]),
-                }
-                library.append(term)
-        return library
+        return _cached_load_gmt(gmt_file_path)
 
     def compute_unique_genes(self) -> Set[str]:
         """

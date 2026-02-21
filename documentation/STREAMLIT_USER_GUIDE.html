@@ -1,984 +1,593 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="pandoc" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>STREAMLIT_USER_GUIDE</title>
-  <style>
-    /* Default styles provided by pandoc.
-    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
-    */
-    code{white-space: pre-wrap;}
-    span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
-    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    /* The extra [class] is a hack that increases specificity enough to
-       override a similar rule in reveal.js */
-    ul.task-list[class]{list-style: none;}
-    ul.task-list li input[type="checkbox"] {
-      font-size: inherit;
-      width: 0.8em;
-      margin: 0 0.8em 0.2em -1.6em;
-      vertical-align: middle;
-    }
-    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
-    /* CSS for syntax highlighting */
-    html { -webkit-text-size-adjust: 100%; }
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #aaaaaa;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-    div.sourceCode
-      {   }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-    code span.at { color: #7d9029; } /* Attribute */
-    code span.bn { color: #40a070; } /* BaseN */
-    code span.bu { color: #008000; } /* BuiltIn */
-    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #4070a0; } /* Char */
-    code span.cn { color: #880000; } /* Constant */
-    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-    code span.dt { color: #902000; } /* DataType */
-    code span.dv { color: #40a070; } /* DecVal */
-    code span.er { color: #ff0000; font-weight: bold; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #40a070; } /* Float */
-    code span.fu { color: #06287e; } /* Function */
-    code span.im { color: #008000; font-weight: bold; } /* Import */
-    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-    code span.op { color: #666666; } /* Operator */
-    code span.ot { color: #007020; } /* Other */
-    code span.pp { color: #bc7a00; } /* Preprocessor */
-    code span.sc { color: #4070a0; } /* SpecialChar */
-    code span.ss { color: #bb6688; } /* SpecialString */
-    code span.st { color: #4070a0; } /* String */
-    code span.va { color: #19177c; } /* Variable */
-    code span.vs { color: #4070a0; } /* VerbatimString */
-    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iterative Enrichment Analysis — User Guide (Cloud Edition)</title>
+    <style>
+        :root {
+            --primary: #FF4B4B;
+            --bg: #ffffff;
+            --text: #1a1a2e;
+            --muted: #6c757d;
+            --border: #e0e0e0;
+            --code-bg: #f5f5f5;
+            --accent: #0068c9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--text);
+            line-height: 1.7;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            background: var(--bg);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 2.5rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        h4 {
+            font-size: 1.05rem;
+            margin-top: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        p,
+        li {
+            margin-bottom: 0.4rem;
+        }
+
+        ul,
+        ol {
+            padding-left: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        code {
+            background: var(--code-bg);
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 0.8rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+            vertical-align: middle;
+            margin-left: 0.3rem;
+        }
+
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 0.75rem 1rem;
+            margin: 1rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .tip {
+            background: #d1ecf1;
+            border-left: 4px solid #0dcaf0;
+            padding: 0.75rem 1rem;
+            margin: 1rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .warning {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 0.75rem 1rem;
+            margin: 1rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.8rem 0;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--code-bg);
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        a {
+            color: var(--accent);
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 2rem 0;
+        }
+
+        .toc {
+            background: var(--code-bg);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .toc ol {
+            margin-bottom: 0;
+        }
+
+        .toc li {
+            margin-bottom: 0.2rem;
+        }
+    </style>
 </head>
+
 <body>
-<nav id="TOC" role="doc-toc">
-<ul>
-<li><a href="#streamlit-web-interface-user-guide"
-id="toc-streamlit-web-interface-user-guide">Streamlit Web Interface User
-Guide</a>
-<ul>
-<li><a href="#table-of-contents" id="toc-table-of-contents">Table of
-Contents</a></li>
-<li><a href="#overview" id="toc-overview">Overview</a></li>
-<li><a href="#getting-started" id="toc-getting-started">Getting
-Started</a>
-<ul>
-<li><a href="#launching-the-application"
-id="toc-launching-the-application">Launching the Application</a></li>
-<li><a href="#interface-overview" id="toc-interface-overview">Interface
-Overview</a></li>
-</ul></li>
-<li><a href="#input-methods" id="toc-input-methods">Input Methods</a>
-<ul>
-<li><a href="#method-1-direct-input"
-id="toc-method-1-direct-input">Method 1: Direct Input</a></li>
-<li><a href="#method-2-file-selection"
-id="toc-method-2-file-selection">Method 2: File Selection</a></li>
-<li><a href="#method-3-load-example"
-id="toc-method-3-load-example">Method 3: Load Example</a></li>
-<li><a href="#gene-input-validation" id="toc-gene-input-validation">Gene
-Input Validation</a></li>
-</ul></li>
-<li><a href="#analysis-modes" id="toc-analysis-modes">Analysis Modes</a>
-<ul>
-<li><a href="#regular-mode" id="toc-regular-mode">Regular Mode</a></li>
-<li><a href="#iterative-mode" id="toc-iterative-mode">Iterative
-Mode</a></li>
-</ul></li>
-<li><a href="#parameters-and-settings"
-id="toc-parameters-and-settings">Parameters and Settings</a>
-<ul>
-<li><a href="#regular-mode-parameters"
-id="toc-regular-mode-parameters">Regular Mode Parameters</a></li>
-<li><a href="#iterative-mode-parameters"
-id="toc-iterative-mode-parameters">Iterative Mode Parameters</a></li>
-<li><a href="#advanced-settings" id="toc-advanced-settings">Advanced
-Settings</a></li>
-</ul></li>
-<li><a href="#understanding-results"
-id="toc-understanding-results">Understanding Results</a>
-<ul>
-<li><a href="#regular-mode-results"
-id="toc-regular-mode-results">Regular Mode Results</a></li>
-<li><a href="#iterative-mode-results"
-id="toc-iterative-mode-results">Iterative Mode Results</a></li>
-</ul></li>
-<li><a href="#export-options" id="toc-export-options">Export Options</a>
-<ul>
-<li><a href="#regular-mode-exports"
-id="toc-regular-mode-exports">Regular Mode Exports</a></li>
-<li><a href="#iterative-mode-exports"
-id="toc-iterative-mode-exports">Iterative Mode Exports</a></li>
-<li><a href="#file-formats" id="toc-file-formats">File Formats</a></li>
-</ul></li>
-<li><a href="#advanced-features" id="toc-advanced-features">Advanced
-Features</a>
-<ul>
-<li><a href="#custom-background-gene-list"
-id="toc-custom-background-gene-list">Custom Background Gene
-List</a></li>
-<li><a href="#network-generation-iterative-mode-only"
-id="toc-network-generation-iterative-mode-only">Network Generation
-(Iterative Mode Only)</a></li>
-<li><a href="#statistical-benchmarking-iterative-mode-only"
-id="toc-statistical-benchmarking-iterative-mode-only">Statistical
-Benchmarking (Iterative Mode Only)</a></li>
-<li><a href="#msigdb-version-information"
-id="toc-msigdb-version-information">MSigDB Version Information</a></li>
-</ul></li>
-<li><a href="#troubleshooting"
-id="toc-troubleshooting">Troubleshooting</a>
-<ul>
-<li><a href="#common-issues" id="toc-common-issues">Common
-Issues</a></li>
-<li><a href="#performance-tips" id="toc-performance-tips">Performance
-Tips</a></li>
-<li><a href="#getting-help" id="toc-getting-help">Getting Help</a></li>
-</ul></li>
-<li><a href="#best-practices" id="toc-best-practices">Best Practices</a>
-<ul>
-<li><a href="#input-preparation" id="toc-input-preparation">Input
-Preparation</a></li>
-<li><a href="#analysis-strategy" id="toc-analysis-strategy">Analysis
-Strategy</a></li>
-<li><a href="#result-interpretation"
-id="toc-result-interpretation">Result Interpretation</a></li>
-<li><a href="#export-and-documentation"
-id="toc-export-and-documentation">Export and Documentation</a></li>
-</ul></li>
-<li><a href="#quick-reference" id="toc-quick-reference">Quick
-Reference</a>
-<ul>
-<li><a href="#keyboard-shortcuts" id="toc-keyboard-shortcuts">Keyboard
-Shortcuts</a></li>
-<li><a href="#default-settings-summary"
-id="toc-default-settings-summary">Default Settings Summary</a></li>
-<li><a href="#file-locations" id="toc-file-locations">File
-Locations</a></li>
-</ul></li>
-</ul></li>
-</ul>
-</nav>
-<h1 id="streamlit-web-interface-user-guide">Streamlit Web Interface User
-Guide</h1>
-<p>This comprehensive guide explains how to use the Streamlit web
-interface for Iterative Gene Enrichment Analysis.</p>
-<h2 id="table-of-contents">Table of Contents</h2>
-<ol type="1">
-<li><a href="#overview">Overview</a></li>
-<li><a href="#getting-started">Getting Started</a></li>
-<li><a href="#input-methods">Input Methods</a></li>
-<li><a href="#analysis-modes">Analysis Modes</a></li>
-<li><a href="#parameters-and-settings">Parameters and Settings</a></li>
-<li><a href="#understanding-results">Understanding Results</a></li>
-<li><a href="#export-options">Export Options</a></li>
-<li><a href="#advanced-features">Advanced Features</a></li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
-</ol>
-<h2 id="overview">Overview</h2>
-<p>The Streamlit web interface provides an interactive, user-friendly
-way to perform gene enrichment analysis. It offers:</p>
-<ul>
-<li><strong>Interactive Web UI</strong>: Access through any web
-browser</li>
-<li><strong>Real-time Visualization</strong>: Charts, graphs, and tables
-update instantly</li>
-<li><strong>Multiple Input Methods</strong>: Direct input, file
-selection, or file upload</li>
-<li><strong>Two Analysis Modes</strong>: Regular and Iterative
-enrichment</li>
-<li><strong>Network Visualization</strong>: Generate network graphs for
-AI systems</li>
-<li><strong>Statistical Benchmarking</strong>: Compare results against
-random gene lists</li>
-</ul>
-<p><strong>Recommendation:</strong> - <strong>Use Streamlit</strong> for
-interactive exploration, visualization, and one-off analyses -
-<strong>Use CLI</strong> for batch processing, automation, and
-integration into computational pipelines</p>
-<h2 id="getting-started">Getting Started</h2>
-<h3 id="launching-the-application">Launching the Application</h3>
-<h4 id="local-installation">Local Installation</h4>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Activate virtual environment (if using one)</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the Streamlit app</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">streamlit</span> run code/streamlit_app.py</span></code></pre></div>
-<p>The application will automatically open in your default web browser
-at <code>http://localhost:8501</code>.</p>
-<h4 id="docker-installation">Docker Installation</h4>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the Docker image</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> cc_enrichment:latest .</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the container</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 8080:8080 cc_enrichment:latest</span></code></pre></div>
-<p>Access the application at <code>http://localhost:8080</code>.</p>
-<h3 id="interface-overview">Interface Overview</h3>
-<p>The Streamlit interface consists of:</p>
-<ol type="1">
-<li><strong>Sidebar</strong>: Mode selection and app information</li>
-<li><strong>Main Panel</strong>:
-<ul>
-<li><strong>Analysis Tab</strong>: Input area, settings, and
-parameters</li>
-<li><strong>Advanced Settings Tab</strong>: Additional configuration
-options</li>
-</ul></li>
-<li><strong>Results Area</strong>: Displays analysis results, charts,
-and download options</li>
-</ol>
-<h2 id="input-methods">Input Methods</h2>
-<h3 id="method-1-direct-input">Method 1: Direct Input</h3>
-<ol type="1">
-<li><strong>Select Input Format</strong>: Choose between “Gene Symbols”
-or “Entrez IDs” from the dropdown</li>
-<li><strong>Enter Genes</strong>: Paste your gene list into the text
-area (one gene per line)
-<ul>
-<li><strong>Gene Symbols</strong>: Official gene symbols (e.g.,
-<code>TP53</code>, <code>BRCA1</code>, <code>EGFR</code>)</li>
-<li><strong>Entrez IDs</strong>: Numeric identifiers from NCBI Entrez
-(e.g., <code>7157</code>, <code>672</code>, <code>1956</code>)</li>
-</ul></li>
-<li><strong>Name Your Gene Set</strong>: Enter a descriptive name in the
-“Input/edit gene list name” field</li>
-<li><strong>Click Submit</strong>: Run the analysis</li>
-</ol>
-<p><strong>Limitations:</strong> - Maximum 800 genes for optimal
-performance - Minimum 20 genes required for analysis</p>
-<h3 id="method-2-file-selection">Method 2: File Selection</h3>
-<ol type="1">
-<li>Use the dropdown menu: “Or select a file from the <code>data</code>
-folder”</li>
-<li>Select a <code>.txt</code> file from the available gene lists</li>
-<li>The file content will automatically populate the input area</li>
-<li>The gene set name will be set to the filename (without
-extension)</li>
-<li>Click Submit to run the analysis</li>
-</ol>
-<p><strong>File Format:</strong> - Plain text files (<code>.txt</code>)
-- One gene identifier per line - Can contain gene symbols or Entrez IDs
-(must match selected format)</p>
-<h3 id="method-3-load-example">Method 3: Load Example</h3>
-<ol type="1">
-<li>Click the <strong>“Load Example”</strong> button</li>
-<li>A pre-loaded example gene set will populate the input area</li>
-<li>Modify if needed, then click Submit</li>
-</ol>
-<h3 id="gene-input-validation">Gene Input Validation</h3>
-<p>The app automatically validates and converts your input:</p>
-<ul>
-<li><strong>Format Validation</strong>: Checks gene identifiers against
-the selected format</li>
-<li><strong>Conversion</strong>:
-<ul>
-<li>Entrez IDs → Official gene symbols</li>
-<li>Old symbols → Updated symbols (when possible)</li>
-</ul></li>
-<li><strong>Duplicate Removal</strong>: Removes duplicate genes</li>
-<li><strong>Background Check</strong>: Validates genes against the
-background list</li>
-<li><strong>Statistics Display</strong>: Shows conversion statistics and
-unrecognized genes</li>
-</ul>
-<p><strong>Validation Results Display:</strong> - ✅ <strong>Validated
-genes</strong>: Successfully converted and recognized - ⚠️
-<strong>Unrecognized genes</strong>: Genes that couldn’t be matched
-(check spelling/format) - 📊 <strong>Statistics</strong>: Total input,
-validated, converted, and unrecognized counts</p>
-<h2 id="analysis-modes">Analysis Modes</h2>
-<h3 id="regular-mode">Regular Mode</h3>
-<p><strong>Purpose</strong>: Standard one-pass enrichment analysis that
-reports all significant results.</p>
-<p><strong>How it works:</strong> This is a standard over-representation
-analysis (ORA) 1. Tests your gene set against all selected libraries 2.
-Calculates enrichment statistics for each term 3. Filters results based
-on p-value thresholds and overlap requirements 4. Displays ranked
-results with p-values and FDR adjustments</p>
-<p><strong>Best for:</strong> - Standard enrichment analysis - Getting a
-comprehensive view of all significant pathways - When you want
-FDR-adjusted p-values</p>
-<h3 id="iterative-mode">Iterative Mode</h3>
-<p><strong>Purpose</strong>: Iteratively removes genes from top hits to
-identify core enriched pathways.</p>
-<p><strong>How it works:</strong> 1. <strong>Iteration 1</strong>: Finds
-the top enriched term (lowest p-value) 2. <strong>Removes
-genes</strong>: Removes overlapping genes from your input gene set 3.
-<strong>Iteration 2+</strong>: Repeats enrichment with the reduced gene
-set 4. <strong>Continues</strong>: Until no terms pass the p-value
-threshold or max iterations reached 5. <strong>Builds network</strong>:
-Integrate enriched terms across library using a gene–term network.</p>
-<p><strong>Best for:</strong> - Large language model assisted
-interpretation of enrichment analysis - Visualizing enrichment results
-in a network</p>
-<h2 id="parameters-and-settings">Parameters and Settings</h2>
-<h3 id="regular-mode-parameters">Regular Mode Parameters</h3>
-<h4 id="raw-p-value-threshold">Raw P-value Threshold</h4>
-<ul>
-<li><strong>Default</strong>: <code>0.01</code></li>
-<li><strong>Description</strong>: Maximum raw p-value for terms to be
-included in results</li>
-<li><strong>Lower values</strong>: More stringent filtering (fewer
-results)</li>
-<li><strong>Higher values</strong>: Less stringent filtering (more
-results)</li>
-</ul>
-<h4 id="adjusted-p-value-threshold-fdr">Adjusted P-value Threshold
-(FDR)</h4>
-<ul>
-<li><strong>Default</strong>: <code>0.05</code></li>
-<li><strong>Description</strong>: Maximum FDR-adjusted p-value for terms
-to be included</li>
-<li><strong>Note</strong>: Only applicable in Regular mode</li>
-</ul>
-<h4 id="minimum-overlap">Minimum Overlap</h4>
-<ul>
-<li><strong>Default</strong>: <code>3</code></li>
-<li><strong>Description</strong>: Minimum number of genes that must
-overlap between your input and a term. The motivation here is to avoid
-inflating the list with many terms where only 1 or 2 genes overlap. Such
-terms might be significant statistically but typically have lower
-biological interpretation value.</li>
-<li><strong>Lower values</strong>: Include terms with fewer overlapping
-genes</li>
-<li><strong>Higher values</strong>: Require more overlap (more
-stringent)</li>
-</ul>
-<h4 id="term-size-range">Term Size Range</h4>
-<ul>
-<li><strong>Default</strong>: <code>10</code> to <code>600</code>
-genes</li>
-<li><strong>Description</strong>: Filter gene sets by their size (number
-of genes). The motivation is to avoide removing genes with terms that
-are less informative for interpretation. Terms like “Receptors” can
-include 2000+ genes and their contribution to biological interpretation
-would be low.</li>
-<li><strong>Minimum</strong>: Excludes very small gene sets</li>
-<li><strong>Maximum</strong>: Excludes very large gene sets (reduces
-noise)</li>
-</ul>
-<h3 id="iterative-mode-parameters">Iterative Mode Parameters</h3>
-<h4 id="p-value-threshold">P-value Threshold</h4>
-<ul>
-<li><strong>Default</strong>: <code>0.01</code></li>
-<li><strong>Description</strong>: Maximum p-value for terms to be
-selected at each iteration. Higher values are not supported for
-statistical benchmarking.</li>
-<li><strong>Note</strong>: No FDR adjustment in iterative mode</li>
-</ul>
-<h4 id="max-iterations">Max Iterations</h4>
-<ul>
-<li><strong>Default</strong>: <code>10</code></li>
-<li><strong>Description</strong>: Maximum number of iterations to
-perform. The main motivation is saving compute time. Statistical
-analysis is supported up to 30 iteration.</li>
-<li><strong><code>0</code></strong>: No limit (continues until no terms
-pass threshold)</li>
-<li><strong>Higher values</strong>: Allows more iterations (longer
-analysis)</li>
-</ul>
-<h3 id="advanced-settings">Advanced Settings</h3>
-<h4 id="number-of-results-to-display">Number of Results to Display</h4>
-<ul>
-<li><strong>Default</strong>: <code>10</code></li>
-<li><strong>Description</strong>: Controls how many top-ranked results
-are displayed in the interactive table and bar chart for each
-library.</li>
-<li><strong>What it affects</strong>:
-<ul>
-<li>✅ <strong>Table view</strong>: Limits the number of rows shown in
-the results table</li>
-<li>✅ <strong>Bar chart</strong>: Limits the number of bars displayed
-in the visualization</li>
-<li>❌ <strong>Download files</strong>: Does NOT affect downloadable
-TSV/JSON files (these contain ALL results that pass the filters)</li>
-</ul></li>
-<li><strong>Use cases</strong>:
-<ul>
-<li><strong>Small value (5-10)</strong>: Focus on the most significant
-results, cleaner visualization</li>
-<li><strong>Large value (50-100)</strong>: See more results at once,
-useful for comprehensive exploration</li>
-</ul></li>
-<li><strong>Note</strong>: Only applies to Regular mode. Iterative mode
-shows all iterations by default.</li>
-</ul>
-<h4 id="p-value-calculation-method">P-value Calculation Method</h4>
-<ul>
-<li><strong>Options</strong>:
-<ul>
-<li><code>Fisher's Exact Test</code> (default, recommended)</li>
-<li><code>Hypergeometric Test</code></li>
-<li><code>Chi-squared Test</code></li>
-</ul></li>
-<li><strong>Description</strong>: Statistical method used to calculate
-enrichment p-values</li>
-<li><strong>Recommendation</strong>: Use Fisher’s Exact Test unless you
-have a specific reason</li>
-</ul>
-<h4 id="background-gene-list">Background Gene List</h4>
-<ul>
-<li><strong>Default</strong>: <code>all_genes.txt</code></li>
-<li><strong>Description</strong>: The reference gene set used for
-enrichment calculations</li>
-<li><strong>Options</strong>: Select from available backgrounds in the
-dropdown</li>
-<li><strong>Custom Upload</strong>: Upload your own background file (see
-Advanced Features)</li>
-</ul>
-<h4 id="gene-set-libraries">Gene Set Libraries</h4>
-<ul>
-<li><strong>Description</strong>: Select which gene set libraries to
-test against</li>
-<li><strong>Selection</strong>: Checkboxes for each available
-library</li>
-<li><strong>Default Libraries</strong>:
-<ul>
-<li>H: Hallmark Gene Sets</li>
-<li>C2: Reactome Pathways</li>
-<li>C5: Gene Ontology: Biological Process</li>
-</ul></li>
-<li><strong>Available Libraries</strong>: MSigDB collections (H, C2, C5,
-etc.)</li>
-</ul>
-<h2 id="understanding-results">Understanding Results</h2>
-<h3 id="regular-mode-results">Regular Mode Results</h3>
-<h4 id="results-table">Results Table</h4>
-<p>Each library displays a table with:</p>
-<table>
-<colgroup>
-<col style="width: 38%" />
-<col style="width: 61%" />
-</colgroup>
-<thead>
-<tr>
-<th>Column</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Rank</strong></td>
-<td>Ranking by p-value (1 = most significant)</td>
-</tr>
-<tr>
-<td><strong>Term</strong></td>
-<td>Gene set term name</td>
-</tr>
-<tr>
-<td><strong>Description</strong></td>
-<td>Detailed description of the term</td>
-</tr>
-<tr>
-<td><strong>Overlap size</strong></td>
-<td>Format: <code>X/Y</code> (overlapping genes / term size)</td>
-</tr>
-<tr>
-<td><strong>Genes</strong></td>
-<td>List of overlapping genes (click to expand)</td>
-</tr>
-<tr>
-<td><strong>p-value</strong></td>
-<td>Raw p-value from statistical test</td>
-</tr>
-<tr>
-<td><strong>-log(p-value)</strong></td>
-<td>Negative log10 of p-value (higher = more significant)</td>
-</tr>
-<tr>
-<td><strong>FDR</strong></td>
-<td>False Discovery Rate adjusted p-value</td>
-</tr>
-</tbody>
-</table>
-<h4 id="bar-chart">Bar Chart</h4>
-<ul>
-<li><strong>X-axis</strong>: <code>-log10(p-value)</code> (higher = more
-significant)</li>
-<li><strong>Y-axis</strong>: Term names</li>
-<li><strong>Interactive</strong>: Hover for details, zoom, pan</li>
-<li><strong>Color</strong>: Gradient based on significance</li>
-</ul>
-<h4 id="library-specific-information">Library-Specific Information</h4>
-<p>Each library result shows: - <strong>Gene Count</strong>:
-<code>X/Y genes</code> (library-specific input / total input) -
-<strong>Background Count</strong>: <code>X/Y background</code>
-(library-specific background / total background)</p>
-<h3 id="iterative-mode-results">Iterative Mode Results</h3>
-<h4 id="iteration-table">Iteration Table</h4>
-<p>Each library displays results organized by iteration:</p>
-<table>
-<colgroup>
-<col style="width: 38%" />
-<col style="width: 61%" />
-</colgroup>
-<thead>
-<tr>
-<th>Column</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Iteration</strong></td>
-<td>Iteration number (1, 2, 3, …)</td>
-</tr>
-<tr>
-<td><strong>Term</strong></td>
-<td>Top enriched term for this iteration</td>
-</tr>
-<tr>
-<td><strong>Description</strong></td>
-<td>Term description</td>
-</tr>
-<tr>
-<td><strong>iteration overlapping genes</strong></td>
-<td>Format: <code>X/Y</code> (overlap / term size)</td>
-</tr>
-<tr>
-<td><strong>iteration p-value</strong></td>
-<td>P-value for this iteration</td>
-</tr>
-<tr>
-<td><strong>iteration -log(p-value)</strong></td>
-<td>Negative log10 of iteration p-value</td>
-</tr>
-<tr>
-<td><strong>Genes removed for next iteration</strong></td>
-<td>Genes removed from input for next iteration</td>
-</tr>
-<tr>
-<td><strong>Full list overlapping genes</strong></td>
-<td>Overlap with original (full) gene list</td>
-</tr>
-<tr>
-<td><strong>Full list p-value</strong></td>
-<td>P-value against full gene list</td>
-</tr>
-<tr>
-<td><strong>Regular FDR</strong></td>
-<td>FDR from iteration 1 (ORA comparison)</td>
-</tr>
-</tbody>
-</table>
-<h4 id="network-visualization">Network Visualization</h4>
-<ul>
-<li><strong>Interactive Graph</strong>: Shows relationships between
-iterations</li>
-<li><strong>Nodes</strong>: Represent enriched terms</li>
-<li><strong>Edges</strong>: Show gene removal relationships</li>
-<li><strong>Layout</strong>: Hierarchical structure showing pathway
-relationships</li>
-</ul>
-<h4 id="ora-vs-igea-comparison">ORA vs iGEA Comparison</h4>
-<ul>
-<li><strong>ORA</strong>: Over-Representation Analysis (Iteration 1
-only)</li>
-<li><strong>iGEA</strong>: Iterative Gene Enrichment Analysis (All
-iterations)</li>
-<li><strong>Statistics</strong>: Comparison metrics showing how
-iterative analysis differs from standard ORA</li>
-</ul>
-<h2 id="export-options">Export Options</h2>
-<h3 id="regular-mode-exports">Regular Mode Exports</h3>
-<h4 id="combined-results">Combined Results</h4>
-<ul>
-<li><strong>TSV File</strong>: All libraries combined in one
-tab-separated file</li>
-<li><strong>JSON File</strong>: All libraries combined in JSON
-format</li>
-</ul>
-<h4 id="individual-library-files">Individual Library Files</h4>
-<ul>
-<li><strong>Archive</strong>: Single <code>.tar.gz</code> file
-containing:
-<ul>
-<li>Individual TSV files for each library</li>
-<li>Individual JSON files for each library</li>
-</ul></li>
-</ul>
-<h3 id="iterative-mode-exports">Iterative Mode Exports</h3>
-<h4 id="ora-results-iteration-1">ORA Results (Iteration 1)</h4>
-<ul>
-<li><strong>Combined TSV</strong>: All libraries’ iteration 1 results
-combined</li>
-<li><strong>Individual Files Archive</strong>: All libraries’ ORA files
-in one archive</li>
-</ul>
-<h4 id="igea-results-all-iterations">iGEA Results (All Iterations)</h4>
-<ul>
-<li><strong>Combined TSV</strong>: All libraries’ all-iteration results
-combined</li>
-<li><strong>Individual Files Archive</strong>: All libraries’ iteration
-files in one archive</li>
-</ul>
-<h4 id="validated-gene-symbols">Validated Gene Symbols</h4>
-<ul>
-<li><strong>TXT File</strong>: Your input genes after validation and
-conversion</li>
-<li><strong>Format</strong>: One gene symbol per line</li>
-</ul>
-<h3 id="file-formats">File Formats</h3>
-<h4 id="tsv-tab-separated-values">TSV (Tab-Separated Values)</h4>
-<ul>
-<li><strong>Use</strong>: Spreadsheet applications (Excel, Google
-Sheets)</li>
-<li><strong>Format</strong>: Tab-separated columns</li>
-<li><strong>Encoding</strong>: UTF-8</li>
-</ul>
-<h4 id="json-javascript-object-notation">JSON (JavaScript Object
-Notation)</h4>
-<ul>
-<li><strong>Use</strong>: Programmatic access, data exchange</li>
-<li><strong>Format</strong>: Structured JSON with metadata</li>
-<li><strong>Includes</strong>: Full analysis parameters and results</li>
-</ul>
-<h4 id="dot-graph-description-language">DOT (Graph Description
-Language)</h4>
-<ul>
-<li><strong>Use</strong>: Network visualization, graph analysis</li>
-<li><strong>Format</strong>: Graphviz DOT format</li>
-<li><strong>Available</strong>: Only in Iterative mode (network
-generation)</li>
-</ul>
-<h2 id="advanced-features">Advanced Features</h2>
-<h3 id="custom-background-gene-list">Custom Background Gene List</h3>
-<ol type="1">
-<li>Go to <strong>Advanced Settings</strong> tab</li>
-<li>Select background format: “Gene Symbols” or “Entrez IDs”</li>
-<li>Click <strong>“Upload your background gene list”</strong></li>
-<li>Select a <code>.txt</code> file (one gene per line)</li>
-<li>Click <strong>“Apply Settings”</strong></li>
-<li>Your custom background will appear in the dropdown menu</li>
-</ol>
-<p><strong>Use Cases:</strong> - Tissue-specific backgrounds -
-Experiment-specific gene sets - Custom reference genomes</p>
-<h3 id="network-generation-iterative-mode-only">Network Generation
-(Iterative Mode Only)</h3>
-<h4 id="purpose">Purpose</h4>
-<p>Generate network graphs for conversational AI systems (e.g., ChatGPT,
-Claude).</p>
-<h4 id="steps">Steps</h4>
-<ol type="1">
-<li><strong>Run Iterative Analysis</strong>: Complete an iterative
-enrichment analysis</li>
-<li><strong>Select Libraries</strong>:
-<ul>
-<li>Check “Use results in network” for each library you want to
-include</li>
-<li>Or use the “Generate network for conversational AI systems”
-section</li>
-</ul></li>
-<li><strong>Generate Network</strong>: Click “Generate Network”
-button</li>
-<li><strong>View Network</strong>: Interactive Plotly graph
-displays</li>
-<li><strong>AI Prompt</strong>: Copy the generated prompt for use with
-AI systems</li>
-</ol>
-<h4 id="network-features">Network Features</h4>
-<ul>
-<li><strong>Interactive Visualization</strong>: Zoom, pan, hover for
-details</li>
-<li><strong>Hierarchical Layout</strong>: Shows pathway
-relationships</li>
-<li><strong>Gene Count Display</strong>: Shows number of genes in your
-input</li>
-<li><strong>Library List</strong>: Lists all included libraries</li>
-<li><strong>DOT Format</strong>: Available for download</li>
-</ul>
-<h3 id="statistical-benchmarking-iterative-mode-only">Statistical
-Benchmarking (Iterative Mode Only)</h3>
-<h4 id="purpose-1">Purpose</h4>
-<p>Compare your network connectivity against random gene lists of
-similar size.</p>
-<h4 id="how-it-works">How It Works</h4>
-<ol type="1">
-<li><strong>Automatic Computation</strong>: Runs automatically after
-iterative analysis</li>
-<li><strong>Null Distribution</strong>: Uses pre-computed permutation
-data</li>
-<li><strong>Comparison</strong>: Compares your network metrics against
-random gene lists</li>
-<li><strong>Statistics</strong>: Provides Z-scores and percentiles</li>
-</ol>
-<h4 id="metrics-compared">Metrics Compared</h4>
-<table>
-<thead>
-<tr>
-<th>Metric</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Genes</strong></td>
-<td>Number of unique genes in network</td>
-</tr>
-<tr>
-<td><strong>Terms</strong></td>
-<td>Number of enriched terms</td>
-</tr>
-<tr>
-<td><strong>Edges</strong></td>
-<td>Number of connections in network</td>
-</tr>
-<tr>
-<td><strong>Density</strong></td>
-<td>Network connectivity density</td>
-</tr>
-</tbody>
-</table>
-<h4 id="interpreting-results">Interpreting Results</h4>
-<p><strong>Z-score and Percentile:</strong> - <strong>Z-score &gt; 2.0
-and Percentile &gt; 95%</strong>: ✓✓ SIGNIFICANTLY BETTER (top 5%) -
-<strong>Z-score &gt; 1.0 and Percentile &gt; 84%</strong>: ✓ BETTER (top
-16%) - <strong>Z-score ~ 0.0 and Percentile ~ 50%</strong>: ~ SIMILAR to
-random - <strong>Z-score &lt; -1.0 and Percentile &lt; 16%</strong>: ✗
-WORSE than random</p>
-<p><strong>What This Means:</strong> - Higher values indicate better
-network connectivity - Your gene list is compared against thousands of
-random gene lists - Significant results suggest biological coherence</p>
-<h4 id="requirements">Requirements</h4>
-<ul>
-<li><strong>Permutation Data</strong>: Requires pre-computed permutation
-statistics</li>
-<li><strong>Gene List Size</strong>: Must match available permutation
-data sizes</li>
-<li><strong>Parameters</strong>: Best results with default parameters
-(min overlap: 3, term size: 10-600)</li>
-</ul>
-<h4 id="download-statistical-report">Download Statistical Report</h4>
-<ul>
-<li><strong>Format</strong>: Plain text file</li>
-<li><strong>Content</strong>: Comprehensive statistical analysis
-report</li>
-<li><strong>Includes</strong>: All benchmark metrics, interpretations,
-and library information</li>
-</ul>
-<h3 id="msigdb-version-information">MSigDB Version Information</h3>
-<p>The app displays: - <strong>MSigDB Version</strong>: Current version
-of gene set libraries (e.g., v2025.1) - <strong>Last Update
-Date</strong>: When libraries were last updated</p>
-<p>This information appears at the top of the Analysis tab.</p>
-<h2 id="troubleshooting">Troubleshooting</h2>
-<h3 id="common-issues">Common Issues</h3>
-<h4 id="no-enrichment-results-found">“No enrichment results found”</h4>
-<p><strong>Possible Causes:</strong> 1. <strong>P-value threshold too
-strict</strong>: Try increasing the p-value threshold 2. <strong>Minimum
-overlap too high</strong>: Reduce the minimum overlap requirement 3.
-<strong>Term size filters too restrictive</strong>: Adjust min/max term
-size range 4. <strong>No significant enrichment</strong>: Your gene list
-may not be enriched in selected libraries</p>
-<p><strong>Solutions:</strong> - Increase p-value threshold to
-<code>0.05</code> or higher - Reduce minimum overlap to <code>1</code>
-or <code>2</code> - Expand term size range (e.g., <code>5</code> to
-<code>1000</code>) - Try different gene set libraries - Check that your
-genes are valid and in the background</p>
-<h4 id="gene-validation-failed">“Gene validation failed”</h4>
-<p><strong>Possible Causes:</strong> 1. <strong>Invalid gene
-identifiers</strong>: Genes not recognized in database 2. <strong>Wrong
-format selected</strong>: Using Entrez IDs but selected “Gene Symbols”
-(or vice versa) 3. <strong>Too few genes</strong>: Less than 20
-validated genes 4. <strong>Too many genes</strong>: More than 800
-genes</p>
-<p><strong>Solutions:</strong> - Check gene spelling and format - Verify
-you selected the correct input format - Add more genes (minimum 20
-required) - Reduce gene list size (maximum 500) - Check unrecognized
-genes list and correct them</p>
-<h4 id="background-validation-failed">“Background validation
-failed”</h4>
-<p><strong>Possible Causes:</strong> 1. <strong>Background file
-missing</strong>: Background file not found 2. <strong>Background file
-corrupted</strong>: File cannot be read 3. <strong>Format
-mismatch</strong>: Background format doesn’t match selection</p>
-<p><strong>Solutions:</strong> - Refresh the page - Try selecting a
-different background - Check that background files exist in
-<code>data/backgrounds/</code> - Re-upload custom background if using
-one</p>
-<h4 id="library-validation-failed">“Library validation failed”</h4>
-<p><strong>Possible Causes:</strong> 1. <strong>No libraries
-selected</strong>: No gene set libraries checked 2. <strong>Library file
-missing</strong>: Selected library file not found 3. <strong>Library
-file corrupted</strong>: Library file cannot be read</p>
-<p><strong>Solutions:</strong> - Select at least one library from the
-checkboxes - Refresh the page - Check that library files exist in
-<code>data/libraries/</code></p>
-<h4 id="app-is-slow-or-unresponsive">App is slow or unresponsive</h4>
-<p><strong>Possible Causes:</strong> 1. <strong>Large gene
-list</strong>: Too many genes (&gt;800) 2. <strong>Many libraries
-selected</strong>: Processing many libraries simultaneously 3.
-<strong>Large term sizes</strong>: Very large gene sets in libraries 4.
-<strong>Browser issues</strong>: Browser memory or performance</p>
-<p><strong>Solutions:</strong> - Reduce gene list size - Select fewer
-libraries - Adjust max term size filter - Refresh the browser - Close
-other browser tabs - Use CLI for large-scale analyses</p>
-<h4 id="network-generation-fails">Network generation fails</h4>
-<p><strong>Possible Causes:</strong> 1. <strong>No libraries
-selected</strong>: No libraries chosen for network 2. <strong>No
-iterative results</strong>: Must run iterative analysis first 3.
-<strong>No enrichment results</strong>: Libraries have no significant
-terms</p>
-<p><strong>Solutions:</strong> - Run iterative analysis first - Select
-at least one library with results - Check that libraries have enrichment
-results - Adjust parameters to get more results</p>
-<h4 id="benchmarking-not-available">Benchmarking not available</h4>
-<p><strong>Possible Causes:</strong> 1. <strong>No permutation
-data</strong>: Permutation statistics files missing 2. <strong>Gene list
-size mismatch</strong>: Your gene list size not in permutation data 3.
-<strong>Parameter mismatch</strong>: Using non-default parameters 4.
-<strong>No clusters</strong>: Network has no clusters to benchmark</p>
-<p><strong>Solutions:</strong> - Check that permutation data exists in
-<code>permutations/</code> directory - Use default parameters for best
-compatibility - Ensure gene list size matches available permutation data
-- Verify network has at least one cluster</p>
-<h3 id="performance-tips">Performance Tips</h3>
-<ol type="1">
-<li><strong>Start Small</strong>: Begin with a small gene list and few
-libraries</li>
-<li><strong>Use Filters</strong>: Apply term size filters to reduce
-computation</li>
-<li><strong>Close Unused Tabs</strong>: Free up browser memory</li>
-<li><strong>Regular Mode First</strong>: Use Regular mode to quickly
-test parameters</li>
-<li><strong>Iterative Mode</strong>: Use Iterative mode only when needed
-(more computationally intensive)</li>
-</ol>
-<h3 id="getting-help">Getting Help</h3>
-<p>If you encounter issues not covered here:</p>
-<ol type="1">
-<li><strong>Check Logs</strong>: Look at terminal/console output for
-error messages</li>
-<li><strong>Validate Input</strong>: Ensure gene list format is
-correct</li>
-<li><strong>Try Defaults</strong>: Reset to default parameters</li>
-<li><strong>Check Documentation</strong>: Review CLI documentation for
-parameter details</li>
-<li><strong>File Issues</strong>: Report bugs with error messages and
-input examples</li>
-</ol>
-<h2 id="best-practices">Best Practices</h2>
-<h3 id="input-preparation">Input Preparation</h3>
-<ol type="1">
-<li><strong>Use Official Gene Symbols</strong>: Prefer official HGNC
-gene symbols</li>
-<li><strong>Check Format</strong>: Verify Entrez IDs are numeric</li>
-<li><strong>Remove Duplicates</strong>: Clean your gene list before
-input</li>
-<li><strong>Reasonable Size</strong>: Keep gene lists between 20-800
-genes</li>
-<li><strong>Meaningful Names</strong>: Use descriptive gene set
-names</li>
-</ol>
-<h3 id="analysis-strategy">Analysis Strategy</h3>
-<ol type="1">
-<li><strong>Start with Regular Mode</strong>: Get overview of all
-significant pathways</li>
-<li><strong>Use Default Libraries</strong>: Start with Hallmark,
-Reactome, GO BP</li>
-<li><strong>Adjust Parameters Gradually</strong>: Make small parameter
-changes</li>
-<li><strong>Iterative for Networks</strong>: Use Iterative mode when you
-need networks</li>
-<li><strong>Save Results</strong>: Download results for
-record-keeping</li>
-</ol>
-<h3 id="result-interpretation">Result Interpretation</h3>
-<ol type="1">
-<li><strong>Check P-values</strong>: Focus on highly significant results
-(p &lt; 0.01)</li>
-<li><strong>Consider FDR</strong>: In Regular mode, FDR &lt; 0.05 is
-significant</li>
-<li><strong>Review Overlap</strong>: Check that overlap sizes are
-meaningful</li>
-<li><strong>Compare Libraries</strong>: Results may vary between
-libraries</li>
-<li><strong>Biological Context</strong>: Interpret results in context of
-your research</li>
-</ol>
-<h3 id="export-and-documentation">Export and Documentation</h3>
-<ol type="1">
-<li><strong>Save TSV Files</strong>: For spreadsheet analysis</li>
-<li><strong>Keep JSON Files</strong>: For programmatic access</li>
-<li><strong>Document Parameters</strong>: Note parameter settings
-used</li>
-<li><strong>Record Gene Lists</strong>: Save validated gene symbols</li>
-<li><strong>Version Control</strong>: Note MSigDB version used</li>
-</ol>
-<hr />
-<h2 id="quick-reference">Quick Reference</h2>
-<h3 id="keyboard-shortcuts">Keyboard Shortcuts</h3>
-<ul>
-<li><strong>Ctrl/Cmd + R</strong>: Refresh page (resets app)</li>
-<li><strong>Ctrl/Cmd + F</strong>: Find in page</li>
-</ul>
-<h3 id="default-settings-summary">Default Settings Summary</h3>
-<p><strong>Regular Mode:</strong> - Raw p-value: <code>0.01</code> -
-Adjusted p-value (FDR): <code>0.05</code> - Min overlap: <code>3</code>
-- Term size: <code>10-600</code> - Results to display:
-<code>10</code></p>
-<p><strong>Iterative Mode:</strong> - P-value: <code>0.01</code> - Max
-iterations: <code>10</code> - Min overlap: <code>3</code> - Term size:
-<code>10-600</code></p>
-<p><strong>Advanced:</strong> - P-value method:
-<code>Fisher's Exact Test</code> - Background:
-<code>all_genes.txt</code> - Input format: <code>Gene Symbols</code></p>
-<h3 id="file-locations">File Locations</h3>
-<ul>
-<li><strong>Results</strong>:
-<code>results/run_YYYYMMDD_HHMMSS/</code></li>
-<li><strong>Gene Lists</strong>: <code>data/gene_lists/</code></li>
-<li><strong>Backgrounds</strong>: <code>data/backgrounds/</code></li>
-<li><strong>Libraries</strong>: <code>data/libraries/</code></li>
-</ul>
-<hr />
-<p><strong>Last Updated</strong>: Based on app version with MSigDB
-v2025.1 support</p>
-<p>For CLI documentation, see <a
-href="CLI_README.md">CLI_README.md</a></p>
+
+    <h1>Iterative Enrichment Analysis</h1>
+    <p class="subtitle">User Guide — Streamlit Cloud Edition</p>
+
+    <div class="toc">
+        <strong>Contents</strong>
+        <ol>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#getting-started">Getting Started</a></li>
+            <li><a href="#input-methods">Input Methods</a></li>
+            <li><a href="#analysis-modes">Analysis Modes</a></li>
+            <li><a href="#parameters">Parameters &amp; Settings</a></li>
+            <li><a href="#results">Understanding Results</a></li>
+            <li><a href="#exports">Export Options</a></li>
+            <li><a href="#advanced">Advanced Features</a></li>
+            <li><a href="#troubleshooting">Troubleshooting</a></li>
+            <li><a href="#best-practices">Best Practices</a></li>
+            <li><a href="#cloud-notes">Cloud-Specific Notes</a></li>
+        </ol>
+    </div>
+
+    <!-- ───────────────────────────────────────── -->
+    <h2 id="overview">1. Overview</h2>
+    <p>The Streamlit web interface provides an interactive way to perform gene enrichment analysis. Features include:
+    </p>
+    <ul>
+        <li><strong>Two Analysis Modes</strong> — Regular (standard ORA) and Iterative (iGEA)</li>
+        <li><strong>12 Gene Set Libraries</strong> — MSigDB v2025.1 collections (H, C2, C5) plus Protein Interaction
+        </li>
+        <li><strong>Real-time Visualization</strong> — Ranked bar charts, interactive tables, network graphs</li>
+        <li><strong>Network Visualization</strong> — Generate network graphs for conversational AI systems</li>
+        <li><strong>Statistical Benchmarking</strong> — Compare results against random gene lists</li>
+        <li><strong>Custom Backgrounds</strong> — Upload your own background gene list</li>
+        <li><strong>Multiple P-value Methods</strong> — Fisher's Exact Test, Hypergeometric, Chi-squared</li>
+    </ul>
+
+    <!-- ───────────────────────────────────────── -->
+    <h2 id="getting-started">2. Getting Started</h2>
+    <h3>Accessing the App</h3>
+    <p>The app is deployed on <strong>Streamlit Community Cloud</strong>. Open the shared URL in any modern browser — no
+        installation required.</p>
+
+    <h3>Interface Layout</h3>
+    <ol>
+        <li><strong>Sidebar</strong> — Mode selection (Regular / Iterative), app information, documentation link</li>
+        <li><strong>Analysis Tab</strong> — Input area, library selection, parameters</li>
+        <li><strong>Advanced Settings Tab</strong> — P-value method, background selection, custom upload</li>
+        <li><strong>Results Area</strong> — Tables, charts, downloads (appears after analysis)</li>
+    </ol>
+
+    <!-- ───────────────────────────────────────── -->
+    <h2 id="input-methods">3. Input Methods</h2>
+
+    <h3>Method 1: Direct Input</h3>
+    <ol>
+        <li>Select <strong>Input Format</strong>: Gene Symbols or Entrez IDs</li>
+        <li>Paste genes into the text area (one per line, max 800)</li>
+        <li>Name your gene set in the "Input/edit gene list name" field</li>
+        <li>Click <strong>Submit</strong></li>
+    </ol>
+
+    <h3>Method 2: File Selection</h3>
+    <p>Use the <em>"Or select a file from the data folder"</em> dropdown to pick a pre-loaded <code>.txt</code> gene
+        list.</p>
+
+    <h3>Method 3: Load Example</h3>
+    <p>Click <strong>Load Example</strong> to populate the input with a sample gene set (HIV dependency factors).</p>
+
+    <h3>Gene Input Validation</h3>
+    <p>The app automatically:</p>
+    <ul>
+        <li>Converts Entrez IDs → official gene symbols</li>
+        <li>Updates old symbols → current symbols</li>
+        <li>Removes duplicates</li>
+        <li>Validates against the background gene list</li>
+        <li>Displays conversion statistics and unrecognized genes</li>
+    </ul>
+    <div class="note">
+        <strong>Limits:</strong> Minimum 20 genes, maximum 800 genes for optimal performance.
+    </div>
+
+    <!-- ───────────────────────────────────────── -->
+    <h2 id="analysis-modes">4. Analysis Modes</h2>
+
+    <h3>Regular Mode</h3>
+    <p>Standard one-pass over-representation analysis (ORA). Tests your gene set against all selected libraries,
+        calculates enrichment statistics, and filters by p-value thresholds. Includes FDR adjustment.</p>
+    <p><strong>Best for:</strong> comprehensive overview of all significant pathways.</p>
+
+    <h3>Iterative Mode</h3>
+    <p>Iteratively removes genes from the top hit at each step:</p>
+    <ol>
+        <li>Finds the top enriched term (lowest p-value)</li>
+        <li>Removes overlapping genes from your input</li>
+        <li>Repeats until no terms pass the threshold or max iterations reached</li>
+        <li>Builds a gene–term network integrating results across libraries</li>
+    </ol>
+    <p><strong>Best for:</strong> LLM-assisted interpretation and network visualization of enrichment results.</p>
+
+    <!-- ───────────────────────────────────────── -->
+    <h2 id="parameters">5. Parameters &amp; Settings</h2>
+
+    <h3>Regular Mode Parameters</h3>
+    <table>
+        <tr>
+            <th>Parameter</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>Raw P-value</td>
+            <td>0.01</td>
+            <td>Maximum raw p-value for inclusion</td>
+        </tr>
+        <tr>
+            <td>Adjusted P-value (FDR)</td>
+            <td>0.05</td>
+            <td>Maximum FDR-adjusted p-value</td>
+        </tr>
+        <tr>
+            <td>Minimum Overlap</td>
+            <td>3</td>
+            <td>Min genes overlapping between input and a term</td>
+        </tr>
+        <tr>
+            <td>Term Size Range</td>
+            <td>10–600</td>
+            <td>Filter gene sets by size</td>
+        </tr>
+        <tr>
+            <td>Results to Display</td>
+            <td>10</td>
+            <td>Top-ranked results shown in table/chart (downloads contain all)</td>
+        </tr>
+    </table>
+
+    <h3>Iterative Mode Parameters</h3>
+    <table>
+        <tr>
+            <th>Parameter</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>P-value Threshold</td>
+            <td>0.01</td>
+            <td>Max p-value per iteration (no FDR)</td>
+        </tr>
+        <tr>
+            <td>Max Iterations</td>
+            <td>10</td>
+            <td>0 = no limit. Benchmarking supports up to 30.</td>
+        </tr>
+        <tr>
+            <td>Minimum Overlap</td>
+            <td>3</td>
+            <td>Min genes overlapping per iteration</td>
+        </tr>
+        <tr>
+            <td>Term Size Range</td>
+            <td>10–600</td>
+            <td>Filter gene sets by size</td>
+        </tr>
+    </table>
+
+    <h3>Advanced Settings <span class="badge">Tab</span></h3>
+    <table>
+        <tr>
+            <th>Setting</th>
+            <th>Default</th>
+            <th>Options</th>
+        </tr>
+        <tr>
+            <td>P-value Method</td>
+            <td>Fisher's Exact Test</td>
+            <td>Fisher's Exact, Hypergeometric, Chi-squared</td>
+        </tr>
+        <tr>
+            <td>Background Gene List</td>
+            <td>All genes</td>
+            <td>Dropdown + custom upload</td>
+        </tr>
+    </table>
+
+    <h3>Available Libraries</h3>
+    <table>
+        <tr>
+            <th>Collection</th>
+            <th>Library</th>
+        </tr>
+        <tr>
+            <td>H</td>
+            <td>Hallmark Gene Sets</td>
+        </tr>
+        <tr>
+            <td>C2</td>
+            <td>BioCarta, KEGG MEDICUS, KEGG Legacy, Pathway Interaction Database, Reactome Pathways, WikiPathways</td>
+        </tr>
+        <tr>
+            <td>C5</td>
+            <td>GO: Biological Process, GO: Cellular Component, GO: Molecular Function, Human Phenotype Ontology</td>
+        </tr>
+        <tr>
+            <td>—</td>
+            <td>Protein Interaction (StringDB)</td>
+        </tr>
+    </table>
+
+    <!-- ───────────────────────────────────────── -->
+    <h2 id="results">6. Understanding Results</h2>
+
+    <h3>Regular Mode Results</h3>
+    <ul>
+        <li><strong>Results Table</strong> — Term name, p-value, adjusted p-value, overlap (X/Y), genes</li>
+        <li><strong>Bar Chart</strong> — -log10(p-value) on x-axis, interactive (hover, zoom)</li>
+        <li><strong>Library Info</strong> — Gene count (library-specific input / total), background count</li>
+    </ul>
+
+    <h3>Iterative Mode Results</h3>
+    <ul>
+        <li><strong>Iteration Table</strong> — Results organized by iteration number</li>
+        <li><strong>Network Visualization</strong> — Interactive graph showing pathway relationships</li>
+        <li><strong>ORA vs iGEA Comparison</strong> — Statistics comparing Iteration 1 vs all iterations</li>
+        <li><strong>Statistical Benchmarking</strong> — Z-scores and percentiles vs random gene lists</li>
+    </ul>
+
+    <h4>Interpreting Benchmarking</h4>
+    <table>
+        <tr>
+            <th>Z-score</th>
+            <th>Percentile</th>
+            <th>Interpretation</th>
+        </tr>
+        <tr>
+            <td>&gt; 2.0</td>
+            <td>&gt; 95%</td>
+            <td>✓✓ Significantly better (top 5%)</td>
+        </tr>
+        <tr>
+            <td>&gt; 1.0</td>
+            <td>&gt; 84%</td>
+            <td>✓ Better (top 16%)</td>
+        </tr>
+        <tr>
+            <td>≈ 0.0</td>
+            <td>≈ 50%</td>
+            <td>~ Similar to random</td>
+        </tr>
+        <tr>
+            <td>&lt; -1.0</td>
+            <td>&lt; 16%</td>
+            <td>✗ Worse than random</td>
+        </tr>
+    </table>
+
+    <!-- ───────────────────────────────────────── -->
+    <h2 id="exports">7. Export Options</h2>
+
+    <h3>Regular Mode</h3>
+    <ul>
+        <li><strong>Combined TSV / JSON</strong> — All libraries in one file</li>
+        <li><strong>Individual Archive</strong> — <code>.tar.gz</code> with per-library TSV + JSON files</li>
+    </ul>
+
+    <h3>Iterative Mode</h3>
+    <ul>
+        <li><strong>ORA Results</strong> — Iteration 1 combined TSV + archive</li>
+        <li><strong>iGEA Results</strong> — All iterations combined TSV + archive</li>
+        <li><strong>Validated Gene Symbols</strong> — <code>.txt</code> file of your input after validation</li>
+        <li><strong>Network DOT</strong> — Graphviz format for further visualization</li>
+        <li><strong>Statistical Report</strong> — Benchmarking results in plain text</li>
+    </ul>
+
+    <!-- ───────────────────────────────────────── -->
+    <h2 id="advanced">8. Advanced Features</h2>
+
+    <h3>Custom Background Gene List</h3>
+    <ol>
+        <li>Go to the <strong>Advanced Settings</strong> tab</li>
+        <li>Select format: Gene Symbols or Entrez IDs</li>
+        <li>Click <strong>"Upload your background gene list"</strong></li>
+        <li>Select a <code>.txt</code> file (one gene per line)</li>
+        <li>Click <strong>"Apply Settings"</strong></li>
+    </ol>
+    <div class="note">
+        <strong>Cloud note:</strong> Uploaded backgrounds are ephemeral — they persist only for the current session.
+    </div>
+
+    <h3>Network Generation (Iterative Mode)</h3>
+    <ol>
+        <li>Run an iterative analysis</li>
+        <li>Check <em>"Use results in network"</em> for each library</li>
+        <li>Click <strong>"Generate Network"</strong></li>
+        <li>View the interactive Plotly graph</li>
+        <li>Copy the generated prompt for use with AI systems (ChatGPT, Claude, etc.)</li>
+    </ol>
+
+    <h3>Statistical Benchmarking (Iterative Mode)</h3>
+    <p>Runs automatically after iterative analysis. Compares your network metrics against thousands of random gene lists
+        using pre-computed permutation data.</p>
+    <ul>
+        <li>Metrics: cluster size, edges, connectivity, library diversity</li>
+        <li>Permutation data available for gene list sizes 50–1000 (increments of 50)</li>
+        <li>Download the full statistical report</li>
+    </ul>
+
+    <!-- ───────────────────────────────────────── -->
+    <h2 id="troubleshooting">9. Troubleshooting</h2>
+
+    <h3>"No enrichment results found"</h3>
+    <ul>
+        <li>Increase p-value threshold (try 0.05)</li>
+        <li>Reduce minimum overlap to 1 or 2</li>
+        <li>Expand term size range (e.g., 5–1000)</li>
+        <li>Try different libraries</li>
+    </ul>
+
+    <h3>"Gene validation failed"</h3>
+    <ul>
+        <li>Check gene spelling and format</li>
+        <li>Verify the correct input format is selected (Symbols vs Entrez IDs)</li>
+        <li>Ensure at least 20 validated genes</li>
+    </ul>
+
+    <h3>App is slow or unresponsive</h3>
+    <ul>
+        <li>Reduce gene list size (stay under 500 genes)</li>
+        <li>Select fewer libraries</li>
+        <li>Reduce max term size</li>
+        <li>Refresh the browser</li>
+    </ul>
+
+    <h3>Benchmarking not available</h3>
+    <ul>
+        <li>Only available in Iterative mode</li>
+        <li>Requires gene list sizes between 50–1000</li>
+        <li>Best results with default parameters (min overlap 3, term size 10–600)</li>
+    </ul>
+
+    <!-- ───────────────────────────────────────── -->
+    <h2 id="best-practices">10. Best Practices</h2>
+
+    <h3>Input Preparation</h3>
+    <ul>
+        <li>Use official HGNC gene symbols when possible</li>
+        <li>Remove duplicates before input</li>
+        <li>Keep lists between 20–800 genes</li>
+        <li>Use descriptive gene set names</li>
+    </ul>
+
+    <h3>Analysis Strategy</h3>
+    <ol>
+        <li>Start with <strong>Regular Mode</strong> for a quick overview</li>
+        <li>Default libraries (Hallmark, Reactome, GO BP) are pre-selected</li>
+        <li>Switch to <strong>Iterative Mode</strong> for network visualization</li>
+        <li>Download results for record-keeping</li>
+    </ol>
+
+    <h3>Result Interpretation</h3>
+    <ul>
+        <li>Focus on highly significant results (p &lt; 0.01)</li>
+        <li>In Regular mode, FDR &lt; 0.05 is the standard significance threshold</li>
+        <li>Check that overlap sizes are biologically meaningful</li>
+        <li>Compare results across libraries for consistency</li>
+    </ul>
+
+    <!-- ───────────────────────────────────────── -->
+    <h2 id="cloud-notes">11. Cloud-Specific Notes</h2>
+
+    <div class="warning">
+        <strong>Ephemeral Storage:</strong> Streamlit Community Cloud uses ephemeral storage. Results and uploaded files
+        are temporary and will be lost when the app restarts. Always download your results before closing the browser.
+    </div>
+
+    <div class="tip">
+        <strong>Performance:</strong> The Cloud edition uses cached data loading — gene info, libraries, and backgrounds
+        are parsed once and reused across interactions. First load may take a few seconds; subsequent runs are faster.
+    </div>
+
+    <table>
+        <tr>
+            <th>Feature</th>
+            <th>Cloud Behaviour</th>
+        </tr>
+        <tr>
+            <td>Results storage</td>
+            <td>Stored in <code>/tmp/</code> — ephemeral, download immediately</td>
+        </tr>
+        <tr>
+            <td>Custom backgrounds</td>
+            <td>Persist for current session only</td>
+        </tr>
+        <tr>
+            <td>Data caching</td>
+            <td>GMT files, gene info, and backgrounds cached via <code>@st.cache_data</code></td>
+        </tr>
+        <tr>
+            <td>Libraries</td>
+            <td>12 active MSigDB v2025.1 libraries</td>
+        </tr>
+        <tr>
+            <td>Benchmarking data</td>
+            <td>Pre-computed parquet statistics (sizes 50–1000)</td>
+        </tr>
+    </table>
+
+    <hr>
+    <p style="color: var(--muted); font-size: 0.85rem; text-align: center; margin-top: 2rem;">
+        Iterative Enrichment Analysis • Cloud Edition • MSigDB v2025.1 • AION Labs
+    </p>
+
 </body>
+
 </html>

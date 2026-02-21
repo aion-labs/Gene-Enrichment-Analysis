@@ -85,23 +85,18 @@ class IterativeEnrichment:
     def _get_run_results_dir(self) -> "Path":
         """
         Get the unique results directory for this run.
+        Uses /tmp on Streamlit Cloud for ephemeral storage.
         
         Returns:
             Path to the run-specific results directory
         """
         from pathlib import Path
-        # If output_dir was provided, use it (allows CLI to override default location)
+        # If output_dir was provided, use it
         if self._output_dir is not None:
             results_dir = Path(self._output_dir) / f"run_{self._run_id}"
-        # Detect Code Ocean environment - use /results if it exists, otherwise use project root
-        # Code Ocean mounts results at /results/
-        elif Path("/results").exists() and Path("/results").is_dir():
-            # Running on Code Ocean
-            results_dir = Path("/results") / f"run_{self._run_id}"
         else:
-            # Running locally - use absolute path to project root (default behavior)
-            ROOT = Path(__file__).resolve().parent.parent
-            results_dir = ROOT / "results" / f"run_{self._run_id}"
+            # Use /tmp for Streamlit Cloud (ephemeral, always writable)
+            results_dir = Path("/tmp") / "enrichment_results" / f"run_{self._run_id}"
         return results_dir
 
     @property
@@ -356,7 +351,7 @@ class IterativeEnrichment:
         
         # Ensure results directory exists
         results_dir = self._get_run_results_dir()
-        results_dir.mkdir(exist_ok=True)
+        results_dir.mkdir(parents=True, exist_ok=True)
         
         # Create filename with library name and iteration number
         # Replace problematic file name characters with dots
@@ -432,7 +427,7 @@ class IterativeEnrichment:
         
         # Ensure results directory exists
         results_dir = self._get_run_results_dir()
-        results_dir.mkdir(exist_ok=True)
+        results_dir.mkdir(parents=True, exist_ok=True)
         
         # Create archive filename
         library_name = self.gene_set_library.name.replace(" ", "_").replace("/", "_")
@@ -512,7 +507,7 @@ class IterativeEnrichment:
         
         # Ensure results directory exists
         results_dir = self._get_run_results_dir()
-        results_dir.mkdir(exist_ok=True)
+        results_dir.mkdir(parents=True, exist_ok=True)
         
         # Create filename with library name and timestamp
         # Replace problematic file name characters with dots

@@ -1,6 +1,6 @@
 import logging
 from math import log10
-from typing import Dict, Set
+from typing import Dict, List, Set
 
 import numpy as np
 import pandas as pd
@@ -188,6 +188,8 @@ def render_validation() -> None:
                     },
                     hide_index=True,
                 )
+            if not dups and not non_gene:
+                st.success("✅ All genes are valid")
 
 
 def render_iter_table(result: pd.DataFrame) -> None:
@@ -701,7 +703,12 @@ def render_ora_igea_comparison(
     )
 
 
-def render_network(dot: str, title: str = "Iterative Enrichment Network") -> None:
+def render_network(
+    dot: str, 
+    title: str = "Iterative Enrichment Network",
+    gene_count: int = None,
+    library_list: List[str] = None
+) -> None:
     """
     Render a bipartite network graph of iterative enrichment across libraries.
 
@@ -709,6 +716,10 @@ def render_network(dot: str, title: str = "Iterative Enrichment Network") -> Non
     :type dot: str
     :param title: Header title for the network graph.
     :type title: str
+    :param gene_count: Number of genes in the original input gene list.
+    :type gene_count: int, optional
+    :param library_list: List of library names that were tested.
+    :type library_list: list, optional
     """
     logger.info("Rendering iterative network graph.")
 
@@ -731,19 +742,74 @@ def render_network(dot: str, title: str = "Iterative Enrichment Network") -> Non
             "Download the DOT file to view in external tools like Graphviz."
         )
     
-    # Always offer downloads regardless of size
+    # Generate AI prompt - this is the source of truth for both clipboard and download
+    ai_prompt = generate_ai_analysis_prompt(dot, gene_count=gene_count, library_list=library_list)
+    
+    # Display AI prompt section with platform buttons
+    st.markdown("---")
+    st.subheader("🤖 AI Analysis Prompt")
+    st.caption("Use this prompt with conversational AI systems to analyze your enrichment network")
+    
+    # Display prompt in text area (selectable for easy copying)
+    # Note: The text_area displays the same ai_prompt that will be downloaded
+    prompt_key = f"ai_prompt_{hash(dot) % 10000}"  # Unique key based on dot content
+    st.text_area(
+        "AI Analysis Prompt:",
+        value=ai_prompt,  # Same text as downloadable file
+        height=400,
+        key=prompt_key,
+        help="Select all text (Ctrl+A / Cmd+A) and copy (Ctrl+C / Cmd+C) to paste into your preferred AI platform"
+    )
+    
+    # AI Platform buttons
+    st.markdown("**Open AI Platform:**")
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.link_button(
+            "💬 ChatGPT",
+            "https://chat.openai.com/",
+            use_container_width=True,
+            help="Opens ChatGPT in a new tab. Copy the prompt from the text box above and paste it into the chat."
+        )
+    
+    with col2:
+        st.link_button(
+            "🧠 Claude",
+            "https://claude.ai/",
+            use_container_width=True,
+            help="Opens Claude in a new tab. Copy the prompt from the text box above and paste it into the chat."
+        )
+    
+    with col3:
+        st.link_button(
+            "✨ Gemini",
+            "https://gemini.google.com/",
+            use_container_width=True,
+            help="Opens Google Gemini in a new tab. Copy the prompt from the text box above and paste it into the chat."
+        )
+    
+    # Instructions
+    st.info("💡 **How to use:** 1) Select all text in the prompt box above (Ctrl+A / Cmd+A) 2) Copy it (Ctrl+C / Cmd+C) 3) Click your preferred AI platform button 4) Paste the prompt (Ctrl+V / Cmd+V) into the chat")
+    
+    # Always offer downloads with clear labels
     st.markdown(
-        f'Download network graph as {download_link(dot, "iterative_network", "dot")}, '
-        f'Download {download_link(generate_ai_analysis_prompt(dot), "ai_analysis_prompt", "txt")} for AI analysis',
+        f'**Downloads:** Download network in DOT format {download_link(dot, "iterative_network", "dot")} | Download AI prompt as text file {download_link(ai_prompt, "ai_analysis_prompt", "txt")}',
         unsafe_allow_html=True,
     )
 
 
-def generate_ai_analysis_prompt(dot_content: str) -> str:
+def generate_ai_analysis_prompt(
+    dot_content: str, 
+    gene_count: int = None, 
+    library_list: List[str] = None
+) -> str:
     """
     Generate an AI analysis prompt based on the DOT network content with library source annotations.
     
     :param dot_content: The DOT network content
+    :param gene_count: Number of genes in the original input gene list
+    :param library_list: List of library names that were tested
     :return: Formatted AI analysis prompt with library information
     """
     import re
@@ -779,7 +845,24 @@ def generate_ai_analysis_prompt(dot_content: str) -> str:
     
     prompt = """You are a computational biologist analyzing an iterative gene set enrichment network. Iterative means that for each library source, the top enriched gene set is found, saved and the genes are removed from the initial gene list. The remaining genes are then tested for enrichment again. Thus, each gene appears only once per library source tested but can be linked to multiple terms that originate from different libraries. The results are provided as a DOT network represents the relationships between genes and gene sets(=terms).
 
-**NETWORK STRUCTURE:**
+"""
+    
+    # Add gene count and library list information if provided
+    if gene_count is not None or library_list is not None:
+        info_parts = []
+        if gene_count is not None:
+            info_parts.append(f"The original gene list included {gene_count} genes")
+        if library_list is not None and len(library_list) > 0:
+            library_str = ", ".join(library_list)
+            if gene_count is not None:
+                info_parts.append(f"and was tested across the following libraries: {library_str}")
+            else:
+                info_parts.append(f"The analysis was tested across the following libraries: {library_str}")
+        
+        if info_parts:
+            prompt += f"{' '.join(info_parts)}.\n\n"
+    
+    prompt += """**NETWORK STRUCTURE:**
 """
     
     # Add the annotated DOT content

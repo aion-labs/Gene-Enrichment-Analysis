@@ -611,7 +611,7 @@ def compute_null_distribution_from_parquet(
             logger.info("User p-value threshold is 0.05, using pre-computed Parquet cluster statistics")
             # Continue to Parquet processing below
         else:
-            # User threshold < 0.05, need to filter raw permutation results
+            # User threshold < 0.05, try to filter raw permutation results
             if merged_permutation_file is None:
                 # Try to find merged permutation file
                 project_root = parquet_dir.parent.parent
@@ -628,24 +628,27 @@ def compute_null_distribution_from_parquet(
                         merged_permutation_file = path
                         logger.info(f"Found merged permutation file: {merged_permutation_file}")
                         break
-                
-                if merged_permutation_file is None:
-                    raise FileNotFoundError(
-                        f"Could not find merged permutation results file. "
-                        f"Required for p-value filtering. Tried: {possible_paths}"
-                    )
             
-            logger.info(f"Using raw permutation results with p-value filtering (threshold: {user_p_threshold})")
-            null_stats, actual_size = compute_null_distribution_from_raw_permutations(
-                merged_permutation_file,
-                gene_list_size,
-                selected_libraries,
-                user_p_threshold,
-                user_max_iterations,
-                metrics
-            )
-            # Return the actual size used (may have been rounded)
-            return null_stats, actual_size
+            if merged_permutation_file is not None and merged_permutation_file.exists():
+                logger.info(f"Using raw permutation results with p-value filtering (threshold: {user_p_threshold})")
+                null_stats, actual_size = compute_null_distribution_from_raw_permutations(
+                    merged_permutation_file,
+                    gene_list_size,
+                    selected_libraries,
+                    user_p_threshold,
+                    user_max_iterations,
+                    metrics
+                )
+                # Return the actual size used (may have been rounded)
+                return null_stats, actual_size
+            else:
+                # Merged TSV not available — fall back to pre-computed parquet stats
+                logger.warning(
+                    f"Merged permutation results file not found. "
+                    f"Falling back to pre-computed Parquet cluster statistics (generated at p=0.05). "
+                    f"Note: User threshold ({user_p_threshold}) cannot be applied without the merged TSV."
+                )
+                # Continue to Parquet processing below
     
     # Use pre-computed Parquet cluster statistics (generated with p-value 0.05)
     if metrics is None:

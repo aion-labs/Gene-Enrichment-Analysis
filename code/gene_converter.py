@@ -3,7 +3,78 @@ import re
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
+import streamlit as st
+
 logger = logging.getLogger(__name__)
+
+
+@st.cache_data(show_spinner="Loading gene info database...")
+def _cached_load_gene_info(gene_info_path: str) -> Tuple[Dict[str, str], Dict[str, str], Dict[str, str]]:
+    """Load and cache gene info parsing. Returns (entrez_to_symbol, symbol_to_entrez, synonyms_to_symbol)."""
+    entrez_to_symbol: Dict[str, str] = {}
+    symbol_to_entrez: Dict[str, str] = {}
+    synonyms_to_symbol: Dict[str, str] = {}
+    
+    with open(gene_info_path, 'r', encoding='utf-8') as f:
+        for line_num, line in enumerate(f, 1):
+            if line.startswith('#'):
+                continue
+            try:
+                fields = line.strip().split('\t')
+                if len(fields) < 3:
+                    continue
+                tax_id = fields[0]
+                if tax_id != '9606':
+                    continue
+                entrez_id = fields[1]
+                symbol = fields[2]
+                if not entrez_id or not symbol or symbol == '-':
+                    continue
+                entrez_to_symbol[entrez_id] = symbol
+                symbol_to_entrez[symbol.upper()] = entrez_id
+                if len(fields) > 4 and fields[4] != '-':
+                    synonyms = fields[4].split('|')
+                    for synonym in synonyms:
+                        if synonym and synonym != '-':
+                            synonyms_to_symbol[synonym.upper()] = symbol
+            except Exception as e:
+                logger.warning(f"Error parsing line {line_num}: {e}")
+                continue
+    
+    logger.info(f"Loaded {len(entrez_to_symbol)} human Entrez ID mappings")
+    return entrez_to_symbol, symbol_to_entrez, synonyms_to_symbol
+
+
+@st.cache_data(show_spinner="Loading gene history...")
+def _cached_load_gene_history(gene_history_path: str) -> Dict[str, str]:
+    """Load and cache gene history parsing. Returns old_to_current_symbol mapping."""
+    old_to_current_symbol: Dict[str, str] = {}
+    
+    with open(gene_history_path, 'r', encoding='utf-8') as f:
+        for line_num, line in enumerate(f, 1):
+            if line.startswith('#'):
+                continue
+            try:
+                fields = line.strip().split('\t')
+                if len(fields) < 4:
+                    continue
+                tax_id = fields[0]
+                if tax_id != '9606':
+                    continue
+                old_symbol = fields[2]
+                current_symbol = fields[3]
+                if not old_symbol or not current_symbol or old_symbol == '-' or current_symbol == '-':
+                    continue
+                if old_symbol.upper() not in old_to_current_symbol:
+                    old_to_current_symbol[old_symbol.upper()] = current_symbol.upper()
+                elif old_to_current_symbol[old_symbol.upper()] != current_symbol.upper():
+                    del old_to_current_symbol[old_symbol.upper()]
+            except Exception as e:
+                logger.warning(f"Error parsing gene_history line {line_num}: {e}")
+                continue
+    
+    logger.info(f"Loaded {len(old_to_current_symbol)} unique old-to-current symbol mappings")
+    return old_to_current_symbol
 
 
 class GeneConverter:
@@ -23,84 +94,52 @@ class GeneConverter:
                              If None, will look for it in the data/recent_release directory.
         """
         if gene_info_path is None:
-            # Look for the file in the data/recent_release directory
-            # Try multiple path resolution strategies for robustness in different environments
-            
-            # Strategy 1: Use __file__ to get path relative to this module
             project_root = Path(__file__).resolve().parent.parent
             gene_info_path = project_root / "data" / "recent_release" / "Homo_sapiens.gene_info"
-            
-            # Strategy 2: If not found, try relative to current working directory
             if not gene_info_path.exists():
                 alt_path = Path.cwd() / "data" / "recent_release" / "Homo_sapiens.gene_info"
                 if alt_path.exists():
                     gene_info_path = alt_path
                 else:
-                    # Strategy 3: Try one level up from current directory (if in code/ folder)
                     alt_path2 = Path.cwd().parent / "data" / "recent_release" / "Homo_sapiens.gene_info"
                     if alt_path2.exists():
                         gene_info_path = alt_path2
-                    else:
-                        # Strategy 4: Try Code Ocean style path (if data is mounted at /data)
-                        code_ocean_path = Path("/data") / "recent_release" / "Homo_sapiens.gene_info"
-                        if code_ocean_path.exists():
-                            gene_info_path = code_ocean_path
-                        else:
-                            # Strategy 5: Try relative path from code/ directory
-                            code_dir_path = Path(__file__).resolve().parent / ".." / "data" / "recent_release" / "Homo_sapiens.gene_info"
-                            if code_dir_path.resolve().exists():
-                                gene_info_path = code_dir_path.resolve()
         
         self.gene_info_path = Path(gene_info_path)
         
         if gene_history_path is None:
-            # Look for the file in the data/recent_release directory
-            # Try multiple path resolution strategies for robustness in different environments
-            
-            # Strategy 1: Use __file__ to get path relative to this module
             project_root = Path(__file__).resolve().parent.parent
             gene_history_path = project_root / "data" / "recent_release" / "gene_history"
-            
-            # Strategy 2: If not found, try relative to current working directory
             if not gene_history_path.exists():
                 alt_path = Path.cwd() / "data" / "recent_release" / "gene_history"
                 if alt_path.exists():
                     gene_history_path = alt_path
                 else:
-                    # Strategy 3: Try one level up from current directory (if in code/ folder)
                     alt_path2 = Path.cwd().parent / "data" / "recent_release" / "gene_history"
                     if alt_path2.exists():
                         gene_history_path = alt_path2
-                    else:
-                        # Strategy 4: Try Code Ocean style path (if data is mounted at /data)
-                        code_ocean_path = Path("/data") / "recent_release" / "gene_history"
-                        if code_ocean_path.exists():
-                            gene_history_path = code_ocean_path
-                        else:
-                            # Strategy 5: Try relative path from code/ directory
-                            code_dir_path = Path(__file__).resolve().parent / ".." / "data" / "recent_release" / "gene_history"
-                            if code_dir_path.resolve().exists():
-                                gene_history_path = code_dir_path.resolve()
         
         self.gene_history_path = Path(gene_history_path)
-        
-        self.entrez_to_symbol: Dict[str, str] = {}
-        self.symbol_to_entrez: Dict[str, str] = {}
-        self.synonyms_to_symbol: Dict[str, str] = {}
-        self.old_to_current_symbol: Dict[str, str] = {}
         
         # Track conversions for this session
         self.conversions: List[str] = []
         
+        # Load from cached functions
         if self.gene_info_path.exists():
-            self._load_gene_info()
+            self.entrez_to_symbol, self.symbol_to_entrez, self.synonyms_to_symbol = (
+                _cached_load_gene_info(str(self.gene_info_path))
+            )
         else:
             logger.warning(f"Gene info file not found at {self.gene_info_path}")
+            self.entrez_to_symbol: Dict[str, str] = {}
+            self.symbol_to_entrez: Dict[str, str] = {}
+            self.synonyms_to_symbol: Dict[str, str] = {}
         
         if self.gene_history_path.exists():
-            self._load_gene_history()
+            self.old_to_current_symbol = _cached_load_gene_history(str(self.gene_history_path))
         else:
             logger.warning(f"Gene history file not found at {self.gene_history_path}")
+            self.old_to_current_symbol: Dict[str, str] = {}
     
     def _load_gene_info(self) -> None:
         """Load gene information from the NCBI gene info file."""
