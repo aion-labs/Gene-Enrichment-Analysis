@@ -1,107 +1,163 @@
 # Iterative Gene Enrichment Analysis
 
-## Prerequisites
-- Have a list of genes for enrichment analysis in official human gene symbols or entrez IDs.
-- Unless you use all genes as a background, have a background file with all measured genes ready in the human gene symbols or entrez IDs.
-- You may add new gene set libraries in GMT format. Make sure they are properly listed in the data folder and added to the alias.json file.  
-- The NCBI gene information database (`Homo_sapiens.gene_info`) is automatically downloaded for Entrez ID support.
+A web-based tool for gene set enrichment analysis with support for both standard over-representation analysis (ORA) and a novel **iterative enrichment** mode. Deployed on [Streamlit Community Cloud](https://streamlit.io/cloud).
 
-## Run the Application
+---
 
-### Web Interface (Streamlit)
-The application provides a user-friendly web interface that runs in your browser:
-- **To run locally**: `streamlit run code/streamlit_app.py`
-- **To run in Docker**: `docker build -t cc_enrichment:latest .` and `docker run -p 8080:8080 cc_enrichment:latest`
+## 🚀 Live App
 
-The Streamlit interface offers:
-- Interactive web-based UI accessible through your browser
-- Real-time parameter adjustment
-- Visual results display with charts and graphs
-- Easy file upload and download capabilities
+Access the application directly in your browser — no installation required:
 
-### Command Line Interface (CLI)
-For automated analysis, batch processing, or integration into workflows, use the command-line interface:
+**[Launch Enrichment Analysis →](https://gene-enrichment-analysis.streamlit.app)**
 
-```bash
-# Basic usage
-python code/cli.py --genelist your_genes.txt --libraries "H: Hallmark Gene Sets"
+---
 
-# Run with all active libraries
-python code/cli.py --genelist your_genes.txt
+## Quick Start
 
-# Iterative enrichment mode
-python code/cli.py --genelist your_genes.txt --mode iterative
+1. Prepare a gene list in **official human gene symbols** (e.g., TP53, BRCA1) or **Entrez IDs** (e.g., 7157, 672).
+2. Open the app and paste your genes or upload a file.
+3. Select gene set libraries and analysis mode (Regular or Iterative).
+4. Click **Run Enrichment** and explore interactive results.
 
-# See all options
-python code/cli.py --help
+---
+
+## Features
+
+### Gene Input & Validation
+- **Flexible input**: Paste a newline-separated gene list or upload a `.txt` file.
+- **Dual format support**: Gene symbols and Entrez IDs with automatic validation.
+- **Smart conversion**: Entrez IDs → official symbols; outdated symbols → current symbols via NCBI gene information.
+- **Duplicate detection**: Automatically flags and handles duplicate entries.
+
+### Analysis Modes
+
+| | Regular (ORA) | Iterative Enrichment |
+|---|---|---|
+| **Method** | Standard over-representation analysis | Multi-iteration refinement of gene-term associations |
+| **P-value** | Fisher's exact, hypergeometric, or chi-squared | Fisher's exact, hypergeometric, or chi-squared |
+| **Correction** | FDR-adjusted p-values | Raw p-values per iteration (FDR not applicable) |
+| **Best for** | Quick, standard enrichment | Deep, iterative discovery of enriched pathways |
+
+### Gene Set Libraries (MSigDB v2025.1)
+
+The app ships with 12 pre-loaded gene set libraries from [MSigDB](https://www.gsea-msigdb.org/gsea/msigdb/):
+
+| Collection | Library |
+|---|---|
+| **Hallmark** | H: Hallmark Gene Sets |
+| **Canonical Pathways (C2)** | BioCarta · KEGG Legacy · KEGG MEDICUS · PID · Reactome · WikiPathways |
+| **Ontology (C5)** | GO Biological Process · GO Cellular Component · GO Molecular Function · Human Phenotype Ontology |
+| **Protein Interaction** | StringDB Protein Interactions |
+
+Custom libraries in `.gmt` format can be uploaded through the UI.
+
+### Background Gene Sets
+- **All genes** (default): Uses the full set of annotated human genes.
+- **Custom background**: Upload a `.txt` file with all measured genes for more accurate statistics.
+
+### Results & Export
+- **Interactive bar charts** for each library with adjustable display settings.
+- **Export options**: Download results as TSV, JSON, or combined archives (`.tar.gz`).
+- **Network visualization**: Explore gene-term relationships as interactive network graphs.
+- **Unique filenames**: All outputs are saved with timestamped, unique identifiers.
+
+### Statistical Methods
+- **Fisher's Exact Test**
+- **Hypergeometric Test**
+- **Chi-Squared Test**
+
+P-value filtering uses both raw and FDR-adjusted thresholds. In Iterative mode, only raw p-values are used.
+
+---
+
+## Project Structure
+
+```
+iterative_enrichment/
+├── code/
+│   ├── streamlit_app.py          # Main Streamlit application
+│   ├── enrichment.py             # ORA enrichment engine
+│   ├── iter_enrichment.py        # Iterative enrichment engine
+│   ├── gene_converter.py         # Gene symbol / Entrez ID converter
+│   ├── gene_set.py               # Gene set data model
+│   ├── gene_set_library.py       # GMT library parser
+│   ├── background_gene_set.py    # Background gene set loader
+│   └── ui/                       # UI components and rendering
+├── data/
+│   ├── libraries/                # GMT gene set library files
+│   │   └── alias.json            # Library metadata & activation config
+│   ├── backgrounds/              # Background gene set files
+│   ├── gene_lists/               # Example gene lists
+│   └── recent_release/           # NCBI gene info files
+├── .streamlit/
+│   └── config.toml               # Streamlit theme & server config
+├── requirements.txt              # Python dependencies
+├── packages.txt                  # System packages (apt) for Cloud
+├── pyproject.toml                # Project metadata
+└── README.md
 ```
 
-**CLI Features:**
-- Full feature parity with the web interface
-- Support for both regular and iterative enrichment modes
-- Batch processing capabilities
-- Automated output generation (TSV, JSON, DOT files)
-- Gene format support (symbols or Entrez IDs)
-- Configurable statistical parameters
+---
 
-For detailed CLI documentation, see [CLI_README.md](documentation/CLI_README.md).
+## Deployment on Streamlit Community Cloud
 
-### Choosing Between Web Interface and CLI
+This repository is configured for **zero-setup deployment** on Streamlit Community Cloud.
 
-| Feature | Web Interface (Streamlit) | Command Line Interface (CLI) |
-|---------|---------------------------|------------------------------|
-| **Ease of Use** | ✅ User-friendly, no command line knowledge required | ⚠️ Requires basic command line skills |
-| **Visualization** | ✅ Interactive charts and graphs | ❌ Text-based output only |
-| **Real-time Adjustments** | ✅ Instant parameter changes | ❌ Requires re-running commands |
-| **Batch Processing** | ❌ Manual operation only | ✅ Automated processing |
-| **Integration** | ❌ Limited to web browser | ✅ Easy integration into workflows |
-| **Resource Usage** | ⚠️ Higher memory usage | ✅ Lower resource footprint |
-| **Remote Access** | ✅ Accessible from any browser | ⚠️ Requires SSH/remote access |
+### Required files
 
-**Recommendation:**
-- **Use Streamlit** for interactive exploration, visualization, and one-off analyses
-- **Use CLI** for batch processing, automation, and integration into computational pipelines
+| File | Purpose |
+|---|---|
+| `requirements.txt` | Python dependencies (installed via `pip`) |
+| `packages.txt` | System-level packages (installed via `apt`) — includes `graphviz` |
+| `.streamlit/config.toml` | Theme, upload limits, and server settings |
 
-## Overview of Application Components
-### Key Features
+### Deploy your own instance
 
-#### Gene Set Submission
-Users have the flexibility to input their gene set in multiple ways:
-- **Direct Input**: Paste a newline-separated list of gene identifiers and assign a name to the gene set.
-- **File Selection**: Choose an existing gene list from the local `data` folder.
-- **Multiple Formats**: Support for gene symbols (e.g., TP53, BRCA1) and Entrez IDs (e.g., 7157, 672).
-- **Format Selection**: Users must specify their input format before entering gene lists.
+1. Fork this repository to your GitHub account.
+2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in.
+3. Click **New app** → select your fork → set main file to `code/streamlit_app.py`.
+4. Click **Deploy**. Streamlit will install dependencies and launch the app.
 
-#### Gene Set Validation
-The app performs crucial validation steps to ensure the accuracy of the analysis:
-- **Format Validation**: Validates gene identifiers against the selected input format (symbols or Entrez IDs).
-- **Conversion**: Converts Entrez IDs to official gene symbols when using Entrez ID format. In addition, converts old symbols to updated symbols when possible. 
-- **Duplicate Check**: Checks for any duplicate gene names within the input gene set.
-- **Background Check**: Validates the input gene set against a predefined background gene list, which helps in identifying any genes that might not be present in the background list.
+### Running locally
 
-#### Results Display and Interaction
-- Interactive Bar Graph: An interactive bar graph provides a visual representation of the results for each gene set library.
+```bash
+# Clone the repository
+git clone https://github.com/<your-org>/iterative-enrichment.git
+cd iterative-enrichment
 
-#### Data Export Options
-- Individual Library Export: Users can save the results for each gene set library in TSV and JSON formats.
-- Consolidated Export: There is an option to save results for all libraries in a single TSV file.
+# Create and activate a virtual environment (Python 3.12.4+)
+python -m venv .venv
+source .venv/bin/activate
 
-#### Results Management
-All results, along with the complementary metadata, are stored in the `results` folder and are assigned unique filenames.
+# Install dependencies
+pip install -r requirements.txt
 
-### Advanced Features
+# Launch the app
+streamlit run code/streamlit_app.py
+```
 
-#### Customization of Results Display
-Users can customize the number of results to display in both the chart and the bar graph in the Streamlit app.
+> **Note**: Graphviz must be installed on your system for network visualization (`brew install graphviz` on macOS, `sudo apt install graphviz graphviz-dev` on Linux).
 
-#### P-value Calculation Methods
-The app offers various statistical methods to calculate p-values:
-- Fisher's Exact Test.
-- Hypergeometric Test.
-- Chi-Squared Test.
+---
 
-**Important Note on P-values**: The p-value threshold used for filtering results are both **raw p-value** and FDR adjusted p-values. In Iterative mode, adjusted p-values are not relevant and thus not calculated. 
+## Adding Custom Gene Set Libraries
 
-#### Custom Reference Data Upload
-Background Gene List Upload: Users can upload their background gene lists as .txt files containing newline-separated gene names or Entrez IDs.
-Gene Set Libraries Upload: The app allows for the upload of gene set libraries in the .gmt file format, enabling the use of custom gene sets in the analysis.
+1. Place your `.gmt` file in `data/libraries/`.
+2. Add an entry to `data/libraries/alias.json`:
+   ```json
+   {
+       "name": "My Custom Library",
+       "file": "my_library.gmt",
+       "active": true,
+       "color": "#4CAF50"
+   }
+   ```
+3. Restart the app — the new library will appear in the selection panel.
+
+Alternatively, upload a `.gmt` file directly through the app's **Upload Library** feature.
+
+---
+
+## License
+
+This project is licensed under the **GNU General Public License v3.0** — see [LICENSE](LICENSE) for details.
