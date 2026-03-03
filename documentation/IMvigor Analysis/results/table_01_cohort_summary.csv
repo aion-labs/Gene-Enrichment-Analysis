@@ -1,0 +1,27 @@
+variable,value,count,percent
+Best Confirmed Overall Response,PD,167,48.0
+Best Confirmed Overall Response,SD,63,18.1
+Best Confirmed Overall Response,NE,50,14.4
+Best Confirmed Overall Response,PR,43,12.4
+Best Confirmed Overall Response,CR,25,7.2
+binaryResponse,SD/PD,230,66.1
+binaryResponse,CR/PR,68,19.5
+binaryResponse,nan,50,14.4
+Sex,M,272,78.2
+Sex,F,76,21.8
+Enrollment IC,IC1,132,37.9
+Enrollment IC,IC2,117,33.6
+Enrollment IC,IC0,99,28.4
+Immune phenotype,excluded,134,38.5
+Immune phenotype,desert,76,21.8
+Immune phenotype,inflamed,74,21.3
+Immune phenotype,nan,64,18.4
+TCGA Subtype,I,118,33.9
+TCGA Subtype,II,95,27.3
+TCGA Subtype,III,69,19.8
+TCGA Subtype,IV,66,19.0
+Baseline ECOG Score,1,196,56.3
+Baseline ECOG Score,0,134,38.5
+Baseline ECOG Score,2,18,5.2
+Received platinum,Y,272,78.2
+Received platinum,N,76,21.8

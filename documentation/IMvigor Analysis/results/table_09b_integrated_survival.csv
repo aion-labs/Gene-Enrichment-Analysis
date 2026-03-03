@@ -1,0 +1,4 @@
+model,c_index
+Expression-only,0.6088
+Clinical-only,0.6576
+Integrated,0.6684

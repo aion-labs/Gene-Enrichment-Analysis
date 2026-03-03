@@ -1,0 +1,16 @@
+module,finding,detail
+Clinical,6 clinical variables significantly associated with response (FDR<0.05),"IC Level, Baseline ECOG Score, Lund, Met Disease Status, FMOne mutation burden per MB"
+Clinical,Cox PH model C-index,0.6568
+Genomic,TMB as response predictor,AUC=0.728
+Expression,"14 differentially expressed genes (|log2FC|>1, FDR<0.05)",
+Signature,Elastic Net AUC,0.714±0.055
+Signature,Random Forest AUC,0.701±0.056
+Signature,TMB AUC,0.728±0.000
+Signature,PD-L1 IC AUC,0.618±0.000
+Integrated,Expression-only LR AUC,0.988
+Integrated,Clinical-only LR AUC,0.721
+Integrated,Integrated LR AUC,0.990
+Integrated,Integrated GB AUC,0.980
+Integrated,Expression-only survival C-index,0.6088
+Integrated,Clinical-only survival C-index,0.6576
+Integrated,Integrated survival C-index,0.6684

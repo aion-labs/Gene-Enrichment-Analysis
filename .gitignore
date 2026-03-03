@@ -13,6 +13,12 @@ sandbox.py
 results/
 data/recent_release/
 
+# Exception: keep IMvigor Analysis results in documentation
+!documentation/
+!documentation/IMvigor Analysis/
+!documentation/IMvigor Analysis/results/
+!documentation/IMvigor Analysis/results/**
+
 # Large data files that exceed GitHub's file size limits
 *.gz
 *.zip

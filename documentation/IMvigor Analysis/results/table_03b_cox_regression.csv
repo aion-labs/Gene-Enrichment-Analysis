@@ -1,0 +1,11 @@
+covariate,hazard_ratio,hr_ci_lower,hr_ci_upper,p_value
+ic_ordinal,0.7506,0.6103,0.9231,0.0066
+immpheno_excluded,1.1499,0.8405,1.573,0.3824
+immpheno_inflamed,1.0679,0.6941,1.6431,0.765
+tmb_imputed,0.9519,0.9306,0.9737,0.0
+tmb_missing,1.1975,0.8841,1.622,0.2443
+ecog,1.9348,1.5394,2.4317,0.0
+tcga_II,1.2014,0.8504,1.6973,0.2981
+tcga_III,1.3538,0.93,1.9707,0.1138
+tcga_IV,1.0324,0.6988,1.5251,0.8729
+sex_male,0.9346,0.6873,1.2709,0.6663
