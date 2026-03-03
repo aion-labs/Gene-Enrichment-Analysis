@@ -675,10 +675,7 @@ def render_ora_igea_comparison(
         overlap_fdr_terms=term_stats["overlap_fdr"]
     ))
     
-    # Venn diagram data for download
-    st.markdown("---")
-    st.markdown("#### 📥 Venn Diagram Data")
-    
+    # Comparison table data for download
     # Create TSV with Venn diagram data - expanded to include raw and FDR sets
     venn_data_rows = [
         "Category\tSet\tCount\tItems",
@@ -696,7 +693,7 @@ def render_ora_igea_comparison(
     venn_data_tsv = "\n".join(venn_data_rows)
     
     st.markdown(
-        f"Download Venn diagram data: {download_link(venn_data_tsv, 'ora_igea_venn_data', 'tsv')}",
+        f"📥 **Download comparison table:** {download_link(venn_data_tsv, 'ora_igea_comparison', 'tsv')}",
         unsafe_allow_html=True,
     )
 
