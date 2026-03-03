@@ -1438,6 +1438,13 @@ Results include ranked tables, bar charts, and network graphs."""
                     del state.last_enrich_hash
             
             state.iter_ready = True
+            state.selected_dot_paths = [
+                lib for lib, it in state.iter_enrich.items()
+                if not it.to_dataframe().empty
+            ]
+            for lib in state.selected_dot_paths:
+                safe_lib_name = lib.replace(':', '_').replace(' ', '_').replace('-', '_')
+                state[f"network_select_{safe_lib_name}"] = True
 
     # Iterative rendering
     if mode == "Iterative" and state.iter_ready:
@@ -1567,6 +1574,13 @@ Results include ranked tables, bar charts, and network graphs."""
         else:
             logger.info("Comparison not displayed - no iterative results")
 
+        # Statistical Benchmarking Section (per-run random-list null)
+        # Streamlit Community Cloud: 0.078-2 CPUs and 690 MB-2.7 GB memory per app, so the random
+        # lists run in this process (no worker processes) and the default is 1,000 lists (max 10,000).
+        st.markdown("---")
+        st.header("📊 Network statistics")
+        render_per_run_benchmark(st, state, download_link, default_n_lists=1000, max_n_lists=10000, n_jobs=1, grid_lists=200)
+
         # Network section
         st.markdown("---")
         st.header("Generate network for conversational AI systems")
@@ -1658,13 +1672,6 @@ Results include ranked tables, bar charts, and network graphs."""
             gene_count = state.gene_set.size if hasattr(state, 'gene_set') and state.gene_set else None
             library_list = state.selected_dot_paths if state.selected_dot_paths else None
             render_network(state.last_merged_dot, gene_count=gene_count, library_list=library_list)
-        
-        # Statistical Benchmarking Section (per-run random-list null)
-        # Streamlit Community Cloud: 0.078-2 CPUs and 690 MB-2.7 GB memory per app, so the random
-        # lists run in this process (no worker processes) and the default is 1,000 lists (max 10,000).
-        st.markdown("---")
-        st.header("📊 Network statistics")
-        render_per_run_benchmark(st, state, download_link, default_n_lists=1000, max_n_lists=10000, n_jobs=1, grid_lists=200)
 
     logger.info("Finishing the Streamlit app")
 

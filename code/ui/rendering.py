@@ -660,11 +660,13 @@ def render_ora_igea_comparison(
     
     # Display as expanded table with ORA split into raw p-value and FDR
     st.markdown("""
-    | | ORA (raw p-value) | ORA (FDR) | iGEA | Overlap (raw) | Overlap (FDR) |
+    | | ORA (p≤{p_thr}) | ORA (FDR<{fdr_thr}) | iGEA (p≤{p_thr}) | Overlap (raw) | Overlap (FDR) |
     |---|---|---|---|---|---|
     | **Genes** | {ora_raw_genes} | {ora_fdr_genes} | {igea_genes} | {overlap_raw_genes} | {overlap_fdr_genes} |
     | **Terms** | {ora_raw_terms} | {ora_fdr_terms} | {igea_terms} | {overlap_raw_terms} | {overlap_fdr_terms} |
     """.format(
+        p_thr=p_threshold,
+        fdr_thr=fdr_threshold,
         ora_raw_genes=gene_stats["ora_raw_total"],
         ora_fdr_genes=gene_stats["ora_fdr_total"],
         igea_genes=gene_stats["igea_total"],
@@ -677,10 +679,7 @@ def render_ora_igea_comparison(
         overlap_fdr_terms=term_stats["overlap_fdr"]
     ))
     
-    # Venn diagram data for download
-    st.markdown("---")
-    st.markdown("#### 📥 Venn Diagram Data")
-    
+    # Comparison table data for download
     # Create TSV with Venn diagram data - expanded to include raw and FDR sets
     venn_data_rows = [
         "Category\tSet\tCount\tItems",
@@ -698,7 +697,7 @@ def render_ora_igea_comparison(
     venn_data_tsv = "\n".join(venn_data_rows)
     
     st.markdown(
-        f"Download Venn diagram data: {download_link(venn_data_tsv, 'ora_igea_venn_data', 'tsv')}",
+        f"📥 **Download comparison table:** {download_link(venn_data_tsv, 'ora_igea_comparison', 'tsv')}",
         unsafe_allow_html=True,
     )
 
