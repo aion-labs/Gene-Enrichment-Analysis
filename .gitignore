@@ -34,3 +34,6 @@ test_benchmarking_debug.py
 # Sandbox folder (generated files)
 sandbox/
 !sandbox/.gitignore
+
+# Reference folder (manuscript, supplementary materials, website)
+Reference/
