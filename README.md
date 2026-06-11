@@ -1,5 +1,9 @@
 # Iterative Gene Enrichment Analysis
 
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://iterative-gene-enrichment.streamlit.app/)
+
+> **Try it now:** A slim hosted version of this tool is available at [iterative-gene-enrichment.streamlit.app](https://iterative-gene-enrichment.streamlit.app/) — no installation required.
+
 ## Prerequisites
 - Have a list of genes for enrichment analysis in official human gene symbols or entrez IDs.
 - Unless you use all genes as a background, have a background file with all measured genes ready in the human gene symbols or entrez IDs.
