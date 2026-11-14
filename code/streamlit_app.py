@@ -1659,7 +1659,7 @@ Results include ranked tables, bar charts, and network graphs."""
         # lists run in this process (no worker processes) and the default is 1,000 lists (max 10,000).
         st.markdown("---")
         st.header("📊 Network statistics")
-        render_per_run_benchmark(st, state, download_link, default_n_lists=1000, max_n_lists=10000, n_jobs=1)
+        render_per_run_benchmark(st, state, download_link, default_n_lists=1000, max_n_lists=10000, n_jobs=1, grid_lists=200)
 
     logger.info("Finishing the Streamlit app")
 
