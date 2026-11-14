@@ -1074,7 +1074,7 @@ def main(
         help="'per-run': generate random lists matched to this run (size, background, collections, "
              "parameters); 'stored': legacy precomputed permutations (default background only)",
     ),
-    null_lists: int = typer.Option(1000, "--null-lists", help="Number of random lists for the per-run null"),
+    null_lists: int = typer.Option(10000, "--null-lists", help="Number of random lists for the per-run null (default 10000)"),
     null_seed: int = typer.Option(2026, "--null-seed", help="Random seed for the per-run null"),
     null_jobs: int = typer.Option(0, "--null-jobs", help="Processes for the per-run null (0 = all CPUs)"),
 ):

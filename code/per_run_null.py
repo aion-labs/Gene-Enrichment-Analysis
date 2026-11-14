@@ -30,7 +30,7 @@ from network_connectivity_benchmark import NetworkConnectivityAnalyzer
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_N_LISTS = 1000
+DEFAULT_N_LISTS = 10000
 DEFAULT_SEED = 2026
 
 METRICS = [

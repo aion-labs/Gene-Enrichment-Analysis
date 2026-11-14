@@ -66,6 +66,27 @@ For detailed CLI documentation, see [CLI_README.md](documentation/CLI_README.md)
 - **Use Streamlit** for interactive exploration, visualization, and one-off analyses
 - **Use CLI** for batch processing, automation, and integration into computational pipelines
 
+## Network statistics (per-run random gene lists)
+
+iGEA evaluates the largest connected cluster of the cross-collection network against random gene lists
+generated **for each run**:
+
+- each random list has exactly as many genes as your validated input list;
+- genes are drawn without replacement from **your** background;
+- each list is analysed with the same collections, test, p-value threshold, minimum overlap, gene-set size
+  limits and iteration cap as your analysis.
+
+For each metric (cluster size, genes, terms, edges, edges per gene) the report gives the z-score and the
+empirical p-value, p = (r + 1) / (n + 1), where r is the number of random lists whose largest cluster is at
+least as large as yours and n is the number of random lists (default 10,000; smallest attainable p ≈ 0.0001).
+Random lists are reproducible from the seed (default 2026).
+
+A fast vectorised engine (`code/fast_igea.py`) makes this practical: 1,000 random lists of 300 genes take
+about 7 s on 4 cores (10,000 take about a minute); lists of 800–1,000 genes take several times longer.
+
+CLI: `python code/cli.py -g genes.txt -m iterative --benchmark [--null-lists 10000] [--null-seed 2026] [--null-jobs 0]`.
+`--null-source stored` reproduces the previous behaviour (precomputed permutations, default background only).
+
 ## Overview of Application Components
 ### Key Features
 
