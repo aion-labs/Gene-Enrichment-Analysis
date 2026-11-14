@@ -782,38 +782,41 @@ def compute_per_run_benchmark_for_cli(
     null_options: Dict,
     output_dir: Path,
 ):
-    """Benchmark the largest cluster against random lists generated for this run.
+    """Term q-values and network statistics from random lists generated for this run.
 
     The random lists have the validated input size, are drawn from this run's background and are
-    analysed with this run's collections and parameters (see per_run_null.py).
+    analysed with this run's collections and parameters; terms of the input and of every random
+    list are filtered by the same signal-adjusted q-value before networks are built (see
+    per_run_null.py).
     """
-    from per_run_null import (DEFAULT_N_LISTS, DEFAULT_SEED, compare_to_null, format_report,
-                              generate_null, largest_cluster_metrics)
+    from per_run_null import (DEFAULT_GRID_LISTS, DEFAULT_N_LISTS, DEFAULT_Q_THRESHOLD, DEFAULT_SEED,
+                              format_report, run_statistics)
 
-    records = []
-    for lib_name, it in iter_enrich_objects.items():
-        for r in it.results:
-            records.append({"Term": r.get("Term_raw", r.get("Term")), "Iteration": r.get("Iteration"),
-                            "Library": lib_name,
-                            "Genes removed for next iteration": r.get("Genes removed for next iteration", [])})
-    observed = largest_cluster_metrics(records)
     libraries = [it.gene_set_library for it in iter_enrich_objects.values()]
+    records = []
+    for c, it in enumerate(iter_enrich_objects.values()):
+        for r in it.results:
+            records.append((c, r.get("Term_raw", r.get("Term")), r.get("Iteration"), r.get("iteration p-value"),
+                            list(r.get("Genes removed for next iteration", []))))
     n_lists = int(null_options.get("n_lists") or DEFAULT_N_LISTS)
     seed = int(null_options.get("seed") if null_options.get("seed") is not None else DEFAULT_SEED)
     n_jobs = int(null_options.get("n_jobs") or 0) or None
+    q_threshold = null_options.get("q_threshold", DEFAULT_Q_THRESHOLD)
+    grid_lists = int(null_options.get("grid_lists") or 0) or None
     logger.info(f"Generating {n_lists} random lists of {gene_set.size} genes from the run background")
-    null = generate_null(libraries, background_gene_set.genes, gene_set.size, n_lists=n_lists,
-                         seed=seed, n_jobs=n_jobs,
-                         progress_callback=lambda d, n: logger.info(f"Random lists: {d}/{n}"), **params)
-    table = compare_to_null(observed, null)
+    table, null, terms, observed, attrs = run_statistics(
+        records, libraries, background_gene_set.genes, gene_set.size, n_lists=n_lists, seed=seed, n_jobs=n_jobs,
+        q_threshold=q_threshold, grid_lists=grid_lists,
+        progress_callback=lambda d, n, lab: logger.info(f"{lab}: {d}/{n}"), **params)
     shown = dict(params, background=background_gene_set.name)
-    report = format_report(table, null.attrs, [lib.name for lib in libraries], shown)
     report = (f"Gene list: {gene_set.name}\nValidated input genes: {gene_set.size}\n"
               f"Largest cluster: {observed['cluster_size']} nodes, {observed['n_genes']} genes, "
               f"{observed['n_terms']} terms, {observed['n_edges']} edges, "
-              f"{observed['avg_edges_per_gene']:.4f} edges per gene, {observed['n_libraries']} collections\n\n") + report
+              f"{observed['avg_edges_per_gene']:.4f} edges per gene, {observed['n_libraries']} collections\n\n"
+              + format_report(table, attrs, [lib.name for lib in libraries], shown, terms))
     (output_dir / f"{gene_set.name}_statistical_report.txt").write_text(report)
     table.to_csv(output_dir / f"{gene_set.name}_statistics.tsv", sep="\t", index=False)
+    terms.to_csv(output_dir / f"{gene_set.name}_term_qvalues.tsv", sep="\t", index=False)
     null.to_csv(output_dir / f"{gene_set.name}_random_lists.tsv", sep="\t", index=False)
     logger.info(f"Saved per-run statistical report to {output_dir}")
     return table
@@ -1079,6 +1082,13 @@ def main(
     null_lists: int = typer.Option(10000, "--null-lists", help="Number of random lists for the per-run null (default 10000)"),
     null_seed: int = typer.Option(2026, "--null-seed", help="Random seed for the per-run null"),
     null_jobs: int = typer.Option(0, "--null-jobs", help="Processes for the per-run null (0 = all CPUs)"),
+    q_threshold: float = typer.Option(
+        0.10, "--q-threshold",
+        help="Keep terms with signal-adjusted empirical q below this value before building networks "
+             "(applied identically to random lists); 0 = keep all selected terms"),
+    q_grid_lists: int = typer.Option(0, "--q-grid-lists",
+                                     help="Random lists per size step for the q-value signal adjustment "
+                                          "(0 = max(200, null-lists / 10))"),
 ):
     """
     Run gene set enrichment analysis from the command line.
@@ -1208,7 +1218,9 @@ def main(
             max_iterations=max_iterations,
             output_dir=final_output_dir,  # None = use default results/ directory
             benchmark=benchmark,
-            null_options={"source": null_source, "n_lists": null_lists, "seed": null_seed, "n_jobs": null_jobs},
+            null_options={"source": null_source, "n_lists": null_lists, "seed": null_seed, "n_jobs": null_jobs,
+                          "q_threshold": (q_threshold if q_threshold and q_threshold > 0 else None),
+                          "grid_lists": q_grid_lists},
         )
         if final_output_dir is not None:
             typer.echo(f"✅ Analysis completed successfully! Results saved to {final_output_dir}")

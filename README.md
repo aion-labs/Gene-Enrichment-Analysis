@@ -66,26 +66,31 @@ For detailed CLI documentation, see [CLI_README.md](documentation/CLI_README.md)
 - **Use Streamlit** for interactive exploration, visualization, and one-off analyses
 - **Use CLI** for batch processing, automation, and integration into computational pipelines
 
-## Network statistics (per-run random gene lists)
+## Statistics (per-run random gene lists)
 
-iGEA evaluates the largest connected cluster of the cross-collection network against random gene lists
-generated **for each run**:
+iGEA evaluates each analysis against random gene lists generated **for that run**: each random list has
+exactly as many genes as your validated input list, is drawn without replacement from **your**
+background, and is analysed with the same collections, test, p-value threshold, minimum overlap,
+gene-set size limits and iteration cap. Two layers of statistics are applied, identically to your list
+and to every random list:
 
-- each random list has exactly as many genes as your validated input list;
-- genes are drawn without replacement from **your** background;
-- each list is analysed with the same collections, test, p-value threshold, minimum overlap, gene-set size
-  limits and iteration cap as your analysis.
+1. **Term level — signal-adjusted empirical q-value.** For a selected term with p-value p, q is the
+   expected number of chance terms with p' ≤ p (from the random lists, per collection) divided by the
+   number of your terms with p' ≤ p, made monotone. Genes assigned to accepted terms are then treated as
+   signal and the expected chance terms are re-estimated from random lists of the remaining number of
+   genes, until stable. Terms with q ≥ 0.10 (default) are removed before the network is built.
+2. **Network level.** The largest connected cluster of the filtered network is compared with the
+   largest clusters of the filtered random networks: z-score and empirical p = (r + 1) / (n + 1), where r
+   is the number of random lists whose cluster is at least as large and n the number of random lists
+   (default 10,000; smallest attainable p ≈ 0.0001).
 
-For each metric (cluster size, genes, terms, edges, edges per gene) the report gives the z-score and the
-empirical p-value, p = (r + 1) / (n + 1), where r is the number of random lists whose largest cluster is at
-least as large as yours and n is the number of random lists (default 10,000; smallest attainable p ≈ 0.0001).
-Random lists are reproducible from the seed (default 2026).
+Random lists are reproducible from the seed (default 2026). A fast vectorised engine
+(`code/fast_igea.py`, identical results to the reference implementation) makes this practical: for a
+272-gene list, 10,000 random lists plus the q-value adjustment take about 1.5 min on 4 cores.
 
-A fast vectorised engine (`code/fast_igea.py`) makes this practical: 1,000 random lists of 300 genes take
-about 7 s on 4 cores (10,000 take about a minute); lists of 800–1,000 genes take several times longer.
-
-CLI: `python code/cli.py -g genes.txt -m iterative --benchmark [--null-lists 10000] [--null-seed 2026] [--null-jobs 0]`.
-`--null-source stored` reproduces the previous behaviour (precomputed permutations, default background only).
+CLI: `python code/cli.py -g genes.txt -m iterative --benchmark [--null-lists 10000] [--q-threshold 0.10] [--null-seed 2026] [--null-jobs 0]`.
+`--q-threshold 0` keeps all selected terms; `--null-source stored` reproduces the previous behaviour
+(precomputed permutations, default background only).
 
 ## Overview of Application Components
 ### Key Features
