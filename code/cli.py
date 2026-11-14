@@ -41,6 +41,7 @@ def run_enrichment(
     max_iterations: int,
     output_dir: Path,
     benchmark: bool = False,
+    null_options: Optional[Dict] = None,
 ):
     """Run enrichment analysis for the given parameters."""
     
@@ -155,7 +156,8 @@ def run_enrichment(
             run_iterative_enrichment(
                 gene_set, gene_set_libraries, background_gene_set,
                 p_value_method, p_threshold, min_overlap, min_term_size, max_term_size,
-                max_iterations, output_dir, gene_set_output_dir, compute_benchmark=benchmark
+                max_iterations, output_dir, gene_set_output_dir, compute_benchmark=benchmark,
+                null_options=null_options,
             )
 
 
@@ -772,6 +774,51 @@ Report generated: {datetime.now().isoformat()}
     logger.info("✅ Statistical benchmarking completed successfully!")
 
 
+def compute_per_run_benchmark_for_cli(
+    iter_enrich_objects: Dict[str, IterativeEnrichment],
+    gene_set: GeneSet,
+    background_gene_set: BackgroundGeneSet,
+    params: Dict,
+    null_options: Dict,
+    output_dir: Path,
+):
+    """Benchmark the largest cluster against random lists generated for this run.
+
+    The random lists have the validated input size, are drawn from this run's background and are
+    analysed with this run's collections and parameters (see per_run_null.py).
+    """
+    from per_run_null import (DEFAULT_N_LISTS, DEFAULT_SEED, compare_to_null, format_report,
+                              generate_null, largest_cluster_metrics)
+
+    records = []
+    for lib_name, it in iter_enrich_objects.items():
+        for r in it.results:
+            records.append({"Term": r.get("Term_raw", r.get("Term")), "Iteration": r.get("Iteration"),
+                            "Library": lib_name,
+                            "Genes removed for next iteration": r.get("Genes removed for next iteration", [])})
+    observed = largest_cluster_metrics(records)
+    libraries = [it.gene_set_library for it in iter_enrich_objects.values()]
+    n_lists = int(null_options.get("n_lists") or DEFAULT_N_LISTS)
+    seed = int(null_options.get("seed") if null_options.get("seed") is not None else DEFAULT_SEED)
+    n_jobs = int(null_options.get("n_jobs") or 0) or None
+    logger.info(f"Generating {n_lists} random lists of {gene_set.size} genes from the run background")
+    null = generate_null(libraries, background_gene_set.genes, gene_set.size, n_lists=n_lists,
+                         seed=seed, n_jobs=n_jobs,
+                         progress_callback=lambda d, n: logger.info(f"Random lists: {d}/{n}"), **params)
+    table = compare_to_null(observed, null)
+    shown = dict(params, background=background_gene_set.name)
+    report = format_report(table, null.attrs, [lib.name for lib in libraries], shown)
+    report = (f"Gene list: {gene_set.name}\nValidated input genes: {gene_set.size}\n"
+              f"Largest cluster: {observed['cluster_size']} nodes, {observed['n_genes']} genes, "
+              f"{observed['n_terms']} terms, {observed['n_edges']} edges, "
+              f"{observed['avg_edges_per_gene']:.4f} edges per gene, {observed['n_libraries']} collections\n\n") + report
+    (output_dir / f"{gene_set.name}_statistical_report.txt").write_text(report)
+    table.to_csv(output_dir / f"{gene_set.name}_statistics.tsv", sep="\t", index=False)
+    null.to_csv(output_dir / f"{gene_set.name}_random_lists.tsv", sep="\t", index=False)
+    logger.info(f"Saved per-run statistical report to {output_dir}")
+    return table
+
+
 def run_iterative_enrichment(
     gene_set: GeneSet,
     gene_set_libraries: List[GeneSetLibrary],
@@ -785,6 +832,7 @@ def run_iterative_enrichment(
     output_dir: Optional[Path],  # For IterativeEnrichment intermediate files (None = use default results/)
     final_output_dir: Path,  # For final combined results
     compute_benchmark: bool = False,
+    null_options: Optional[Dict] = None,
 ):
     """Run iterative enrichment analysis."""
     logger.info("Running iterative enrichment analysis")
@@ -908,6 +956,20 @@ def run_iterative_enrichment(
         # Compute statistical benchmarks if requested
         if compute_benchmark and all_iter_enrich_objects:
             logger.info("Computing statistical benchmarks...")
+            null_options = null_options or {}
+            if null_options.get("source", "per-run") == "per-run":
+                try:
+                    compute_per_run_benchmark_for_cli(
+                        all_iter_enrich_objects, gene_set, background_gene_set,
+                        dict(p_value_method=p_value_method, p_threshold=p_threshold, min_overlap=min_overlap,
+                             min_term_size=min_term_size, max_term_size=max_term_size,
+                             max_iterations=max_iterations if max_iterations > 0 else None),
+                        null_options, final_output_dir,
+                    )
+                except Exception as e:
+                    logger.error(f"Error computing per-run benchmark: {e}")
+                    logger.warning("Benchmarking failed, but enrichment analysis completed successfully")
+                return
             try:
                 compute_benchmark_for_cli(
                     all_iter_enrich_objects,
@@ -1004,8 +1066,17 @@ def main(
     benchmark: bool = typer.Option(
         False,
         "--benchmark",
-        help="Compute statistical benchmarks against permutation data (iterative mode only)",
+        help="Compute network statistics against random gene lists (iterative mode only)",
     ),
+    null_source: str = typer.Option(
+        "per-run",
+        "--null-source",
+        help="'per-run': generate random lists matched to this run (size, background, collections, "
+             "parameters); 'stored': legacy precomputed permutations (default background only)",
+    ),
+    null_lists: int = typer.Option(1000, "--null-lists", help="Number of random lists for the per-run null"),
+    null_seed: int = typer.Option(2026, "--null-seed", help="Random seed for the per-run null"),
+    null_jobs: int = typer.Option(0, "--null-jobs", help="Processes for the per-run null (0 = all CPUs)"),
 ):
     """
     Run gene set enrichment analysis from the command line.
@@ -1135,6 +1206,7 @@ def main(
             max_iterations=max_iterations,
             output_dir=final_output_dir,  # None = use default results/ directory
             benchmark=benchmark,
+            null_options={"source": null_source, "n_lists": null_lists, "seed": null_seed, "n_jobs": null_jobs},
         )
         if final_output_dir is not None:
             typer.echo(f"✅ Analysis completed successfully! Results saved to {final_output_dir}")
