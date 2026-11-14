@@ -870,6 +870,11 @@ def run_iterative_enrichment(
                 output_dir=output_dir,  # None = use default results/ directory
             )
             
+            # Keep every analysed library for benchmarking, including libraries with no selected
+            # term: the random lists must be analysed with all collections the user selected.
+            if compute_benchmark:
+                all_iter_enrich_objects[library.name] = it
+
             # Save individual library results
             if it.results:
                 # Use the same formatting as Streamlit app
@@ -886,9 +891,6 @@ def run_iterative_enrichment(
                     'dot_content': dot_content
                 }
                 
-                # Store IterativeEnrichment object for benchmarking if needed
-                if compute_benchmark:
-                    all_iter_enrich_objects[library.name] = it
             
         except Exception as e:
             logger.error(f"Error processing library {library.name}: {e}")
