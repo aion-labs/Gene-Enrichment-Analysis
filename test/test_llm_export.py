@@ -43,4 +43,4 @@ def test_without_statistics_or_communities():
 def test_not_significant_instruction():
     terms = _terms()
     _, prompt = export_for_llm(terms, analyze_network_modules(terms, n_seeds=3), _stats(r=400, p=0.4))
-    assert "p = 0.4" in prompt and "not distinguishable from what random gene lists produce" in prompt
+    assert "p = 0.4" in prompt and "not distinguishable from what random gene lists produce" in prompt and "The biological story" in prompt

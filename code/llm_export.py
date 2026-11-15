@@ -185,11 +185,11 @@ def semantic_dot(terms: Iterable[Dict], modules=None, stats: Optional[Dict] = No
     return "\n".join(lines)
 
 
-INTRO = ("You are a computational biologist analyzing an iterative gene set enrichment (iGEA) network. "
-         "Iterative means that for each library source, the top enriched gene set is found, saved and its genes are "
-         "removed from the gene list; the remaining genes are then tested again. Thus each gene appears at most once "
-         "per library source but can be linked to terms from different libraries. The results are provided as a DOT "
-         "network of genes and gene sets (= terms).")
+INTRO = ("Below is an iterative gene set enrichment (iGEA) network computed from a gene list. Iterative means that "
+         "for each library source, the top enriched gene set is found, saved and its genes are removed from the gene "
+         "list; the remaining genes are then tested again. Thus each gene appears at most once per library source but "
+         "can be linked to terms from different libraries. The network of genes and gene sets (= terms) is given in "
+         "DOT format, preceded by its statistics and communities.")
 
 
 def _stats_section(stats: Optional[Dict], has_q: bool = True) -> str:
@@ -219,7 +219,7 @@ Network-level test: the largest connected cluster of this network compared with 
 |---|---|---|---|
 {rows}
 
-How to use the statistics: if the empirical p for the number of nodes in the largest cluster is 0.05 or higher, the network is not distinguishable from what random gene lists produce. In that case, say so in the first sentence of the Executive Summary, keep the interpretation short and explicitly tentative, and do not propose a specific experimental context. Do not use p-values, q-values or iteration numbers to rank biological importance.
+How to use the statistics: the network is not distinguishable from what random gene lists produce if the empirical p for the number of nodes in the largest cluster is 0.05 or higher. In that case, say so plainly, keep the rest short and tentative, and do not propose an experimental context. Do not use p-values, q-values or iteration numbers to rank biological importance.
 """
 
 
@@ -244,6 +244,36 @@ def _community_section(modules) -> str:
 """
 
 
+def _guide_and_task(libs: str, comm_guide: str) -> str:
+    """Background on the DOT attributes, then the writing task (narrative interpretation)."""
+    return f"""**NETWORK INTERPRETATION GUIDE (background):**
+- **Term nodes** (`type=term`): enriched gene sets, with `library` (source collection), `iteration`, `p` (enrichment p-value in its iteration), `q` (term q-value) and `genes` (number of genes linked)
+- **Gene nodes** (`type=gene`): input genes, with `degree` (number of terms the gene connects to; in iGEA, the number of library sources that place it in the network){comm_guide}
+- **Edges**: each line `"term" -- {{"GENE1" "GENE2" ...}}` links a term to its genes. Edges are gene-set memberships from curated annotation, not physical interactions or directions of change.
+
+**Library Sources:**
+{libs}
+
+**YOUR TASK:**
+You are an experienced molecular biologist explaining to a colleague what this gene list reveals. Write in clear, natural prose. Explain why these processes appear together and what biological program connects them; do not describe the network itself.
+
+**How to write it:**
+- Ground your claims in the network by naming a few key genes in parentheses, for example (GENE1, GENE2, GENE3). Do not quote term names or list memberships; the reader has the network.
+- Use the communities as a guide to the main modules, not as a section structure.
+- Use your biological knowledge to explain mechanisms. When a central point depends on knowledge that is not in the network, say so once in plain words ("this is not in the network, but ...").
+- Do not repeat general caveats about annotation networks (memberships rather than interactions, no direction of change). Mention a limitation only where it changes the interpretation.
+- Look for what is surprising or unexpected, and for what a biologist would want to test next.
+- About 600-800 words.
+
+**Structure:**
+1. **In short**: 3-4 plain sentences, starting with whether the network is distinguishable from random gene lists.
+2. **The biological story**: connected prose that links the main modules into one picture, including what is surprising.
+3. **Key genes**: 3-5 genes and why they matter.
+4. **Hypothesis and how to test it**: one hypothesis and 2-3 concrete experiments.
+5. **Likely experimental context**: what experiment might have produced this list, and why.
+"""
+
+
 def llm_prompt(dot_text: str, terms: Iterable[Dict], modules=None, stats: Optional[Dict] = None) -> str:
     """Full prompt: statistics, communities, the semantic DOT, an interpretation guide and the request."""
     terms = list(terms)
@@ -265,35 +295,7 @@ def llm_prompt(dot_text: str, terms: Iterable[Dict], modules=None, stats: Option
 **NETWORK (DOT):**
 {dot_text}
 
-**NETWORK INTERPRETATION GUIDE:**
-- **Term nodes** (`type=term`): enriched gene sets, with `library` (source collection), `iteration`, `p` (enrichment p-value in its iteration), `q` (term q-value) and `genes` (number of genes linked)
-- **Gene nodes** (`type=gene`): input genes, with `degree` (number of terms the gene connects to){comm_guide}
-- **Edges**: each line `"term" -- {{"GENE1" "GENE2" ...}}` links a term to its genes (gene membership)
-
-**Library Sources and Their Biological Context:**
-{libs}
-
-**ANALYSIS REQUEST:**
-1. **Key Biological Insights:** What are the main biological processes or pathways? Which genes appear central?
-2. **Communities:** For each community, give a short biological name and justify it from its terms and genes. State whether it is coherent. You may propose merging or splitting communities if the terms and genes support it; explain why.
-3. **Hub and Bridge Genes:** Discuss the genes with the highest degree (supported by the most library sources) and the bridge genes, and what the links between communities suggest.
-4. **Biological Hypothesis:** Formulate one hypothesis based on the most central communities and terms and how they may relate to one another. How do the library sources support or complement each other?
-5. **Estimated Experimental Context:** What experiment might have generated this gene list?
-
-**RESPONSE STRUCTURE:**
-- **Executive Summary** (2-3 sentences; begin with whether the network is distinguishable from random gene lists)
-- **Communities** (one short paragraph per community)
-- **Hub and Bridge Genes**
-- **Proposed Biological Hypothesis**
-- **Estimated Experimental Context**
-
-**IMPORTANT NOTES:**
-- Use the statistics only to judge how much confidence the network deserves.
-- Edges show annotation membership, not physical interaction, regulation or direction of change.
-- Look for unexpected connections that might reveal novel biology, and consider the broader biological context.
-- For every biological statement, name the term(s) and gene(s) from the network that support it, exactly as they appear in the network. If a statement relies on knowledge that is not represented in the network, mark it as [outside the network].
-- If the network is too small or too weakly connected to support a coherent interpretation, say so.
-"""
+{_guide_and_task(libs, comm_guide)}"""
 
 
 def export_for_llm(terms: List[Dict], modules=None, stats: Optional[Dict] = None,
