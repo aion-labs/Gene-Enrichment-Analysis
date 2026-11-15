@@ -27,6 +27,81 @@ def _run_signature(iter_enrich: Dict) -> tuple:
             tuple((k, len(v.results)) for k, v in sorted(iter_enrich.items())))
 
 
+def _subset(state) -> Dict:
+    """iGEA results for the collections the statistics (and network) refer to: all by default, or
+    the subset last chosen for the network."""
+    iter_enrich = state.get("iter_enrich") or {}
+    chosen = state.get("stats_libraries")
+    if chosen:
+        sub = {k: v for k, v in iter_enrich.items() if k in set(chosen)}
+        if sub:
+            return sub
+    return iter_enrich
+
+
+def _compute(st, state, sub: Dict, n_lists: int, q_threshold: float, seed: int,
+             n_jobs: Optional[int], grid_lists: Optional[int]):
+    """Run the two-layer statistics for the collections in ``sub`` and rebuild their networks."""
+    first = next(iter(sub.values()))
+    n_genes = first.gene_set.size
+    libraries = [it.gene_set_library for it in sub.values()]
+    records = []
+    for c, it in enumerate(sub.values()):
+        for r in it.results:
+            records.append((c, r.get("Term_raw", r.get("Term")), r.get("Iteration"), r.get("iteration p-value"),
+                            list(r.get("Genes removed for next iteration", []))))
+    if not records:
+        st.warning("No terms were selected in these collections, so there is nothing to compare.")
+        return None
+    params = dict(p_value_method=first.p_value_method_name, p_threshold=first.p_threshold,
+                  min_overlap=first.min_overlap, min_term_size=first.min_term_size,
+                  max_term_size=first.max_term_size, max_iterations=first.max_iterations)
+    bar = st.progress(0.0, text="Analysing random gene lists…")
+    t0 = time.time()
+
+    def progress(done, total, label):
+        bar.progress(done / total, text=f"Analysing {label}… {done:,}/{total:,} ({time.time() - t0:.0f} s)")
+    table, null, terms, observed, attrs = run_statistics(
+        records, libraries, first.background_gene_set.genes, n_genes, n_lists=int(n_lists), seed=int(seed),
+        q_threshold=float(q_threshold), grid_lists=grid_lists, n_jobs=n_jobs, progress_callback=progress, **params)
+    bar.empty()
+    shown = dict(params, background=first.background_gene_set.name)
+    name = state.get("gene_set_name") or "gene_list"
+    report = (f"Gene list: {name}\nValidated input genes: {n_genes}\n"
+              f"Largest cluster: {observed['cluster_size']} nodes, {observed['n_genes']} genes, "
+              f"{observed['n_terms']} terms, {observed['n_edges']} edges, "
+              f"{observed['avg_edges_per_gene']:.4f} edges per gene, {observed['n_libraries']} collections\n\n"
+              + format_report(table, attrs, [lib.name for lib in libraries], shown, terms))
+    stored = {"signature": _run_signature(sub), "libraries": list(sub.keys()), "table": table, "report": report,
+              "terms": terms, "null": null, "observed": observed, "attrs": dict(attrs)}
+    state.per_run_benchmark = stored
+    # Rebuild each library's network from the retained terms only
+    kept = {(r["Library"], r["Term"]) for _, r in terms.iterrows() if r["Kept"]}
+    if "iter_dot" in state:
+        for lib_name, it in sub.items():
+            res = [r for r in it.results if (lib_name, r.get("Term_raw", r.get("Term"))) in kept]
+            state.iter_dot[lib_name] = it.to_dot(res)
+    return stored
+
+
+def ensure_statistics(st, state, library_names) -> bool:
+    """Make sure the statistics refer to exactly ``library_names`` (e.g. the collections chosen for
+    the network). Recomputes with the current settings if needed. Returns True if recomputed."""
+    iter_enrich = state.get("iter_enrich") or {}
+    all_names = list(iter_enrich.keys())
+    state.stats_libraries = None if set(library_names) == set(all_names) else list(library_names)
+    sub = _subset(state)
+    stored = state.get("per_run_benchmark")
+    if stored and stored.get("signature") == _run_signature(sub):
+        return False
+    cfg = state.get("per_run_cfg") or {}
+    with st.spinner("Recomputing statistics for the selected collections…"):
+        _compute(st, state, sub, state.get("null_n_lists", cfg.get("default_n_lists", 10000)),
+                 state.get("null_q_threshold", DEFAULT_Q_THRESHOLD), state.get("null_seed", DEFAULT_SEED),
+                 cfg.get("n_jobs"), cfg.get("grid_lists"))
+    return True
+
+
 def render_per_run_benchmark(st, state, download_link: Callable, default_n_lists: int = 10000,
                              max_n_lists: int = 100000, n_jobs: Optional[int] = None, grid_lists: Optional[int] = None,
                              seconds_per_list_hint: Optional[float] = None) -> None:
@@ -35,11 +110,13 @@ def render_per_run_benchmark(st, state, download_link: Callable, default_n_lists
     if not iter_enrich:
         st.info("Run iterative enrichment analysis first to compute network statistics.")
         return
-
-    first = next(iter(iter_enrich.values()))
-    sig = _run_signature(iter_enrich)
+    state.per_run_cfg = {"default_n_lists": default_n_lists, "n_jobs": n_jobs, "grid_lists": grid_lists}
+    if state.get("stats_libraries") and not set(state.stats_libraries) <= set(iter_enrich):
+        state.stats_libraries = None                     # new analysis: back to all collections
+    sub = _subset(state)
+    first = next(iter(sub.values()))
     stored = state.get("per_run_benchmark")
-    if stored and stored.get("signature") != sig:
+    if stored and stored.get("signature") != _run_signature(sub):
         state.per_run_benchmark = stored = None
 
     n_genes = first.gene_set.size
@@ -60,43 +137,8 @@ def render_per_run_benchmark(st, state, download_link: Callable, default_n_lists
 
     recompute = st.button("Recompute statistics", type="secondary" if stored else "primary")
     if recompute or not stored:
-        libraries = [it.gene_set_library for it in iter_enrich.values()]
-        records = []
-        for c, it in enumerate(iter_enrich.values()):
-            for r in it.results:
-                records.append((c, r.get("Term_raw", r.get("Term")), r.get("Iteration"), r.get("iteration p-value"),
-                                list(r.get("Genes removed for next iteration", []))))
-        if not records:
-            st.warning("No terms were selected, so there is nothing to compare.")
-            return
-        params = dict(p_value_method=first.p_value_method_name, p_threshold=first.p_threshold,
-                      min_overlap=first.min_overlap, min_term_size=first.min_term_size,
-                      max_term_size=first.max_term_size, max_iterations=first.max_iterations)
-        bar = st.progress(0.0, text="Analysing random gene lists…")
-        t0 = time.time()
-
-        def progress(done, total, label):
-            bar.progress(done / total, text=f"Analysing {label}… {done:,}/{total:,} ({time.time() - t0:.0f} s)")
-        qt = float(q_threshold)
-        table, null, terms, observed, attrs = run_statistics(
-            records, libraries, first.background_gene_set.genes, n_genes, n_lists=int(n_lists), seed=int(seed),
-            q_threshold=qt, grid_lists=grid_lists, n_jobs=n_jobs, progress_callback=progress, **params)
-        bar.empty()
-        shown = dict(params, background=first.background_gene_set.name)
-        name = state.get("gene_set_name") or "gene_list"
-        report = (f"Gene list: {name}\nValidated input genes: {n_genes}\n"
-                  f"Largest cluster: {observed['cluster_size']} nodes, {observed['n_genes']} genes, "
-                  f"{observed['n_terms']} terms, {observed['n_edges']} edges, "
-                  f"{observed['avg_edges_per_gene']:.4f} edges per gene, {observed['n_libraries']} collections\n\n"
-                  + format_report(table, attrs, [lib.name for lib in libraries], shown, terms))
-        state.per_run_benchmark = stored = {"signature": sig, "table": table, "report": report, "terms": terms,
-                                            "null": null, "observed": observed, "attrs": dict(attrs)}
-        # Rebuild each library's network from the retained terms only
-        kept = {(r["Library"], r["Term"]) for _, r in terms.iterrows() if r["Kept"]}
-        if "iter_dot" in state:
-            for lib_name, it in iter_enrich.items():
-                res = [r for r in it.results if (lib_name, r.get("Term_raw", r.get("Term"))) in kept]
-                state.iter_dot[lib_name] = it.to_dot(res)
+        stored = _compute(st, state, sub, n_lists, q_threshold, seed, n_jobs, grid_lists)
+        if stored and "iter_dot" in state:
             state.network_generated = False
             state.last_merged_dot = ""
 
@@ -111,6 +153,9 @@ def render_per_run_benchmark(st, state, download_link: Callable, default_n_lists
         st.info(f"**Term level:** {obs['n_terms_kept']} of {obs['n_terms_total']} terms have q < {qt} and form the network below. "
                 f"A random list of this size selects about {attrs['expected_chance_terms']} terms by chance; "
                 f"random lists are filtered the same way before their networks are built.")
+    if set(stored.get("libraries", [])) != set(iter_enrich):
+        st.warning("Statistics and network refer to the collections chosen for the network: "
+                   + ", ".join(stored["libraries"]) + ". Random lists were analysed with the same collections.")
     st.success(f"Largest cluster: {obs['n_genes']} genes, {obs['n_terms']} terms, {obs['n_edges']} edges, "
                f"{obs['n_libraries']} collections. Compared with {attrs['n_lists']:,} random lists "
                f"(seed {attrs['seed']}, {attrs['seconds']} s).")
