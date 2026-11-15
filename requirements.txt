@@ -17,6 +17,7 @@ Pillow==11.1.0
 networkx==3.5
 graphviz==0.21
 pydot==4.0.1
+igraph>=0.11  # Leiden communities (network_modules.py; falls back to networkx Louvain)
 
 # Web application framework
 streamlit==1.48.0
