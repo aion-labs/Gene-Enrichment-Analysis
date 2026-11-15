@@ -62,13 +62,13 @@
     {
         "name": "C5: Human Phenotype Ontology",
         "file": "c5.hpo.v2025.1.Hs.symbols.gmt",
-        "active": true,
+        "active": false,
         "color": "#F7DC6F"
     },
     {
         "name": "Protein Interaction",
         "file": "stringdb_protein_interactions.gmt",
-        "active": true,
+        "active": false,
         "color": "#F5B7B1"
     }
 ]
