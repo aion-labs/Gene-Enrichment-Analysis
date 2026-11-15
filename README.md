@@ -78,7 +78,8 @@ and to every random list:
    expected number of chance terms with p' ≤ p (from the random lists, per collection) divided by the
    number of your terms with p' ≤ p, made monotone. Genes assigned to accepted terms are then treated as
    signal and the expected chance terms are re-estimated from random lists of the remaining number of
-   genes, until stable. Terms with q ≥ 0.10 (default) are removed before the network is built.
+   genes, until stable. **The network is built only from terms with q < 0.10 (default).** Use a q-value
+   threshold of 1 to keep all selected terms (q-values are still reported).
 2. **Network level.** The largest connected cluster of the filtered network is compared with the
    largest clusters of the filtered random networks: z-score and empirical p = (r + 1) / (n + 1), where r
    is the number of random lists whose cluster is at least as large and n the number of random lists
@@ -88,8 +89,9 @@ Random lists are reproducible from the seed (default 2026). A fast vectorised en
 (`code/fast_igea.py`, identical results to the reference implementation) makes this practical: for a
 272-gene list, 10,000 random lists plus the q-value adjustment take about 1.5 min on 4 cores.
 
-CLI: `python code/cli.py -g genes.txt -m iterative --benchmark [--null-lists 10000] [--q-threshold 0.10] [--null-seed 2026] [--null-jobs 0]`.
-`--q-threshold 0` keeps all selected terms; `--null-source stored` reproduces the previous behaviour
+CLI: `python code/cli.py -g genes.txt -m iterative [--null-lists 10000] [--q-threshold 0.10] [--null-seed 2026] [--null-jobs 0]`.
+Statistics run by default in iterative mode; `--q-threshold 1` keeps all selected terms; `--no-benchmark` skips
+statistics (network from all terms, unfiltered); `--null-source stored` reproduces the previous behaviour
 (precomputed permutations, default background only).
 
 ## Overview of Application Components

@@ -819,7 +819,7 @@ def compute_per_run_benchmark_for_cli(
     terms.to_csv(output_dir / f"{gene_set.name}_term_qvalues.tsv", sep="\t", index=False)
     null.to_csv(output_dir / f"{gene_set.name}_random_lists.tsv", sep="\t", index=False)
     logger.info(f"Saved per-run statistical report to {output_dir}")
-    return table
+    return table, terms
 
 
 def run_iterative_enrichment(
@@ -901,80 +901,86 @@ def run_iterative_enrichment(
     
     # Save combined results
     if all_iter_results:
-        # Create combined TSV in the same format as Streamlit
+        null_options = null_options or {}
+        per_run = compute_benchmark and null_options.get("source", "per-run") == "per-run"
+        stat_params = dict(p_value_method=p_value_method, p_threshold=p_threshold, min_overlap=min_overlap,
+                           min_term_size=min_term_size, max_term_size=max_term_size,
+                           max_iterations=max_iterations if max_iterations > 0 else None)
+
+        # 1) Statistics first: the term filter (q-values) decides which terms enter the network.
+        term_q = {}
+        if per_run and all_iter_enrich_objects:
+            logger.info("Computing term q-values and network statistics...")
+            try:
+                _, terms = compute_per_run_benchmark_for_cli(
+                    all_iter_enrich_objects, gene_set, background_gene_set, stat_params, null_options, final_output_dir)
+                term_q = {(r["Library"], r["Term"]): (r["q-value"], bool(r["Kept"])) for _, r in terms.iterrows()}
+            except Exception as e:
+                logger.error(f"Error computing per-run statistics: {e}")
+                logger.warning("Statistics failed; the network below is built from all selected terms")
+        elif not compute_benchmark:
+            logger.warning("Statistics disabled (--no-benchmark): the network is built from all selected terms, "
+                           "without q-value filtering")
+
+        def kept_results(lib_name, results):
+            if not term_q:
+                return results
+            return [r for r in results if term_q.get((lib_name, r.get("Term_raw", r.get("Term"))), (None, True))[1]]
+
+        # 2) Combined table: all selected terms, with q-value and whether they enter the network
+        import math
         combined_rows = []
         for lib_name, data in all_iter_results.items():
-            results = data['results']
-            for result in results:
-                import math
+            for result in data['results']:
+                q, kept = term_q.get((lib_name, result.get("Term_raw", result.get("Term"))), (None, True))
+                p = result.get("iteration p-value", None)
                 combined_rows.append({
                     "Library": lib_name,
                     "Iteration": result.get("Iteration", ""),
-                    "Term": result.get("Term", "").replace("_", " ") if result.get("Term") else "",
+                    "Term": result.get("Term", ""),
                     "Description": result.get("Description", ""),
-                    "Overlap size": result.get("Overlap size", ""),
-                    "p-value": result.get("p-value", ""),
-                    "-log(p-value)": -math.log10(result.get("p-value", 1)) if result.get("p-value", 1) > 0 else 0,
-                    "Genes": ", ".join(result.get('Genes', [])) if result.get('Genes') else "",
+                    "Overlap size": result.get("iteration overlapping genes", ""),
+                    "p-value": p,
+                    "-log(p-value)": -math.log10(p) if p else "",
+                    "q-value": q,
+                    "In network": kept,
+                    "Genes": ", ".join(result.get("Genes removed for next iteration", [])),
                 })
-        
         if combined_rows:
-            # Reorder columns to match Streamlit format
-            column_order = ["Library", "Iteration", "Term", "Description", "Overlap size", "p-value", "-log(p-value)", "Genes"]
-            combined_df = pd.DataFrame(combined_rows)
-            if not combined_df.empty:
-                combined_df = combined_df[column_order]
-            
             combined_file = final_output_dir / "combined_iterative_results.tsv"
-            combined_df.to_csv(combined_file, sep='\t', index=False)
+            pd.DataFrame(combined_rows).to_csv(combined_file, sep='\t', index=False)
             logger.info(f"Saved combined iterative results to {combined_file}")
-        
-        # Generate combined DOT file
+
+        # 3) Network (DOT) and AI prompt from the retained terms
+        dot_inputs = {}
+        for lib_name, data in all_iter_results.items():
+            kept = kept_results(lib_name, data['results'])
+            if kept:
+                it = all_iter_enrich_objects.get(lib_name)
+                dot_inputs[lib_name] = {'results': kept, 'dot_content': it.to_dot(kept) if it else data['dot_content']}
         try:
-            combined_dot_content = _combine_dot_files(all_iter_results)
+            combined_dot_content = _combine_dot_files(dot_inputs)
             combined_dot_file = final_output_dir / "combined_network.dot"
             with open(combined_dot_file, 'w') as f:
                 f.write(combined_dot_content)
-            logger.info(f"Saved combined network DOT to {combined_dot_file}")
-            
-            # Generate and save AI analysis prompt for combined network
+            logger.info(f"Saved combined network DOT to {combined_dot_file} "
+                        f"({sum(len(v['results']) for v in dot_inputs.values())} terms)")
             try:
                 from ui.rendering import generate_ai_analysis_prompt
-                
-                # Enhanced prompt format
                 enhanced_prompt = generate_ai_analysis_prompt(combined_dot_content)
                 enhanced_file = final_output_dir / "combined_ai_analysis_prompt_enhanced.txt"
                 with open(enhanced_file, 'w') as f:
                     f.write(enhanced_prompt)
                 logger.info(f"Saved combined enhanced AI prompt to {enhanced_file}")
-                
             except ImportError as e:
                 logger.warning(f"Could not import AI analysis functions: {e}")
             except Exception as e:
                 logger.warning(f"Error generating AI prompts: {e}")
-                
         except Exception as e:
             logger.warning(f"Error generating combined DOT file: {e}")
-        
-        # Metadata is included in the text report files
-        
-        # Compute statistical benchmarks if requested
-        if compute_benchmark and all_iter_enrich_objects:
-            logger.info("Computing statistical benchmarks...")
-            null_options = null_options or {}
-            if null_options.get("source", "per-run") == "per-run":
-                try:
-                    compute_per_run_benchmark_for_cli(
-                        all_iter_enrich_objects, gene_set, background_gene_set,
-                        dict(p_value_method=p_value_method, p_threshold=p_threshold, min_overlap=min_overlap,
-                             min_term_size=min_term_size, max_term_size=max_term_size,
-                             max_iterations=max_iterations if max_iterations > 0 else None),
-                        null_options, final_output_dir,
-                    )
-                except Exception as e:
-                    logger.error(f"Error computing per-run benchmark: {e}")
-                    logger.warning("Benchmarking failed, but enrichment analysis completed successfully")
-                return
+
+        # Legacy benchmark against stored permutations (no term filter)
+        if compute_benchmark and not per_run and all_iter_enrich_objects:
             try:
                 compute_benchmark_for_cli(
                     all_iter_enrich_objects,
@@ -1069,9 +1075,10 @@ def main(
         help="Output directory for results",
     ),
     benchmark: bool = typer.Option(
-        False,
-        "--benchmark",
-        help="Compute network statistics against random gene lists (iterative mode only)",
+        True,
+        "--benchmark/--no-benchmark",
+        help="Term q-values and network statistics from random gene lists (iterative mode). On by default: "
+             "the q-value filter decides which terms enter the network.",
     ),
     null_source: str = typer.Option(
         "per-run",
@@ -1083,9 +1090,9 @@ def main(
     null_seed: int = typer.Option(2026, "--null-seed", help="Random seed for the per-run null"),
     null_jobs: int = typer.Option(0, "--null-jobs", help="Processes for the per-run null (0 = all CPUs)"),
     q_threshold: float = typer.Option(
-        0.10, "--q-threshold",
-        help="Keep terms with signal-adjusted empirical q below this value before building networks "
-             "(applied identically to random lists); 0 = keep all selected terms"),
+        0.10, "--q-threshold", min=0.0001, max=1.0,
+        help="Build the network from terms with signal-adjusted empirical q below this value (applied "
+             "identically to the random lists). 1 = keep all selected terms (q-values still reported)."),
     q_grid_lists: int = typer.Option(0, "--q-grid-lists",
                                      help="Random lists per size step for the q-value signal adjustment "
                                           "(0 = max(200, null-lists / 10))"),
@@ -1219,7 +1226,7 @@ def main(
             output_dir=final_output_dir,  # None = use default results/ directory
             benchmark=benchmark,
             null_options={"source": null_source, "n_lists": null_lists, "seed": null_seed, "n_jobs": null_jobs,
-                          "q_threshold": (q_threshold if q_threshold and q_threshold > 0 else None),
+                          "q_threshold": q_threshold,
                           "grid_lists": q_grid_lists},
         )
         if final_output_dir is not None:

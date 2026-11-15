@@ -605,10 +605,13 @@ class IterativeEnrichment:
 
         return json.dumps(self.results, indent=2)
 
-    def to_dot(self) -> str:
+    def to_dot(self, results: Optional[List[Dict[str, Any]]] = None) -> str:
         """
         Generate a valid Graphviz DOT for the iterative enrichment network,
         with sanitized, quoted IDs, semicolons, and no duplicates.
+
+        :param results: records to draw (default: all results). Pass the q-filtered records to draw
+            the network from retained terms only.
         """
 
         def _sanitize_id(raw: str) -> str:
@@ -634,7 +637,7 @@ class IterativeEnrichment:
         edges: Set[str] = set()
 
         # Build nodes and edges
-        for rec in self.results:
+        for rec in (self.results if results is None else results):
             term_label = rec.get("Term", "")
             # Format term name for display (convert underscores to spaces)
             formatted_term_label = _format_term_name(term_label)
