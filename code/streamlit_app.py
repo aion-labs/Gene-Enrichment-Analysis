@@ -30,7 +30,7 @@ from ui.rendering import (
     render_ora_igea_comparison,
 )
 from ui.utils import download_link, download_file_link, update_aliases
-from ui.per_run_benchmark import render_per_run_benchmark
+from ui.per_run_benchmark import ensure_statistics, render_per_run_benchmark
 from ui.benchmarking import (
     compute_benchmark_for_streamlit,
     extract_benchmark_table_data,
@@ -1642,8 +1642,13 @@ Results include ranked tables, bar charts, and network graphs."""
                 if not chosen:
                     st.error("No valid libraries selected for network generation.")
                 else:
+                    # Statistics must refer to the collections drawn (random lists use the same ones)
+                    recomputed = ensure_statistics(st, state, chosen)
                     selected_dots = {lib: state.iter_dot[lib] for lib in chosen}
                     state.last_merged_dot = merge_iterative_dot(selected_dots)
+                    if recomputed:
+                        state.network_generated = True
+                        st.rerun()   # refresh the statistics section above for the new collections
                     # Get gene count and library list for AI prompt
                     gene_count = state.gene_set.size if hasattr(state, 'gene_set') and state.gene_set else None
                     library_list = chosen if chosen else None
