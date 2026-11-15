@@ -2,8 +2,10 @@
 Streamlit section: network statistics against random gene lists generated for this run.
 
 The random lists have the validated input size, are drawn from the run's background and are
-analysed with the run's collections and parameters (see per_run_null.py). Computation starts only
-when the user presses the button, so the page stays responsive.
+analysed with the run's collections and parameters (see per_run_null.py). Statistics run automatically
+after each new iGEA analysis, because the term q-value filter decides which terms enter the network;
+the network shown and exported (state.iter_dot) is rebuilt from the retained terms. Use the button to
+recompute with other settings; a q-value threshold of 1 keeps all selected terms.
 """
 import logging
 import time
@@ -49,14 +51,15 @@ def render_per_run_benchmark(st, state, download_link: Callable, default_n_lists
     c1, c2, c3 = st.columns(3)
     n_lists = c1.number_input("Number of random lists", min_value=100, max_value=max_n_lists,
                               value=default_n_lists, step=100, key="null_n_lists")
-    q_threshold = c2.number_input("Term q-value threshold (0 = keep all)", min_value=0.0, max_value=1.0,
+    q_threshold = c2.number_input("Term q-value threshold (1 = keep all terms)", min_value=0.01, max_value=1.0,
                                   value=DEFAULT_Q_THRESHOLD, step=0.01, format="%.2f", key="null_q_threshold")
     seed = c3.number_input("Random seed", min_value=0, value=DEFAULT_SEED, step=1, key="null_seed")
     if seconds_per_list_hint:
         st.caption(f"Estimated time: about {max(1, round(n_lists * seconds_per_list_hint / 60))} min "
                    "(longer for large gene lists).")
 
-    if st.button("Compute network statistics", type="primary"):
+    recompute = st.button("Recompute statistics", type="secondary" if stored else "primary")
+    if recompute or not stored:
         libraries = [it.gene_set_library for it in iter_enrich.values()]
         records = []
         for c, it in enumerate(iter_enrich.values()):
@@ -74,7 +77,7 @@ def render_per_run_benchmark(st, state, download_link: Callable, default_n_lists
 
         def progress(done, total, label):
             bar.progress(done / total, text=f"Analysing {label}… {done:,}/{total:,} ({time.time() - t0:.0f} s)")
-        qt = float(q_threshold) if q_threshold and q_threshold > 0 else None
+        qt = float(q_threshold)
         table, null, terms, observed, attrs = run_statistics(
             records, libraries, first.background_gene_set.genes, n_genes, n_lists=int(n_lists), seed=int(seed),
             q_threshold=qt, grid_lists=grid_lists, n_jobs=n_jobs, progress_callback=progress, **params)
@@ -88,13 +91,24 @@ def render_per_run_benchmark(st, state, download_link: Callable, default_n_lists
                   + format_report(table, attrs, [lib.name for lib in libraries], shown, terms))
         state.per_run_benchmark = stored = {"signature": sig, "table": table, "report": report, "terms": terms,
                                             "null": null, "observed": observed, "attrs": dict(attrs)}
+        # Rebuild each library's network from the retained terms only
+        kept = {(r["Library"], r["Term"]) for _, r in terms.iterrows() if r["Kept"]}
+        if "iter_dot" in state:
+            for lib_name, it in iter_enrich.items():
+                res = [r for r in it.results if (lib_name, r.get("Term_raw", r.get("Term"))) in kept]
+                state.iter_dot[lib_name] = it.to_dot(res)
+            state.network_generated = False
+            state.last_merged_dot = ""
 
     if not stored:
         return
     obs, attrs, table = stored["observed"], stored["attrs"], stored["table"]
     qt = attrs.get("q_threshold")
-    if qt is not None:
-        st.info(f"**Term level:** {obs['n_terms_kept']} of {obs['n_terms_total']} terms have q < {qt} and are kept. "
+    if qt is not None and qt >= 1:
+        st.info(f"**Term level:** no q-value filter (threshold {qt}); all {obs['n_terms_total']} selected terms are in "
+                "the network. Random lists are treated the same way.")
+    elif qt is not None:
+        st.info(f"**Term level:** {obs['n_terms_kept']} of {obs['n_terms_total']} terms have q < {qt} and form the network below. "
                 f"A random list of this size selects about {attrs['expected_chance_terms']} terms by chance; "
                 f"random lists are filtered the same way before their networks are built.")
     st.success(f"Largest cluster: {obs['n_genes']} genes, {obs['n_terms']} terms, {obs['n_edges']} edges, "

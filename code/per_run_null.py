@@ -23,8 +23,9 @@ Two layers, applied identically to the input list and to every random list:
         z = (observed - mean) / SD,  empirical p = (r + 1) / (n + 1)   (Phipson & Smyth 2010).
 
 Random list i of size s is drawn with numpy.random.default_rng([seed, s, i]) from the sorted
-background, so all results are reproducible. With q_threshold=None the term filter is skipped
-(all selected terms enter the network).
+background, so all results are reproducible. q_threshold = 1 keeps every selected term (q-values are
+still computed and reported, with the signal adjustment at the default level 0.10); q_threshold = None
+skips the term level entirely.
 """
 import logging
 import math
@@ -170,6 +171,15 @@ def _gen(task: Tuple[int, int]) -> List[Record]:
     return out
 
 
+def _keep(q: float, q_threshold: Optional[float]) -> bool:
+    return q_threshold is None or q_threshold >= 1 or q < q_threshold
+
+
+def _accept_level(q_threshold: Optional[float]) -> float:
+    """q level at which genes of accepted terms are treated as signal."""
+    return DEFAULT_Q_THRESHOLD if (q_threshold is None or q_threshold >= 1) else q_threshold
+
+
 def _init_score(names, ref, n_genes, q_threshold):
     _W.update(names=names, ref=ref, n_genes=n_genes, q_threshold=q_threshold)
 
@@ -179,8 +189,8 @@ def _score(item: Tuple[int, List[Record]]) -> Dict[str, float]:
     if _W["q_threshold"] is None:
         kept = recs
     else:
-        q, _ = signal_adjusted_q(recs, _W["n_genes"], _W["ref"], _W["q_threshold"], leave_out_self=True)
-        kept = [r for r, qq in zip(recs, q) if qq < _W["q_threshold"]]
+        q, _ = signal_adjusted_q(recs, _W["n_genes"], _W["ref"], _accept_level(_W["q_threshold"]), leave_out_self=True)
+        kept = [r for r, qq in zip(recs, q) if _keep(qq, _W["q_threshold"])]
     out = largest_cluster_metrics(_to_dicts(kept, _W["names"]))
     out.update(list=i, n_terms_total=len(recs), n_terms_kept=len(kept))
     return out
@@ -259,12 +269,12 @@ def run_statistics(observed_records: Sequence[Record], libraries, background_gen
         q_obs, m0 = np.full(len(obs), np.nan), n_genes
         kept = obs
     else:
-        q_obs, m0 = signal_adjusted_q(obs, n_genes, ref, q_threshold)
-        kept = [r for r, q in zip(obs, q_obs) if q < q_threshold]
+        q_obs, m0 = signal_adjusted_q(obs, n_genes, ref, _accept_level(q_threshold))
+        kept = [r for r, q in zip(obs, q_obs) if _keep(q, q_threshold)]
     observed = largest_cluster_metrics(_to_dicts(kept, names))
     observed["n_terms_total"], observed["n_terms_kept"] = len(obs), len(kept)
     obs_terms = pd.DataFrame([{"Library": names[c], "Iteration": it, "Term": t, "p-value": p, "q-value": q,
-                               "Kept": (q_threshold is None) or (q < q_threshold),
+                               "Kept": _keep(q, q_threshold),
                                "Genes": ", ".join(g)} for (c, t, it, p, g), q in zip(obs, q_obs)])
     table = compare_to_null(observed, null)
     attrs = dict(n_genes=n_genes, n_lists=n_lists, seed=seed, n_jobs=n_jobs, background_size=len(background),
@@ -329,7 +339,8 @@ def format_report(table: pd.DataFrame, attrs: Dict, libraries: List[str], params
             f"  q = expected chance terms with p' <= p / selected terms with p' <= p (per collection, monotone),",
             f"  re-estimated after treating genes of accepted terms as signal ({attrs['noise_genes']} of {attrs['n_genes']} genes",
             f"  treated as noise in the final round; {attrs['grid_lists']} random lists per size step).",
-            f"  Terms kept (q < {qt}): {kept} of {len(observed_terms)}. Random lists are filtered the same way.",
+            (f"  Terms kept (q < {qt}): {kept} of {len(observed_terms)}. Random lists are filtered the same way."
+             if qt < 1 else f"  No term filter (q threshold {qt}): all {kept} selected terms kept, in the input and the random lists."),
             "",
         ]
     lines += [
