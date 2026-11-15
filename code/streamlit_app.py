@@ -150,7 +150,7 @@ def _ensure_base_state():
     if "iter_p_threshold" not in state:
         state.iter_p_threshold = 0.01
     if "iter_max_iter" not in state:
-        state.iter_max_iter = 10
+        state.iter_max_iter = 30
     if "iter_min_term_size" not in state:
         state.iter_min_term_size = 10
     if "benchmark_computed" not in state:
@@ -195,7 +195,7 @@ def reset_app() -> None:
     state.min_term_size = 10
     state.max_term_size = 600
     state.iter_p_threshold = 0.01
-    state.iter_max_iter = 10
+    state.iter_max_iter = 30
     state.iter_min_overlap = 3
     state.iter_min_term_size = 10
     state.iter_max_term_size = 600
@@ -955,9 +955,13 @@ Results include ranked tables, bar charts, and network graphs."""
                         converted_symbols,
                         state.background_gene_set.genes,
                         state.gene_set_name,
-                        hgcn=False,  # Skip background validation since genes are already validated
+                        hgcn=True,  # keep only genes in the background (same universe as gene sets and random lists)
                         format=False,  # Skip formatting since genes are already formatted
                     )
+                    outside = sorted(state.gene_set.validation["non_valid"])
+                    if outside:
+                        st.info(f"{len(outside)} validated gene(s) are not in the selected background and were "
+                                f"excluded from the analysis: {', '.join(outside)}")
                 else:
                     state.gene_set = None
             if mode == "Regular":
@@ -1014,7 +1018,7 @@ Results include ranked tables, bar charts, and network graphs."""
                     "Max iterations (0 = no limit)",
                     min_value=0,
                     max_value=500,
-                    value=10,
+                    value=30,
                     step=1,
                 )
                 state.iter_min_overlap = st.number_input(

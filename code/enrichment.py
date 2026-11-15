@@ -48,6 +48,30 @@ def format_term_name(term_name: str) -> str:
         return formatted
 
 
+def background_terms(gene_set_library, background_genes, min_term_size: int, max_term_size: int):
+    """Gene sets restricted to the background, then filtered by size (10-600 by default).
+
+    Every quantity of the 2x2 table then refers to one universe, the background: the input list
+    (restricted to the background when the GeneSet is built), the gene sets (here) and the universe
+    size M (background genes in the retained sets). Cached per library and background."""
+    key = (id(background_genes), len(background_genes), min_term_size, max_term_size)
+    cache = getattr(gene_set_library, "_background_terms_cache", None)
+    if cache is None:
+        cache = {}
+        try:
+            gene_set_library._background_terms_cache = cache
+        except AttributeError:
+            pass
+    if key not in cache:
+        out = []
+        for term in gene_set_library.library:
+            genes = [g for g in dict.fromkeys(term["genes"]) if g in background_genes]
+            if min_term_size <= len(genes) <= max_term_size:
+                out.append(dict(term, genes=genes, size=len(genes)))
+        cache[key] = out
+    return cache[key]
+
+
 def compute_pvalue(
     args: Tuple[GeneSet, BackgroundGeneSet, dict, str, int, Set[str]],
 ) -> Tuple[str, str, str, List[str], float]:
@@ -190,8 +214,8 @@ class Enrichment:
         logger.info(f"Calculating p-values for {self.gene_set_library.name}")
         
         # Filter terms by size range first
-        filtered_terms = [term for term in self.gene_set_library.library 
-                         if self.min_term_size <= term["size"] <= self.max_term_size]
+        filtered_terms = background_terms(self.gene_set_library, self.background_gene_set.genes,
+                                          self.min_term_size, self.max_term_size)
         
         # Calculate unique genes from filtered terms only
         filtered_unique_genes = set()
@@ -312,8 +336,8 @@ class Enrichment:
         """Return the snapshot of input parameters and the enrichment results as a JSON string."""
         # Calculate library-specific background size for the snapshot
         # Filter terms by size range first
-        filtered_terms = [term for term in self.gene_set_library.library 
-                         if self.min_term_size <= term["size"] <= self.max_term_size]
+        filtered_terms = background_terms(self.gene_set_library, self.background_gene_set.genes,
+                                          self.min_term_size, self.max_term_size)
         
         # Calculate unique genes from filtered terms only
         filtered_unique_genes = set()
