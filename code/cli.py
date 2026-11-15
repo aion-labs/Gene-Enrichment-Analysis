@@ -927,6 +927,21 @@ def run_iterative_enrichment(
                 return results
             return [r for r in results if term_q.get((lib_name, r.get("Term_raw", r.get("Term"))), (None, True))[1]]
 
+        # Communities, hub genes and bridges of the network (descriptive; network_modules.py)
+        term_community = {}
+        try:
+            from network_modules import analyze_network_modules, write_network_modules
+            module_terms = [dict(library=lib, term=r.get("Term", ""), genes=r.get("Genes removed for next iteration", []))
+                            for lib, data in all_iter_results.items() for r in kept_results(lib, data['results'])]
+            mods = analyze_network_modules(module_terms)
+            if mods.summary.get("n_terms"):
+                write_network_modules(mods, final_output_dir)
+                term_community = {(r.Library, r.Term): r.Community for r in mods.terms.itertuples()}
+                logger.info(f"Network communities: {mods.summary['n_communities']} ({mods.summary['method']}); "
+                            f"saved network_modules_*.tsv")
+        except Exception as e:
+            logger.warning(f"Community analysis skipped: {e}")
+
         # 2) Combined table: all selected terms, with q-value and whether they enter the network
         import math
         combined_rows = []
@@ -944,6 +959,7 @@ def run_iterative_enrichment(
                     "-log(p-value)": -math.log10(p) if p else "",
                     "q-value": q,
                     "In network": kept,
+                    "Community": term_community.get((lib_name, result.get("Term", "")), ""),
                     "Genes": ", ".join(result.get("Genes removed for next iteration", [])),
                 })
         if combined_rows:

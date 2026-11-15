@@ -81,6 +81,15 @@ def _compute(st, state, sub: Dict, n_lists: int, q_threshold: float, seed: int,
         for lib_name, it in sub.items():
             res = [r for r in it.results if (lib_name, r.get("Term_raw", r.get("Term"))) in kept]
             state.iter_dot[lib_name] = it.to_dot(res)
+    # Communities, hub genes and bridges of the retained network (descriptive)
+    try:
+        from network_modules import analyze_network_modules
+        stored["modules"] = analyze_network_modules(
+            [dict(library=lib_name, term=r.get("Term", ""), genes=r.get("Genes removed for next iteration", []))
+             for lib_name, it in sub.items() for r in it.results
+             if (lib_name, r.get("Term_raw", r.get("Term"))) in kept])
+    except Exception:
+        stored["modules"] = None
     return stored
 
 
@@ -166,6 +175,24 @@ def render_per_run_benchmark(st, state, download_link: Callable, default_n_lists
         with st.expander("Term q-values"):
             st.dataframe(stored["terms"][["Library", "Iteration", "Term", "p-value", "q-value", "Kept"]],
                          use_container_width=True, hide_index=True)
+    mods = stored.get("modules")
+    if mods is not None and mods.summary.get("n_terms"):
+        sm = mods.summary
+        with st.expander(f"Communities and hub genes ({sm['n_communities']} communities)"):
+            st.caption(
+                f"{sm['method']} on the term network (terms linked by shared genes). "
+                + (f"Modularity {sm['modularity']}; partition agreement across {sm['n_seeds']} seeds "
+                   f"(mean adjusted Rand index) {sm['partition_stability_mean_ARI']}. " if sm.get('modularity') is not None else "")
+                + "Gene degree = number of terms the gene connects to (at most one per collection in iGEA). "
+                  "Bridge genes connect terms in different communities. Descriptive only: no statistical test.")
+            st.dataframe(mods.communities.drop(columns=["All terms"]), use_container_width=True, hide_index=True)
+            st.dataframe(mods.genes[["Gene", "Degree", "Community", "Participation", "Bridge", "Terms"]],
+                         use_container_width=True, hide_index=True)
+            nm = state.get("gene_set_name") or "network"
+            st.markdown(f"📄 {download_link(mods.communities.to_csv(sep=chr(9), index=False), nm + '_communities', 'tsv')} · "
+                        f"{download_link(mods.terms.to_csv(sep=chr(9), index=False), nm + '_community_terms', 'tsv')} · "
+                        f"{download_link(mods.genes.to_csv(sep=chr(9), index=False), nm + '_hub_genes', 'tsv')}",
+                        unsafe_allow_html=True)
     with st.expander("📖 How to read these numbers"):
         n = attrs["n_lists"]
         st.markdown(f"""
