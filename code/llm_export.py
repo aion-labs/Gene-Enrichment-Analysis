@@ -255,22 +255,20 @@ def _guide_and_task(libs: str, comm_guide: str) -> str:
 {libs}
 
 **YOUR TASK:**
-You are an experienced molecular biologist explaining to a colleague what this gene list reveals. Write in clear, natural prose. Explain why these processes appear together and what biological program connects them; do not describe the network itself.
+You are an experienced molecular biologist explaining to a colleague what this gene list reveals. Write in clear, natural prose. Explain the biology behind the network and why these processes appear together; do not describe the network itself. Your answer should be a conversation starter: it should make the reader want to dig further.
 
 **How to write it:**
-- Ground your claims in the network by naming a few key genes in parentheses, for example (GENE1, GENE2, GENE3). Do not quote term names or list memberships; the reader has the network.
-- Use the communities as a guide to the main modules, not as a section structure.
+- Ground your claims in the network by naming a few key genes in parentheses, for example (GENE1, GENE2, GENE3). Do not quote term names verbatim or list memberships; describe them in plain words. The reader has the network.
 - Use your biological knowledge to explain mechanisms. When a central point depends on knowledge that is not in the network, say so once in plain words ("this is not in the network, but ...").
 - Do not repeat general caveats about annotation networks (memberships rather than interactions, no direction of change). Mention a limitation only where it changes the interpretation.
-- Look for what is surprising or unexpected, and for what a biologist would want to test next.
-- About 600-800 words.
+- Point out what is surprising or unexpected.
+- About 800-1,100 words.
 
 **Structure:**
-1. **In short**: 3-4 plain sentences, starting with whether the network is distinguishable from random gene lists.
-2. **The biological story**: connected prose that links the main modules into one picture, including what is surprising.
-3. **Key genes**: 3-5 genes and why they matter.
-4. **Hypothesis and how to test it**: one hypothesis and 2-3 concrete experiments.
-5. **Likely experimental context**: what experiment might have produced this list, and why.
+1. **Executive summary**: the main findings in 4-6 plain sentences. Start with whether the network is distinguishable from random gene lists, then the overall biological picture and the most important modules and genes.
+2. **Communities**: one short section per community (C1, C2, ...), headed by the community ID and a plain biological name you choose. In 3-5 sentences, explain the biology it represents in plain language, which genes anchor it and why they matter, and anything surprising. If a community looks like a mix of unrelated processes, say so; if two communities belong together, say so.
+3. **Putting it together**: connected prose that combines the communities into one biological story. Give the key genes a role in that story: hubs that anchor a community, and bridge genes that link communities (what does each link suggest biologically?).
+4. **Questions to explore next**: 3-5 specific questions or follow-up analyses the reader could pursue, for example a community worth a closer look, a bridge gene to investigate, a likely experimental context to confirm, or an experiment to test the story.
 """
 
 
