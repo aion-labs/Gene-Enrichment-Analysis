@@ -2,8 +2,8 @@
 Fast iterative enrichment engine.
 
 Implements exactly the same selection procedure as ``IterativeEnrichment`` (iter_enrichment.py):
-for each collection, gene sets are filtered by size, the input list is restricted to the genes of
-the retained sets, every set is tested against the remaining genes, sets with overlap below
+for each collection, gene sets are restricted to the background and filtered by size, the input
+list is restricted to the genes of the retained sets, every set is tested against the remaining genes, sets with overlap below
 ``min_overlap`` are skipped, the lowest p-value is selected (ties broken by GMT order), its
 overlapping genes are removed, and the procedure repeats until no set reaches ``p_threshold``.
 
@@ -65,22 +65,27 @@ class FastCollection:
 
     def __init__(self, terms: List[dict], background_genes: Iterable[str], name: str = "",
                  min_term_size: int = 10, max_term_size: int = 600):
-        # Same filter as Enrichment: size = raw GMT length
-        kept = [t for t in terms if min_term_size <= t["size"] <= max_term_size]
+        # Same as enrichment.background_terms: gene sets restricted to the background, then filtered by size
+        bg = set(background_genes)
+        usets, names = [], []
+        for t in terms:
+            u = sorted(set(t["genes"]) & bg)
+            if min_term_size <= len(u) <= max_term_size:
+                usets.append(u)
+                names.append(t["name"])
         self.name = name
-        self.term_names = [t["name"] for t in kept]
-        usets = [sorted(set(t["genes"])) for t in kept]
+        self.term_names = names
         self.genes = sorted(set().union(*map(set, usets))) if usets else []
         self.index = {g: i for i, g in enumerate(self.genes)}
-        # Same K as compute_pvalue: number of unique genes in the set
+        # K = number of unique background genes in the set
         self.K = np.array([len(s) for s in usets], dtype=float)
         rows = np.repeat(np.arange(len(usets)), [len(s) for s in usets])
         cols = np.array([self.index[g] for s in usets for g in s], dtype=int)
         self.A = sparse.csr_matrix((np.ones(len(cols)), (rows, cols)),
                                    shape=(len(usets), len(self.genes)))
         self.members = [np.array([self.index[g] for g in s], dtype=int) for s in usets]
-        # Same M as Enrichment: background genes present in the retained sets
-        self.M = len(set(background_genes) & set(self.genes))
+        # M = background genes present in the retained sets (all set genes are background genes)
+        self.M = len(self.genes)
 
     @classmethod
     def from_library(cls, library, background_genes, min_term_size=10, max_term_size=600):

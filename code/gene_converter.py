@@ -23,65 +23,19 @@ class GeneConverter:
                              If None, will look for it in the data/recent_release directory.
         """
         if gene_info_path is None:
-            # Look for the file in the data/recent_release directory
-            # Try multiple path resolution strategies for robustness in different environments
-            
-            # Strategy 1: Use __file__ to get path relative to this module
-            project_root = Path(__file__).resolve().parent.parent
-            gene_info_path = project_root / "data" / "recent_release" / "Homo_sapiens.gene_info"
-            
-            # Strategy 2: If not found, try relative to current working directory
-            if not gene_info_path.exists():
-                alt_path = Path.cwd() / "data" / "recent_release" / "Homo_sapiens.gene_info"
-                if alt_path.exists():
-                    gene_info_path = alt_path
-                else:
-                    # Strategy 3: Try one level up from current directory (if in code/ folder)
-                    alt_path2 = Path.cwd().parent / "data" / "recent_release" / "Homo_sapiens.gene_info"
-                    if alt_path2.exists():
-                        gene_info_path = alt_path2
-                    else:
-                        # Strategy 4: Try Code Ocean style path (if data is mounted at /data)
-                        code_ocean_path = Path("/data") / "recent_release" / "Homo_sapiens.gene_info"
-                        if code_ocean_path.exists():
-                            gene_info_path = code_ocean_path
-                        else:
-                            # Strategy 5: Try relative path from code/ directory
-                            code_dir_path = Path(__file__).resolve().parent / ".." / "data" / "recent_release" / "Homo_sapiens.gene_info"
-                            if code_dir_path.resolve().exists():
-                                gene_info_path = code_dir_path.resolve()
-        
+            gene_info_path = self._find_data_file(["Homo_sapiens.gene_info", "Homo_sapiens.gene_info.gz"])
+            if gene_info_path is None:
+                raise FileNotFoundError(
+                    "NCBI gene info not found. Expected data/recent_release/Homo_sapiens.gene_info(.gz) in the "
+                    "repository. Gene symbols cannot be validated without it, and results would depend on the "
+                    "working directory.")
         self.gene_info_path = Path(gene_info_path)
-        
+
         if gene_history_path is None:
-            # Look for the file in the data/recent_release directory
-            # Try multiple path resolution strategies for robustness in different environments
-            
-            # Strategy 1: Use __file__ to get path relative to this module
-            project_root = Path(__file__).resolve().parent.parent
-            gene_history_path = project_root / "data" / "recent_release" / "gene_history"
-            
-            # Strategy 2: If not found, try relative to current working directory
-            if not gene_history_path.exists():
-                alt_path = Path.cwd() / "data" / "recent_release" / "gene_history"
-                if alt_path.exists():
-                    gene_history_path = alt_path
-                else:
-                    # Strategy 3: Try one level up from current directory (if in code/ folder)
-                    alt_path2 = Path.cwd().parent / "data" / "recent_release" / "gene_history"
-                    if alt_path2.exists():
-                        gene_history_path = alt_path2
-                    else:
-                        # Strategy 4: Try Code Ocean style path (if data is mounted at /data)
-                        code_ocean_path = Path("/data") / "recent_release" / "gene_history"
-                        if code_ocean_path.exists():
-                            gene_history_path = code_ocean_path
-                        else:
-                            # Strategy 5: Try relative path from code/ directory
-                            code_dir_path = Path(__file__).resolve().parent / ".." / "data" / "recent_release" / "gene_history"
-                            if code_dir_path.resolve().exists():
-                                gene_history_path = code_dir_path.resolve()
-        
+            gene_history_path = self._find_data_file(["gene_history", "gene_history_9606.gz", "gene_history.gz"])
+            if gene_history_path is None:
+                logger.warning("NCBI gene history not found in data/recent_release; outdated symbols will not be mapped")
+                gene_history_path = "gene_history_not_found"
         self.gene_history_path = Path(gene_history_path)
         
         self.entrez_to_symbol: Dict[str, str] = {}
@@ -102,11 +56,31 @@ class GeneConverter:
         else:
             logger.warning(f"Gene history file not found at {self.gene_history_path}")
     
+    @staticmethod
+    def _find_data_file(names):
+        """First existing file among ``names`` in data/recent_release (repository first, then the
+        current directory and its parent, then /data/recent_release)."""
+        here = Path(__file__).resolve().parent.parent
+        for d in (here / "data" / "recent_release", Path.cwd() / "data" / "recent_release",
+                  Path.cwd().parent / "data" / "recent_release", Path("/data") / "recent_release"):
+            for n in names:
+                if (d / n).exists():
+                    return d / n
+        return None
+
+    @staticmethod
+    def _open(path):
+        import gzip
+        path = Path(path)
+        if path.suffix == ".gz":
+            return gzip.open(path, "rt", encoding="utf-8")
+        return open(path, "r", encoding="utf-8")
+
     def _load_gene_info(self) -> None:
         """Load gene information from the NCBI gene info file."""
         logger.info(f"Loading gene info from {self.gene_info_path}")
         
-        with open(self.gene_info_path, 'r', encoding='utf-8') as f:
+        with self._open(self.gene_info_path) as f:
             for line_num, line in enumerate(f, 1):
                 if line.startswith('#'):
                     continue
@@ -156,7 +130,7 @@ class GeneConverter:
         logger.info(f"Loading gene history from {self.gene_history_path}")
         
         try:
-            with open(self.gene_history_path, 'r', encoding='utf-8') as f:
+            with self._open(self.gene_history_path) as f:
                 for line_num, line in enumerate(f, 1):
                     if line.startswith('#'):
                         continue

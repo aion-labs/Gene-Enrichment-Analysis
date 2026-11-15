@@ -8,7 +8,10 @@
 - Have a list of genes for enrichment analysis in official human gene symbols or entrez IDs.
 - Unless you use all genes as a background, have a background file with all measured genes ready in the human gene symbols or entrez IDs.
 - You may add new gene set libraries in GMT format. Make sure they are properly listed in the data folder and added to the alias.json file.  
-- The NCBI gene information database (`Homo_sapiens.gene_info`) is automatically downloaded for Entrez ID support.
+- NCBI gene data used to validate symbols ship with the repository (`data/recent_release/Homo_sapiens.gene_info.gz`,
+  `gene_history_9606.gz`). iGEA stops with an error if they are missing, so results never depend on the working directory.
+- One universe: input genes outside the background are removed (and listed), and gene sets are restricted to the
+  background before the size filter (10-600 genes), so the input, the gene sets and the random lists share the background.
 
 ## Run the Application
 
@@ -89,10 +92,32 @@ Random lists are reproducible from the seed (default 2026). A fast vectorised en
 (`code/fast_igea.py`, identical results to the reference implementation) makes this practical: for a
 272-gene list, 10,000 random lists plus the q-value adjustment take about 1.5 min on 4 cores.
 
-CLI: `python code/cli.py -g genes.txt -m iterative [--null-lists 10000] [--q-threshold 0.10] [--null-seed 2026] [--null-jobs 0]`.
+CLI: `python code/cli.py -g genes.txt -m iterative [--null-lists 10000] [--q-threshold 0.10] [--null-seed 2026] [--null-jobs 0] [--null-cache DIR]`.
+`--null-cache DIR` keeps the generated random lists, so a run interrupted by a time limit resumes when the same
+command is rerun (identical results). Iterations stop when no gene set reaches p < 0.01 or after 30 iterations
+per collection (`--max-iterations`, 0 = no limit). Lists above 800 genes run with a warning (longer run time).
 Statistics run by default in iterative mode; `--q-threshold 1` keeps all selected terms; `--no-benchmark` skips
 statistics (network from all terms, unfiltered); `--null-source stored` reproduces the previous behaviour
 (precomputed permutations, default background only).
+
+## Communities, hubs and LLM interpretation
+
+Each iterative run also writes:
+- `network_modules_*.tsv`: communities of the network (Leiden, modularity, on terms linked by shared genes), gene
+  degree (= number of collections placing the gene in the network), participation coefficient and bridge genes.
+- `combined_network.dot`: the network for drawing (colours by collection).
+- `network_llm.dot`: the same network for reading (no styling): one cluster per community, term and gene
+  attributes (library, iteration, p, q, community, degree, bridge) and the statistics as graph attributes.
+- `llm_prompt.txt`: the prompt for a language model: statistics (with an instruction for networks that are not
+  distinguishable from random lists), community table, the semantic DOT, and instructions requiring every
+  statement to cite network terms and genes, with outside knowledge marked [outside the network].
+
+To send the prompt to an OpenAI model (standard library only; the key stays in your environment):
+```
+export OPENAI_API_KEY="sk-..."
+python3 code/llm_client.py <run folder> --model <model-id> [--repeats 3]   # or: cli.py ... --llm-model <model-id>
+```
+Responses, full request/response JSON and a manifest (model, response id, time, tokens) are saved in `<run folder>/llm/`.
 
 ## Overview of Application Components
 ### Key Features

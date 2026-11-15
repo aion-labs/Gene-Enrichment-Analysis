@@ -89,18 +89,9 @@ class BackgroundGeneSet:
             has_gene_data = stats.get('symbol_mappings', 0) > 0
             
             if not has_gene_data:
-                # Gene converter doesn't have data - likely gene info file not loaded
-                # For background files, we'll accept all symbols as-is (trusted source)
-                # This is safer than rejecting everything
-                import logging
-                logger = logging.getLogger(__name__)
-                logger.warning(
-                    f"GeneConverter has no loaded data (gene info file may not be loaded). "
-                    f"Accepting all {len(raw_lines)} symbols from background file without validation."
-                )
-                # Return all non-empty lines as valid symbols
-                return set(line.strip().upper() for line in raw_lines if line.strip())
-            
+                raise RuntimeError("GeneConverter has no gene data; cannot validate the background. "
+                                   "Check data/recent_release/Homo_sapiens.gene_info(.gz).")
+
             valid_symbols = []
             invalid_symbols = []
             

@@ -215,13 +215,70 @@ def _pool_map(fn, items, init, initargs, n_jobs, progress=None, label=""):
         return res
 
 
+# ----------------------------------------------------------------------------- optional disk cache
+CACHE_BLOCK = 500
+
+
+def _cache_key(background, collections, params, seed) -> str:
+    """Identifies the random-list analysis: background, collections (terms and their genes), parameters, seed."""
+    import hashlib
+    h = hashlib.sha1()
+    h.update("\n".join(background).encode())
+    for col in collections:
+        h.update(col.name.encode())
+        h.update("\n".join(col.term_names).encode())
+        h.update(np.asarray(col.K).tobytes())
+        h.update("\n".join(col.genes).encode())
+    h.update(repr(sorted(params.items())).encode())
+    h.update(str(seed).encode())
+    return h.hexdigest()[:16]
+
+
+def _generate_cached(tasks, collections, background, seed, params, n_jobs, progress, cache_dir):
+    """Generate random-list records in blocks saved to ``cache_dir``; finished blocks are reused, so an
+    interrupted run resumes where it stopped. Results are identical with or without the cache."""
+    import pickle
+    os.makedirs(cache_dir, exist_ok=True)
+    key = _cache_key(background, collections, params, seed)
+    blocks = [tasks[k:k + CACHE_BLOCK] for k in range(0, len(tasks), CACHE_BLOCK)]
+    out, done = [], 0
+    pool = None
+    try:
+        for b in blocks:
+            f = os.path.join(cache_dir, f"igea_null_{key}_{b[0][0]}_{b[0][1]}_{len(b)}.pkl")
+            if os.path.exists(f):
+                with open(f, "rb") as fh:
+                    res = pickle.load(fh)
+            else:
+                if n_jobs == 1:
+                    _init_gen(collections, background, seed, params)
+                    res = [_gen(t) for t in b]
+                else:
+                    if pool is None:
+                        pool = get_context("spawn").Pool(n_jobs, initializer=_init_gen,
+                                                          initargs=(collections, background, seed, params))
+                    res = pool.map(_gen, b, chunksize=max(1, len(b) // (n_jobs * 4)))
+                with open(f + ".tmp", "wb") as fh:
+                    pickle.dump(res, fh, protocol=pickle.HIGHEST_PROTOCOL)
+                os.replace(f + ".tmp", f)
+            out.extend(res)
+            done += len(b)
+            if progress:
+                progress(done, len(tasks), "random lists")
+    finally:
+        if pool is not None:
+            pool.close()
+            pool.join()
+    return out
+
+
 # ----------------------------------------------------------------------------- main entry point
 def run_statistics(observed_records: Sequence[Record], libraries, background_genes, n_genes: int,
                    p_value_method: str = FISHER, p_threshold: float = 0.01, min_overlap: int = 3,
                    min_term_size: int = 10, max_term_size: int = 600, max_iterations: Optional[int] = None,
                    n_lists: int = DEFAULT_N_LISTS, seed: int = DEFAULT_SEED,
                    q_threshold: Optional[float] = DEFAULT_Q_THRESHOLD, grid_lists: Optional[int] = DEFAULT_GRID_LISTS,
-                   n_jobs: Optional[int] = None, progress_callback=None):
+                   n_jobs: Optional[int] = None, progress_callback=None, cache_dir: Optional[str] = None):
     """Term q-values and network statistics for one analysis.
 
     Args:
@@ -233,6 +290,7 @@ def run_statistics(observed_records: Sequence[Record], libraries, background_gen
         n_genes: validated input size.
         q_threshold: terms with signal-adjusted q >= this are dropped before building networks
             (None = keep all selected terms).
+        cache_dir: optional folder for the generated random lists; an interrupted run resumes from it.
 
     Returns:
         (table, null, observed_terms, observed_metrics, attrs)
@@ -250,8 +308,11 @@ def run_statistics(observed_records: Sequence[Record], libraries, background_gen
     grid = grid_sizes(n_genes) if q_threshold is not None else [n_genes]
     tasks += [(s, i) for s in grid if s != n_genes for i in range(grid_lists)]
     stage = lambda d, n, lab: progress_callback(d, n, lab) if progress_callback else None
-    generated = _pool_map(_gen, tasks, _init_gen, (collections, background, seed, params), n_jobs,
-                          stage, "random lists")
+    if cache_dir:
+        generated = _generate_cached(tasks, collections, background, seed, params, n_jobs, stage, cache_dir)
+    else:
+        generated = _pool_map(_gen, tasks, _init_gen, (collections, background, seed, params), n_jobs,
+                              stage, "random lists")
     main = generated[:n_lists]
     ref = ChanceReference(len(collections))
     ref.add(n_genes, main)

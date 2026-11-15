@@ -42,6 +42,7 @@ def run_enrichment(
     output_dir: Path,
     benchmark: bool = False,
     null_options: Optional[Dict] = None,
+    llm_options: Optional[Dict] = None,
 ):
     """Run enrichment analysis for the given parameters."""
     
@@ -116,20 +117,25 @@ def run_enrichment(
                 logger.warning(f"Warning: {len(unrecognized_symbols)} gene symbols not found in database")
         
         # Create GeneSet object
+        # Validated genes that are not in the background are removed: the input list, the gene sets and
+        # the random lists all refer to the same universe (the background)
         gene_set = GeneSet(
             gene_symbols,
             background_gene_set.genes,
             gene_set_name,
-            hgcn=False,
+            hgcn=True,
             format=False,
         )
-        
-        logger.info(f"Gene set {gene_set_name}: {gene_set.size} genes")
-        
-        # Check gene list size limit (800 genes maximum)
+        outside = sorted(gene_set.validation["non_valid"])
+        if outside:
+            logger.warning(f"{len(outside)} validated genes are not in the background "
+                           f"({background_gene_set.name}) and were removed: {', '.join(outside)}")
+        logger.info(f"Gene set {gene_set_name}: {gene_set.size} genes in the background (used for the analysis)")
+
+        # Large lists: no hard limit, but statistics take longer (random lists have the same size)
         if gene_set.size > 800:
-            logger.error(f"❌ **Gene list too large!** Your input contains {gene_set.size} genes, but the maximum allowed is 800 genes. Please reduce your gene list size.")
-            raise typer.Exit(code=1)
+            logger.warning(f"Large gene list ({gene_set.size} genes): the iterative analysis and the random-list "
+                           "statistics take longer; consider fewer random lists (--null-lists) for a first look.")
         
         # Create unique results directory for this run with timestamp
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -157,7 +163,7 @@ def run_enrichment(
                 gene_set, gene_set_libraries, background_gene_set,
                 p_value_method, p_threshold, min_overlap, min_term_size, max_term_size,
                 max_iterations, output_dir, gene_set_output_dir, compute_benchmark=benchmark,
-                null_options=null_options,
+                null_options=null_options, llm_options=llm_options,
             )
 
 
@@ -803,10 +809,11 @@ def compute_per_run_benchmark_for_cli(
     n_jobs = int(null_options.get("n_jobs") or 0) or None
     q_threshold = null_options.get("q_threshold", DEFAULT_Q_THRESHOLD)
     grid_lists = int(null_options.get("grid_lists") or 0) or None
+    cache_dir = null_options.get("cache_dir") or None
     logger.info(f"Generating {n_lists} random lists of {gene_set.size} genes from the run background")
     table, null, terms, observed, attrs = run_statistics(
         records, libraries, background_gene_set.genes, gene_set.size, n_lists=n_lists, seed=seed, n_jobs=n_jobs,
-        q_threshold=q_threshold, grid_lists=grid_lists,
+        q_threshold=q_threshold, grid_lists=grid_lists, cache_dir=cache_dir,
         progress_callback=lambda d, n, lab: logger.info(f"{lab}: {d}/{n}"), **params)
     shown = dict(params, background=background_gene_set.name)
     report = (f"Gene list: {gene_set.name}\nValidated input genes: {gene_set.size}\n"
@@ -836,6 +843,7 @@ def run_iterative_enrichment(
     final_output_dir: Path,  # For final combined results
     compute_benchmark: bool = False,
     null_options: Optional[Dict] = None,
+    llm_options: Optional[Dict] = None,
 ):
     """Run iterative enrichment analysis."""
     logger.info("Running iterative enrichment analysis")
@@ -999,6 +1007,16 @@ def run_iterative_enrichment(
                 (final_output_dir / "network_llm.dot").write_text(llm_dot)
                 (final_output_dir / "llm_prompt.txt").write_text(prompt)
                 logger.info(f"Saved semantic network (network_llm.dot) and LLM prompt (llm_prompt.txt) to {final_output_dir}")
+                llm_options = llm_options or {}
+                if llm_options.get("model"):
+                    from llm_client import run_llm
+                    try:
+                        files = run_llm(prompt, llm_options["model"], str(final_output_dir / "llm"),
+                                        repeats=int(llm_options.get("repeats") or 1), log=logger.info)
+                        logger.info(f"LLM interpretation saved: {', '.join(Path(f).name for f in files)} in {final_output_dir / 'llm'}")
+                    except Exception as e:
+                        logger.error(f"LLM call failed: {e}. The prompt is in llm_prompt.txt; run "
+                                     f"python3 code/llm_client.py {final_output_dir} --model {llm_options['model']}")
             except Exception as e:
                 logger.warning(f"Error generating the LLM export: {e}")
         except Exception as e:
@@ -1089,9 +1107,10 @@ def main(
         help="Maximum term size",
     ),
     max_iterations: int = typer.Option(
-        10,
+        30,
         "--max-iterations",
-        help="Maximum iterations for iterative mode (0 = no limit)",
+        help="Maximum iterations per collection for iterative mode (0 = no limit); iterations also stop "
+             "when no gene set reaches the p-value threshold",
     ),
     output_dir: Optional[Path] = typer.Option(
         None,
@@ -1121,6 +1140,13 @@ def main(
     q_grid_lists: int = typer.Option(0, "--q-grid-lists",
                                      help="Random lists per size step for the q-value signal adjustment "
                                           "(0 = max(200, null-lists / 10))"),
+    null_cache: Optional[Path] = typer.Option(None, "--null-cache",
+                                              help="Folder to keep generated random lists; rerunning the same "
+                                                   "command resumes an interrupted run (results are identical)"),
+    llm_model: Optional[str] = typer.Option(None, "--llm-model",
+                                            help="Send llm_prompt.txt to this OpenAI model (needs OPENAI_API_KEY in "
+                                                 "the environment); responses are saved in llm/"),
+    llm_repeats: int = typer.Option(1, "--llm-repeats", help="Independent LLM calls with the same prompt"),
 ):
     """
     Run gene set enrichment analysis from the command line.
@@ -1252,7 +1278,8 @@ def main(
             benchmark=benchmark,
             null_options={"source": null_source, "n_lists": null_lists, "seed": null_seed, "n_jobs": null_jobs,
                           "q_threshold": q_threshold,
-                          "grid_lists": q_grid_lists},
+                          "grid_lists": q_grid_lists, "cache_dir": str(null_cache) if null_cache else None},
+            llm_options={"model": llm_model, "repeats": llm_repeats},
         )
         if final_output_dir is not None:
             typer.echo(f"✅ Analysis completed successfully! Results saved to {final_output_dir}")

@@ -35,3 +35,9 @@ test_benchmarking_debug.py
 # Sandbox folder (generated files)
 sandbox/
 !sandbox/.gitignore
+
+# NCBI gene data needed to validate symbols (small, versioned for reproducibility)
+!data/recent_release/
+data/recent_release/*
+!data/recent_release/Homo_sapiens.gene_info.gz
+!data/recent_release/gene_history_9606.gz
