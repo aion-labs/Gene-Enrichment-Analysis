@@ -5,9 +5,13 @@ Standard library only, so it also runs outside the iGEA environment:
     export OPENAI_API_KEY="sk-..."        # never put the key in a file or on the command line
     python3 code/llm_client.py <run folder or llm_prompt.txt> --model <model-id> [--repeats 3]
     python3 code/llm_client.py --list-models
+    python3 code/llm_client.py <run folder> --model <model-id> --context "siRNA screen for ..."   # second turn
 
 The CLI calls the same function when ``--llm-model`` is given. Each call is independent (no
-conversation, no stored memory): the request contains only the prompt. For every call the folder
+conversation, no stored memory): the request contains only the prompt, and responses are not stored
+by the provider (store=false). With --context, a second turn is sent for each saved response: the
+first prompt, that response and a follow-up revealing how the gene list was generated (llm_export.FOLLOWUP),
+sent together in one stateless request; results are saved as followup_r<N>. For every call the folder
 ``llm/`` receives the full request and response (JSON), the response text (Markdown) and a line in
 ``manifest.tsv`` (requested and returned model, response id, time, tokens).
 """
@@ -44,6 +48,72 @@ def text_of(resp):
     return "\n".join(parts).strip()
 
 
+def _body(model, turns, api):
+    msgs = [{"role": r, "content": c} for r, c in turns]
+    if api == "responses":
+        return {"model": model, "input": msgs if len(msgs) > 1 else msgs[0]["content"], "store": False}
+    return {"model": model, "messages": msgs}
+
+
+def _post(body, key, api, log):
+    path = "/responses" if api == "responses" else "/chat/completions"
+    for attempt in range(4):
+        try:
+            return _request("POST", path, key, body)
+        except urllib.error.HTTPError as e:
+            msg = e.read().decode()[:500]
+            if e.code in (429, 500, 502, 503) and attempt < 3:
+                log(f"  retry after HTTP {e.code} ...")
+                time.sleep(20 * (attempt + 1))
+                continue
+            raise RuntimeError(f"HTTP {e.code}: {msg}")
+
+
+def run_followup(prompt, context, model, out_dir, key=None, api="responses", log=print):
+    """Second turn for every saved response_r<N>: reveal the experiment and rebuild the interpretation."""
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from llm_export import followup_prompt
+    key = key or os.environ.get("OPENAI_API_KEY", "")
+    if not key:
+        raise RuntimeError('No API key: run  export OPENAI_API_KEY="sk-..."  in this terminal first')
+    follow = followup_prompt(context)
+    manifest = os.path.join(out_dir, "followup_manifest.tsv")
+    new = not os.path.exists(manifest)
+    saved = []
+    with open(manifest, "a", newline="") as mf:
+        w = csv.writer(mf, delimiter="\t")
+        if new:
+            w.writerow(["repeat", "requested_model", "returned_model", "response_id", "started_utc", "seconds",
+                        "input_tokens", "output_tokens", "context", "response_file"])
+        r = 1
+        while os.path.exists(os.path.join(out_dir, f"response_r{r}.md")):
+            base = os.path.join(out_dir, f"followup_r{r}")
+            if os.path.exists(base + ".json"):
+                log(f"skip (done) follow-up r{r}")
+            else:
+                first = open(os.path.join(out_dir, f"response_r{r}.md")).read().strip()
+                body = _body(model, [("user", prompt), ("assistant", first), ("user", follow)], api)
+                started = datetime.now(timezone.utc).isoformat(timespec="seconds")
+                t0 = time.time()
+                resp = _post(body, key, api, log)
+                secs = round(time.time() - t0, 1)
+                with open(base + ".json", "w") as f:
+                    json.dump({"request": body, "response": resp, "started_utc": started, "seconds": secs}, f, indent=2)
+                with open(base + ".md", "w") as f:
+                    f.write(text_of(resp) + "\n")
+                u = resp.get("usage", {})
+                w.writerow([r, model, resp.get("model", ""), resp.get("id", ""), started, secs,
+                            u.get("input_tokens", u.get("prompt_tokens", "")),
+                            u.get("output_tokens", u.get("completion_tokens", "")), context, os.path.basename(base) + ".json"])
+                mf.flush()
+                log(f"done follow-up r{r} ({secs} s)")
+            saved.append(base + ".md")
+            r += 1
+    if not saved:
+        raise RuntimeError(f"No response_r<N>.md in {out_dir}: run the first turn first")
+    return saved
+
+
 def list_models(key):
     return sorted(m["id"] for m in _request("GET", "/models", key)["data"])
 
@@ -69,22 +139,10 @@ def run_llm(prompt, model, out_dir, repeats=1, key=None, api="responses", log=pr
                 log(f"skip (done) r{r}")
                 saved.append(base + ".md")
                 continue
-            body = {"model": model, "input": prompt} if api == "responses" else \
-                   {"model": model, "messages": [{"role": "user", "content": prompt}]}
-            path = "/responses" if api == "responses" else "/chat/completions"
+            body = _body(model, [("user", prompt)], api)
             started = datetime.now(timezone.utc).isoformat(timespec="seconds")
             t0 = time.time()
-            for attempt in range(4):
-                try:
-                    resp = _request("POST", path, key, body)
-                    break
-                except urllib.error.HTTPError as e:
-                    msg = e.read().decode()[:500]
-                    if e.code in (429, 500, 502, 503) and attempt < 3:
-                        log(f"  retry after HTTP {e.code} ...")
-                        time.sleep(20 * (attempt + 1))
-                        continue
-                    raise RuntimeError(f"HTTP {e.code}: {msg}")
+            resp = _post(body, key, api, log)
             secs = round(time.time() - t0, 1)
             with open(base + ".json", "w") as f:
                 json.dump({"request": body, "response": resp, "started_utc": started, "seconds": secs}, f, indent=2)
@@ -107,6 +165,7 @@ def main():
     ap.add_argument("--repeats", type=int, default=1)
     ap.add_argument("--api", choices=["responses", "chat"], default="responses")
     ap.add_argument("--list-models", action="store_true")
+    ap.add_argument("--context", help="How the gene list was generated; sends the second turn for each saved response")
     a = ap.parse_args()
     key = os.environ.get("OPENAI_API_KEY", "")
     if not key:
@@ -120,7 +179,10 @@ def main():
         prompt_file = os.path.join(a.target, "llm_prompt.txt") if os.path.isdir(a.target) else a.target
         out_dir = os.path.join(os.path.dirname(os.path.abspath(prompt_file)), "llm")
         prompt = open(prompt_file).read()
-        run_llm(prompt, a.model, out_dir, a.repeats, key, a.api)
+        if a.context:
+            run_followup(prompt, a.context, a.model, out_dir, key, a.api)
+        else:
+            run_llm(prompt, a.model, out_dir, a.repeats, key, a.api)
         print("Responses are in", out_dir)
     except urllib.error.URLError as e:
         hint = ""

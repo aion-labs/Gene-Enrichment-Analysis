@@ -255,20 +255,21 @@ def _guide_and_task(libs: str, comm_guide: str) -> str:
 {libs}
 
 **YOUR TASK:**
-You are an experienced molecular biologist explaining to a colleague what this gene list reveals. Write in clear, natural prose. Explain the biology behind the network and why these processes appear together; do not describe the network itself. Your answer should be a conversation starter: it should make the reader want to dig further.
+You are an experienced molecular biologist explaining to a colleague what this gene list reveals. Write in clear, natural prose. Explain the biology behind the network and why these processes appear together; do not describe the network itself. Your answer should be a conversation starter: it should make the reader want to dig further, and it ends by asking how the gene list was generated so that the interpretation can be rebuilt around the real experiment.
 
 **How to write it:**
 - Ground your claims in the network by naming a few key genes in parentheses, for example (GENE1, GENE2, GENE3). Do not quote term names verbatim or list memberships; describe them in plain words. The reader has the network.
 - Use your biological knowledge to explain mechanisms. When a central point depends on knowledge that is not in the network, say so once in plain words ("this is not in the network, but ...").
 - Do not repeat general caveats about annotation networks (memberships rather than interactions, no direction of change). Mention a limitation only where it changes the interpretation.
 - Point out what is surprising or unexpected.
-- About 800-1,100 words.
+- About 900-1,200 words.
 
 **Structure:**
 1. **Executive summary**: the main findings in 4-6 plain sentences. Start with whether the network is distinguishable from random gene lists, then the overall biological picture and the most important modules and genes.
 2. **Communities**: one short section per community (C1, C2, ...), headed by the community ID and a plain biological name you choose. In 3-5 sentences, explain the biology it represents in plain language, which genes anchor it and why they matter, and anything surprising. If a community looks like a mix of unrelated processes, say so; if two communities belong together, say so.
 3. **Putting it together**: connected prose that combines the communities into one biological story. Give the key genes a role in that story: hubs that anchor a community, and bridge genes that link communities (what does each link suggest biologically?).
-4. **Questions to explore next**: 3-5 specific questions or follow-up analyses the reader could pursue, for example a community worth a closer look, a bridge gene to investigate, a likely experimental context to confirm, or an experiment to test the story.
+4. **Estimated experimental context**: hypothesize what experiment most likely generated this gene list (for example the type of assay, perturbation, cell type or condition). Reason from the network: which communities and genes point to it, and how confident you are. Name one or two alternatives and what in the network would distinguish them.
+5. **Closing**: end with one or two sentences inviting the reader to share how the gene list was actually generated (assay, perturbation, cell type, comparison), so that you can rebuild the interpretation around it: what fits the experiment, what does not, what is already known and what may be new.
 """
 
 
@@ -294,6 +295,22 @@ def llm_prompt(dot_text: str, terms: Iterable[Dict], modules=None, stats: Option
 {dot_text}
 
 {_guide_and_task(libs, comm_guide)}"""
+
+
+FOLLOWUP = """Here is how the gene list was generated: {context}
+
+Rebuild your interpretation of the same network with this experiment in mind. Keep the same writing rules (natural prose, a few key genes in parentheses, outside knowledge flagged in plain words). Structure:
+1. **Revised summary**: 4-6 sentences. How well does the network match the experiment, and did your estimate of the experimental context hold?
+2. **What fits**: communities and genes that make sense for this experiment, and why. Separate what is well established for this experiment from what is plausible but less documented.
+3. **What does not fit**: communities or genes that are unexpected for this experiment. Could they be technical (for example, effects of the assay itself), indirect, or a sign of new biology?
+4. **What may be new**: the most interesting candidates for novel biology, with the network evidence for each (which community, which bridge or hub genes) and how confident you are.
+5. **Priorities**: the 3 findings you would follow up first, and the experiment that would test each.
+"""
+
+
+def followup_prompt(context: str) -> str:
+    """Second turn: the reader reveals how the gene list was generated; the analysis is rebuilt around it."""
+    return FOLLOWUP.format(context=context.strip())
 
 
 def export_for_llm(terms: List[Dict], modules=None, stats: Optional[Dict] = None,
