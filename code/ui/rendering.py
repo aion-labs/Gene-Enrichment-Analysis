@@ -699,7 +699,7 @@ def render_ora_igea_comparison(
 
 
 def render_network(dot: str, title: str = "Iterative Enrichment Network",
-                   gene_count: int = None, library_list: list = None) -> None:
+                   gene_count: int = None, library_list: list = None, llm_export: tuple = None) -> None:
     """
     Render a bipartite network graph of iterative enrichment across libraries.
 
@@ -730,11 +730,20 @@ def render_network(dot: str, title: str = "Iterative Enrichment Network",
         )
     
     # Always offer downloads regardless of size
-    st.markdown(
-        f'Download network graph as {download_link(dot, "iterative_network", "dot")}, '
-        f'Download {download_link(generate_ai_analysis_prompt(dot), "ai_analysis_prompt", "txt")} for AI analysis',
-        unsafe_allow_html=True,
-    )
+    if llm_export:
+        llm_dot, llm_prompt = llm_export
+        st.markdown(
+            f'Download network graph as {download_link(dot, "iterative_network", "dot")} (for drawing) · '
+            f'network for AI analysis as {download_link(llm_dot, "network_llm", "dot")} (communities, statistics) · '
+            f'{download_link(llm_prompt, "llm_prompt", "txt")} (complete prompt: statistics, communities, network and instructions)',
+            unsafe_allow_html=True,
+        )
+    else:
+        st.markdown(
+            f'Download network graph as {download_link(dot, "iterative_network", "dot")}, '
+            f'Download {download_link(generate_ai_analysis_prompt(dot), "ai_analysis_prompt", "txt")} for AI analysis',
+            unsafe_allow_html=True,
+        )
 
 
 def generate_ai_analysis_prompt(dot_content: str) -> str:

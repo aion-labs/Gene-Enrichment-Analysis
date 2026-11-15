@@ -819,7 +819,7 @@ def compute_per_run_benchmark_for_cli(
     terms.to_csv(output_dir / f"{gene_set.name}_term_qvalues.tsv", sep="\t", index=False)
     null.to_csv(output_dir / f"{gene_set.name}_random_lists.tsv", sep="\t", index=False)
     logger.info(f"Saved per-run statistical report to {output_dir}")
-    return table, terms
+    return table, terms, observed, attrs
 
 
 def run_iterative_enrichment(
@@ -909,11 +909,14 @@ def run_iterative_enrichment(
 
         # 1) Statistics first: the term filter (q-values) decides which terms enter the network.
         term_q = {}
+        llm_stats = None
         if per_run and all_iter_enrich_objects:
             logger.info("Computing term q-values and network statistics...")
             try:
-                _, terms = compute_per_run_benchmark_for_cli(
+                stat_table, terms, stat_observed, stat_attrs = compute_per_run_benchmark_for_cli(
                     all_iter_enrich_objects, gene_set, background_gene_set, stat_params, null_options, final_output_dir)
+                from llm_export import network_stats
+                llm_stats = network_stats(stat_table, stat_attrs, stat_observed, gene_set.size)
                 term_q = {(r["Library"], r["Term"]): (r["q-value"], bool(r["Kept"])) for _, r in terms.iterrows()}
             except Exception as e:
                 logger.error(f"Error computing per-run statistics: {e}")
@@ -929,6 +932,7 @@ def run_iterative_enrichment(
 
         # Communities, hub genes and bridges of the network (descriptive; network_modules.py)
         term_community = {}
+        mods = None
         try:
             from network_modules import analyze_network_modules, write_network_modules
             module_terms = [dict(library=lib, term=r.get("Term", ""), genes=r.get("Genes removed for next iteration", []))
@@ -981,17 +985,22 @@ def run_iterative_enrichment(
                 f.write(combined_dot_content)
             logger.info(f"Saved combined network DOT to {combined_dot_file} "
                         f"({sum(len(v['results']) for v in dot_inputs.values())} terms)")
+            # Semantic DOT (no styling; communities, statistics) and the LLM prompt that wraps it
             try:
-                from ui.rendering import generate_ai_analysis_prompt
-                enhanced_prompt = generate_ai_analysis_prompt(combined_dot_content)
-                enhanced_file = final_output_dir / "combined_ai_analysis_prompt_enhanced.txt"
-                with open(enhanced_file, 'w') as f:
-                    f.write(enhanced_prompt)
-                logger.info(f"Saved combined enhanced AI prompt to {enhanced_file}")
-            except ImportError as e:
-                logger.warning(f"Could not import AI analysis functions: {e}")
+                from llm_export import export_for_llm
+                llm_terms = []
+                for lib_name, data in dot_inputs.items():
+                    for r in data['results']:
+                        q, _ = term_q.get((lib_name, r.get("Term_raw", r.get("Term"))), (None, True))
+                        llm_terms.append(dict(library=lib_name, term=r.get("Term", ""), iteration=r.get("Iteration"),
+                                              p=r.get("iteration p-value"), q=q,
+                                              genes=r.get("Genes removed for next iteration", [])))
+                llm_dot, prompt = export_for_llm(llm_terms, mods, llm_stats)
+                (final_output_dir / "network_llm.dot").write_text(llm_dot)
+                (final_output_dir / "llm_prompt.txt").write_text(prompt)
+                logger.info(f"Saved semantic network (network_llm.dot) and LLM prompt (llm_prompt.txt) to {final_output_dir}")
             except Exception as e:
-                logger.warning(f"Error generating AI prompts: {e}")
+                logger.warning(f"Error generating the LLM export: {e}")
         except Exception as e:
             logger.warning(f"Error generating combined DOT file: {e}")
 
