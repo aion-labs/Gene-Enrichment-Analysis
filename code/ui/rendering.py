@@ -698,7 +698,8 @@ def render_ora_igea_comparison(
     )
 
 
-def render_network(dot: str, title: str = "Iterative Enrichment Network") -> None:
+def render_network(dot: str, title: str = "Iterative Enrichment Network",
+                   gene_count: int = None, library_list: list = None) -> None:
     """
     Render a bipartite network graph of iterative enrichment across libraries.
 
