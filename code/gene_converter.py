@@ -8,7 +8,7 @@ import streamlit as st
 logger = logging.getLogger(__name__)
 
 
-@st.cache_data(show_spinner="Loading gene info database...")
+@st.cache_resource(show_spinner="Loading gene info database...")
 def _cached_load_gene_info(gene_info_path: str) -> Tuple[Dict[str, str], Dict[str, str], Dict[str, str]]:
     """Load and cache gene info parsing. Returns (entrez_to_symbol, symbol_to_entrez, synonyms_to_symbol)."""
     entrez_to_symbol: Dict[str, str] = {}
@@ -45,7 +45,7 @@ def _cached_load_gene_info(gene_info_path: str) -> Tuple[Dict[str, str], Dict[st
     return entrez_to_symbol, symbol_to_entrez, synonyms_to_symbol
 
 
-@st.cache_data(show_spinner="Loading gene history...")
+@st.cache_resource(show_spinner="Loading gene history...")
 def _cached_load_gene_history(gene_history_path: str) -> Dict[str, str]:
     """Load and cache gene history parsing. Returns old_to_current_symbol mapping."""
     old_to_current_symbol: Dict[str, str] = {}
