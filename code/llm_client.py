@@ -48,6 +48,29 @@ def text_of(resp):
     return "\n".join(parts).strip()
 
 
+class ProviderError(RuntimeError):
+    """The provider refused or failed the request (HTTP error after retries)."""
+    def __init__(self, code, message):
+        super().__init__(f"HTTP {code}: {message}")
+        self.code, self.message = code, message
+
+
+POLICY_CODES = ("policy", "flagged", "safety")
+
+
+def _is_refusal(err) -> bool:
+    """A 400 caused by a provider content policy (not a malformed request)."""
+    return err.code == 400 and any(k in err.message.lower() for k in POLICY_CODES)
+
+
+def _record_refusal(base, body, err, log):
+    """Save a refused request (e.g. a provider content policy) so the run continues and the refusal is reported."""
+    with open(base + ".refused.json", "w") as f:
+        json.dump({"request": body, "http_status": err.code, "error": err.message,
+                   "utc": datetime.now(timezone.utc).isoformat(timespec="seconds")}, f, indent=2)
+    log(f"  refused by the provider (HTTP {err.code}); saved {os.path.basename(base)}.refused.json and continuing")
+
+
 def _body(model, turns, api):
     msgs = [{"role": r, "content": c} for r, c in turns]
     if api == "responses":
@@ -66,7 +89,7 @@ def _post(body, key, api, log):
                 log(f"  retry after HTTP {e.code} ...")
                 time.sleep(20 * (attempt + 1))
                 continue
-            raise RuntimeError(f"HTTP {e.code}: {msg}")
+            raise ProviderError(e.code, msg)
 
 
 def run_followup(prompt, context, model, out_dir, key=None, api="responses", log=print):
@@ -90,12 +113,21 @@ def run_followup(prompt, context, model, out_dir, key=None, api="responses", log
             base = os.path.join(out_dir, f"followup_r{r}")
             if os.path.exists(base + ".json"):
                 log(f"skip (done) follow-up r{r}")
+            elif os.path.exists(base + ".refused.json"):
+                log(f"skip (refused earlier) follow-up r{r}")
             else:
                 first = open(os.path.join(out_dir, f"response_r{r}.md")).read().strip()
                 body = _body(model, [("user", prompt), ("assistant", first), ("user", follow)], api)
                 started = datetime.now(timezone.utc).isoformat(timespec="seconds")
                 t0 = time.time()
-                resp = _post(body, key, api, log)
+                try:
+                    resp = _post(body, key, api, log)
+                except ProviderError as err:
+                    if not _is_refusal(err):
+                        raise
+                    _record_refusal(base, body, err, log)
+                    r += 1
+                    continue
                 secs = round(time.time() - t0, 1)
                 with open(base + ".json", "w") as f:
                     json.dump({"request": body, "response": resp, "started_utc": started, "seconds": secs}, f, indent=2)
@@ -109,7 +141,7 @@ def run_followup(prompt, context, model, out_dir, key=None, api="responses", log
                 log(f"done follow-up r{r} ({secs} s)")
             saved.append(base + ".md")
             r += 1
-    if not saved:
+    if r == 1:
         raise RuntimeError(f"No response_r<N>.md in {out_dir}: run the first turn first")
     return saved
 
@@ -139,10 +171,19 @@ def run_llm(prompt, model, out_dir, repeats=1, key=None, api="responses", log=pr
                 log(f"skip (done) r{r}")
                 saved.append(base + ".md")
                 continue
+            if os.path.exists(base + ".refused.json"):
+                log(f"skip (refused earlier) r{r}")
+                continue
             body = _body(model, [("user", prompt)], api)
             started = datetime.now(timezone.utc).isoformat(timespec="seconds")
             t0 = time.time()
-            resp = _post(body, key, api, log)
+            try:
+                resp = _post(body, key, api, log)
+            except ProviderError as err:
+                if not _is_refusal(err):
+                    raise
+                _record_refusal(base, body, err, log)
+                continue
             secs = round(time.time() - t0, 1)
             with open(base + ".json", "w") as f:
                 json.dump({"request": body, "response": resp, "started_utc": started, "seconds": secs}, f, indent=2)
