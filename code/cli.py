@@ -8,7 +8,7 @@ import typer
 import pandas as pd
 
 from background_gene_set import BackgroundGeneSet
-from enrichment import Enrichment
+from enrichment import format_term_name, Enrichment
 from gene_set import GeneSet
 from gene_set_library import GeneSetLibrary
 from iter_enrichment import IterativeEnrichment
@@ -154,7 +154,7 @@ def run_enrichment(
             run_regular_enrichment(
                 gene_set, gene_set_libraries, background_gene_set,
                 p_value_method, p_threshold, min_overlap,
-                gene_set_output_dir
+                gene_set_output_dir, min_term_size=min_term_size, max_term_size=max_term_size,
             )
         elif mode == "iterative":
             # Pass output_dir (may be None) to IterativeEnrichment for intermediate files
@@ -175,8 +175,11 @@ def run_regular_enrichment(
     p_threshold: float,
     min_overlap: int,
     output_dir: Path,
+    min_term_size: int = 10,
+    max_term_size: int = 600,
 ):
-    """Run regular enrichment analysis."""
+    """Run regular enrichment analysis (ORA): every gene set tested once, BH FDR per collection over all
+    tested sets; reported sets have p <= p_threshold and overlap >= min_overlap."""
     logger.info("Running regular enrichment analysis")
     
     all_results = []
@@ -189,8 +192,8 @@ def run_regular_enrichment(
                 gene_set,
                 library,
                 background_gene_set,
-                min_term_size=library.library[0]["size"] if library.library else 10,
-                max_term_size=library.library[-1]["size"] if library.library else 600,
+                min_term_size=min_term_size,
+                max_term_size=max_term_size,
                 p_value_method_name=p_value_method,
             )
             
@@ -239,7 +242,7 @@ def run_regular_enrichment(
             combined_rows.append({
                 "Library": library_name,
                 "Rank": result.get("rank", ""),
-                "Term": result.get("term", "").replace("_", " ") if result.get("term") else "",
+                "Term": format_term_name(result.get("term", "")) if result.get("term") else "",
                 "Description": result.get("description", ""),
                 "Overlap size": result.get("overlap_size", ""),
                 "p-value": result.get("p-value", ""),
@@ -252,6 +255,11 @@ def run_regular_enrichment(
         column_order = ["Library", "Rank", "Term", "Description", "Overlap size", "p-value", "-log(p-value)", "FDR", "Genes"]
         combined_df = pd.DataFrame(combined_rows)
         if not combined_df.empty:
+            # Rank = position by p-value within each collection (collections in the order analysed)
+            order = {lib.name: i for i, lib in enumerate(gene_set_libraries)}
+            combined_df = combined_df.assign(_o=combined_df["Library"].map(order)).sort_values(
+                ["_o", "p-value"], kind="stable").drop(columns="_o")
+            combined_df["Rank"] = combined_df.groupby("Library").cumcount() + 1
             combined_df = combined_df[column_order]
         
         combined_file = output_dir / "combined_regular_results.tsv"
