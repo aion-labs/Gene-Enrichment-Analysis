@@ -1,6 +1,7 @@
 import json
 import logging
 import multiprocessing as mp
+import os
 from datetime import datetime
 from typing import Any, Dict, List, Tuple, Set
 
@@ -46,6 +47,14 @@ def format_term_name(term_name: str) -> str:
     else:
         # If only one word, just return it
         return formatted
+
+
+def enrichment_workers() -> int:
+    """Processes for the p-value computation: IGEA_WORKERS if set, otherwise CPUs - 2 (at most 8, at least 1)."""
+    env = os.environ.get("IGEA_WORKERS")
+    if env:
+        return max(1, int(env))
+    return max(1, min(8, (os.cpu_count() or 1) - 2))
 
 
 def background_terms(gene_set_library, background_genes, min_term_size: int, max_term_size: int):
@@ -247,23 +256,20 @@ class Enrichment:
             for term in filtered_terms
         ]
         
-        # Compute p-values either in parallel or serially
+        # Compute p-values in parallel when it pays off, otherwise serially. A failed pool falls back to the
+        # serial computation instead of returning no results.
         parallel_results = []
-        try:
-            if self.use_multiprocessing:
-                cpu_count = mp.cpu_count() - 2
-                with mp.Pool(cpu_count) as pool:
-                    logger.info(f"Initializing the MP pool with {cpu_count} CPUs")
-                    parallel_results = pool.map(compute_pvalue, compute_args)
-                    pool.close()
-                    pool.join()
-                    logger.info(f"Releasing {cpu_count} CPUs from the MP pool")
-            else:
-                logger.info("Running enrichment serially (multiprocessing disabled)")
-                parallel_results = [compute_pvalue(args) for args in compute_args]
-        except Exception as e:
-            logging.exception("An error occurred: %s", e)
-            return results  # Return empty results if computation failed
+        workers = enrichment_workers()
+        if self.use_multiprocessing and workers > 1 and len(compute_args) >= 500:
+            try:
+                with mp.Pool(workers) as pool:
+                    logger.info(f"Initializing the MP pool with {workers} processes")
+                    parallel_results = pool.map(compute_pvalue, compute_args, chunksize=max(1, len(compute_args) // (4 * workers)))
+            except Exception as e:
+                logger.warning(f"Parallel enrichment failed ({e}); computing serially")
+                parallel_results = []
+        if not parallel_results:
+            parallel_results = [compute_pvalue(args) for args in compute_args]
 
         # Check if we have results to process
         if not parallel_results:
