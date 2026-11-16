@@ -50,11 +50,10 @@ def format_term_name(term_name: str) -> str:
 
 
 def enrichment_workers() -> int:
-    """Processes for the p-value computation: IGEA_WORKERS if set, otherwise CPUs - 2 (at most 8, at least 1)."""
+    """Processes for the p-value computation. Hosted app (Streamlit Community Cloud: 0.078-2 CPUs, 690 MB-2.7 GB):
+    serial by default, because os.cpu_count() reports the host, not the app's share. IGEA_WORKERS overrides."""
     env = os.environ.get("IGEA_WORKERS")
-    if env:
-        return max(1, int(env))
-    return max(1, min(8, (os.cpu_count() or 1) - 2))
+    return max(1, int(env)) if env else 1
 
 
 def background_terms(gene_set_library, background_genes, min_term_size: int, max_term_size: int):
