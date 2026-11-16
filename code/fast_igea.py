@@ -48,6 +48,12 @@ def _fisher_two_sided_fast(k, K, n, M):
     return np.minimum(np.where(keep, np.exp(lp), 0.0).sum(1), 1.0)
 
 
+def _pmf_lower_bound(k, K, n, M):
+    """Lower bound of the two-sided Fisher p-value: the probability of the observed table itself (the two-sided
+    p-value sums the probabilities of all tables at most as likely as the observed one, including it)."""
+    return np.exp(_lchoose(K, k) + _lchoose(M - K, n - k) - _lchoose(M, n))
+
+
 def exact_pvalue(method: str, k: int, K: int, n: int, M: int) -> float:
     """p-value computed exactly as in enrichment.compute_pvalue."""
     table = [[k, K - k], [n - k, M - K - n + k]]
@@ -125,6 +131,12 @@ class FastCollection:
             cand = np.flatnonzero(k >= min_overlap)
             if cand.size == 0:
                 break
+            if method == FISHER:
+                # Sets whose p-value cannot reach the threshold cannot be selected; dropping them before the
+                # (expensive) two-sided computation leaves the selected term and its p-value unchanged.
+                cand = cand[_pmf_lower_bound(k[cand], self.K[cand], n, self.M) < p_threshold * (1 + 1e-6)]
+                if cand.size == 0:
+                    break
             p = self._pvalues(method, k[cand], self.K[cand], n)
             # Recompute the best candidate and near-ties exactly; first minimum = GMT order
             near = np.flatnonzero(p <= p.min() * (1 + 1e-6))
