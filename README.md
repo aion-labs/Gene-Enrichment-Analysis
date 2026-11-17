@@ -7,7 +7,7 @@
 ## Prerequisites
 - Have a list of genes for enrichment analysis in official human gene symbols or entrez IDs.
 - Unless you use all genes as a background, have a background file with all measured genes ready in the human gene symbols or entrez IDs.
-- You may add new gene set libraries in GMT format. Make sure they are properly listed in the data folder and added to the alias.json file.  
+- You may add your own gene set collections in GMT format with `python code/libraries.py add` (see "Managing gene-set collections").
 - NCBI gene data used to validate symbols ship with the repository (`data/recent_release/Homo_sapiens.gene_info.gz`,
   `gene_history_9606.gz`). iGEA stops with an error if they are missing, so results never depend on the working directory.
 - One universe: input genes outside the background are removed (and listed), and gene sets are restricted to the
@@ -99,6 +99,35 @@ per collection (`--max-iterations`, 0 = no limit). Lists above 800 genes run wit
 Statistics run by default in iterative mode; `--q-threshold 1` keeps all selected terms; `--no-benchmark` skips
 statistics (network from all terms, unfiltered); `--null-source stored` reproduces the previous behaviour
 (precomputed permutations, default background only).
+
+## Managing gene-set collections
+
+Collections live in `data/libraries/` and are listed in `data/libraries/alias.json` (name, file, active,
+colour). Active collections are used by default by the CLI and the app (the 10 used in the paper are active).
+
+```
+python code/libraries.py list                                        # * = active
+python code/libraries.py activate "C5: Human Phenotype Ontology"
+python code/libraries.py deactivate "C2: BioCarta"
+python code/libraries.py add my_sets.gmt --name "Custom: My sets"    # --inactive, --color "#1F77B4"
+python code/libraries.py remove "Custom: My sets"                    # file moved to data/libraries/previous/removed/
+```
+
+Updating to a new MSigDB release (download the release zip from the MSigDB website, free login) and,
+first, the NCBI gene data it should be harmonised with (`Homo_sapiens.gene_info.gz` and `gene_history.gz`
+from NCBI's `gene/DATA` area):
+
+```
+python code/libraries.py update-gene-data --gene-info Homo_sapiens.gene_info.gz --gene-history gene_history.gz
+python code/libraries.py update-msigdb --zip msigdb_v2026.1.Hs_files_to_download_locally.zip --dry-run
+python code/libraries.py update-msigdb --zip msigdb_v2026.1.Hs_files_to_download_locally.zip
+```
+
+Every MSigDB collection listed in `alias.json` is replaced by its new version (`--only c2.cp.reactome ...` or
+`--active-only` to limit), keeping its name, colour and active flag; gene symbols are mapped to current NCBI
+symbols (unmapped symbols are kept); previous files are moved to `data/libraries/previous/vYYYY.N/`. The
+background (`data/backgrounds/all_genes.txt`) is not changed. Results depend on the MSigDB release and NCBI
+gene data, so record both; the paper uses MSigDB 2025.1 with the bundled gene data (tag `csbj-v7-revision`).
 
 ## Communities, hubs and LLM interpretation
 
