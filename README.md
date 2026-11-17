@@ -33,7 +33,7 @@ For automated analysis, batch processing, or integration into workflows, use the
 # Basic usage
 python code/cli.py --genelist your_genes.txt --libraries "H: Hallmark Gene Sets"
 
-# Run with all active libraries
+# Run with all active collections
 python code/cli.py --genelist your_genes.txt
 
 # Iterative enrichment mode
@@ -166,11 +166,11 @@ The app performs crucial validation steps to ensure the accuracy of the analysis
 - **Background Check**: Validates the input gene set against a predefined background gene list, which helps in identifying any genes that might not be present in the background list.
 
 #### Results Display and Interaction
-- Interactive Bar Graph: An interactive bar graph provides a visual representation of the results for each gene set library.
+- Interactive Bar Graph: An interactive bar graph provides a visual representation of the results for each gene set collection.
 
 #### Data Export Options
-- Individual Library Export: Users can save the results for each gene set library in TSV and JSON formats.
-- Consolidated Export: There is an option to save results for all libraries in a single TSV file.
+- Individual Collection Export: Users can save the results for each gene set collection in TSV and JSON formats.
+- Consolidated Export: There is an option to save results for all collections in a single TSV file.
 
 #### Results Management
 All results, along with the complementary metadata, are stored in the `results` folder and are assigned unique filenames.
@@ -190,4 +190,4 @@ The app offers various statistical methods to calculate p-values:
 
 #### Custom Reference Data Upload
 Background Gene List Upload: Users can upload their background gene lists as .txt files containing newline-separated gene names or Entrez IDs.
-Gene Set Libraries Upload: The app allows for the upload of gene set libraries in the .gmt file format, enabling the use of custom gene sets in the analysis.
+Gene Set Collections: add custom collections in .gmt format from the command line (see *Managing gene-set collections*).
