@@ -31,7 +31,8 @@ from ui.rendering import (
 )
 from ui.utils import download_link, download_file_link, update_aliases
 from ui.per_run_benchmark import (ensure_statistics, llm_export_from_state, render_per_run_benchmark,
-                                  render_q_threshold, render_statistics_settings)
+                                  render_q_threshold, render_statistics_settings,
+                                  run_statistics_after_analysis, term_stats)
 from ui.benchmarking import (
     compute_benchmark_for_streamlit,
     extract_benchmark_table_data,
@@ -840,10 +841,10 @@ Results include ranked tables, bar charts, and network graphs."""
             
             # Initialize default libraries if not already set
             if not hasattr(state, 'libraries') or not state.libraries:
+                # Default: all active collections (alias.json) except Protein Interaction
                 default_libraries = [
-                    "H: Hallmark Gene Sets",
-                    "C2: Reactome Pathways", 
-                    "C5: Gene Ontology: Biological Process"
+                    lib for lib in list(state.lib_mapper.keys())
+                    if not lib.startswith("Protein Interaction")
                 ]
                 state.libraries = default_libraries
             
@@ -1399,8 +1400,8 @@ Results include ranked tables, bar charts, and network graphs."""
                         gene_set=state.gene_set,
                         gene_set_library=gsl,
                         background_gene_set=state.background_gene_set,
-                        min_term_size=state.min_term_size,
-                        max_term_size=state.max_term_size,
+                        min_term_size=state.iter_min_term_size,
+                        max_term_size=state.iter_max_term_size,
                         p_value_method_name=state.p_val_method,
                         p_threshold=state.iter_p_threshold,
                         max_iterations=(
@@ -1432,7 +1433,10 @@ Results include ranked tables, bar charts, and network graphs."""
             # Clear progress indicators
             progress_bar.empty()
             status_text.empty()
-            
+
+            # Statistics right after the iterations (own progress bar): term q-values and network p-value
+            run_statistics_after_analysis(st, state, default_n_lists=10000)
+
             # Reset benchmarking when new iGEA results are computed
             # This ensures benchmarking recomputes when iGEA is rerun with different parameters
             if 'benchmark_computed' in state:
@@ -1529,7 +1533,8 @@ Results include ranked tables, bar charts, and network graphs."""
         available_libraries = sort_libraries(list(state.iter_enrich.keys()))
         for lib in available_libraries:
             it = state.iter_enrich[lib]
-            render_iter_results(it, lib)
+            lib_stats, q_thr = term_stats(state, lib)
+            render_iter_results(it, lib, lib_stats, q_thr)
             # Sanitize library name for widget key (replace special characters)
             safe_lib_name = lib.replace(':', '_').replace(' ', '_').replace('-', '_')
             st.checkbox(
@@ -1574,9 +1579,9 @@ Results include ranked tables, bar charts, and network graphs."""
         else:
             logger.info("Comparison not displayed - no iterative results")
 
-        # Statistical Benchmarking Section (per-run random-list null)
+        # Network statistics (largest cluster vs random lists; communities and hub genes)
         st.markdown("---")
-        st.header("📊 Statistics (random gene lists)")
+        st.header("📊 Network statistics")
         render_per_run_benchmark(st, state, download_link, default_n_lists=10000)
 
         # Network section
