@@ -30,7 +30,7 @@ from ui.rendering import (
     render_ora_igea_comparison,
 )
 from ui.utils import download_link, download_file_link, update_aliases
-from ui.per_run_benchmark import (ensure_statistics, llm_export_from_state, render_per_run_benchmark,
+from ui.per_run_benchmark import (ensure_statistics, llm_export_from_state, network_from_state, render_per_run_benchmark,
                                   render_q_threshold, render_statistics_settings,
                                   run_statistics_after_analysis, term_stats)
 from ui.benchmarking import (
@@ -1437,6 +1437,11 @@ Results include ranked tables, bar charts, and network graphs."""
             # Statistics right after the iterations (own progress bar): term q-values and network p-value
             run_statistics_after_analysis(st, state, default_n_lists=10000)
 
+            # All collections with results are selected for the network by default
+            state.selected_dot_paths = [lib for lib, it in state.iter_enrich.items() if not it.to_dataframe().empty]
+            for lib in state.selected_dot_paths:
+                state[f"network_select_{lib.replace(':', '_').replace(' ', '_').replace('-', '_')}"] = True
+
             # Reset benchmarking when new iGEA results are computed
             # This ensures benchmarking recomputes when iGEA is rerun with different parameters
             if 'benchmark_computed' in state:
@@ -1669,14 +1674,16 @@ Results include ranked tables, bar charts, and network graphs."""
                     # Get gene count and library list for AI prompt
                     gene_count = state.gene_set.size if hasattr(state, 'gene_set') and state.gene_set else None
                     library_list = chosen if chosen else None
+                    net = network_from_state(state)
                     render_network(state.last_merged_dot, gene_count=gene_count, library_list=library_list,
-                           llm_export=llm_export_from_state(state))
+                                   llm_export=llm_export_from_state(state, net), network=net)
         elif state.network_generated and state.selected_dot_paths:
             # Get gene count and library list for AI prompt
             gene_count = state.gene_set.size if hasattr(state, 'gene_set') and state.gene_set else None
             library_list = state.selected_dot_paths if state.selected_dot_paths else None
+            net = network_from_state(state)
             render_network(state.last_merged_dot, gene_count=gene_count, library_list=library_list,
-                           llm_export=llm_export_from_state(state))
+                           llm_export=llm_export_from_state(state, net), network=net)
 
     logger.info("Finishing the Streamlit app")
 

@@ -710,43 +710,40 @@ def render_ora_igea_comparison(
 
 
 def render_network(dot: str, title: str = "Iterative Enrichment Network",
-                   gene_count: int = None, library_list: list = None, llm_export: tuple = None) -> None:
+                   gene_count: int = None, library_list: list = None, llm_export: tuple = None,
+                   network: dict = None) -> None:
     """
-    Render a bipartite network graph of iterative enrichment across libraries.
+    Render the enrichment network and its downloads.
 
-    :param dot: Graphviz DOT-format string.
-    :type dot: str
-    :param title: Header title for the network graph.
-    :type title: str
+    With statistics (``network``), the figure shows the network that is tested and sent to the LLM:
+    terms that passed the q-value filter, with communities, hub genes and bridges. Without
+    statistics, the merged per-collection DOT is drawn.
     """
     logger.info("Rendering iterative network graph.")
 
     st.divider()
     st.subheader(title)
-    
-    # Count edges to check network size
-    from ui.dot_utils import count_edges_in_dot
-    edge_count = count_edges_in_dot(dot)
-    
-    # Check if network is too large for Plotly rendering
-    if edge_count <= 500:
-        # Render Plotly network as usual
-        st.plotly_chart(dot_to_plotly(dot), use_container_width=True, key="network_chart")
+
+    if network and network.get("terms"):
+        render_network_figure(network)
     else:
-        # Show warning and skip Plotly rendering
-        st.warning(
-            f"⚠️ Network too large ({edge_count} edges). "
-            "Plotly visualization skipped to prevent crashes. "
-            "Download the DOT file to view in external tools like Graphviz."
-        )
-    
-    # Always offer downloads regardless of size
+        from ui.dot_utils import count_edges_in_dot
+        edge_count = count_edges_in_dot(dot)
+        if edge_count <= 500:
+            st.plotly_chart(dot_to_plotly(dot), use_container_width=True, key="network_chart")
+        else:
+            st.warning(
+                f"⚠️ Network too large ({edge_count} edges). "
+                "Plotly visualization skipped to prevent crashes. "
+                "Download the DOT file to view in external tools like Graphviz."
+            )
+
     if llm_export:
         llm_dot, llm_prompt = llm_export
         st.markdown(
-            f'Download network graph as {download_link(dot, "iterative_network", "dot")} (for drawing) · '
-            f'network for AI analysis as {download_link(llm_dot, "network_llm", "dot")} (communities, statistics) · '
-            f'{download_link(llm_prompt, "llm_prompt", "txt")} (complete prompt: statistics, communities, network and instructions)',
+            f'Download the network as drawn and sent to the AI as {download_link(llm_dot, "network_llm", "dot")} '
+            f'(communities, statistics) · {download_link(llm_prompt, "llm_prompt", "txt")} '
+            '(complete prompt: statistics, communities, network and instructions)',
             unsafe_allow_html=True,
         )
     else:
@@ -755,6 +752,33 @@ def render_network(dot: str, title: str = "Iterative Enrichment Network",
             f'Download {download_link(generate_ai_analysis_prompt(dot), "ai_analysis_prompt", "txt")} for AI analysis',
             unsafe_allow_html=True,
         )
+
+
+def render_network_figure(network: dict) -> None:
+    from ui.dot_utils import load_library_colors
+    from ui.network_plot import MAX_EDGES, n_edges, network_figure
+
+    terms, mods = network["terms"], network.get("modules")
+    has_comm = mods is not None and len(getattr(mods, "terms", []))
+    ne = n_edges(terms)
+    st.caption(f"{len(terms)} terms (q-value filter passed), "
+               f"{len({g for t in terms for g in t['genes']})} genes, {ne} edges"
+               + (f", {mods.summary['n_communities']} communities" if has_comm else "")
+               + ". Squares: terms. Circles: genes, sized by degree (number of terms). "
+                 "Diamonds: bridge genes (terms in more than one community). Hover for details; "
+                 "click a legend entry to hide it.")
+    c1, c2 = st.columns(2)
+    colour_by = c1.radio("Colour by", ["Community", "Collection"] if has_comm else ["Collection"],
+                         horizontal=True, key="net_colour_by")
+    labels = c2.radio("Labels", ["Hub genes", "Hub genes and terms", "None"], horizontal=True, key="net_labels")
+    if ne > MAX_EDGES:
+        st.warning(f"⚠️ Network too large to draw here ({ne} edges). Download the DOT file below to view it "
+                   "in Graphviz or Cytoscape; the communities table is under Network statistics.")
+        return
+    lib_colours = {v: k for k, v in load_library_colors().items()}
+    st.plotly_chart(network_figure(terms, mods, colour_by, labels, lib_colours), use_container_width=True,
+                    key="network_chart", theme=None,
+                    config={"scrollZoom": True, "displaylogo": False})
 
 
 def generate_ai_analysis_prompt(dot_content: str) -> str:
