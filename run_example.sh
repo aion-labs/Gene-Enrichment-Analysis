@@ -60,13 +60,13 @@ echo ""
 # Example 2: Regular enrichment with specific libraries
 echo "🔬 Example 2: Regular Enrichment (Specific Libraries)"
 echo "----------------------------------------------------"
-echo "Running: python code/cli.py --mode regular --gene-sets data/gene_lists/example_gene_list.txt --libraries h.all.v2025.1.Hs.symbols.gmt c5.go.bp.v2025.1.Hs.symbols.gmt"
+echo "Running: python code/cli.py --mode regular --gene-sets data/gene_lists/example_gene_list.txt --collections h.all.v2025.1.Hs.symbols.gmt c5.go.bp.v2025.1.Hs.symbols.gmt"
 echo ""
 
 python code/cli.py \
     --mode regular \
     --genelist data/gene_lists/hypoxia-genes.symbols.txt \
-    --libraries data/libraries/h.all.v2025.1.Hs.symbols.gmt data/libraries/c5.go.bp.v2025.1.Hs.symbols.gmt \
+    --collections data/libraries/h.all.v2025.1.Hs.symbols.gmt data/libraries/c5.go.bp.v2025.1.Hs.symbols.gmt \
     --p-threshold 0.01 \
     --min-overlap 3 \
     --output-dir "${EXAMPLE_OUTPUT_DIR}/example2_regular"
@@ -84,7 +84,7 @@ echo ""
 python code/cli.py \
     --mode iterative \
     --genelist data/gene_lists/hypoxia-genes.symbols.txt \
-    --libraries data/libraries/h.all.v2025.1.Hs.symbols.gmt \
+    --collections data/libraries/h.all.v2025.1.Hs.symbols.gmt \
     --p-threshold 0.01 \
     --min-overlap 3 \
     --max-iterations 5 \
@@ -103,7 +103,7 @@ echo ""
 python code/cli.py \
     --mode regular \
     --genelist data/gene_lists/hypoxia-genes.symbols.txt \
-    --libraries data/libraries/c2.cp.reactome.v2025.1.Hs.symbols.gmt \
+    --collections data/libraries/c2.cp.reactome.v2025.1.Hs.symbols.gmt \
     --method "Hypergeometric Test" \
     --p-threshold 0.05 \
     --min-overlap 2 \
@@ -127,7 +127,7 @@ head -50 data/gene_lists/hypoxia-genes.symbols.txt > temp_gene_list2.txt
 python code/cli.py \
     --mode regular \
     --genelist data/gene_lists/hypoxia-genes.symbols.txt temp_gene_list2.txt \
-    --libraries data/libraries/h.all.v2025.1.Hs.symbols.gmt \
+    --collections data/libraries/h.all.v2025.1.Hs.symbols.gmt \
     --p-threshold 0.01 \
     --output-dir "${EXAMPLE_OUTPUT_DIR}/example5_multiple"
 
@@ -161,7 +161,7 @@ echo "   head -20 ${EXAMPLE_OUTPUT_DIR}/example1_basic/hypoxia-genes/combined_re
 echo ""
 echo "💡 CLI Usage Tips:"
 echo "   - Use --help to see all options: python code/cli.py --help"
-echo "   - Omit --libraries to use all available libraries"
+echo "   - Omit --collections to use all active collections"
 echo "   - Use --output-dir to specify custom output location"
 echo "   - Adjust --p-threshold and --min-overlap for different sensitivity"
 echo ""

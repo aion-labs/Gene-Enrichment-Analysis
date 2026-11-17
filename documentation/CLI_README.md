@@ -49,7 +49,7 @@ This will run 5 different examples demonstrating various CLI usage patterns.
 |--------|-------|-------------|---------|
 | `--gene-sets` | `-g` | Paths to gene set files | Auto-discovers files in `data/gene_lists/` |
 | `--background` | `-b` | Path to background gene set file | **all_genes.txt** |
-| `--libraries` | `-l` | Paths to gene set library files | **Active libraries from alias.json** |
+| `--collections` (former `--libraries`) | `-c` (`-l`) | Gene set collection files (GMT) | **Active collections in alias.json** |
 
 ### Analysis Parameters
 
@@ -91,8 +91,8 @@ python code/cli.py --gene-sets my_genes.txt
 python code/cli.py \
     --mode regular \
     --gene-sets my_genes.txt \
-    --libraries data/libraries/h.all.v2025.1.Hs.symbols.gmt \
-    --libraries data/libraries/c5.go.bp.v2025.1.Hs.symbols.gmt \
+    --collections data/libraries/h.all.v2025.1.Hs.symbols.gmt \
+    --collections data/libraries/c5.go.bp.v2025.1.Hs.symbols.gmt \
     --p-threshold 0.01 \
     --min-overlap 3
 ```
@@ -104,7 +104,7 @@ python code/cli.py \
 python code/cli.py \
     --mode iterative \
     --gene-sets my_genes.txt \
-    --libraries data/libraries/h.all.v2025.1.Hs.symbols.gmt \
+    --collections data/libraries/h.all.v2025.1.Hs.symbols.gmt \
     --p-threshold 0.01 \
     --min-overlap 3 \
     --max-iterations 10 \
@@ -132,7 +132,7 @@ python code/cli.py \
 python code/cli.py \
     --mode regular \
     --gene-sets gene_list1.txt gene_list2.txt gene_list3.txt \
-    --libraries data/libraries/h.all.v2025.1.Hs.symbols.gmt \
+    --collections data/libraries/h.all.v2025.1.Hs.symbols.gmt \
     --output-dir multi_analysis
 ```
 
@@ -355,7 +355,7 @@ python code/cli.py --gene-sets data/gene_lists/my_genes.txt
 ls data/libraries/*.gmt
 
 # Specify library paths explicitly
-python code/cli.py --gene-sets my_genes.txt --libraries data/libraries/h.all.v2025.1.Hs.symbols.gmt
+python code/cli.py --gene-sets my_genes.txt --collections data/libraries/h.all.v2025.1.Hs.symbols.gmt
 ```
 
 #### 3. "Virtual environment not activated"
@@ -391,7 +391,7 @@ head -10 my_genes.txt
 **Solutions:**
 ```bash
 # Use fewer libraries
-python code/cli.py --gene-sets my_genes.txt --libraries data/libraries/h.all.v2025.1.Hs.symbols.gmt
+python code/cli.py --gene-sets my_genes.txt --collections data/libraries/h.all.v2025.1.Hs.symbols.gmt
 
 # Reduce gene set size (max 800 genes)
 head -800 my_genes.txt > my_genes_limited.txt

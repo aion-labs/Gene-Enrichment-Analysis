@@ -785,7 +785,7 @@ def render_network_figure(network: dict) -> None:
 
 def generate_ai_analysis_prompt(dot_content: str) -> str:
     """
-    Generate an AI analysis prompt based on the DOT network content with library source annotations.
+    Generate an AI analysis prompt based on the DOT network content with collection annotations.
     
     :param dot_content: The DOT network content
     :return: Formatted AI analysis prompt with library information
@@ -809,19 +809,19 @@ def generate_ai_analysis_prompt(dot_content: str) -> str:
             color_match = re.search(r'fillcolor="([^"]+)"', line)
             if color_match:
                 color = color_match.group(1)
-                library_name = color_to_library.get(color, "Unknown Library")
+                library_name = color_to_library.get(color, "Unknown collection")
                 
                 # Add library information to the node attributes
-                if 'library=' not in line:
+                if 'collection=' not in line:
                     # Insert library attribute before the closing bracket
-                    line = line.rstrip('];') + f', library="{library_name}"];'
+                    line = line.rstrip('];') + f', collection="{library_name}"];'
         
         annotated_lines.append(line)
     
     # Create the annotated DOT content
     annotated_dot = '\n'.join(annotated_lines)
     
-    prompt = """You are a computational biologist analyzing an iterative gene set enrichment network. Iterative means that for each library source, the top enriched gene set is found, saved and the genes are removed from the initial gene list. The remaining genes are then tested for enrichment again. Thus, each gene appears only once per library source tested but can be linked to multiple terms that originate from different libraries. The results are provided as a DOT network represents the relationships between genes and gene sets(=terms).
+    prompt = """You are a computational biologist analyzing an iterative gene set enrichment network. Iterative means that for each gene set collection, the top enriched gene set is found, saved and the genes are removed from the initial gene list. The remaining genes are then tested for enrichment again. Thus, each gene appears only once per collection tested but can be linked to multiple terms that originate from different collections. The results are provided as a DOT network represents the relationships between genes and gene sets(=terms).
 
 **NETWORK STRUCTURE:**
 """
@@ -835,9 +835,9 @@ def generate_ai_analysis_prompt(dot_content: str) -> str:
 **Node Types:**
 - **Gene nodes** (type="gene"): Individual genes from the input gene set
 - **Term nodes** (type="term"): Enriched biological pathways/processes/gene sets
-- **Library Source**: Each term node includes a "library" attribute indicating the source database
+- **Collection**: Each term node includes a "collection" attribute indicating the source gene set collection
 
-**Library Sources and Their Biological Context:**
+**Gene Set Collections and Their Biological Context:**
 - **H: Hallmark gene sets**: Curated gene sets representing well-defined biological states or processes
 - **C2: BioCarta**: Canonical pathways from BioCarta database
 - **C2: KEGG MEDICUS**: Metabolic and signaling pathways from KEGG
@@ -875,7 +875,7 @@ Please analyze this network and provide:
 
 3. **Biological Hypothesis:**
    - Based on the network structure, what biological hypothesis can you generate?
-   - How do the different library sources support or complement each other?
+   - How do the different collections support or complement each other?
    - Try to formulate one hypothesis based on the most central terms and how they possibly related to one another.
    
 4. **Estimated Experimental Context**
@@ -883,7 +883,7 @@ Please analyze this network and provide:
 
 **RESPONSE STRUCTURE:**
 - **Executive Summary** (2-3 sentences)
-- **Key Biological Processes Identified** (by library source)
+- **Key Biological Processes Identified** (by collection)
 - **Network Topology Insights**
 - **Proposed Biological Hypothesis**
 - **Estimated Experimental Context**
@@ -893,8 +893,8 @@ Please analyze this network and provide:
 - Consider the functional relationships between connected genes and terms
 - Look for unexpected connections that might reveal novel or unexpected biology
 - Consider the broader biological context and literature
-- Note that protein interaction library could shed light on physical interaction between genes while terms indicate functional interaction
-- Different library sources may provide complementary biological insights"""
+- Note that the protein interaction collection could shed light on physical interaction between genes while terms indicate functional interaction
+- Different collections may provide complementary biological insights"""
     
     return prompt
 
@@ -1290,15 +1290,15 @@ You are a computational biologist analyzing over-representation analysis (ORA) r
 **DATA STRUCTURE:**
 - **Ranked List**: Terms are ranked by statistical significance (lower rank = more significant)
 - **Gene Lists**: Each term contains the specific genes that are enriched in that biological process
-- **Library Sources**: Different databases provide complementary biological context
-- **Table Format**: Results are organized by ranked terms per library source
+- **Gene Set Collections**: Different collections provide complementary biological context
+- **Table Format**: Results are organized by ranked terms per collection
 
 ## ENRICHMENT DATA (JSON Format)
 ```json
 {json.dumps(analysis_data, indent=2)}
 ```
 
-## LIBRARY SOURCES AND THEIR BIOLOGICAL CONTEXT:
+## GENE SET COLLECTIONS AND THEIR BIOLOGICAL CONTEXT:
 - **H: Hallmark gene sets**: Curated gene sets representing well-defined biological states or processes
 - **C2: BioCarta**: Canonical pathways from BioCarta database
 - **C2: KEGG MEDICUS**: Metabolic and signaling pathways from KEGG
@@ -1325,7 +1325,7 @@ Please analyze this ranked list of enriched terms and provide:
 
 3. **Biological Hypothesis:**
    - Based on the ranked list structure, what biological hypothesis can you generate?
-   - How do the different library sources support or complement each other?
+   - How do the different collections support or complement each other?
    - Try to formulate one coherent hypothesis that explains as many terms as possible and generates a coherent biological story.
    
 4. **Estimated Experimental Context**
@@ -1333,7 +1333,7 @@ Please analyze this ranked list of enriched terms and provide:
 
 ## RESPONSE STRUCTURE:
 - **Executive Summary** (2-3 sentences)
-- **Key Biological Processes Identified** (by library source and rank)
+- **Key Biological Processes Identified** (by collection and rank)
 - **Gene-Term Relationship Analysis**
 - **Proposed Biological Hypothesis** (coherent story explaining multiple terms)
 - **Estimated Experimental Context**
@@ -1343,7 +1343,7 @@ Please analyze this ranked list of enriched terms and provide:
 - Consider the functional relationships between genes within and across terms
 - Consider that some genes may appear in multiple terms due to term redundancy
 - Consider the broader biological context and literature
-- Different library sources may provide complementary biological insights
+- Different collections may provide complementary biological insights
 - Build a coherent story that explains as many terms as possible rather than treating them in isolation
 - The goal is to find a unifying biological hypothesis that connects the enriched terms into a meaningful narrative
 """

@@ -55,7 +55,7 @@ def run_enrichment(
     background_gene_set = BackgroundGeneSet(str(background))
     
     # Load gene set libraries
-    logger.info(f"Loading {len(libraries)} gene set libraries")
+    logger.info(f"Loading {len(libraries)} gene set collections")
     gene_set_libraries = []
     for lib_path in libraries:
         # Get library name from alias.json
@@ -70,7 +70,7 @@ def run_enrichment(
         library.unique_genes = library.compute_unique_genes()
         library.size = len(library.unique_genes)
         gene_set_libraries.append(library)
-        logger.info(f"Loaded library {lib_name}: {library.num_terms} terms")
+        logger.info(f"Loaded collection {lib_name}: {library.num_terms} terms")
     
     # Process each gene set
     for gene_set_path in gene_sets:
@@ -185,7 +185,7 @@ def run_regular_enrichment(
     all_results = []
     
     for library in gene_set_libraries:
-        logger.info(f"Processing library: {library.name}")
+        logger.info(f"Processing collection: {library.name}")
         
         try:
             enrich = Enrichment(
@@ -864,12 +864,12 @@ def run_iterative_enrichment(
     all_iter_enrich_objects = {}  # Store IterativeEnrichment objects for benchmarking
     
     for library in gene_set_libraries:
-        logger.info(f"Processing library: {library.name}")
+        logger.info(f"Processing collection: {library.name}")
         
         try:
             # Create progress callback for logging
             def progress_callback(message: str):
-                logger.info(f"Library {library.name}: {message}")
+                logger.info(f"Collection {library.name}: {message}")
             
             # Pass output_dir to IterativeEnrichment
             # If None, IterativeEnrichment will use its default results/ directory
@@ -1074,12 +1074,16 @@ def main(
     ),
     libraries: List[Path] = typer.Option(
         None,
+        "--collections",
+        "-c",
         "--libraries",
         "-l",
         exists=True,
         file_okay=True,
         dir_okay=False,
-        help="Paths to gene set library files. Default: active libraries from alias.json.",
+        help="Gene set collection files (GMT); repeat the option for each file. Default: the active "
+             "collections in data/libraries/alias.json (see code/libraries.py list). "
+             "--libraries/-l is the former name and still works.",
         show_default=False,
     ),
     mode: str = typer.Option(
@@ -1225,14 +1229,14 @@ def main(
                     if lib_file.exists():
                         active_libraries.append(lib_file)
                     else:
-                        typer.echo(f"Warning: Active library file not found: {alias['file']}", err=True)
+                        typer.echo(f"Warning: Active collection file not found: {alias['file']}", err=True)
             
             if not active_libraries:
-                typer.echo("Error: No active library files found in alias.json", err=True)
+                typer.echo("Error: No active collection files found in alias.json", err=True)
                 raise typer.Exit(code=1)
             
             libraries = active_libraries
-            typer.echo(f"📚 Using active libraries from alias.json: {len(libraries)} files")
+            typer.echo(f"📚 Using active collections from alias.json: {len(libraries)} files")
             for lib in libraries:
                 typer.echo(f"   - {lib.name}")
             typer.echo("")
@@ -1243,14 +1247,14 @@ def main(
 
     # Ensure that the resulting variables are not empty
     if not gene_sets or not libraries:
-        typer.echo("Error: Gene sets and libraries cannot be empty.", err=True)
+        typer.echo("Error: Gene sets and collections cannot be empty.", err=True)
         raise typer.Exit(code=1)
 
     # Display analysis parameters
     typer.echo(f"Analysis Mode: {mode}")
     typer.echo(f"Gene Sets: {len(gene_sets)} files")
     typer.echo(f"Background: {background}")
-    typer.echo(f"Libraries: {len(libraries)} files")
+    typer.echo(f"Collections: {len(libraries)} files")
     typer.echo(f"P-value Method: {p_value_method}")
     typer.echo(f"P-value Threshold: {p_threshold}")
     typer.echo(f"Min Overlap: {min_overlap}")

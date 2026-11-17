@@ -187,7 +187,7 @@ def main():
         "python", "code/cli.py",
         "--genelist", str(example_gene_list),
         "--background", background_file,
-        "--libraries"] + available_libraries[:1],  # Use just one library for speed
+        "--collections"] + available_libraries[:1],  # Use just one library for speed
         "Regular Enrichment with Defaults"
     )
     
@@ -215,7 +215,7 @@ def main():
         "--mode", "regular",
         "--genelist", str(example_gene_list),
         "--background", background_file,
-        "--libraries"] + available_libraries[:2] + [  # Use two libraries
+        "--collections"] + available_libraries[:2] + [  # Use two libraries
         "--p-threshold", "0.05",
         "--min-overlap", "2",
         "--min-term-size", "5",
@@ -244,7 +244,7 @@ def main():
         "--mode", "iterative",
         "--genelist", str(example_gene_list),
         "--background", background_file,
-        "--libraries"] + available_libraries[:1] + [  # Use just one library for speed
+        "--collections"] + available_libraries[:1] + [  # Use just one library for speed
         "--p-threshold", "0.01",
         "--min-overlap", "3",
         "--max-iterations", "5",  # Limit iterations for testing
@@ -282,7 +282,7 @@ def main():
         "--mode", "regular",
         "--genelist", str(example_gene_list), str(test_gene_list2),
         "--background", background_file,
-        "--libraries"] + available_libraries[:1] + [
+        "--libraries"] + available_libraries[:1] + [  # former option name, still accepted
         "--output-dir", "test_multiple"
     ], "Multiple Gene Sets")
     

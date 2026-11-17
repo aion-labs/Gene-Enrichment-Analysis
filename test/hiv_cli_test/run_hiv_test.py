@@ -117,9 +117,9 @@ def run_hiv_test():
         "--output-dir", str(OUTPUT_DIR),
     ]
     
-    # Add all libraries (typer List[Path] requires --libraries before each library)
+    # Add all libraries (typer List[Path] requires --collections before each library)
     for lib in LIBRARIES:
-        cmd.extend(["--libraries", str(PROJECT_ROOT / lib)])
+        cmd.extend(["--collections", str(PROJECT_ROOT / lib)])
     
     print("Command:")
     print(" ".join(cmd))

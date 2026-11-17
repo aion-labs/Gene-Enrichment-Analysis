@@ -31,7 +31,7 @@ For automated analysis, batch processing, or integration into workflows, use the
 
 ```bash
 # Basic usage
-python code/cli.py --genelist your_genes.txt --libraries "H: Hallmark Gene Sets"
+python code/cli.py --genelist your_genes.txt --collections data/libraries/h.all.v2025.1.Hs.symbols.gmt
 
 # Run with all active collections
 python code/cli.py --genelist your_genes.txt
