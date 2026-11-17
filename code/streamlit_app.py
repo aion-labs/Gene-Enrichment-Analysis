@@ -31,7 +31,7 @@ from ui.rendering import (
 )
 from ui.utils import download_link, download_file_link, update_aliases
 from ui.per_run_benchmark import (ensure_statistics, llm_export_from_state, render_per_run_benchmark,
-                                  render_statistics_settings)
+                                  render_q_threshold, render_statistics_settings)
 from ui.benchmarking import (
     compute_benchmark_for_streamlit,
     extract_benchmark_table_data,
@@ -1020,8 +1020,9 @@ Results include ranked tables, bar charts, and network graphs."""
                 )
             if mode == "Iterative":
                 st.markdown("**Iteration**")
-                st.caption("Each iteration selects the most enriched gene set in each collection and removes its "
-                           "genes before the next iteration.")
+                st.caption("Each iteration selects the most enriched gene set in each collection (p below the "
+                           "threshold) and removes its genes before the next iteration. The q-value corrects these "
+                           "p-values using the random gene lists; terms with q below its threshold form the network.")
                 state.iter_p_threshold = st.number_input(
                     "P-value threshold",
                     min_value=1e-10,
@@ -1030,6 +1031,7 @@ Results include ranked tables, bar charts, and network graphs."""
                     step=0.001,
                     format="%.4f",
                 )
+                render_q_threshold(st)
                 state.iter_max_iter = st.number_input(
                     "Max iterations (0 = no limit)",
                     min_value=0,
@@ -1052,8 +1054,7 @@ Results include ranked tables, bar charts, and network graphs."""
                 )
                 st.markdown("**Statistics (random gene lists)**")
                 st.caption("Random gene lists of your input size, drawn from your background and analysed exactly "
-                           "like your list, give each term's q-value (which terms enter the network) and the "
-                           "network's significance.")
+                           "like your list. They give each term's q-value and the network's significance.")
                 render_statistics_settings(st, default_n_lists=10000, max_n_lists=100000)
 
 
