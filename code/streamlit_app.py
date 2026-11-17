@@ -30,7 +30,8 @@ from ui.rendering import (
     render_ora_igea_comparison,
 )
 from ui.utils import download_link, download_file_link, update_aliases
-from ui.per_run_benchmark import ensure_statistics, llm_export_from_state, render_per_run_benchmark
+from ui.per_run_benchmark import (ensure_statistics, llm_export_from_state, render_per_run_benchmark,
+                                  render_statistics_settings)
 from ui.benchmarking import (
     compute_benchmark_for_streamlit,
     extract_benchmark_table_data,
@@ -1047,29 +1048,12 @@ Results include ranked tables, bar charts, and network graphs."""
                     step=10,
                     max_value=5000
                 )
+                st.markdown("**Network statistics (random gene lists)**")
+                render_statistics_settings(st, default_n_lists=10000, max_n_lists=100000)
 
 
-    # Filter gene sets based on mode-specific max_term_size
-    if state.gene_set_libraries:
-        if mode == "Regular":
-            for gsl in state.gene_set_libraries:
-                filtered_terms = [
-                    t for t in gsl.library if t["size"] <= state.max_term_size
-                ]
-                gsl.library = filtered_terms
-                gsl.num_terms = len(filtered_terms)
-                gsl.unique_genes = gsl.compute_unique_genes()
-                gsl.size = len(gsl.unique_genes)
-        elif mode == "Iterative":
-            for gsl in state.gene_set_libraries:
-                filtered_terms = [
-                    t for t in gsl.library if t["size"] <= state.iter_max_term_size
-                ]
-                gsl.library = filtered_terms
-                gsl.num_terms = len(filtered_terms)
-                gsl.unique_genes = gsl.compute_unique_genes()
-                gsl.size = len(gsl.unique_genes)
-
+    # Gene sets are filtered by size inside the analysis (after restriction to the background), exactly as in
+    # the command-line tool; the libraries themselves are not modified here.
 
 
     with advanced:
