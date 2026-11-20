@@ -1095,7 +1095,8 @@ def main(
     p_value_method: str = typer.Option(
         "Fisher's Exact Test",
         "--method",
-        help="P-value calculation method: 'fisher' (Fisher's Exact Test), 'hga' (Hypergeometric Test), or 'chi' (Chi-squared Test)",
+        help="P-value calculation method: 'fisher' (Fisher's exact test, one-sided: over-representation; default), "
+             "'hga' (hypergeometric test; same p-values as one-sided Fisher), or 'chi' (chi-squared test)",
     ),
     p_threshold: float = typer.Option(
         0.01,

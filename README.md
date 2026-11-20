@@ -182,7 +182,7 @@ Users can customize the number of results to display in both the chart and the b
 
 #### P-value Calculation Methods
 The app offers various statistical methods to calculate p-values:
-- Fisher's Exact Test.
+- Fisher's exact test, one-sided (over-representation; default; same p-values as the hypergeometric test).
 - Hypergeometric Test.
 - Chi-Squared Test.
 

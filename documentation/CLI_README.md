@@ -56,7 +56,7 @@ This will run 5 different examples demonstrating various CLI usage patterns.
 | Option | Description | Default | Range |
 |--------|-------------|---------|-------|
 | `--mode` | Analysis mode: 'regular' or 'iterative' | `regular` | `regular`, `iterative` |
-| `--method` | P-value calculation method | `Fisher's Exact Test` | `Fisher's Exact Test`, `Hypergeometric Test`, `Chi-squared Test` |
+| `--method` | P-value calculation method (Fisher: one-sided, over-representation) | `Fisher's Exact Test` | `Fisher's Exact Test`, `Hypergeometric Test`, `Chi-squared Test` |
 | `--p-threshold` | Raw p-value threshold for including terms | `0.01` | `1e-10` to `0.5` |
 | `--min-overlap` | Minimum overlap size required for terms | `3` | `1` to `∞` |
 | `--min-term-size` | Minimum term size | `10` | `1` to `∞` |

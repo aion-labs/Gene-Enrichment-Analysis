@@ -95,3 +95,16 @@ def test_two_layer_statistics(data):
     # without the filter all observed terms are kept
     c = run_statistics(obs, libs, bg.genes, gs.size, n_lists=50, seed=3, n_jobs=1, q_threshold=None)
     assert c[3]["n_terms_kept"] == len(obs)
+
+
+def test_fisher_is_one_sided_over_representation():
+    """A depleted gene set (overlap below expectation) must not get a small p-value."""
+    from scipy.stats import hypergeom
+    from fast_igea import FISHER, exact_pvalue, _fisher_one_sided_fast
+    import numpy as np
+    # 800 genes, set of 600 in 20,000: expected overlap 24, observed 3 -> depleted
+    assert exact_pvalue(FISHER, 3, 600, 800, 20000) > 0.99
+    # enriched case equals the hypergeometric upper tail
+    assert abs(exact_pvalue(FISHER, 15, 50, 350, 4500) - hypergeom.sf(14, 4500, 50, 350)) < 1e-12
+    v = _fisher_one_sided_fast(np.array([15.0, 3.0]), np.array([50.0, 600.0]), 350.0, 4500)
+    assert abs(v[0] - hypergeom.sf(14, 4500, 50, 350)) < 1e-12 and v[1] > 0.5
