@@ -92,6 +92,17 @@ def _post(body, key, api, log):
             raise ProviderError(e.code, msg)
 
 
+def _check_model(out_dir, model):
+    """One folder holds the answers of one model: refuse to add answers from another model."""
+    for name in ("manifest.tsv", "followup_manifest.tsv"):
+        f = os.path.join(out_dir, name)
+        if os.path.exists(f):
+            used = {r["requested_model"] for r in csv.DictReader(open(f), delimiter="\t")} - {""}
+            if used and used != {model}:
+                raise RuntimeError(f"{out_dir} holds answers from {', '.join(sorted(used))}; use --out-name for "
+                                   f"{model} (for example --out-name llm_{model})")
+
+
 def run_followup(prompt, context, model, out_dir, key=None, api="responses", log=print):
     """Second turn for every saved response_r<N>: reveal the experiment and rebuild the interpretation."""
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -100,6 +111,7 @@ def run_followup(prompt, context, model, out_dir, key=None, api="responses", log
     if not key:
         raise RuntimeError('No API key: run  export OPENAI_API_KEY="sk-..."  in this terminal first')
     follow = followup_prompt(context)
+    _check_model(out_dir, model)
     manifest = os.path.join(out_dir, "followup_manifest.tsv")
     new = not os.path.exists(manifest)
     saved = []
@@ -157,6 +169,7 @@ def run_llm(prompt, model, out_dir, repeats=1, key=None, api="responses", log=pr
     if not key:
         raise RuntimeError('No API key: run  export OPENAI_API_KEY="sk-..."  in this terminal first')
     os.makedirs(out_dir, exist_ok=True)
+    _check_model(out_dir, model)
     manifest = os.path.join(out_dir, "manifest.tsv")
     new = not os.path.exists(manifest)
     saved = []
@@ -206,6 +219,8 @@ def main():
     ap.add_argument("--repeats", type=int, default=1)
     ap.add_argument("--api", choices=["responses", "chat"], default="responses")
     ap.add_argument("--list-models", action="store_true")
+    ap.add_argument("--out-name", default="llm",
+                    help="Subfolder of the run folder for the answers (default: llm). One folder per model.")
     ap.add_argument("--context", help="How the gene list was generated; sends the second turn for each saved response")
     a = ap.parse_args()
     key = os.environ.get("OPENAI_API_KEY", "")
@@ -218,7 +233,7 @@ def main():
         if not a.target or not a.model:
             sys.exit("Usage: python3 llm_client.py <run folder or prompt file> --model <model-id>")
         prompt_file = os.path.join(a.target, "llm_prompt.txt") if os.path.isdir(a.target) else a.target
-        out_dir = os.path.join(os.path.dirname(os.path.abspath(prompt_file)), "llm")
+        out_dir = os.path.join(os.path.dirname(os.path.abspath(prompt_file)), a.out_name)
         prompt = open(prompt_file).read()
         if a.context:
             run_followup(prompt, a.context, a.model, out_dir, key, a.api)
