@@ -1,0 +1,2 @@
+Library	Iteration	Term	Description	iteration overlapping genes	iteration p-value	iteration -log(p-value)	Genes removed for next iteration	Full list overlapping genes	Full list p-value	Regular FDR	Full list overlapping genes (gene names)
+C2: Pathway Interaction Database	1	PID: SMAD2 3PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/PID_SMAD2_3PATHWAY	3/16	0.005675896037807639	2.245965567869243	KPNB1, NUP153, NUP214	3/16	0.005675896037807639	1.0	KPNB1, NUP153, NUP214

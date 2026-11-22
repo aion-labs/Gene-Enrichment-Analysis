@@ -1,0 +1,2 @@
+Library	Iteration	Term	Description	iteration overlapping genes	iteration p-value	iteration -log(p-value)	Genes removed for next iteration	Full list overlapping genes	Full list p-value	Regular FDR	Full list overlapping genes (gene names)
+C2: BioCarta	1	BIOCARTA: NFKB PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/BIOCARTA_NFKB_PATHWAY	5/21	0.00024311851172350175	3.614181971501037	IL1A, MAP3K14, MAP3K7, NFKB1, RELA	5/21	0.00024311851172350175	0.05494478364951139	IL1A, MAP3K14, MAP3K7, NFKB1, RELA

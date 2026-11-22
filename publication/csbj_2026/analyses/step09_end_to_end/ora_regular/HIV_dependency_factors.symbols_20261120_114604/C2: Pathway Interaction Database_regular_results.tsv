@@ -1,0 +1,4 @@
+Library	Rank	Term	Description	Overlap size	p-value	-log(p-value)	FDR	Genes
+C2: Pathway Interaction Database	13	PID: ARF 3PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/PID_ARF_3PATHWAY	4/19	0.0003020865128309504	3.519868664113842	0.05920895651486629	AP2M1, ARF1, CD4, GOSR2
+C2: Pathway Interaction Database	45	PID: ECADHERIN NASCENT AJ PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/PID_ECADHERIN_NASCENT_AJ_PATHWAY	4/39	0.004914886942183686	2.308486467852291	0.3520914892769659	AKT1, PIP5K1C, RAP1B, RAPGEF1
+C2: Pathway Interaction Database	84	PID: IFNG PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/PID_IFNG_PATHWAY	4/40	0.0053891554481168245	2.2684792891659535	0.3520914892769659	AKT1, JAK1, RAP1B, RAPGEF1

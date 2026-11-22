@@ -1,0 +1,3 @@
+Library	Iteration	Term	Description	iteration overlapping genes	iteration p-value	iteration -log(p-value)	Genes removed for next iteration	Full list overlapping genes	Full list p-value	Regular FDR	Full list overlapping genes (gene names)
+C5: Gene Ontology: Molecular Function	1	GOMF: ASPARTIC TYPE PEPTIDASE ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_ASPARTIC_TYPE_PEPTIDASE_ACTIVITY	3/34	0.0051820358517491935	2.2854995866873264	CTSD, DDI2, PGC	3/34	0.0051820358517491935	1.0	CTSD, DDI2, PGC
+C5: Gene Ontology: Molecular Function	2	GOMF: ACTININ BINDING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_ACTININ_BINDING	3/38	0.006689124090317766	2.174630747351241	ADORA2A, PDLIM5, TRPC5	3/38	0.007088447518448042	1.0	ADORA2A, PDLIM5, TRPC5

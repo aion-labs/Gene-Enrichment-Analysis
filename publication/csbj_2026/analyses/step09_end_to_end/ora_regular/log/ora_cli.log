@@ -1,0 +1,156 @@
+🎯 Using default background: all_genes.txt
+📚 Using active collections from alias.json: 10 files
+   - h.all.v2025.1.Hs.symbols.gmt
+   - c2.cp.biocarta.v2025.1.Hs.symbols.gmt
+   - c2.cp.kegg_medicus.v2025.1.Hs.symbols.gmt
+   - c2.cp.pid.v2025.1.Hs.symbols.gmt
+   - c2.cp.reactome.v2025.1.Hs.symbols.gmt
+   - c2.cp.wikipathways.v2025.1.Hs.symbols.gmt
+   - c2.cp.kegg_legacy.v2025.1.Hs.symbols.gmt
+   - c5.go.bp.v2025.1.Hs.symbols.gmt
+   - c5.go.cc.v2025.1.Hs.symbols.gmt
+   - c5.go.mf.v2025.1.Hs.symbols.gmt
+
+Analysis Mode: regular
+Gene Sets: 1 files
+Background: /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/backgrounds/all_genes.txt
+Collections: 10 files
+P-value Method: Fisher's Exact Test
+P-value Threshold: 0.01
+Min Overlap: 3
+Term Size Range: 10-600
+Output Directory: /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/ora_regular
+
+2026-11-20 11:46:03,835 - INFO - Loading background gene set: /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/backgrounds/all_genes.txt
+2026-11-20 11:46:03,837 - INFO - Loading gene info from /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/recent_release/Homo_sapiens.gene_info.gz
+2026-11-20 11:46:04,041 - INFO - Loaded 193577 human Entrez ID mappings (taxonomy ID 9606)
+2026-11-20 11:46:04,042 - INFO - Loaded 69379 synonym mappings
+2026-11-20 11:46:04,044 - INFO - Sample Entrez IDs: ['1', '2', '9']
+2026-11-20 11:46:04,044 - INFO - Sample symbols: ['A1BG', 'A2M', 'NAT1']
+2026-11-20 11:46:04,045 - INFO - Loading gene history from /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/recent_release/gene_history_9606.gz
+2026-11-20 11:46:04,114 - INFO - Loaded 166606 unique old-to-current symbol mappings
+2026-11-20 11:46:04,121 - WARNING - 199 symbols not found in database: ['DDX12B', 'ENSG00000181123', 'ENSG00000187185', 'ENSG00000187951', 'ENSG00000188897', 'ENSG00000189229', 'ENSG00000200063', 'ENSG00000201329', 'ENSG00000201957', 'ENSG00000202231']...
+2026-11-20 11:46:04,128 - INFO - Loading 10 gene set collections
+2026-11-20 11:46:04,130 - INFO - Gene Set Library
+H: Hallmark Gene Sets (Homo Sapiens)
+	50 terms
+	4384 genes
+2026-11-20 11:46:04,130 - INFO - Loaded collection H: Hallmark Gene Sets: 50 terms
+2026-11-20 11:46:04,131 - INFO - Gene Set Library
+C2: BioCarta (Homo Sapiens)
+	292 terms
+	1509 genes
+2026-11-20 11:46:04,132 - INFO - Loaded collection C2: BioCarta: 226 terms
+2026-11-20 11:46:04,134 - INFO - Gene Set Library
+C2: KEGG MEDICUS (Homo Sapiens)
+	658 terms
+	2788 genes
+2026-11-20 11:46:04,135 - INFO - Loaded collection C2: KEGG MEDICUS: 403 terms
+2026-11-20 11:46:04,136 - INFO - Gene Set Library
+C2: Pathway Interaction Database (Homo Sapiens)
+	196 terms
+	2534 genes
+2026-11-20 11:46:04,136 - INFO - Loaded collection C2: Pathway Interaction Database: 196 terms
+2026-11-20 11:46:04,142 - INFO - Gene Set Library
+C2: Reactome Pathways (Homo Sapiens)
+	1787 terms
+	11369 genes
+2026-11-20 11:46:04,144 - INFO - Loaded collection C2: Reactome Pathways: 1409 terms
+2026-11-20 11:46:04,147 - INFO - Gene Set Library
+C2: WikiPathways (Homo Sapiens)
+	885 terms
+	9127 genes
+2026-11-20 11:46:04,148 - INFO - Loaded collection C2: WikiPathways: 766 terms
+2026-11-20 11:46:04,150 - INFO - Gene Set Library
+C2: KEGG Legacy (Homo Sapiens)
+	186 terms
+	5245 genes
+2026-11-20 11:46:04,150 - INFO - Loaded collection C2: KEGG Legacy: 186 terms
+2026-11-20 11:46:04,215 - INFO - Gene Set Library
+C5: Gene Ontology: Biological Process (Homo Sapiens)
+	7583 terms
+	17999 genes
+2026-11-20 11:46:04,222 - INFO - Loaded collection C5: Gene Ontology: Biological Process: 5360 terms
+2026-11-20 11:46:04,229 - INFO - Gene Set Library
+C5: Gene Ontology: Cellular Component (Homo Sapiens)
+	1042 terms
+	14868 genes
+2026-11-20 11:46:04,231 - INFO - Loaded collection C5: Gene Ontology: Cellular Component: 684 terms
+2026-11-20 11:46:04,241 - INFO - Gene Set Library
+C5: Gene Ontology: Molecular Function (Homo Sapiens)
+	1855 terms
+	15698 genes
+2026-11-20 11:46:04,243 - INFO - Loaded collection C5: Gene Ontology: Molecular Function: 1165 terms
+2026-11-20 11:46:04,244 - INFO - Processing gene set: /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/inputs/HIV_dependency_factors.symbols.txt
+2026-11-20 11:46:04,244 - INFO - Loading gene info from /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/recent_release/Homo_sapiens.gene_info.gz
+2026-11-20 11:46:04,446 - INFO - Loaded 193577 human Entrez ID mappings (taxonomy ID 9606)
+2026-11-20 11:46:04,446 - INFO - Loaded 69379 synonym mappings
+2026-11-20 11:46:04,448 - INFO - Sample Entrez IDs: ['1', '2', '9']
+2026-11-20 11:46:04,449 - INFO - Sample symbols: ['A1BG', 'A2M', 'NAT1']
+2026-11-20 11:46:04,449 - INFO - Loading gene history from /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/recent_release/gene_history_9606.gz
+2026-11-20 11:46:04,519 - INFO - Loaded 166606 unique old-to-current symbol mappings
+2026-11-20 11:46:04,520 - INFO - Input Gene Set
+HIV_dependency_factors.symbols
+	265 genes
+2026-11-20 11:46:04,520 - WARNING - 7 non valid
+2026-11-20 11:46:04,520 - WARNING - 7 validated genes are not in the background (all_genes) and were removed: FAM226A, IGHV1OR21-1, KRABD5, LINC00208, LINC01994, LOC400627, RPL32P3
+2026-11-20 11:46:04,520 - INFO - Gene set HIV_dependency_factors.symbols: 265 genes in the background (used for the analysis)
+2026-11-20 11:46:04,521 - INFO - Created unique output directory: HIV_dependency_factors.symbols_20261120_114604
+2026-11-20 11:46:04,521 - INFO - Running regular enrichment analysis
+2026-11-20 11:46:04,521 - INFO - Processing collection: H: Hallmark Gene Sets
+2026-11-20 11:46:04,521 - INFO - Calculating p-values for H: Hallmark Gene Sets
+2026-11-20 11:46:04,522 - INFO - Library-specific background size: 4378 genes (intersection of 23391 background genes and 4378 filtered library genes from 50 terms within size range [10, 600])
+2026-11-20 11:46:04,523 - INFO - Input gene set filtered: 265 → 76 genes (intersected with library-specific background)
+2026-11-20 11:46:04,527 - INFO - Saved 1 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/ora_regular/HIV_dependency_factors.symbols_20261120_114604/H: Hallmark Gene Sets_regular_results.tsv
+2026-11-20 11:46:04,527 - INFO - Processing collection: C2: BioCarta
+2026-11-20 11:46:04,528 - INFO - Calculating p-values for C2: BioCarta
+2026-11-20 11:46:04,528 - INFO - Library-specific background size: 1363 genes (intersection of 23391 background genes and 1363 filtered library genes from 226 terms within size range [10, 600])
+2026-11-20 11:46:04,528 - INFO - Input gene set filtered: 265 → 27 genes (intersected with library-specific background)
+2026-11-20 11:46:04,537 - INFO - Saved 6 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/ora_regular/HIV_dependency_factors.symbols_20261120_114604/C2: BioCarta_regular_results.tsv
+2026-11-20 11:46:04,537 - INFO - Processing collection: C2: KEGG MEDICUS
+2026-11-20 11:46:04,538 - INFO - Calculating p-values for C2: KEGG MEDICUS
+2026-11-20 11:46:04,539 - INFO - Library-specific background size: 2258 genes (intersection of 23391 background genes and 2258 filtered library genes from 402 terms within size range [10, 600])
+2026-11-20 11:46:04,539 - INFO - Input gene set filtered: 265 → 41 genes (intersected with library-specific background)
+2026-11-20 11:46:04,552 - INFO - Saved 7 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/ora_regular/HIV_dependency_factors.symbols_20261120_114604/C2: KEGG MEDICUS_regular_results.tsv
+2026-11-20 11:46:04,552 - INFO - Processing collection: C2: Pathway Interaction Database
+2026-11-20 11:46:04,552 - INFO - Calculating p-values for C2: Pathway Interaction Database
+2026-11-20 11:46:04,554 - INFO - Library-specific background size: 2534 genes (intersection of 23391 background genes and 2534 filtered library genes from 196 terms within size range [10, 600])
+2026-11-20 11:46:04,554 - INFO - Input gene set filtered: 265 → 46 genes (intersected with library-specific background)
+2026-11-20 11:46:04,562 - INFO - Saved 3 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/ora_regular/HIV_dependency_factors.symbols_20261120_114604/C2: Pathway Interaction Database_regular_results.tsv
+2026-11-20 11:46:04,562 - INFO - Processing collection: C2: Reactome Pathways
+2026-11-20 11:46:04,562 - INFO - Calculating p-values for C2: Reactome Pathways
+2026-11-20 11:46:04,568 - INFO - Library-specific background size: 11019 genes (intersection of 23391 background genes and 11019 filtered library genes from 1408 terms within size range [10, 600])
+2026-11-20 11:46:04,569 - INFO - Input gene set filtered: 265 → 169 genes (intersected with library-specific background)
+2026-11-20 11:46:04,577 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:46:04,637 - INFO - Saved 85 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/ora_regular/HIV_dependency_factors.symbols_20261120_114604/C2: Reactome Pathways_regular_results.tsv
+2026-11-20 11:46:04,637 - INFO - Processing collection: C2: WikiPathways
+2026-11-20 11:46:04,637 - INFO - Calculating p-values for C2: WikiPathways
+2026-11-20 11:46:04,642 - INFO - Library-specific background size: 9035 genes (intersection of 23391 background genes and 9035 filtered library genes from 766 terms within size range [10, 600])
+2026-11-20 11:46:04,642 - INFO - Input gene set filtered: 265 → 134 genes (intersected with library-specific background)
+2026-11-20 11:46:04,647 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:46:04,691 - INFO - Saved 19 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/ora_regular/HIV_dependency_factors.symbols_20261120_114604/C2: WikiPathways_regular_results.tsv
+2026-11-20 11:46:04,692 - INFO - Processing collection: C2: KEGG Legacy
+2026-11-20 11:46:04,692 - INFO - Calculating p-values for C2: KEGG Legacy
+2026-11-20 11:46:04,694 - INFO - Library-specific background size: 5230 genes (intersection of 23391 background genes and 5230 filtered library genes from 186 terms within size range [10, 600])
+2026-11-20 11:46:04,694 - INFO - Input gene set filtered: 265 → 73 genes (intersected with library-specific background)
+2026-11-20 11:46:04,703 - INFO - Saved 9 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/ora_regular/HIV_dependency_factors.symbols_20261120_114604/C2: KEGG Legacy_regular_results.tsv
+2026-11-20 11:46:04,703 - INFO - Processing collection: C5: Gene Ontology: Biological Process
+2026-11-20 11:46:04,703 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 11:46:04,736 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 11:46:04,736 - INFO - Input gene set filtered: 265 → 228 genes (intersected with library-specific background)
+2026-11-20 11:46:04,742 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:46:04,900 - INFO - Saved 89 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/ora_regular/HIV_dependency_factors.symbols_20261120_114604/C5: Gene Ontology: Biological Process_regular_results.tsv
+2026-11-20 11:46:04,900 - INFO - Processing collection: C5: Gene Ontology: Cellular Component
+2026-11-20 11:46:04,900 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-20 11:46:04,906 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-20 11:46:04,906 - INFO - Input gene set filtered: 265 → 191 genes (intersected with library-specific background)
+2026-11-20 11:46:04,913 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:46:04,959 - INFO - Saved 19 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/ora_regular/HIV_dependency_factors.symbols_20261120_114604/C5: Gene Ontology: Cellular Component_regular_results.tsv
+2026-11-20 11:46:04,960 - INFO - Processing collection: C5: Gene Ontology: Molecular Function
+2026-11-20 11:46:04,960 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-20 11:46:04,968 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-20 11:46:04,969 - INFO - Input gene set filtered: 265 → 195 genes (intersected with library-specific background)
+2026-11-20 11:46:04,974 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:46:05,031 - INFO - Saved 17 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/ora_regular/HIV_dependency_factors.symbols_20261120_114604/C5: Gene Ontology: Molecular Function_regular_results.tsv
+2026-11-20 11:46:05,042 - INFO - Saved combined results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/ora_regular/HIV_dependency_factors.symbols_20261120_114604/combined_regular_results.tsv
+✅ Analysis completed successfully! Results saved to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/ora_regular

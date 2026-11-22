@@ -1,0 +1,102 @@
+graph enrichment_network {
+  // 260 validated input genes; network = terms passing the term-level filter
+  graph [input_genes=260, random_lists=1000, q_threshold="none", network_p="0.131"];
+  // communities: Leiden (igraph, modularity), modularity="0.2591"
+  graph [community_method="Leiden (igraph, modularity)", modularity="0.2591"];
+  subgraph cluster_C1 {
+    label="C1"; lead_term="HALLMARK: HYPOXIA"; terms=7; genes=27;
+    "term_HALLMARK_HYPOXIA" [type=term, label="HALLMARK: HYPOXIA", collection="H: Hallmark Gene Sets", iteration=1, p="0.0085", q="0.2", community=C1, genes=7];
+    "term_WP_MALE_INFERTILITY" [type=term, label="WP: MALE INFERTILITY", collection="C2: WikiPathways", iteration=2, p="0.0048", q="0.45", community=C1, genes=6];
+    "term_GOBP_REGULATION_OF_RELEASE_OF_CYTOCHROME_C_FROM_MITOCHONDRIA" [type=term, label="GOBP: REGULATION OF RELEASE OF CYTOCHROME C FROM MITOCHONDRIA", collection="C5: Gene Ontology: Biological Process", iteration=1, p="0.0011", q="1", community=C1, genes=4];
+    "term_GOBP_NEGATIVE_REGULATION_OF_PROTEIN_CATABOLIC_PROCESS" [type=term, label="GOBP: NEGATIVE REGULATION OF PROTEIN CATABOLIC PROCESS", collection="C5: Gene Ontology: Biological Process", iteration=2, p="0.002", q="1", community=C1, genes=6];
+    "term_GOCC_CYCLIN_DEPENDENT_PROTEIN_KINASE_HOLOENZYME_COMPLEX" [type=term, label="GOCC: CYCLIN DEPENDENT PROTEIN KINASE HOLOENZYME COMPLEX", collection="C5: Gene Ontology: Cellular Component", iteration=1, p="0.00089", q="0.18", community=C1, genes=5];
+    "term_GOMF_CYCLIN_DEPENDENT_PROTEIN_SERINE_THREONINE_KINASE_REGULATOR_ACTIVITY" [type=term, label="GOMF: CYCLIN DEPENDENT PROTEIN SERINE THREONINE KINASE REGULATOR ACTIVITY", collection="C5: Gene Ontology: Molecular Function", iteration=1, p="0.00014", q="0.034", community=C1, genes=5];
+    "term_GOMF_IRON_ION_BINDING" [type=term, label="GOMF: IRON ION BINDING", collection="C5: Gene Ontology: Molecular Function", iteration=2, p="0.0047", q="0.67", community=C1, genes=6];
+    "ALKBH3" [type=gene, degree=1, community=C1];
+    "BMF" [type=gene, degree=1, community=C1];
+    "CCNC" [type=gene, degree=2, community=C1];
+    "CCNE2" [type=gene, degree=2, community=C1];
+    "CCNF" [type=gene, degree=2, community=C1];
+    "CCNG2" [type=gene, degree=3, community=C1];
+    "CCNL1" [type=gene, degree=2, community=C1];
+    "CDO1" [type=gene, degree=1, community=C1];
+    "CYP4F11" [type=gene, degree=1, community=C1];
+    "CYP4V2" [type=gene, degree=1, community=C1];
+    "CYP51A1" [type=gene, degree=2, community=C1];
+    "FAM162A" [type=gene, degree=2, community=C1];
+    "IFI6" [type=gene, degree=1, community=C1];
+    "IGFBP3" [type=gene, degree=1, community=C1];
+    "KDM3A" [type=gene, degree=3, community=C1];
+    "LMNA" [type=gene, degree=1, community=C1];
+    "MSMB" [type=gene, degree=1, community=C1];
+    "NAGK" [type=gene, degree=1, community=C1];
+    "NQO1" [type=gene, degree=2, community=C1];
+    "PSME3IP1" [type=gene, degree=1, community=C1];
+    "RAG1" [type=gene, degree=1, community=C1];
+    "RPL11" [type=gene, degree=1, community=C1];
+    "SDC2" [type=gene, degree=1, community=C1];
+    "SOD3" [type=gene, degree=1, community=C1];
+    "TIMP4" [type=gene, degree=1, community=C1];
+    "USP8" [type=gene, degree=2, community=C1];
+  }
+  subgraph cluster_C2 {
+    label="C2"; lead_term="GOBP: REGULATION OF HORMONE SECRETION"; terms=9; genes=19;
+    "term_BIOCARTA_CALCINEURIN_PATHWAY" [type=term, label="BIOCARTA: CALCINEURIN PATHWAY", collection="C2: BioCarta", iteration=1, p="0.0012", q="0.06", community=C2, genes=3];
+    "term_KEGG_MEDICUS_REFERENCE_CA2_CAM_CN_SIGNALING_PATHWAY" [type=term, label="KEGG: MEDICUS REFERENCE CA2 CAM CN SIGNALING PATHWAY", collection="C2: KEGG MEDICUS", iteration=1, p="0.00057", q="0.047", community=C2, genes=3];
+    "term_PID_NFAT_3PATHWAY" [type=term, label="PID: NFAT 3PATHWAY", collection="C2: Pathway Interaction Database", iteration=1, p="0.005", q="0.16", community=C2, genes=4];
+    "term_REACTOME_CLEC7A_DECTIN_1_INDUCES_NFAT_ACTIVATION" [type=term, label="REACTOME: CLEC7A DECTIN 1 INDUCES NFAT ACTIVATION", collection="C2: Reactome Pathways", iteration=1, p="0.00019", q="0.059", community=C2, genes=3];
+    "term_REACTOME_INTEGRATION_OF_ENERGY_METABOLISM" [type=term, label="REACTOME: INTEGRATION OF ENERGY METABOLISM", collection="C2: Reactome Pathways", iteration=2, p="0.0054", q="0.7", community=C2, genes=5];
+    "term_WP_GNAQ_PR183Q_DRIVES_CAPILLARY_MALFORMATION" [type=term, label="WP: GNAQ PR183Q DRIVES CAPILLARY MALFORMATION", collection="C2: WikiPathways", iteration=1, p="0.00016", q="0.036", community=C2, genes=4];
+    "term_KEGG_WNT_SIGNALING_PATHWAY" [type=term, label="KEGG: WNT SIGNALING PATHWAY", collection="C2: KEGG Legacy", iteration=1, p="0.0047", q="0.32", community=C2, genes=6];
+    "term_GOBP_REGULATION_OF_HORMONE_SECRETION" [type=term, label="GOBP: REGULATION OF HORMONE SECRETION", collection="C5: Gene Ontology: Biological Process", iteration=4, p="0.0071", q="1", community=C2, genes=8];
+    "term_GOCC_EXCITATORY_SYNAPSE" [type=term, label="GOCC: EXCITATORY SYNAPSE", collection="C5: Gene Ontology: Cellular Component", iteration=2, p="0.0055", q="0.48", community=C2, genes=4];
+    "ADCY2" [type=gene, degree=1, community=C2];
+    "C1QL1" [type=gene, degree=1, community=C2];
+    "CHD4" [type=gene, degree=1, community=C2];
+    "CRHBP" [type=gene, degree=1, community=C2];
+    "GDF9" [type=gene, degree=1, community=C2];
+    "GNB2" [type=gene, degree=1, community=C2];
+    "KCNC2" [type=gene, degree=1, community=C2];
+    "KCNG2" [type=gene, degree=1, community=C2];
+    "NDUFAF2" [type=gene, degree=1, community=C2];
+    "NFATC1" [type=gene, degree=6, community=C2];
+    "PPP3CB" [type=gene, degree=7, community=C2];
+    "PPP3R1" [type=gene, degree=6, community=C2];
+    "SELENOT" [type=gene, degree=1, community=C2];
+    "SLC16A1" [type=gene, degree=1, community=C2];
+    "SUSD4" [type=gene, degree=1, community=C2];
+    "TBL1X" [type=gene, degree=1, community=C2];
+    "TMF1" [type=gene, degree=1, community=C2];
+  }
+  subgraph cluster_C3 {
+    label="C3"; lead_term="GOBP: TYROSINE PHOSPHORYLATION OF STAT PROTEIN"; terms=2; genes=5;
+    "term_PID_NCADHERIN_PATHWAY" [type=term, label="PID: NCADHERIN PATHWAY", collection="C2: Pathway Interaction Database", iteration=2, p="0.0064", q="0.16", community=C3, genes=3];
+    "term_GOBP_TYROSINE_PHOSPHORYLATION_OF_STAT_PROTEIN" [type=term, label="GOBP: TYROSINE PHOSPHORYLATION OF STAT PROTEIN", collection="C5: Gene Ontology: Biological Process", iteration=3, p="0.004", q="1", community=C3, genes=3];
+    "CNR1" [type=gene, degree=1, community=C3];
+    "CSF1R" [type=gene, degree=1, community=C3];
+    "ERBB4" [type=gene, degree=1, community=C3];
+    "FER" [type=gene, degree=2, community=C3];
+  }
+  // bridge genes: connect terms in different communities
+  "AXIN1" [type=gene, degree=2, community=C2, bridge=true, participation="0.5"];
+  "PRKCA" [type=gene, degree=7, community=C2, bridge=true, participation="0.24"];
+  // edges: each term with its genes
+  "term_HALLMARK_HYPOXIA" -- {"CCNG2" "FAM162A" "IGFBP3" "KDM3A" "NAGK" "PRKCA" "SDC2"};
+  "term_BIOCARTA_CALCINEURIN_PATHWAY" -- {"NFATC1" "PPP3CB" "PRKCA"};
+  "term_KEGG_MEDICUS_REFERENCE_CA2_CAM_CN_SIGNALING_PATHWAY" -- {"NFATC1" "PPP3CB" "PPP3R1"};
+  "term_PID_NFAT_3PATHWAY" -- {"NFATC1" "PPP3CB" "PPP3R1" "PRKCA"};
+  "term_PID_NCADHERIN_PATHWAY" -- {"AXIN1" "CNR1" "FER"};
+  "term_REACTOME_CLEC7A_DECTIN_1_INDUCES_NFAT_ACTIVATION" -- {"NFATC1" "PPP3CB" "PPP3R1"};
+  "term_REACTOME_INTEGRATION_OF_ENERGY_METABOLISM" -- {"ADCY2" "GNB2" "KCNC2" "KCNG2" "PRKCA"};
+  "term_WP_GNAQ_PR183Q_DRIVES_CAPILLARY_MALFORMATION" -- {"NFATC1" "PPP3CB" "PPP3R1" "PRKCA"};
+  "term_WP_MALE_INFERTILITY" -- {"KDM3A" "MSMB" "NQO1" "RAG1" "SOD3" "USP8"};
+  "term_KEGG_WNT_SIGNALING_PATHWAY" -- {"AXIN1" "NFATC1" "PPP3CB" "PPP3R1" "PRKCA" "TBL1X"};
+  "term_GOBP_REGULATION_OF_RELEASE_OF_CYTOCHROME_C_FROM_MITOCHONDRIA" -- {"BMF" "FAM162A" "IFI6" "LMNA"};
+  "term_GOBP_NEGATIVE_REGULATION_OF_PROTEIN_CATABOLIC_PROCESS" -- {"CYP51A1" "NQO1" "PSME3IP1" "RPL11" "TIMP4" "USP8"};
+  "term_GOBP_TYROSINE_PHOSPHORYLATION_OF_STAT_PROTEIN" -- {"CSF1R" "ERBB4" "FER"};
+  "term_GOBP_REGULATION_OF_HORMONE_SECRETION" -- {"CRHBP" "GDF9" "NDUFAF2" "PPP3CB" "PRKCA" "SELENOT" "SLC16A1" "TMF1"};
+  "term_GOCC_CYCLIN_DEPENDENT_PROTEIN_KINASE_HOLOENZYME_COMPLEX" -- {"CCNC" "CCNE2" "CCNF" "CCNG2" "CCNL1"};
+  "term_GOCC_EXCITATORY_SYNAPSE" -- {"C1QL1" "CHD4" "PPP3R1" "SUSD4"};
+  "term_GOMF_CYCLIN_DEPENDENT_PROTEIN_SERINE_THREONINE_KINASE_REGULATOR_ACTIVITY" -- {"CCNC" "CCNE2" "CCNF" "CCNG2" "CCNL1"};
+  "term_GOMF_IRON_ION_BINDING" -- {"ALKBH3" "CDO1" "CYP4F11" "CYP4V2" "CYP51A1" "KDM3A"};
+}

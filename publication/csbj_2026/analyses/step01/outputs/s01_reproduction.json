@@ -1,0 +1,59 @@
+{
+  "input_lines": 272,
+  "mapped": 272,
+  "gene_set_size": 272,
+  "background_size": 23391,
+  "ora_terms_p<0.01_overlap>=3": 252,
+  "ora_terms_fdr<0.05": 87,
+  "ora_fdr<0.05_any_overlap": 87,
+  "igea_terms": 62,
+  "igea_max_iteration": 12,
+  "igea_terms_iter<=30": 62,
+  "largest_cluster": {
+    "size": 241,
+    "n_genes": 179,
+    "n_terms": 62,
+    "n_edges": 412,
+    "avg_edges_per_gene": 2.3017,
+    "n_libraries": 10
+  },
+  "null_size_key": 300,
+  "z": {
+    "largest_component_size": {
+      "obs": 241,
+      "null_mean": 46.428,
+      "null_sd": 24.9856,
+      "n": 1000,
+      "z": 7.79
+    },
+    "largest_cluster_genes": {
+      "obs": 179,
+      "null_mean": 36.004,
+      "null_sd": 19.3863,
+      "n": 1000,
+      "z": 7.38
+    },
+    "largest_cluster_terms": {
+      "obs": 62,
+      "null_mean": 10.424,
+      "null_sd": 6.0078,
+      "n": 1000,
+      "z": 8.58
+    },
+    "largest_cluster_edges": {
+      "obs": 412,
+      "null_mean": 53.541,
+      "null_sd": 31.3059,
+      "n": 1000,
+      "z": 11.45
+    },
+    "largest_cluster_avg_edges_per_gene": {
+      "obs": 2.3016759776536313,
+      "null_mean": 1.4592,
+      "null_sd": 0.2339,
+      "n": 1000,
+      "z": 3.6
+    }
+  },
+  "runtime_s": 14.7
+}

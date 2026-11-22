@@ -1,0 +1,46 @@
+Gene list: random_seed1000_265genes
+Validated input genes: 263
+Largest cluster: 27 nodes, 22 genes, 5 terms, 26 edges, 1.1818 edges per gene, 3 collections
+
+====================================================================================================
+iGEA STATISTICAL REPORT (per-run random lists)
+====================================================================================================
+Random lists: 1000, each of 263 genes (= validated input size), drawn without replacement
+from the analysis background (23391 genes); seed 2026; 6.9 s on 4 process(es).
+Each random list was analysed with the same collections and parameters as the input:
+  p_value_method=Fisher's Exact Test (one-sided), p_threshold=0.01, min_overlap=3, min_term_size=10, max_term_size=600, max_iterations=30, background=all_genes
+Collections: H: Hallmark Gene Sets; C2: BioCarta; C2: KEGG MEDICUS; C2: Pathway Interaction Database; C2: Reactome Pathways; C2: WikiPathways; C2: KEGG Legacy; C5: Gene Ontology: Biological Process; C5: Gene Ontology: Cellular Component; C5: Gene Ontology: Molecular Function
+
+TERM LEVEL (signal-adjusted empirical q-value)
+  A random list of this size selects on average 15.95 terms by chance.
+  q = expected chance terms with p' <= p / selected terms with p' <= p (per collection, monotone),
+  re-estimated after treating genes of accepted terms as signal (263 of 263 genes
+  treated as noise in the final round; 200 random lists per size step).
+  No term filter (q threshold 1.0): all 11 selected terms kept, in the input and the random lists.
+
+NETWORK LEVEL (largest connected cluster)
+  z = (observed - random mean) / random SD
+  empirical p = (r + 1) / (n + 1), r = random lists with a value >= observed, n = 1000
+  (smallest attainable p = 0.000999). The metrics describe the same cluster and are not independent tests.
+
+  Metric                      Observed  Rand mean  Rand SD  Rand max       z     r    Emp. p
+  ------------------------------------------------------------------------------------------
+  Cluster Size                      27     41.982   23.419       127   -0.64   679    0.6793
+  Number of Genes                   22     32.422   18.048        97   -0.58   660    0.6603
+  Number of Terms                    5      9.560    5.728        30   -0.80   779    0.7792
+  Number of Edges                   26     48.394   29.646       165   -0.76   734    0.7343
+  Average Edges per Gene         1.182      1.460    0.261     3.467   -1.07   902    0.9021
+
+TERMS
+  Collection                                It     p-value  q-value  Kept  Term
+  C2: Reactome Pathways                      1     0.00787        1  yes   REACTOME_BETA_DEFENSINS
+  C5: Gene Ontology: Biological Process      1    8.99e-05    0.117  yes   GOBP_REGULATION_OF_LONG_TERM_SYNAPTIC_POTENTIATION
+  C5: Gene Ontology: Biological Process      2    0.000577    0.394  yes   GOBP_PROSTAGLANDIN_SECRETION
+  C5: Gene Ontology: Biological Process      3     0.00674    0.864  yes   GOBP_EXPLORATION_BEHAVIOR
+  C5: Gene Ontology: Biological Process      4     0.00684    0.864  yes   GOBP_POSITIVE_REGULATION_OF_RESPONSE_TO_ENDOPLASMIC_RETICULUM_STRESS
+  C5: Gene Ontology: Biological Process      5      0.0071    0.864  yes   GOBP_NUCLEAR_TRANSCRIBED_MRNA_CATABOLIC_PROCESS
+  C5: Gene Ontology: Biological Process      6     0.00741    0.864  yes   GOBP_NEGATIVE_REGULATION_OF_CELL_PROJECTION_ORGANIZATION
+  C5: Gene Ontology: Cellular Component      1     0.00083    0.207  yes   GOCC_CILIARY_PLASM
+  C5: Gene Ontology: Cellular Component      2     0.00259     0.26  yes   GOCC_BRUSH_BORDER_MEMBRANE
+  C5: Gene Ontology: Molecular Function      1     0.00518    0.885  yes   GOMF_ASPARTIC_TYPE_PEPTIDASE_ACTIVITY
+  C5: Gene Ontology: Molecular Function      2     0.00669    0.885  yes   GOMF_ACTININ_BINDING

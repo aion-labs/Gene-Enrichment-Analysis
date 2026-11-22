@@ -1,0 +1,354 @@
+Below is a gene set enrichment network computed from a gene list by over-representation analysis (ORA): every gene set (= term) of each collection was tested against the full gene list, and each significant term is linked to all of its genes in the list. Thus a gene can be linked to several terms of the same collection. The network of genes and gene sets is given in DOT format, preceded by its statistics and communities.
+
+**STATISTICAL CONTEXT:**
+The input contained 265 validated genes. Each term was tested with a one-sided Fisher's exact test against the full gene list; the 87 terms with a Benjamini-Hochberg false discovery rate below 0.05 (within their collection) form this network (123 genes). No network-level test was computed for this network. Do not use p-values or FDR values to rank biological importance.
+
+**COMMUNITIES:**
+Terms were grouped into communities with Leiden (igraph, modularity) on the term network, in which two terms are linked when they share genes (modularity 0.1311; the same partition was found with 100% of 100 random seeds). Communities are algorithmic groupings, not biological labels; the cluster blocks in the DOT list each community's terms and genes. Gene degree is the number of terms a gene connects to. Bridge genes connect terms in different communities.
+
+| Community | Terms | Genes | Lead term (most genes) | Top hub genes (degree) | Bridge genes |
+|---|---|---|---|---|---|
+| C1 | 33 | 94 | GOBP: GOLGI VESICLE TRANSPORT | COG3 (12), RAB1B (12), AKT1 (11), ARF1 (11), COG2 (11) | 19 |
+| C2 | 54 | 56 | GOBP: ESTABLISHMENT OF PROTEIN LOCALIZATION TO ORGANELLE | NUP107 (54), NUP133 (54), NUP85 (54), NUP155 (53), NUP160 (53) | 8 |
+
+**NETWORK (DOT):**
+graph enrichment_network {
+  // communities: Leiden (igraph, modularity), modularity="0.1311"
+  graph [community_method="Leiden (igraph, modularity)", modularity="0.1311"];
+  subgraph cluster_C1 {
+    label="C1"; lead_term="GOBP: GOLGI VESICLE TRANSPORT"; terms=33; genes=94;
+    "term_HALLMARK_PROTEIN_SECRETION" [type=term, label="HALLMARK: PROTEIN SECRETION", collection="H: Hallmark Gene Sets", p="3.4e-05", q="0.0017", community=C1, genes=9];
+    "term_KEGG_MEDICUS_REFERENCE_EGF_EGFR_PI3K_NFKB_SIGNALING_PATHWAY" [type=term, label="KEGG: MEDICUS REFERENCE EGF EGFR PI3K NFKB SIGNALING PATHWAY", collection="C2: KEGG MEDICUS", p="2.7e-06", q="0.0011", community=C1, genes=5];
+    "term_REACTOME_ASPARAGINE_N_LINKED_GLYCOSYLATION" [type=term, label="REACTOME: ASPARAGINE N LINKED GLYCOSYLATION", collection="C2: Reactome Pathways", p="2.9e-07", q="0.00012", community=C1, genes=19];
+    "term_REACTOME_COPI_MEDIATED_ANTEROGRADE_TRANSPORT" [type=term, label="REACTOME: COPI MEDIATED ANTEROGRADE TRANSPORT", collection="C2: Reactome Pathways", p="4.3e-07", q="0.00012", community=C1, genes=11];
+    "term_REACTOME_ER_TO_GOLGI_ANTEROGRADE_TRANSPORT" [type=term, label="REACTOME: ER TO GOLGI ANTEROGRADE TRANSPORT", collection="C2: Reactome Pathways", p="7.6e-07", q="0.00012", community=C1, genes=13];
+    "term_REACTOME_TRANSPORT_TO_THE_GOLGI_AND_SUBSEQUENT_MODIFICATION" [type=term, label="REACTOME: TRANSPORT TO THE GOLGI AND SUBSEQUENT MODIFICATION", collection="C2: Reactome Pathways", p="1e-06", q="0.00012", community=C1, genes=14];
+    "term_REACTOME_INTRA_GOLGI_AND_RETROGRADE_GOLGI_TO_ER_TRAFFIC" [type=term, label="REACTOME: INTRA GOLGI AND RETROGRADE GOLGI TO ER TRAFFIC", collection="C2: Reactome Pathways", p="2.8e-06", q="0.00022", community=C1, genes=14];
+    "term_REACTOME_TRANSCRIPTIONAL_REGULATION_OF_WHITE_ADIPOCYTE_DIFFERENTIATION" [type=term, label="REACTOME: TRANSCRIPTIONAL REGULATION OF WHITE ADIPOCYTE DIFFERENTIATION", collection="C2: Reactome Pathways", p="5.2e-06", q="0.00033", community=C1, genes=9];
+    "term_REACTOME_RETROGRADE_TRANSPORT_AT_THE_TRANS_GOLGI_NETWORK" [type=term, label="REACTOME: RETROGRADE TRANSPORT AT THE TRANS GOLGI NETWORK", collection="C2: Reactome Pathways", p="8.8e-06", q="0.0005", community=C1, genes=7];
+    "term_REACTOME_ADIPOGENESIS" [type=term, label="REACTOME: ADIPOGENESIS", collection="C2: Reactome Pathways", p="4.7e-05", q="0.0018", community=C1, genes=9];
+    "term_REACTOME_INTRA_GOLGI_TRAFFIC" [type=term, label="REACTOME: INTRA GOLGI TRAFFIC", collection="C2: Reactome Pathways", p="5.2e-05", q="0.0019", community=C1, genes=6];
+    "term_REACTOME_RAB_GEFS_EXCHANGE_GTP_FOR_GDP_ON_RABS" [type=term, label="REACTOME: RAB GEFS EXCHANGE GTP FOR GDP ON RABS", collection="C2: Reactome Pathways", p="0.00045", q="0.012", community=C1, genes=7];
+    "term_REACTOME_RESPIRATORY_SYNCYTIAL_VIRUS_INFECTION_PATHWAY" [type=term, label="REACTOME: RESPIRATORY SYNCYTIAL VIRUS INFECTION PATHWAY", collection="C2: Reactome Pathways", p="0.00054", q="0.015", community=C1, genes=8];
+    "term_REACTOME_RAB_REGULATION_OF_TRAFFICKING" [type=term, label="REACTOME: RAB REGULATION OF TRAFFICKING", collection="C2: Reactome Pathways", p="0.00057", q="0.015", community=C1, genes=8];
+    "term_REACTOME_COPII_MEDIATED_VESICLE_TRANSPORT" [type=term, label="REACTOME: COPII MEDIATED VESICLE TRANSPORT", collection="C2: Reactome Pathways", p="0.00064", q="0.017", community=C1, genes=6];
+    "term_REACTOME_INTERLEUKIN_12_SIGNALING" [type=term, label="REACTOME: INTERLEUKIN 12 SIGNALING", collection="C2: Reactome Pathways", p="0.00073", q="0.018", community=C1, genes=5];
+    "term_REACTOME_SIGNALING_BY_NOTCH" [type=term, label="REACTOME: SIGNALING BY NOTCH", collection="C2: Reactome Pathways", p="0.0012", q="0.03", community=C1, genes=11];
+    "term_REACTOME_CLATHRIN_MEDIATED_ENDOCYTOSIS" [type=term, label="REACTOME: CLATHRIN MEDIATED ENDOCYTOSIS", collection="C2: Reactome Pathways", p="0.0017", q="0.042", community=C1, genes=8];
+    "term_REACTOME_INTERLEUKIN_12_FAMILY_SIGNALING" [type=term, label="REACTOME: INTERLEUKIN 12 FAMILY SIGNALING", collection="C2: Reactome Pathways", p="0.0018", q="0.042", community=C1, genes=5];
+    "term_REACTOME_NUCLEAR_RNA_DECAY" [type=term, label="REACTOME: NUCLEAR RNA DECAY", collection="C2: Reactome Pathways", p="0.0019", q="0.045", community=C1, genes=4];
+    "term_REACTOME_BUTYRATE_RESPONSE_FACTOR_1_BRF1_BINDS_AND_DESTABILIZES_MRNA" [type=term, label="REACTOME: BUTYRATE RESPONSE FACTOR 1 BRF1 BINDS AND DESTABILIZES MRNA", collection="C2: Reactome Pathways", p="0.0021", q="0.046", community=C1, genes=3];
+    "term_REACTOME_KSRP_KHSRP_BINDS_AND_DESTABILIZES_MRNA" [type=term, label="REACTOME: KSRP KHSRP BINDS AND DESTABILIZES MRNA", collection="C2: Reactome Pathways", p="0.0021", q="0.046", community=C1, genes=3];
+    "term_REACTOME_REGULATION_OF_LIPID_METABOLISM_BY_PPARALPHA" [type=term, label="REACTOME: REGULATION OF LIPID METABOLISM BY PPARALPHA", collection="C2: Reactome Pathways", p="0.0022", q="0.049", community=C1, genes=7];
+    "term_GOBP_GOLGI_VESICLE_TRANSPORT" [type=term, label="GOBP: GOLGI VESICLE TRANSPORT", collection="C5: Gene Ontology: Biological Process", p="2.4e-08", q="6.7e-05", community=C1, genes=20];
+    "term_GOBP_INTRA_GOLGI_VESICLE_MEDIATED_TRANSPORT" [type=term, label="GOBP: INTRA GOLGI VESICLE MEDIATED TRANSPORT", collection="C5: Gene Ontology: Biological Process", p="2.5e-08", q="6.7e-05", community=C1, genes=8];
+    "term_GOBP_REGULATION_OF_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY" [type=term, label="GOBP: REGULATION OF PROTEIN CONTAINING COMPLEX DISASSEMBLY", collection="C5: Gene Ontology: Biological Process", p="4.7e-07", q="0.00084", community=C1, genes=12];
+    "term_GOBP_RETROGRADE_VESICLE_MEDIATED_TRANSPORT_GOLGI_TO_ENDOPLASMIC_RETICULUM" [type=term, label="GOBP: RETROGRADE VESICLE MEDIATED TRANSPORT GOLGI TO ENDOPLASMIC RETICULUM", collection="C5: Gene Ontology: Biological Process", p="6.5e-07", q="0.00087", community=C1, genes=8];
+    "term_GOBP_GOLGI_ORGANIZATION" [type=term, label="GOBP: GOLGI ORGANIZATION", collection="C5: Gene Ontology: Biological Process", p="1.4e-05", q="0.015", community=C1, genes=11];
+    "term_GOBP_ENDOPLASMIC_RETICULUM_TO_GOLGI_VESICLE_MEDIATED_TRANSPORT" [type=term, label="GOBP: ENDOPLASMIC RETICULUM TO GOLGI VESICLE MEDIATED TRANSPORT", collection="C5: Gene Ontology: Biological Process", p="3.2e-05", q="0.024", community=C1, genes=10];
+    "term_GOBP_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY" [type=term, label="GOBP: PROTEIN CONTAINING COMPLEX DISASSEMBLY", collection="C5: Gene Ontology: Biological Process", p="0.00012", q="0.05", community=C1, genes=13];
+    "term_GOBP_GLYCOLIPID_BIOSYNTHETIC_PROCESS" [type=term, label="GOBP: GLYCOLIPID BIOSYNTHETIC PROCESS", collection="C5: Gene Ontology: Biological Process", p="0.00013", q="0.05", community=C1, genes=7];
+    "term_GOCC_CORE_MEDIATOR_COMPLEX" [type=term, label="GOCC: CORE MEDIATOR COMPLEX", collection="C5: Gene Ontology: Cellular Component", p="4.7e-05", q="0.011", community=C1, genes=5];
+    "term_GOMF_CATALYTIC_ACTIVITY_ACTING_ON_RNA" [type=term, label="GOMF: CATALYTIC ACTIVITY ACTING ON RNA", collection="C5: Gene Ontology: Molecular Function", p="2.4e-05", q="0.014", community=C1, genes=18];
+    "A4GALT" [type=gene, degree=1, community=C1];
+    "ADAM10" [type=gene, degree=2, community=C1];
+    "ARPC1A" [type=gene, degree=1, community=C1];
+    "ATG12" [type=gene, degree=2, community=C1];
+    "CAV2" [type=gene, degree=1, community=C1];
+    "CLN3" [type=gene, degree=3, community=C1];
+    "COG2" [type=gene, degree=11, community=C1];
+    "COG3" [type=gene, degree=12, community=C1];
+    "COG4" [type=gene, degree=11, community=C1];
+    "DDX10" [type=gene, degree=1, community=C1];
+    "DDX53" [type=gene, degree=1, community=C1];
+    "DDX55" [type=gene, degree=1, community=C1];
+    "DHX33" [type=gene, degree=1, community=C1];
+    "DIMT1" [type=gene, degree=1, community=C1];
+    "DPM1" [type=gene, degree=2, community=C1];
+    "EGF" [type=gene, degree=3, community=C1];
+    "EPS8" [type=gene, degree=2, community=C1];
+    "ERI2" [type=gene, degree=1, community=C1];
+    "ETF1" [type=gene, degree=3, community=C1];
+    "EXOSC3" [type=gene, degree=4, community=C1];
+    "EXOSC5" [type=gene, degree=4, community=C1];
+    "FLII" [type=gene, degree=2, community=C1];
+    "GABARAPL2" [type=gene, degree=4, community=C1];
+    "GAPVD1" [type=gene, degree=3, community=C1];
+    "GOSR2" [type=gene, degree=11, community=C1];
+    "HIP1R" [type=gene, degree=1, community=C1];
+    "HNRNPF" [type=gene, degree=2, community=C1];
+    "IGHMBP2" [type=gene, degree=1, community=C1];
+    "KAT2A" [type=gene, degree=1, community=C1];
+    "KIF3C" [type=gene, degree=1, community=C1];
+    "LARS1" [type=gene, degree=1, community=C1];
+    "LPL" [type=gene, degree=2, community=C1];
+    "MED14" [type=gene, degree=5, community=C1];
+    "MED28" [type=gene, degree=5, community=C1];
+    "MED4" [type=gene, degree=5, community=C1];
+    "MED6" [type=gene, degree=5, community=C1];
+    "MED7" [type=gene, degree=5, community=C1];
+    "MID1IP1" [type=gene, degree=2, community=C1];
+    "MPHOSPH6" [type=gene, degree=1, community=C1];
+    "NGLY1" [type=gene, degree=1, community=C1];
+    "PIGH" [type=gene, degree=1, community=C1];
+    "PIGK" [type=gene, degree=1, community=C1];
+    "PIGY" [type=gene, degree=1, community=C1];
+    "PIP5K1C" [type=gene, degree=1, community=C1];
+    "POLR1H" [type=gene, degree=1, community=C1];
+    "POLR3A" [type=gene, degree=1, community=C1];
+    "POLR3F" [type=gene, degree=1, community=C1];
+    "PSME2" [type=gene, degree=2, community=C1];
+    "RAB6A" [type=gene, degree=8, community=C1];
+    "RAB6B" [type=gene, degree=8, community=C1];
+    "RAB6C" [type=gene, degree=3, community=C1];
+    "RABEPK" [type=gene, degree=2, community=C1];
+    "RAP1B" [type=gene, degree=2, community=C1];
+    "SCFD1" [type=gene, degree=7, community=C1];
+    "SPTAN1" [type=gene, degree=6, community=C1];
+    "SPTBN1" [type=gene, degree=7, community=C1];
+    "ST3GAL5" [type=gene, degree=2, community=C1];
+    "STX5" [type=gene, degree=11, community=C1];
+    "TFDP2" [type=gene, degree=1, community=C1];
+    "TIAM2" [type=gene, degree=1, community=C1];
+    "TM9SF2" [type=gene, degree=1, community=C1];
+    "TMED2" [type=gene, degree=11, community=C1];
+    "TRAPPC1" [type=gene, degree=8, community=C1];
+    "TRAPPC8" [type=gene, degree=5, community=C1];
+    "UBQLN4" [type=gene, degree=2, community=C1];
+    "WNT1" [type=gene, degree=2, community=C1];
+    "YTHDC2" [type=gene, degree=2, community=C1];
+  }
+  subgraph cluster_C2 {
+    label="C2"; lead_term="GOBP: ESTABLISHMENT OF PROTEIN LOCALIZATION TO ORGANELLE"; terms=54; genes=56;
+    "term_KEGG_MEDICUS_REFERENCE_NUCLEAR_EXPORT_OF_MRNA" [type=term, label="KEGG: MEDICUS REFERENCE NUCLEAR EXPORT OF MRNA", collection="C2: KEGG MEDICUS", p="1.1e-05", q="0.0021", community=C2, genes=6];
+    "term_REACTOME_REGULATION_OF_GLUCOKINASE_BY_GLUCOKINASE_REGULATORY_PROTEIN" [type=term, label="REACTOME: REGULATION OF GLUCOKINASE BY GLUCOKINASE REGULATORY PROTEIN", collection="C2: Reactome Pathways", p="2e-08", q="2.8e-05", community=C2, genes=8];
+    "term_REACTOME_SNRNP_ASSEMBLY" [type=term, label="REACTOME: SNRNP ASSEMBLY", collection="C2: Reactome Pathways", p="1.1e-07", q="7.9e-05", community=C2, genes=9];
+    "term_REACTOME_HIV_LIFE_CYCLE" [type=term, label="REACTOME: HIV LIFE CYCLE", collection="C2: Reactome Pathways", p="4.5e-07", q="0.00012", community=C2, genes=13];
+    "term_REACTOME_EXPORT_OF_VIRAL_RIBONUCLEOPROTEINS_FROM_NUCLEUS" [type=term, label="REACTOME: EXPORT OF VIRAL RIBONUCLEOPROTEINS FROM NUCLEUS", collection="C2: Reactome Pathways", p="5.4e-07", q="0.00012", community=C2, genes=7];
+    "term_REACTOME_NUCLEAR_IMPORT_OF_REV_PROTEIN" [type=term, label="REACTOME: NUCLEAR IMPORT OF REV PROTEIN", collection="C2: Reactome Pathways", p="6.7e-07", q="0.00012", community=C2, genes=7];
+    "term_REACTOME_SUMOYLATION_OF_SUMOYLATION_PROTEINS" [type=term, label="REACTOME: SUMOYLATION OF SUMOYLATION PROTEINS", collection="C2: Reactome Pathways", p="8.3e-07", q="0.00012", community=C2, genes=7];
+    "term_REACTOME_NUCLEAR_PORE_COMPLEX_NPC_DISASSEMBLY" [type=term, label="REACTOME: NUCLEAR PORE COMPLEX NPC DISASSEMBLY", collection="C2: Reactome Pathways", p="1e-06", q="0.00012", community=C2, genes=7];
+    "term_REACTOME_TRANSPORT_OF_THE_SLBP_DEPENDANT_MATURE_MRNA" [type=term, label="REACTOME: TRANSPORT OF THE SLBP DEPENDANT MATURE MRNA", collection="C2: Reactome Pathways", p="1e-06", q="0.00012", community=C2, genes=7];
+    "term_REACTOME_INTERACTIONS_OF_REV_WITH_HOST_CELLULAR_PROTEINS" [type=term, label="REACTOME: INTERACTIONS OF REV WITH HOST CELLULAR PROTEINS", collection="C2: Reactome Pathways", p="1.2e-06", q="0.00012", community=C2, genes=7];
+    "term_REACTOME_INTERACTIONS_OF_VPR_WITH_HOST_CELLULAR_PROTEINS" [type=term, label="REACTOME: INTERACTIONS OF VPR WITH HOST CELLULAR PROTEINS", collection="C2: Reactome Pathways", p="1.2e-06", q="0.00012", community=C2, genes=7];
+    "term_REACTOME_HIV_INFECTION" [type=term, label="REACTOME: HIV INFECTION", collection="C2: Reactome Pathways", p="1.2e-06", q="0.00012", community=C2, genes=15];
+    "term_REACTOME_SUMOYLATION_OF_UBIQUITINYLATION_PROTEINS" [type=term, label="REACTOME: SUMOYLATION OF UBIQUITINYLATION PROTEINS", collection="C2: Reactome Pathways", p="1.8e-06", q="0.00016", community=C2, genes=7];
+    "term_REACTOME_NS1_MEDIATED_EFFECTS_ON_HOST_PATHWAYS" [type=term, label="REACTOME: NS1 MEDIATED EFFECTS ON HOST PATHWAYS", collection="C2: Reactome Pathways", p="2.6e-06", q="0.00021", community=C2, genes=7];
+    "term_REACTOME_TRANSPORT_OF_MATURE_MRNAS_DERIVED_FROM_INTRONLESS_TRANSCRIPTS" [type=term, label="REACTOME: TRANSPORT OF MATURE MRNAS DERIVED FROM INTRONLESS TRANSCRIPTS", collection="C2: Reactome Pathways", p="3.6e-06", q="0.00026", community=C2, genes=7];
+    "term_REACTOME_VIRAL_MESSENGER_RNA_SYNTHESIS" [type=term, label="REACTOME: VIRAL MESSENGER RNA SYNTHESIS", collection="C2: Reactome Pathways", p="4.2e-06", q="0.00029", community=C2, genes=7];
+    "term_REACTOME_REGULATION_OF_HSF1_MEDIATED_HEAT_SHOCK_RESPONSE" [type=term, label="REACTOME: REGULATION OF HSF1 MEDIATED HEAT SHOCK RESPONSE", collection="C2: Reactome Pathways", p="4.3e-06", q="0.00029", community=C2, genes=9];
+    "term_REACTOME_SUMOYLATION_OF_DNA_REPLICATION_PROTEINS" [type=term, label="REACTOME: SUMOYLATION OF DNA REPLICATION PROTEINS", collection="C2: Reactome Pathways", p="5.7e-06", q="0.00035", community=C2, genes=7];
+    "term_REACTOME_SUMOYLATION_OF_RNA_BINDING_PROTEINS" [type=term, label="REACTOME: SUMOYLATION OF RNA BINDING PROTEINS", collection="C2: Reactome Pathways", p="6.6e-06", q="0.00039", community=C2, genes=7];
+    "term_REACTOME_HOST_INTERACTIONS_OF_HIV_FACTORS" [type=term, label="REACTOME: HOST INTERACTIONS OF HIV FACTORS", collection="C2: Reactome Pathways", p="1.3e-05", q="0.0007", community=C2, genes=10];
+    "term_REACTOME_NUCLEAR_ENVELOPE_BREAKDOWN" [type=term, label="REACTOME: NUCLEAR ENVELOPE BREAKDOWN", collection="C2: Reactome Pathways", p="1.5e-05", q="0.00078", community=C2, genes=7];
+    "term_REACTOME_ISG15_ANTIVIRAL_MECHANISM" [type=term, label="REACTOME: ISG15 ANTIVIRAL MECHANISM", collection="C2: Reactome Pathways", p="1.7e-05", q="0.00083", community=C2, genes=8];
+    "term_REACTOME_NUCLEAR_ENVELOPE_NE_REASSEMBLY" [type=term, label="REACTOME: NUCLEAR ENVELOPE NE REASSEMBLY", collection="C2: Reactome Pathways", p="2e-05", q="0.00098", community=C2, genes=8];
+    "term_REACTOME_SARS_COV_2_ACTIVATES_MODULATES_INNATE_AND_ADAPTIVE_IMMUNE_RESPONSES" [type=term, label="REACTOME: SARS COV 2 ACTIVATES MODULATES INNATE AND ADAPTIVE IMMUNE RESPONSES", collection="C2: Reactome Pathways", p="2.3e-05", q="0.0011", community=C2, genes=10];
+    "term_REACTOME_CELLULAR_RESPONSE_TO_HEAT_STRESS" [type=term, label="REACTOME: CELLULAR RESPONSE TO HEAT STRESS", collection="C2: Reactome Pathways", p="2.4e-05", q="0.0011", community=C2, genes=9];
+    "term_REACTOME_TRNA_PROCESSING_IN_THE_NUCLEUS" [type=term, label="REACTOME: TRNA PROCESSING IN THE NUCLEUS", collection="C2: Reactome Pathways", p="3.1e-05", q="0.0014", community=C2, genes=7];
+    "term_REACTOME_GLUCOSE_METABOLISM" [type=term, label="REACTOME: GLUCOSE METABOLISM", collection="C2: Reactome Pathways", p="4.2e-05", q="0.0017", community=C2, genes=8];
+    "term_REACTOME_TRANSPORT_OF_MATURE_TRANSCRIPT_TO_CYTOPLASM" [type=term, label="REACTOME: TRANSPORT OF MATURE TRANSCRIPT TO CYTOPLASM", collection="C2: Reactome Pathways", p="4.2e-05", q="0.0017", community=C2, genes=8];
+    "term_REACTOME_TRNA_PROCESSING" [type=term, label="REACTOME: TRNA PROCESSING", collection="C2: Reactome Pathways", p="4.4e-05", q="0.0018", community=C2, genes=9];
+    "term_REACTOME_POSTMITOTIC_NUCLEAR_PORE_COMPLEX_NPC_REFORMATION" [type=term, label="REACTOME: POSTMITOTIC NUCLEAR PORE COMPLEX NPC REFORMATION", collection="C2: Reactome Pathways", p="4.9e-05", q="0.0019", community=C2, genes=5];
+    "term_REACTOME_HCMV_EARLY_EVENTS" [type=term, label="REACTOME: HCMV EARLY EVENTS", collection="C2: Reactome Pathways", p="5e-05", q="0.0019", community=C2, genes=10];
+    "term_REACTOME_SARS_COV_2_INFECTION" [type=term, label="REACTOME: SARS COV 2 INFECTION", collection="C2: Reactome Pathways", p="6.4e-05", q="0.0022", community=C2, genes=15];
+    "term_REACTOME_MITOTIC_PROPHASE" [type=term, label="REACTOME: MITOTIC PROPHASE", collection="C2: Reactome Pathways", p="6.4e-05", q="0.0022", community=C2, genes=10];
+    "term_REACTOME_SARS_COV_2_HOST_INTERACTIONS" [type=term, label="REACTOME: SARS COV 2 HOST INTERACTIONS", collection="C2: Reactome Pathways", p="7e-05", q="0.0023", community=C2, genes=12];
+    "term_REACTOME_SUMOYLATION_OF_CHROMATIN_ORGANIZATION_PROTEINS" [type=term, label="REACTOME: SUMOYLATION OF CHROMATIN ORGANIZATION PROTEINS", collection="C2: Reactome Pathways", p="0.0001", q="0.0034", community=C2, genes=7];
+    "term_REACTOME_ANTIVIRAL_MECHANISM_BY_IFN_STIMULATED_GENES" [type=term, label="REACTOME: ANTIVIRAL MECHANISM BY IFN STIMULATED GENES", collection="C2: Reactome Pathways", p="0.00011", q="0.0034", community=C2, genes=10];
+    "term_REACTOME_SARS_COV_INFECTIONS" [type=term, label="REACTOME: SARS COV INFECTIONS", collection="C2: Reactome Pathways", p="0.00012", q="0.0038", community=C2, genes=19];
+    "term_REACTOME_SLC_TRANSPORTER_DISORDERS" [type=term, label="REACTOME: SLC TRANSPORTER DISORDERS", collection="C2: Reactome Pathways", p="0.00013", q="0.0039", community=C2, genes=8];
+    "term_REACTOME_SUMOYLATION_OF_DNA_DAMAGE_RESPONSE_AND_REPAIR_PROTEINS" [type=term, label="REACTOME: SUMOYLATION OF DNA DAMAGE RESPONSE AND REPAIR PROTEINS", collection="C2: Reactome Pathways", p="0.00017", q="0.0052", community=C2, genes=7];
+    "term_REACTOME_HCMV_INFECTION" [type=term, label="REACTOME: HCMV INFECTION", collection="C2: Reactome Pathways", p="0.00019", q="0.0056", community=C2, genes=10];
+    "term_REACTOME_TRANSCRIPTIONAL_REGULATION_BY_SMALL_RNAS" [type=term, label="REACTOME: TRANSCRIPTIONAL REGULATION BY SMALL RNAS", collection="C2: Reactome Pathways", p="0.00022", q="0.0063", community=C2, genes=8];
+    "term_REACTOME_GENE_SILENCING_BY_RNA" [type=term, label="REACTOME: GENE SILENCING BY RNA", collection="C2: Reactome Pathways", p="0.00028", q="0.008", community=C2, genes=9];
+    "term_REACTOME_SUMOYLATION" [type=term, label="REACTOME: SUMOYLATION", collection="C2: Reactome Pathways", p="0.00066", q="0.017", community=C2, genes=10];
+    "term_REACTOME_HCMV_LATE_EVENTS" [type=term, label="REACTOME: HCMV LATE EVENTS", collection="C2: Reactome Pathways", p="0.002", q="0.046", community=C2, genes=7];
+    "term_REACTOME_MITOTIC_METAPHASE_AND_ANAPHASE" [type=term, label="REACTOME: MITOTIC METAPHASE AND ANAPHASE", collection="C2: Reactome Pathways", p="0.0023", q="0.05", community=C2, genes=10];
+    "term_GOBP_ESTABLISHMENT_OF_PROTEIN_LOCALIZATION_TO_ORGANELLE" [type=term, label="GOBP: ESTABLISHMENT OF PROTEIN LOCALIZATION TO ORGANELLE", collection="C5: Gene Ontology: Biological Process", p="3.3e-05", q="0.024", community=C2, genes=19];
+    "term_GOBP_NUCLEAR_EXPORT" [type=term, label="GOBP: NUCLEAR EXPORT", collection="C5: Gene Ontology: Biological Process", p="3.6e-05", q="0.024", community=C2, genes=11];
+    "term_GOBP_RNA_EXPORT_FROM_NUCLEUS" [type=term, label="GOBP: RNA EXPORT FROM NUCLEUS", collection="C5: Gene Ontology: Biological Process", p="5.8e-05", q="0.034", community=C2, genes=8];
+    "term_GOBP_MRNA_EXPORT_FROM_NUCLEUS" [type=term, label="GOBP: MRNA EXPORT FROM NUCLEUS", collection="C5: Gene Ontology: Biological Process", p="7.9e-05", q="0.042", community=C2, genes=7];
+    "term_GOBP_NUCLEAR_TRANSPORT" [type=term, label="GOBP: NUCLEAR TRANSPORT", collection="C5: Gene Ontology: Biological Process", p="0.00012", q="0.05", community=C2, genes=15];
+    "term_GOBP_MRNA_TRANSPORT" [type=term, label="GOBP: MRNA TRANSPORT", collection="C5: Gene Ontology: Biological Process", p="0.00012", q="0.05", community=C2, genes=9];
+    "term_GOCC_NUCLEAR_PORE_OUTER_RING" [type=term, label="GOCC: NUCLEAR PORE OUTER RING", collection="C5: Gene Ontology: Cellular Component", p="1.2e-05", q="0.0069", community=C2, genes=4];
+    "term_GOCC_NUCLEAR_PORE" [type=term, label="GOCC: NUCLEAR PORE", collection="C5: Gene Ontology: Cellular Component", p="2e-05", q="0.0069", community=C2, genes=9];
+    "term_GOMF_STRUCTURAL_CONSTITUENT_OF_NUCLEAR_PORE" [type=term, label="GOMF: STRUCTURAL CONSTITUENT OF NUCLEAR PORE", collection="C5: Gene Ontology: Molecular Function", p="1e-06", q="0.0012", community=C2, genes=6];
+    "ANKRD6" [type=gene, degree=1, community=C2];
+    "CLNS1A" [type=gene, degree=1, community=C2];
+    "CTDP1" [type=gene, degree=2, community=C2];
+    "CXCR4" [type=gene, degree=2, community=C2];
+    "DNAJB1" [type=gene, degree=2, community=C2];
+    "ELOA" [type=gene, degree=2, community=C2];
+    "ERCC3" [type=gene, degree=2, community=C2];
+    "FAM76B" [type=gene, degree=2, community=C2];
+    "FNTA" [type=gene, degree=1, community=C2];
+    "GCK" [type=gene, degree=3, community=C2];
+    "GEMIN2" [type=gene, degree=4, community=C2];
+    "GML" [type=gene, degree=2, community=C2];
+    "MDN1" [type=gene, degree=2, community=C2];
+    "NMT1" [type=gene, degree=3, community=C2];
+    "NUP107" [type=gene, degree=54, community=C2];
+    "NUP133" [type=gene, degree=54, community=C2];
+    "NUP153" [type=gene, degree=48, community=C2];
+    "NUP155" [type=gene, degree=53, community=C2];
+    "NUP160" [type=gene, degree=53, community=C2];
+    "NUP85" [type=gene, degree=54, community=C2];
+    "PPIB" [type=gene, degree=1, community=C2];
+    "PPP2R2A" [type=gene, degree=2, community=C2];
+    "RANBP2" [type=gene, degree=48, community=C2];
+    "RGPD5" [type=gene, degree=3, community=C2];
+    "RGPD8" [type=gene, degree=3, community=C2];
+    "THOC2" [type=gene, degree=6, community=C2];
+    "TIMM8A" [type=gene, degree=1, community=C2];
+    "TNPO3" [type=gene, degree=2, community=C2];
+    "TOMM70" [type=gene, degree=5, community=C2];
+  }
+  // bridge genes: connect terms in different communities
+  "AGO3" [type=gene, degree=3, community=C1, bridge=true, participation="0.44"];
+  "AKT1" [type=gene, degree=11, community=C1, bridge=true, participation="0.5"];
+  "ALKBH8" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  "AP2M1" [type=gene, degree=5, community=C2, bridge=true, participation="0.48"];
+  "ARF1" [type=gene, degree=11, community=C1, bridge=true, participation="0.3"];
+  "CD4" [type=gene, degree=4, community=C2, bridge=true, participation="0.38"];
+  "DDOST" [type=gene, degree=3, community=C2, bridge=true, participation="0.44"];
+  "EGFR" [type=gene, degree=7, community=C1, bridge=true, participation="0.41"];
+  "GOLPH3" [type=gene, degree=4, community=C1, bridge=true, participation="0.38"];
+  "H3-3A" [type=gene, degree=4, community=C2, bridge=true, participation="0.38"];
+  "HUWE1" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  "IKBKG" [type=gene, degree=7, community=C2, bridge=true, participation="0.24"];
+  "JAK1" [type=gene, degree=9, community=C2, bridge=true, participation="0.44"];
+  "LAPTM5" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  "MGAT1" [type=gene, degree=4, community=C1, bridge=true, participation="0.5"];
+  "NCOR2" [type=gene, degree=7, community=C1, bridge=true, participation="0.49"];
+  "RAB1B" [type=gene, degree=12, community=C1, bridge=true, participation="0.15"];
+  "RAB2A" [type=gene, degree=5, community=C1, bridge=true, participation="0.32"];
+  "RELA" [type=gene, degree=5, community=C1, bridge=true, participation="0.48"];
+  "SPAST" [type=gene, degree=6, community=C1, bridge=true, participation="0.44"];
+  "SPCS3" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  "STT3A" [type=gene, degree=3, community=C2, bridge=true, participation="0.44"];
+  "TAOK1" [type=gene, degree=3, community=C1, bridge=true, participation="0.44"];
+  "TRMT5" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  "TUBAL3" [type=gene, degree=10, community=C1, bridge=true, participation="0.5"];
+  "VPS53" [type=gene, degree=3, community=C1, bridge=true, participation="0.44"];
+  "WNK1" [type=gene, degree=7, community=C2, bridge=true, participation="0.41"];
+  // edges: each term with its genes
+  "term_HALLMARK_PROTEIN_SECRETION" -- {"ADAM10" "AP2M1" "ARF1" "CAV2" "COG2" "EGFR" "GOSR2" "RAB2A" "TMED2"};
+  "term_KEGG_MEDICUS_REFERENCE_EGF_EGFR_PI3K_NFKB_SIGNALING_PATHWAY" -- {"AKT1" "EGF" "EGFR" "IKBKG" "RELA"};
+  "term_KEGG_MEDICUS_REFERENCE_NUCLEAR_EXPORT_OF_MRNA" -- {"NUP107" "NUP133" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_REGULATION_OF_GLUCOKINASE_BY_GLUCOKINASE_REGULATORY_PROTEIN" -- {"GCK" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_SNRNP_ASSEMBLY" -- {"CLNS1A" "GEMIN2" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_ASPARAGINE_N_LINKED_GLYCOSYLATION" -- {"ARF1" "COG2" "COG3" "COG4" "DDOST" "DPM1" "GOSR2" "MGAT1" "NGLY1" "RAB1B" "SCFD1" "SPTAN1" "SPTBN1" "ST3GAL5" "STT3A" "STX5" "TMED2" "TRAPPC1" "TUBAL3"};
+  "term_REACTOME_COPI_MEDIATED_ANTEROGRADE_TRANSPORT" -- {"ARF1" "COG2" "COG3" "COG4" "GOSR2" "RAB1B" "SPTAN1" "SPTBN1" "STX5" "TMED2" "TUBAL3"};
+  "term_REACTOME_HIV_LIFE_CYCLE" -- {"CD4" "CTDP1" "CXCR4" "ELOA" "ERCC3" "NMT1" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_EXPORT_OF_VIRAL_RIBONUCLEOPROTEINS_FROM_NUCLEUS" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_NUCLEAR_IMPORT_OF_REV_PROTEIN" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_ER_TO_GOLGI_ANTEROGRADE_TRANSPORT" -- {"ARF1" "COG2" "COG3" "COG4" "GOSR2" "RAB1B" "SCFD1" "SPTAN1" "SPTBN1" "STX5" "TMED2" "TRAPPC1" "TUBAL3"};
+  "term_REACTOME_SUMOYLATION_OF_SUMOYLATION_PROTEINS" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_NUCLEAR_PORE_COMPLEX_NPC_DISASSEMBLY" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_TRANSPORT_OF_THE_SLBP_DEPENDANT_MATURE_MRNA" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_TRANSPORT_TO_THE_GOLGI_AND_SUBSEQUENT_MODIFICATION" -- {"ARF1" "COG2" "COG3" "COG4" "GOSR2" "MGAT1" "RAB1B" "SCFD1" "SPTAN1" "SPTBN1" "STX5" "TMED2" "TRAPPC1" "TUBAL3"};
+  "term_REACTOME_INTERACTIONS_OF_REV_WITH_HOST_CELLULAR_PROTEINS" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_INTERACTIONS_OF_VPR_WITH_HOST_CELLULAR_PROTEINS" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_HIV_INFECTION" -- {"AP2M1" "ARF1" "CD4" "CTDP1" "CXCR4" "ELOA" "ERCC3" "NMT1" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_SUMOYLATION_OF_UBIQUITINYLATION_PROTEINS" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_NS1_MEDIATED_EFFECTS_ON_HOST_PATHWAYS" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_INTRA_GOLGI_AND_RETROGRADE_GOLGI_TO_ER_TRAFFIC" -- {"ARF1" "COG2" "COG3" "COG4" "GOSR2" "KIF3C" "RAB1B" "RAB6A" "RAB6B" "RABEPK" "STX5" "TMED2" "TUBAL3" "VPS53"};
+  "term_REACTOME_TRANSPORT_OF_MATURE_MRNAS_DERIVED_FROM_INTRONLESS_TRANSCRIPTS" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_VIRAL_MESSENGER_RNA_SYNTHESIS" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_REGULATION_OF_HSF1_MEDIATED_HEAT_SHOCK_RESPONSE" -- {"DNAJB1" "GML" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_TRANSCRIPTIONAL_REGULATION_OF_WHITE_ADIPOCYTE_DIFFERENTIATION" -- {"LPL" "MED14" "MED28" "MED4" "MED6" "MED7" "NCOR2" "RELA" "WNT1"};
+  "term_REACTOME_SUMOYLATION_OF_DNA_REPLICATION_PROTEINS" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_SUMOYLATION_OF_RNA_BINDING_PROTEINS" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_RETROGRADE_TRANSPORT_AT_THE_TRANS_GOLGI_NETWORK" -- {"COG2" "COG3" "COG4" "RAB6A" "RAB6B" "RABEPK" "VPS53"};
+  "term_REACTOME_HOST_INTERACTIONS_OF_HIV_FACTORS" -- {"AP2M1" "ARF1" "CD4" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_NUCLEAR_ENVELOPE_BREAKDOWN" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_ISG15_ANTIVIRAL_MECHANISM" -- {"JAK1" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_NUCLEAR_ENVELOPE_NE_REASSEMBLY" -- {"NUP107" "NUP133" "NUP155" "NUP160" "NUP85" "PPP2R2A" "SPAST" "TUBAL3"};
+  "term_REACTOME_SARS_COV_2_ACTIVATES_MODULATES_INNATE_AND_ADAPTIVE_IMMUNE_RESPONSES" -- {"IKBKG" "JAK1" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "TOMM70"};
+  "term_REACTOME_CELLULAR_RESPONSE_TO_HEAT_STRESS" -- {"DNAJB1" "GML" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_TRNA_PROCESSING_IN_THE_NUCLEUS" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_GLUCOSE_METABOLISM" -- {"GCK" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_TRANSPORT_OF_MATURE_TRANSCRIPT_TO_CYTOPLASM" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "THOC2"};
+  "term_REACTOME_TRNA_PROCESSING" -- {"ALKBH8" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "TRMT5"};
+  "term_REACTOME_ADIPOGENESIS" -- {"LPL" "MED14" "MED28" "MED4" "MED6" "MED7" "NCOR2" "RELA" "WNT1"};
+  "term_REACTOME_POSTMITOTIC_NUCLEAR_PORE_COMPLEX_NPC_REFORMATION" -- {"NUP107" "NUP133" "NUP155" "NUP160" "NUP85"};
+  "term_REACTOME_HCMV_EARLY_EVENTS" -- {"EGFR" "NCOR2" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "TUBAL3"};
+  "term_REACTOME_INTRA_GOLGI_TRAFFIC" -- {"ARF1" "COG2" "COG3" "COG4" "GOSR2" "STX5"};
+  "term_REACTOME_SARS_COV_2_INFECTION" -- {"AKT1" "DDOST" "GEMIN2" "IKBKG" "JAK1" "MGAT1" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "STT3A" "TOMM70"};
+  "term_REACTOME_MITOTIC_PROPHASE" -- {"H3-3A" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RAB1B" "RAB2A" "RANBP2"};
+  "term_REACTOME_SARS_COV_2_HOST_INTERACTIONS" -- {"AKT1" "GEMIN2" "IKBKG" "JAK1" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "TOMM70"};
+  "term_REACTOME_SUMOYLATION_OF_CHROMATIN_ORGANIZATION_PROTEINS" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_ANTIVIRAL_MECHANISM_BY_IFN_STIMULATED_GENES" -- {"IKBKG" "JAK1" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "TUBAL3"};
+  "term_REACTOME_SARS_COV_INFECTIONS" -- {"AKT1" "AP2M1" "DDOST" "FNTA" "GEMIN2" "IKBKG" "JAK1" "MGAT1" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "PPIB" "RANBP2" "RELA" "STT3A" "TOMM70"};
+  "term_REACTOME_SLC_TRANSPORTER_DISORDERS" -- {"GCK" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_SUMOYLATION_OF_DNA_DAMAGE_RESPONSE_AND_REPAIR_PROTEINS" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_HCMV_INFECTION" -- {"EGFR" "NCOR2" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "TUBAL3"};
+  "term_REACTOME_TRANSCRIPTIONAL_REGULATION_BY_SMALL_RNAS" -- {"H3-3A" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_GENE_SILENCING_BY_RNA" -- {"AGO3" "H3-3A" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_RAB_GEFS_EXCHANGE_GTP_FOR_GDP_ON_RABS" -- {"AKT1" "GAPVD1" "RAB1B" "RAB6A" "RAB6B" "TRAPPC1" "TRAPPC8"};
+  "term_REACTOME_RESPIRATORY_SYNCYTIAL_VIRUS_INFECTION_PATHWAY" -- {"EGFR" "JAK1" "MED14" "MED28" "MED4" "MED6" "MED7" "SPCS3"};
+  "term_REACTOME_RAB_REGULATION_OF_TRAFFICKING" -- {"AKT1" "GABARAPL2" "GAPVD1" "RAB1B" "RAB6A" "RAB6B" "TRAPPC1" "TRAPPC8"};
+  "term_REACTOME_COPII_MEDIATED_VESICLE_TRANSPORT" -- {"GOSR2" "RAB1B" "SCFD1" "STX5" "TMED2" "TRAPPC1"};
+  "term_REACTOME_SUMOYLATION" -- {"IKBKG" "NCOR2" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "RELA"};
+  "term_REACTOME_INTERLEUKIN_12_SIGNALING" -- {"ARF1" "HNRNPF" "JAK1" "PSME2" "RAP1B"};
+  "term_REACTOME_SIGNALING_BY_NOTCH" -- {"ADAM10" "AGO3" "AKT1" "EGF" "EGFR" "H3-3A" "KAT2A" "NCOR2" "RAB6A" "TFDP2" "TMED2"};
+  "term_REACTOME_CLATHRIN_MEDIATED_ENDOCYTOSIS" -- {"AP2M1" "ARPC1A" "CD4" "EGF" "EGFR" "GAPVD1" "HIP1R" "PIP5K1C"};
+  "term_REACTOME_INTERLEUKIN_12_FAMILY_SIGNALING" -- {"ARF1" "HNRNPF" "JAK1" "PSME2" "RAP1B"};
+  "term_REACTOME_NUCLEAR_RNA_DECAY" -- {"EXOSC3" "EXOSC5" "MPHOSPH6" "YTHDC2"};
+  "term_REACTOME_HCMV_LATE_EVENTS" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2"};
+  "term_REACTOME_BUTYRATE_RESPONSE_FACTOR_1_BRF1_BINDS_AND_DESTABILIZES_MRNA" -- {"AKT1" "EXOSC3" "EXOSC5"};
+  "term_REACTOME_KSRP_KHSRP_BINDS_AND_DESTABILIZES_MRNA" -- {"AKT1" "EXOSC3" "EXOSC5"};
+  "term_REACTOME_REGULATION_OF_LIPID_METABOLISM_BY_PPARALPHA" -- {"MED14" "MED28" "MED4" "MED6" "MED7" "NCOR2" "TIAM2"};
+  "term_REACTOME_MITOTIC_METAPHASE_AND_ANAPHASE" -- {"NUP107" "NUP133" "NUP155" "NUP160" "NUP85" "PPP2R2A" "RANBP2" "SPAST" "TAOK1" "TUBAL3"};
+  "term_GOBP_GOLGI_VESICLE_TRANSPORT" -- {"CLN3" "COG2" "COG3" "COG4" "GABARAPL2" "GOLPH3" "GOSR2" "LAPTM5" "RAB1B" "RAB2A" "RAB6A" "RAB6B" "RAB6C" "SCFD1" "SPAST" "SPTBN1" "STX5" "TMED2" "TRAPPC1" "TRAPPC8"};
+  "term_GOBP_INTRA_GOLGI_VESICLE_MEDIATED_TRANSPORT" -- {"COG2" "COG3" "COG4" "GABARAPL2" "GOSR2" "RAB6A" "RAB6B" "RAB6C"};
+  "term_GOBP_REGULATION_OF_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY" -- {"ATG12" "CLN3" "EPS8" "ETF1" "FLII" "MID1IP1" "SPAST" "SPTAN1" "SPTBN1" "TAOK1" "UBQLN4" "WNK1"};
+  "term_GOBP_RETROGRADE_VESICLE_MEDIATED_TRANSPORT_GOLGI_TO_ENDOPLASMIC_RETICULUM" -- {"COG3" "COG4" "GOLPH3" "RAB6A" "RAB6B" "RAB6C" "SCFD1" "STX5"};
+  "term_GOBP_GOLGI_ORGANIZATION" -- {"COG2" "COG3" "COG4" "GOLPH3" "HUWE1" "RAB1B" "RAB2A" "RAB6B" "STX5" "TMED2" "TRAPPC8"};
+  "term_GOBP_ENDOPLASMIC_RETICULUM_TO_GOLGI_VESICLE_MEDIATED_TRANSPORT" -- {"COG3" "GOSR2" "RAB1B" "RAB2A" "SCFD1" "SPAST" "STX5" "TMED2" "TRAPPC1" "TRAPPC8"};
+  "term_GOBP_ESTABLISHMENT_OF_PROTEIN_LOCALIZATION_TO_ORGANELLE" -- {"AKT1" "ANKRD6" "GOLPH3" "HUWE1" "LAPTM5" "NMT1" "NUP107" "NUP133" "NUP153" "NUP155" "NUP85" "RANBP2" "RGPD5" "RGPD8" "SPCS3" "TIMM8A" "TNPO3" "TOMM70" "VPS53"};
+  "term_GOBP_NUCLEAR_EXPORT" -- {"FAM76B" "MDN1" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "THOC2" "WNK1"};
+  "term_GOBP_RNA_EXPORT_FROM_NUCLEUS" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "THOC2" "WNK1"};
+  "term_GOBP_MRNA_EXPORT_FROM_NUCLEUS" -- {"NUP107" "NUP133" "NUP155" "NUP160" "NUP85" "THOC2" "WNK1"};
+  "term_GOBP_NUCLEAR_TRANSPORT" -- {"AKT1" "FAM76B" "MDN1" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "RGPD5" "RGPD8" "THOC2" "TNPO3" "WNK1"};
+  "term_GOBP_MRNA_TRANSPORT" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "THOC2" "WNK1"};
+  "term_GOBP_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY" -- {"ATG12" "CLN3" "EPS8" "ETF1" "FLII" "GABARAPL2" "MID1IP1" "SPAST" "SPTAN1" "SPTBN1" "TAOK1" "UBQLN4" "WNK1"};
+  "term_GOBP_GLYCOLIPID_BIOSYNTHETIC_PROCESS" -- {"A4GALT" "DPM1" "PIGH" "PIGK" "PIGY" "ST3GAL5" "TM9SF2"};
+  "term_GOCC_NUCLEAR_PORE_OUTER_RING" -- {"NUP107" "NUP133" "NUP160" "NUP85"};
+  "term_GOCC_NUCLEAR_PORE" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "RGPD5" "RGPD8"};
+  "term_GOCC_CORE_MEDIATOR_COMPLEX" -- {"MED14" "MED28" "MED4" "MED6" "MED7"};
+  "term_GOMF_STRUCTURAL_CONSTITUENT_OF_NUCLEAR_PORE" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85"};
+  "term_GOMF_CATALYTIC_ACTIVITY_ACTING_ON_RNA" -- {"AGO3" "ALKBH8" "DDX10" "DDX53" "DDX55" "DHX33" "DIMT1" "ERI2" "ETF1" "EXOSC3" "EXOSC5" "IGHMBP2" "LARS1" "POLR1H" "POLR3A" "POLR3F" "TRMT5" "YTHDC2"};
+}
+
+**NETWORK INTERPRETATION GUIDE (background):**
+- **Term nodes** (`type=term`): enriched gene sets, with `collection` (source gene set collection), `p` (enrichment p-value) and `q` (Benjamini-Hochberg false discovery rate) and `genes` (number of genes linked)
+- **Gene nodes** (`type=gene`): input genes, with `degree` (number of terms the gene connects to)
+- **Communities**: each `subgraph cluster_Cn` block is one community; term and gene nodes carry `community`. Bridge genes are listed outside the blocks with `bridge=true` and a `participation` value (0 = all terms in one community; higher = spread over communities).
+- **Edges**: each line `"term" -- {"GENE1" "GENE2" ...}` links a term to its genes. Edges are gene-set memberships from curated annotation, not physical interactions or directions of change.
+
+**Gene Set Collections:**
+- **H: Hallmark Gene Sets**: Curated gene sets representing well-defined biological states or processes
+- **C2: KEGG MEDICUS**: Metabolic and signaling pathways from KEGG (MEDICUS)
+- **C2: Reactome Pathways**: Expert-curated biological pathways
+- **C5: Gene Ontology: Biological Process**: Biological processes from Gene Ontology
+- **C5: Gene Ontology: Cellular Component**: Cellular components from Gene Ontology
+- **C5: Gene Ontology: Molecular Function**: Molecular functions from Gene Ontology
+
+**YOUR TASK:**
+You are an experienced molecular biologist explaining to a colleague what this gene list reveals. Write in clear, natural prose. Explain the biology behind the network and why these processes appear together; do not describe the network itself. Your answer should be a conversation starter: it should make the reader want to dig further, and it ends by asking how the gene list was generated so that the interpretation can be rebuilt around the real experiment.
+
+**How to write it:**
+- Ground your claims in the network by naming a few key genes in parentheses, for example (GENE1, GENE2, GENE3). Do not quote term names verbatim or list memberships; describe them in plain words. The reader has the network.
+- Use your biological knowledge to explain mechanisms. When a central point depends on knowledge that is not in the network, say so once in plain words ("this is not in the network, but ...").
+- Do not repeat general caveats about annotation networks (memberships rather than interactions, no direction of change). Mention a limitation only where it changes the interpretation.
+- Point out what is surprising or unexpected.
+- About 900-1,200 words.
+
+**Structure:**
+1. **Executive summary**: the main findings in 4-6 plain sentences. Start with the overall biological picture and the most important modules and genes.
+2. **Communities**: one short section per community (C1, C2, ...), headed by the community ID and a plain biological name you choose. In 3-5 sentences, explain the biology it represents in plain language, which genes anchor it and why they matter, and anything surprising. If a community looks like a mix of unrelated processes, say so; if two communities belong together, say so.
+3. **Putting it together**: connected prose that combines the communities into one biological story. Give the key genes a role in that story: hubs that anchor a community, and bridge genes that link communities (what does each link suggest biologically?).
+4. **Estimated experimental context**: hypothesize what experiment most likely generated this gene list (for example the type of assay, perturbation, cell type or condition). Reason from the network: which communities and genes point to it, and how confident you are. Name one or two alternatives and what in the network would distinguish them.
+5. **Closing**: end with one or two sentences inviting the reader to share how the gene list was actually generated (assay, perturbation, cell type, comparison), so that you can rebuild the interpretation around it: what fits the experiment, what does not, what is already known and what may be new.

@@ -1,0 +1,2 @@
+Library	Iteration	Term	Description	iteration overlapping genes	iteration p-value	iteration -log(p-value)	Genes removed for next iteration	Full list overlapping genes	Full list p-value	Regular FDR	Full list overlapping genes (gene names)
+C2: KEGG MEDICUS	1	KEGG: MEDICUS REFERENCE CA2 CAM CN SIGNALING PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_MEDICUS_REFERENCE_CA2_CAM_CN_SIGNALING_PATHWAY	3/12	0.0005724123877390232	3.242290976120356	NFATC1, PPP3CB, PPP3R1	3/12	0.0005724123877390232	0.1691474760919099	NFATC1, PPP3CB, PPP3R1

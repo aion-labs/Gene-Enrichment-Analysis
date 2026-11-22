@@ -1,0 +1,31 @@
+## 1. Revised summary
+
+The network fits a human-cell siRNA screen for HIV dependency factors: it contains the viral receptor alongside host machinery for transcription, nuclear transport, and membrane traffic. My earlier guess was right about the perturbation-screen format and about the importance of cell-surface biology, but wrong about the endpoint: infection, not cargo delivery, was the readout. What makes the result interesting is that the list contains both a recognizable entry factor (CD4) and clusters of genes whose depletion could change what the assay measures without directly affecting the virus. The nuclear pore signal is especially coherent, while the Golgi, glycan, and spindle signals have several competing explanations. The main question is which hits reflect a requirement of the virus and which reflect a requirement of the cell or of the readout.
+
+## 2. What fits
+
+**Well established.** CD4 is the clearest match. This is not in the network, but CD4 is the primary receptor for HIV entry, and HIV also relies on host RNA polymerase II to transcribe its integrated genome and on host nuclear transport at several points in its life cycle. Alongside CD4 in C1, the concentration of pore proteins in C3 and transcriptional machinery in C4 therefore makes sense (NUP107, NUP133, MED14, MED6). The distinction is that CD4 has a defined role in entry, whereas finding several members of a pore or transcription complex does not assign each one a direct viral role. For example, a pore phenotype alone would not tell you whether transport of incoming viral material or export of newly made RNA mattered to the endpoint.
+
+**Plausible, but less specific.** I would read C2 and C5 together. The repeated appearance of early secretory machinery (RAB1B, RAB2A, COG2–COG4) and the separate grouping of glycan and lipid-anchor genes (MGAT1, PIGY, PIGK) suggest that the state of the cell surface mattered. One explanation is that knockdown changed the amount or composition of host proteins at the surface before infection was measured. If the endpoint included spread or particle production, changes in membrane traffic could also register later. Those interpretations are not interchangeable: the same host phenotype can affect different parts of a single-cycle assay and a spreading-infection assay.
+
+## 3. What does not fit
+
+The surprise in C1 is how much of it lies outside the receptor story. Nuclear RNA processing and spindle organization sit beside endocytosis, but there is no obvious reason to interpret them as one HIV-specific process (EXOSC3, EXOSC5, CSPP1, MAP4). Spindle hits could reflect altered proliferation or cell number over the knockdown interval. RNA-processing and Mediator hits raise a different issue: if the endpoint relied on expression of a reporter, some knockdowns might lower the reporter signal without a proportional change in the infection event it was meant to count. Neither explanation requires dismissing the hits; it changes what they are evidence for.
+
+C6 is harder to place. The ligase adaptors point to selective protein turnover (DCAF1, FBXW11, KLHDC2), but they need not act on the same substrates, and the list doesn’t identify those substrates. Likewise, the autophagosome genes in C2 do not establish that autophagic turnover explains the infection phenotype. Before combining these into a degradation story, I’d ask whether the hits were reproduced by independent siRNAs and whether their original scores tracked cell count or viability. A shared phenotype across several subunits of one complex is more persuasive than an isolated hit, but even a reproducible effect can be indirect.
+
+## 4. What may be new
+
+The most interesting unresolved signal is **surface composition rather than simply cargo delivery**. C2 contains a coherent trafficking core (RAB1B, RAB2A), while C5 includes several genes involved in building or attaching GPI anchors (PIGY, PIGH, PIGK). MGAT1 is a useful bridge because it connects the trafficking and glycan themes, but it acts in N-glycan processing, not GPI anchoring. That distinction gives us two host-cell explanations to separate: altered maturation of surface proteins and altered representation of an entire class of lipid-anchored proteins. I’m confident the list points to both kinds of surface biology; I’m much less confident about which, if either, explains the infection readout.
+
+A second question is whether **microtubule organization explains part of the trafficking signal**. SPAST links the Golgi and tubulin themes in C2 to the spindle theme in C1. A change in interphase cargo movement would give this bridge a different meaning from a change in cell division. I have lower confidence here than for the surface-composition signal: it’s a plausible explanation supported by one informative bridge, not a conclusion supported by several members of the same machinery.
+
+## 5. Priorities
+
+I’d prioritize three tests that distinguish the host-cell explanations without using infection as the readout:
+
+1. **Separate surface abundance from total protein abundance.** In uninfected cells, compare surface and total levels of CD4 and a small panel of unrelated membrane proteins after representative trafficking, glycan-processing, and GPI-anchor knockdowns. A broad surface defect, a selective loss of GPI-anchored proteins, and a drop in total protein would imply different explanations for the original hits.
+2. **Separate transcription, export, and reporter output.** For representative Mediator and pore hits, use a nonviral reporter alongside nuclear and cytoplasmic measurements of endogenous transcripts. Less RNA overall, nuclear retention, and less reporter signal per cell are distinct outcomes that could all look like a weaker signal in the original screen.
+3. **Separate membrane traffic from changes in cell division.** For the SPAST-linked signal, measure ordinary secretory cargo movement in uninfected interphase cells while tracking cell-cycle distribution and cell number. A transport phenotype in cells that aren’t dividing would support the trafficking interpretation; a phenotype that tracks altered proliferation would shift attention back to the assay.
+
+The original endpoint and its timing are the details I’d want next: they determine which of these explanations the screen could have distinguished on its own.

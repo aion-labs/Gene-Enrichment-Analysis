@@ -1,0 +1,11 @@
+Collection	ORA FDR<0.05	iGEA q<0.10	Both	Genes ORA	Genes iGEA	Genes only ORA	Genes only iGEA	ORA terms mostly uncovered by iGEA (<50% genes)	Mean Jaccard ORA	Mean Jaccard iGEA
+H: Hallmark Gene Sets	1	1	1	9	9	0	0	0		
+C2: Reactome Pathways	65	9	7	87	64	28	5	1	0.332	0.0
+C2: KEGG Legacy	0	5	0	0	20	0	20	0		0.0
+C2: KEGG MEDICUS	2	3	2	11	14	0	3	0	0.0	0.0
+C2: BioCarta	0	3	0	0	10	0	10	0		0.0
+C2: Pathway Interaction Database	0	2	0	0	8	0	8	0		0.0
+C2: WikiPathways	0	6	0	0	36	0	36	0		0.0
+C5: Gene Ontology: Biological Process	14	6	4	57	71	10	24	1	0.153	0.0
+C5: Gene Ontology: Cellular Component	3	11	3	14	66	0	52	0	0.148	0.0
+C5: Gene Ontology: Molecular Function	2	10	2	24	83	0	59	0	0.0	0.0

@@ -1,0 +1,157 @@
+Below is an iterative gene set enrichment (iGEA) network computed from a gene list. Iterative means that for each gene set collection, the top enriched gene set is found, saved and its genes are removed from the gene list; the remaining genes are then tested again. Thus each gene appears at most once per collection but can be linked to terms from different collections. The network of genes and gene sets (= terms) is given in DOT format, preceded by its statistics and communities.
+
+**STATISTICAL CONTEXT:**
+The input contained 263 validated genes. No term-level filter was applied (q-value threshold 1): all 11 terms selected by iGEA are in the network, which may include terms that random gene lists of this size also select by chance. Each term carries its q-value (an empirical false discovery rate estimated from 1,000 random gene lists of the same size, background and settings).
+
+Network-level test: the largest connected cluster of this network compared with the networks built the same way (same filter) from the 1,000 random gene lists. Empirical p = (r + 1) / (1,000 + 1), where r is the number of random lists with a value at least as large. The metrics describe the same cluster and are not independent tests.
+
+| Metric | This network | Random mean | Empirical p |
+|---|---|---|---|
+| Nodes (genes + terms) in the largest connected cluster | 27 | 42 | p = 0.68 |
+| Genes in the largest cluster | 22 | 32.4 | p = 0.66 |
+| Terms in the largest cluster | 5 | 9.56 | p = 0.78 |
+| Edges in the largest cluster | 26 | 48.4 | p = 0.73 |
+| Average edges per gene | 1.182 | 1.46 | p = 0.9 |
+
+How to use the statistics: the network is not distinguishable from what random gene lists produce if the empirical p for the number of nodes in the largest cluster is 0.05 or higher. In that case, say so plainly, keep the rest short and tentative, and do not propose an experimental context. Do not use p-values, q-values or iteration numbers to rank biological importance.
+
+**COMMUNITIES:**
+Terms were grouped into communities with Leiden (igraph, modularity) on the term network, in which two terms are linked when they share genes (modularity 0.2188; the same partition was found with 100% of 100 random seeds). Communities are algorithmic groupings, not biological labels; the cluster blocks in the DOT list each community's terms and genes. Gene degree is the number of terms a gene connects to; in iGEA this equals the number of collections that place the gene in the network. Bridge genes connect terms in different communities.
+
+| Community | Terms | Genes | Lead term (most genes) | Top hub genes (degree) | Bridge genes |
+|---|---|---|---|---|---|
+| C1 | 3 | 16 | GOCC: CILIARY PLASM | LIMA1 (2), MAK (2), TRPC5 (2), CFAP52 (1), CFAP90 (1) | 1 |
+| C2 | 2 | 7 | GOBP: REGULATION OF LONG TERM SYNAPTIC POTENTIATION | ADORA2A (2), ADORA1 (1), APOE (1), NRGN (1), PDE9A (1) | 0 |
+| C3 | 1 | 5 | GOBP: NUCLEAR TRANSCRIBED MRNA CATABOLIC PROCESS | CNOT7 (1), DCP1B (1), HNRNPAB (1), LSM7 (1), SYNCRIP (1) | 0 |
+| C4 | 1 | 3 | GOBP: EXPLORATION BEHAVIOR | CRBN (1), DLG4 (1), GABRB3 (1) | 0 |
+| C5 | 1 | 3 | GOBP: POSITIVE REGULATION OF RESPONSE TO ENDOPLASMIC RETICULUM STRESS | RNFT2 (1), TMEM33 (1), UBQLN1 (1) | 0 |
+| C6 | 1 | 3 | GOBP: PROSTAGLANDIN SECRETION | ABCC4 (1), ACSL4 (1), TNFRSF11A (1) | 0 |
+| C7 | 1 | 3 | GOMF: ASPARTIC TYPE PEPTIDASE ACTIVITY | CTSD (1), DDI2 (1), PGC (1) | 0 |
+| C8 | 1 | 3 | REACTOME: BETA DEFENSINS | DEFB104A (1), DEFB114 (1), DEFB126 (1) | 0 |
+
+**NETWORK (DOT):**
+graph enrichment_network {
+  // 263 validated input genes; network = terms passing the term-level filter
+  graph [input_genes=263, random_lists=1000, q_threshold="none", network_p="0.679"];
+  // communities: Leiden (igraph, modularity), modularity="0.2188"
+  graph [community_method="Leiden (igraph, modularity)", modularity="0.2188"];
+  subgraph cluster_C1 {
+    label="C1"; lead_term="GOCC: CILIARY PLASM"; terms=3; genes=16;
+    "term_GOBP_NEGATIVE_REGULATION_OF_CELL_PROJECTION_ORGANIZATION" [type=term, label="GOBP: NEGATIVE REGULATION OF CELL PROJECTION ORGANIZATION", collection="C5: Gene Ontology: Biological Process", iteration=6, p="0.0074", q="0.86", community=C1, genes=6];
+    "term_GOCC_CILIARY_PLASM" [type=term, label="GOCC: CILIARY PLASM", collection="C5: Gene Ontology: Cellular Component", iteration=1, p="0.00083", q="0.21", community=C1, genes=8];
+    "term_GOCC_BRUSH_BORDER_MEMBRANE" [type=term, label="GOCC: BRUSH BORDER MEMBRANE", collection="C5: Gene Ontology: Cellular Component", iteration=2, p="0.0026", q="0.26", community=C1, genes=4];
+    "CFAP52" [type=gene, degree=1, community=C1];
+    "CFAP90" [type=gene, degree=1, community=C1];
+    "CLTRN" [type=gene, degree=1, community=C1];
+    "DGUOK" [type=gene, degree=1, community=C1];
+    "DNAH11" [type=gene, degree=1, community=C1];
+    "DPYSL3" [type=gene, degree=1, community=C1];
+    "EFHC2" [type=gene, degree=1, community=C1];
+    "EFNB3" [type=gene, degree=1, community=C1];
+    "GLI1" [type=gene, degree=1, community=C1];
+    "LIMA1" [type=gene, degree=2, community=C1];
+    "MAK" [type=gene, degree=2, community=C1];
+    "RPGRIP1" [type=gene, degree=1, community=C1];
+    "SEPTIN2" [type=gene, degree=1, community=C1];
+    "SLC22A12" [type=gene, degree=1, community=C1];
+    "SLC28A3" [type=gene, degree=1, community=C1];
+  }
+  subgraph cluster_C2 {
+    label="C2"; lead_term="GOBP: REGULATION OF LONG TERM SYNAPTIC POTENTIATION"; terms=2; genes=7;
+    "term_GOBP_REGULATION_OF_LONG_TERM_SYNAPTIC_POTENTIATION" [type=term, label="GOBP: REGULATION OF LONG TERM SYNAPTIC POTENTIATION", collection="C5: Gene Ontology: Biological Process", iteration=1, p="9e-05", q="0.12", community=C2, genes=5];
+    "term_GOMF_ACTININ_BINDING" [type=term, label="GOMF: ACTININ BINDING", collection="C5: Gene Ontology: Molecular Function", iteration=2, p="0.0067", q="0.89", community=C2, genes=3];
+    "ADORA1" [type=gene, degree=1, community=C2];
+    "ADORA2A" [type=gene, degree=2, community=C2];
+    "APOE" [type=gene, degree=1, community=C2];
+    "NRGN" [type=gene, degree=1, community=C2];
+    "PDE9A" [type=gene, degree=1, community=C2];
+    "PDLIM5" [type=gene, degree=1, community=C2];
+  }
+  subgraph cluster_C3 {
+    label="C3"; lead_term="GOBP: NUCLEAR TRANSCRIBED MRNA CATABOLIC PROCESS"; terms=1; genes=5;
+    "term_GOBP_NUCLEAR_TRANSCRIBED_MRNA_CATABOLIC_PROCESS" [type=term, label="GOBP: NUCLEAR TRANSCRIBED MRNA CATABOLIC PROCESS", collection="C5: Gene Ontology: Biological Process", iteration=5, p="0.0071", q="0.86", community=C3, genes=5];
+    "CNOT7" [type=gene, degree=1, community=C3];
+    "DCP1B" [type=gene, degree=1, community=C3];
+    "HNRNPAB" [type=gene, degree=1, community=C3];
+    "LSM7" [type=gene, degree=1, community=C3];
+    "SYNCRIP" [type=gene, degree=1, community=C3];
+  }
+  subgraph cluster_C4 {
+    label="C4"; lead_term="GOBP: EXPLORATION BEHAVIOR"; terms=1; genes=3;
+    "term_GOBP_EXPLORATION_BEHAVIOR" [type=term, label="GOBP: EXPLORATION BEHAVIOR", collection="C5: Gene Ontology: Biological Process", iteration=3, p="0.0067", q="0.86", community=C4, genes=3];
+    "CRBN" [type=gene, degree=1, community=C4];
+    "DLG4" [type=gene, degree=1, community=C4];
+    "GABRB3" [type=gene, degree=1, community=C4];
+  }
+  subgraph cluster_C5 {
+    label="C5"; lead_term="GOBP: POSITIVE REGULATION OF RESPONSE TO ENDOPLASMIC RETICULUM STRESS"; terms=1; genes=3;
+    "term_GOBP_POSITIVE_REGULATION_OF_RESPONSE_TO_ENDOPLASMIC_RETICULUM_STRESS" [type=term, label="GOBP: POSITIVE REGULATION OF RESPONSE TO ENDOPLASMIC RETICULUM STRESS", collection="C5: Gene Ontology: Biological Process", iteration=4, p="0.0068", q="0.86", community=C5, genes=3];
+    "RNFT2" [type=gene, degree=1, community=C5];
+    "TMEM33" [type=gene, degree=1, community=C5];
+    "UBQLN1" [type=gene, degree=1, community=C5];
+  }
+  subgraph cluster_C6 {
+    label="C6"; lead_term="GOBP: PROSTAGLANDIN SECRETION"; terms=1; genes=3;
+    "term_GOBP_PROSTAGLANDIN_SECRETION" [type=term, label="GOBP: PROSTAGLANDIN SECRETION", collection="C5: Gene Ontology: Biological Process", iteration=2, p="0.00058", q="0.39", community=C6, genes=3];
+    "ABCC4" [type=gene, degree=1, community=C6];
+    "ACSL4" [type=gene, degree=1, community=C6];
+    "TNFRSF11A" [type=gene, degree=1, community=C6];
+  }
+  subgraph cluster_C7 {
+    label="C7"; lead_term="GOMF: ASPARTIC TYPE PEPTIDASE ACTIVITY"; terms=1; genes=3;
+    "term_GOMF_ASPARTIC_TYPE_PEPTIDASE_ACTIVITY" [type=term, label="GOMF: ASPARTIC TYPE PEPTIDASE ACTIVITY", collection="C5: Gene Ontology: Molecular Function", iteration=1, p="0.0052", q="0.89", community=C7, genes=3];
+    "CTSD" [type=gene, degree=1, community=C7];
+    "DDI2" [type=gene, degree=1, community=C7];
+    "PGC" [type=gene, degree=1, community=C7];
+  }
+  subgraph cluster_C8 {
+    label="C8"; lead_term="REACTOME: BETA DEFENSINS"; terms=1; genes=3;
+    "term_REACTOME_BETA_DEFENSINS" [type=term, label="REACTOME: BETA DEFENSINS", collection="C2: Reactome Pathways", iteration=1, p="0.0079", q="1", community=C8, genes=3];
+    "DEFB104A" [type=gene, degree=1, community=C8];
+    "DEFB114" [type=gene, degree=1, community=C8];
+    "DEFB126" [type=gene, degree=1, community=C8];
+  }
+  // bridge genes: connect terms in different communities
+  "TRPC5" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  // edges: each term with its genes
+  "term_REACTOME_BETA_DEFENSINS" -- {"DEFB104A" "DEFB114" "DEFB126"};
+  "term_GOBP_REGULATION_OF_LONG_TERM_SYNAPTIC_POTENTIATION" -- {"ADORA1" "ADORA2A" "APOE" "NRGN" "PDE9A"};
+  "term_GOBP_PROSTAGLANDIN_SECRETION" -- {"ABCC4" "ACSL4" "TNFRSF11A"};
+  "term_GOBP_EXPLORATION_BEHAVIOR" -- {"CRBN" "DLG4" "GABRB3"};
+  "term_GOBP_POSITIVE_REGULATION_OF_RESPONSE_TO_ENDOPLASMIC_RETICULUM_STRESS" -- {"RNFT2" "TMEM33" "UBQLN1"};
+  "term_GOBP_NUCLEAR_TRANSCRIBED_MRNA_CATABOLIC_PROCESS" -- {"CNOT7" "DCP1B" "HNRNPAB" "LSM7" "SYNCRIP"};
+  "term_GOBP_NEGATIVE_REGULATION_OF_CELL_PROJECTION_ORGANIZATION" -- {"DGUOK" "DPYSL3" "EFNB3" "LIMA1" "MAK" "TRPC5"};
+  "term_GOCC_CILIARY_PLASM" -- {"CFAP52" "CFAP90" "DNAH11" "EFHC2" "GLI1" "MAK" "RPGRIP1" "SEPTIN2"};
+  "term_GOCC_BRUSH_BORDER_MEMBRANE" -- {"CLTRN" "LIMA1" "SLC22A12" "SLC28A3"};
+  "term_GOMF_ASPARTIC_TYPE_PEPTIDASE_ACTIVITY" -- {"CTSD" "DDI2" "PGC"};
+  "term_GOMF_ACTININ_BINDING" -- {"ADORA2A" "PDLIM5" "TRPC5"};
+}
+
+**NETWORK INTERPRETATION GUIDE (background):**
+- **Term nodes** (`type=term`): enriched gene sets, with `collection` (source gene set collection), `iteration`, `p` (enrichment p-value in its iteration), `q` (term q-value) and `genes` (number of genes linked)
+- **Gene nodes** (`type=gene`): input genes, with `degree` (number of terms the gene connects to; in iGEA, the number of collections that place it in the network)
+- **Communities**: each `subgraph cluster_Cn` block is one community; term and gene nodes carry `community`. Bridge genes are listed outside the blocks with `bridge=true` and a `participation` value (0 = all terms in one community; higher = spread over communities).
+- **Edges**: each line `"term" -- {"GENE1" "GENE2" ...}` links a term to its genes. Edges are gene-set memberships from curated annotation, not physical interactions or directions of change.
+
+**Gene Set Collections:**
+- **C2: Reactome Pathways**: Expert-curated biological pathways
+- **C5: Gene Ontology: Biological Process**: Biological processes from Gene Ontology
+- **C5: Gene Ontology: Cellular Component**: Cellular components from Gene Ontology
+- **C5: Gene Ontology: Molecular Function**: Molecular functions from Gene Ontology
+
+**YOUR TASK:**
+You are an experienced molecular biologist explaining to a colleague what this gene list reveals. Write in clear, natural prose. Explain the biology behind the network and why these processes appear together; do not describe the network itself. Your answer should be a conversation starter: it should make the reader want to dig further, and it ends by asking how the gene list was generated so that the interpretation can be rebuilt around the real experiment.
+
+**How to write it:**
+- Ground your claims in the network by naming a few key genes in parentheses, for example (GENE1, GENE2, GENE3). Do not quote term names verbatim or list memberships; describe them in plain words. The reader has the network.
+- Use your biological knowledge to explain mechanisms. When a central point depends on knowledge that is not in the network, say so once in plain words ("this is not in the network, but ...").
+- Do not repeat general caveats about annotation networks (memberships rather than interactions, no direction of change). Mention a limitation only where it changes the interpretation.
+- Point out what is surprising or unexpected.
+- About 900-1,200 words.
+
+**Structure:**
+1. **Executive summary**: the main findings in 4-6 plain sentences. Start with whether the network is distinguishable from random gene lists, then the overall biological picture and the most important modules and genes.
+2. **Communities**: one short section per community (C1, C2, ...), headed by the community ID and a plain biological name you choose. In 3-5 sentences, explain the biology it represents in plain language, which genes anchor it and why they matter, and anything surprising. If a community looks like a mix of unrelated processes, say so; if two communities belong together, say so.
+3. **Putting it together**: connected prose that combines the communities into one biological story. Give the key genes a role in that story: hubs that anchor a community, and bridge genes that link communities (what does each link suggest biologically?).
+4. **Estimated experimental context**: hypothesize what experiment most likely generated this gene list (for example the type of assay, perturbation, cell type or condition). Reason from the network: which communities and genes point to it, and how confident you are. Name one or two alternatives and what in the network would distinguish them.
+5. **Closing**: end with one or two sentences inviting the reader to share how the gene list was actually generated (assay, perturbation, cell type, comparison), so that you can rebuild the interpretation around it: what fits the experiment, what does not, what is already known and what may be new.

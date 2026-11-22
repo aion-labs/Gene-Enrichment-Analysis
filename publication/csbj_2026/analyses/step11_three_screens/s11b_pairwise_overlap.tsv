@@ -1,0 +1,4 @@
+pair	genes_a	genes_b	shared_genes	gene_jaccard	terms_a	terms_b	shared_terms	term_jaccard
+Brass–König	265	285	13	0.024	56	52	8	0.08
+Brass–Zhou	265	307	16	0.029	56	32	3	0.035
+König–Zhou	285	307	10	0.017	52	32	3	0.037

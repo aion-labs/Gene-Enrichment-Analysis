@@ -1,0 +1,28 @@
+Supplementary Table 8. Sensitivity of iGEA results to the analysis settings
+
+Each row changes one setting from the default (Fisher's exact test, one-sided; p < 0.01 for selection; minimum overlap of
+3 genes; gene sets of 10-600 genes after restriction to the background; at most 30 iterations per collection; ten
+collections). For every setting, the random gene lists were generated and analysed with the same changed setting
+(2,000 random lists of the input size and 200 per reduced size for the q-value adjustment), so the term-level q-values
+and the network test always match the analysis. Empirical p = (r + 1)/(n + 1); with 2,000 lists the smallest attainable
+value is 0.0005 (shown as < 0.001). Jaccard: overlap with the default analysis of the same gene list (kept terms;
+genes assigned to kept terms). Random control: 264 genes drawn at random from the background (the negative control of the
+Results); "–": no term kept, no network.
+
+Gene list	Setting changed	Terms selected	Terms kept (q < 0.10)	Chance terms per random list	Largest cluster: genes	Largest cluster: terms	Empirical p, cluster size	Empirical p, edges per gene	Kept terms shared with default (Jaccard)	Genes shared with default (Jaccard)
+HIV	default	62	56	16.11	168	56	< 0.001	0.008	1.0	1.0
+HIV	p < 0.005	48	46	9.81	148	46	< 0.001	0.010	0.821	0.881
+HIV	p < 0.05	112	96	48.2	203	95	< 0.001	0.005	0.583	0.816
+HIV	min overlap 2	80	40	25.56	129	39	< 0.001	0.012	0.684	0.81
+HIV	min overlap 5	40	38	6.78	165	38	< 0.001	0.006	0.541	0.947
+HIV	set size 15-500	62	53	15.8	160	53	< 0.001	0.009	0.73	0.874
+HIV	set size 5-1000	59	52	16.24	179	51	< 0.001	0.006	0.565	0.813
+HIV	max 10 iterations	59	54	16.01	167	54	< 0.001	0.009	0.964	0.994
+Random control	default	15	1	16.0	4	1	0.48	0.59	1.0	1.0
+Random control	p < 0.005	8	1	9.77	4	1	0.48	0.59	1.0	1.0
+Random control	p < 0.05	40	1	48.01	4	1	0.48	0.59	1.0	1.0
+Random control	min overlap 2	24	1	25.47	4	1	0.48	0.60	1.0	1.0
+Random control	min overlap 5	8	0	6.83	0	0	–	–	–	–
+Random control	set size 15-500	14	0	15.75	0	0	–	–	–	–
+Random control	set size 5-1000	15	1	16.16	4	1	0.46	0.59	1.0	1.0
+Random control	max 10 iterations	15	1	15.93	4	1	0.48	0.59	1.0	1.0

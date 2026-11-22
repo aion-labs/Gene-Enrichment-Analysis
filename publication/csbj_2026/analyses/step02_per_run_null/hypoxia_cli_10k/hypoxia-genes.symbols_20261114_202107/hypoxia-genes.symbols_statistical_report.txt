@@ -1,0 +1,25 @@
+Gene list: hypoxia-genes.symbols
+Validated input genes: 75
+Largest cluster: 96 nodes, 64 genes, 32 terms, 171 edges, 2.6719 edges per gene, 9 collections
+
+====================================================================================================
+iGEA NETWORK STATISTICAL REPORT (per-run random-list null)
+====================================================================================================
+Random lists: 10000, each of 75 genes (= validated input size), drawn without replacement
+from the analysis background (23391 genes); seed 2026; 10.8 s on 4 process(es).
+Each random list was analysed with the same collections and parameters as the input:
+  p_value_method=Fisher's Exact Test, p_threshold=0.01, min_overlap=3, min_term_size=10, max_term_size=600, max_iterations=None, background=all_genes
+Collections: H: Hallmark Gene Sets; C2: BioCarta; C2: KEGG MEDICUS; C2: Pathway Interaction Database; C2: Reactome Pathways; C2: WikiPathways; C2: KEGG Legacy; C5: Gene Ontology: Biological Process; C5: Gene Ontology: Cellular Component; C5: Gene Ontology: Molecular Function
+
+Statistics for the largest connected cluster:
+  z = (observed - random mean) / random SD
+  empirical p = (r + 1) / (n + 1), r = random lists with a value >= observed, n = 10000
+  (smallest attainable p = 9.999e-05). The metrics describe the same cluster and are not independent tests.
+
+  Metric                      Observed  Rand mean  Rand SD  Rand max       z     r    Emp. p
+  ------------------------------------------------------------------------------------------
+  Cluster Size                      96     12.852    7.851        57   10.59     0 9.999e-05
+  Number of Genes                   64      9.280    5.448        39   10.04     0 9.999e-05
+  Number of Terms                   32      3.571    2.560        19   11.10     0 9.999e-05
+  Number of Edges                  171     13.568    9.709        74   16.22     0 9.999e-05
+  Average Edges per Gene         2.672      1.378    0.394      5.75    3.29   106    0.0107

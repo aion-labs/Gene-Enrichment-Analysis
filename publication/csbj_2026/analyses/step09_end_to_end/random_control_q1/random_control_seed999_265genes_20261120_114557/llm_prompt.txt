@@ -1,0 +1,188 @@
+Below is an iterative gene set enrichment (iGEA) network computed from a gene list. Iterative means that for each gene set collection, the top enriched gene set is found, saved and its genes are removed from the gene list; the remaining genes are then tested again. Thus each gene appears at most once per collection but can be linked to terms from different collections. The network of genes and gene sets (= terms) is given in DOT format, preceded by its statistics and communities.
+
+**STATISTICAL CONTEXT:**
+The input contained 264 validated genes. No term-level filter was applied (q-value threshold 1): all 15 terms selected by iGEA are in the network, which may include terms that random gene lists of this size also select by chance. Each term carries its q-value (an empirical false discovery rate estimated from 10,000 random gene lists of the same size, background and settings).
+
+Network-level test: the largest connected cluster of this network compared with the networks built the same way (same filter) from the 10,000 random gene lists. Empirical p = (r + 1) / (10,000 + 1), where r is the number of random lists with a value at least as large. The metrics describe the same cluster and are not independent tests.
+
+| Metric | This network | Random mean | Empirical p |
+|---|---|---|---|
+| Nodes (genes + terms) in the largest connected cluster | 30 | 42 | p = 0.63 |
+| Genes in the largest cluster | 23 | 32.4 | p = 0.64 |
+| Terms in the largest cluster | 7 | 9.59 | p = 0.64 |
+| Edges in the largest cluster | 32 | 48.1 | p = 0.65 |
+| Average edges per gene | 1.391 | 1.45 | p = 0.57 |
+
+How to use the statistics: the network is not distinguishable from what random gene lists produce if the empirical p for the number of nodes in the largest cluster is 0.05 or higher. In that case, say so plainly, keep the rest short and tentative, and do not propose an experimental context. Do not use p-values, q-values or iteration numbers to rank biological importance.
+
+**COMMUNITIES:**
+Terms were grouped into communities with Leiden (igraph, modularity) on the term network, in which two terms are linked when they share genes (modularity 0.4835; the same partition was found with 100% of 100 random seeds). Communities are algorithmic groupings, not biological labels; the cluster blocks in the DOT list each community's terms and genes. Gene degree is the number of terms a gene connects to; in iGEA this equals the number of collections that place the gene in the network. Bridge genes connect terms in different communities.
+
+| Community | Terms | Genes | Lead term (most genes) | Top hub genes (degree) | Bridge genes |
+|---|---|---|---|---|---|
+| C1 | 4 | 15 | GOBP: RESPONSE TO CORTICOSTEROID | CR2 (2), FCGR2B (2), H2AC14 (2), H2BC14 (2), H3C8 (2) | 1 |
+| C2 | 1 | 13 | GOBP: RNA SPLICING | CELF3 (1), CENATAC (1), CRNKL1 (1), ECD (1), GEMIN2 (1) | 0 |
+| C3 | 3 | 9 | GOMF: EXOGENOUS PROTEIN BINDING | LDLR (3), NPC1L1 (2), CD209 (1), CDHR3 (1), CLDN15 (1) | 0 |
+| C4 | 2 | 6 | GOBP: SKELETAL MUSCLE CELL DIFFERENTIATION | EOMES (2), AKIRIN1 (1), B4GALNT2 (1), IL23A (1), SIX1 (1) | 0 |
+| C5 | 1 | 5 | WP: BARDETBIEDL SYNDROME | CEP41 (1), CLUAP1 (1), CRX (1), PKD1L1 (1), SCAPER (1) | 0 |
+| C6 | 1 | 4 | GOBP: NITRIC OXIDE MEDIATED SIGNAL TRANSDUCTION | AGTR2 (1), CBS (1), FPR1 (1), NDNF (1) | 0 |
+| C7 | 1 | 3 | GOBP: NEGATIVE REGULATION OF CELL MIGRATION INVOLVED IN SPROUTING ANGIOGENESIS | MIR200C (1), MIR361 (1), SPRED1 (1) | 0 |
+| C8 | 1 | 3 | GOBP: NEGATIVE REGULATION OF MUSCLE HYPERTROPHY | MIR25 (1), RGS2 (1), STUB1 (1) | 0 |
+| C9 | 1 | 3 | GOBP: REGULATION OF CLATHRIN DEPENDENT ENDOCYTOSIS | CCDC32 (1), UBQLN2 (1), UNC119 (1) | 0 |
+
+**NETWORK (DOT):**
+graph enrichment_network {
+  // 264 validated input genes; network = terms passing the term-level filter
+  graph [input_genes=264, random_lists=10000, q_threshold="none", network_p="0.635"];
+  // communities: Leiden (igraph, modularity), modularity="0.4835"
+  graph [community_method="Leiden (igraph, modularity)", modularity="0.4835"];
+  subgraph cluster_C1 {
+    label="C1"; lead_term="GOBP: RESPONSE TO CORTICOSTEROID"; terms=4; genes=15;
+    "term_REACTOME_ASSEMBLY_OF_THE_ORC_COMPLEX_AT_THE_ORIGIN_OF_REPLICATION" [type=term, label="REACTOME: ASSEMBLY OF THE ORC COMPLEX AT THE ORIGIN OF REPLICATION", collection="C2: Reactome Pathways", iteration=1, p="0.0096", q="1", community=C1, genes=4];
+    "term_KEGG_SYSTEMIC_LUPUS_ERYTHEMATOSUS" [type=term, label="KEGG: SYSTEMIC LUPUS ERYTHEMATOSUS", collection="C2: KEGG Legacy", iteration=1, p="0.0072", q="0.46", community=C1, genes=6];
+    "term_GOBP_NEGATIVE_REGULATION_OF_B_CELL_MEDIATED_IMMUNITY" [type=term, label="GOBP: NEGATIVE REGULATION OF B CELL MEDIATED IMMUNITY", collection="C5: Gene Ontology: Biological Process", iteration=1, p="1.8e-05", q="0.026", community=C1, genes=4];
+    "term_GOBP_RESPONSE_TO_CORTICOSTEROID" [type=term, label="GOBP: RESPONSE TO CORTICOSTEROID", collection="C5: Gene Ontology: Biological Process", iteration=6, p="0.0049", q="0.65", community=C1, genes=6];
+    "ABCA3" [type=gene, degree=1, community=C1];
+    "AGL" [type=gene, degree=1, community=C1];
+    "C4BPB" [type=gene, degree=1, community=C1];
+    "CCND1" [type=gene, degree=1, community=C1];
+    "FCGR2B" [type=gene, degree=2, community=C1];
+    "GHSR" [type=gene, degree=1, community=C1];
+    "H2AC14" [type=gene, degree=2, community=C1];
+    "H2BC14" [type=gene, degree=2, community=C1];
+    "H3C8" [type=gene, degree=2, community=C1];
+    "HLA-DQA2" [type=gene, degree=1, community=C1];
+    "HSD11B2" [type=gene, degree=1, community=C1];
+    "IL10" [type=gene, degree=2, community=C1];
+    "ORC1" [type=gene, degree=1, community=C1];
+    "PARP3" [type=gene, degree=1, community=C1];
+  }
+  subgraph cluster_C2 {
+    label="C2"; lead_term="GOBP: RNA SPLICING"; terms=1; genes=13;
+    "term_GOBP_RNA_SPLICING" [type=term, label="GOBP: RNA SPLICING", collection="C5: Gene Ontology: Biological Process", iteration=5, p="0.0031", q="0.58", community=C2, genes=13];
+    "CELF3" [type=gene, degree=1, community=C2];
+    "CENATAC" [type=gene, degree=1, community=C2];
+    "CRNKL1" [type=gene, degree=1, community=C2];
+    "ECD" [type=gene, degree=1, community=C2];
+    "GEMIN2" [type=gene, degree=1, community=C2];
+    "RBM28" [type=gene, degree=1, community=C2];
+    "RBMX" [type=gene, degree=1, community=C2];
+    "RNPC3" [type=gene, degree=1, community=C2];
+    "RNU4-1" [type=gene, degree=1, community=C2];
+    "SMN2" [type=gene, degree=1, community=C2];
+    "SNRNP200" [type=gene, degree=1, community=C2];
+    "THUMPD2" [type=gene, degree=1, community=C2];
+    "TRRAP" [type=gene, degree=1, community=C2];
+  }
+  subgraph cluster_C3 {
+    label="C3"; lead_term="GOMF: EXOGENOUS PROTEIN BINDING"; terms=3; genes=9;
+    "term_WP_ENTEROCYTE_CHOLESTEROL_METABOLISM" [type=term, label="WP: ENTEROCYTE CHOLESTEROL METABOLISM", collection="C2: WikiPathways", iteration=1, p="0.0015", q="0.36", community=C3, genes=4];
+    "term_GOBP_INTESTINAL_LIPID_ABSORPTION" [type=term, label="GOBP: INTESTINAL LIPID ABSORPTION", collection="C5: Gene Ontology: Biological Process", iteration=4, p="0.0024", q="0.58", community=C3, genes=3];
+    "term_GOMF_EXOGENOUS_PROTEIN_BINDING" [type=term, label="GOMF: EXOGENOUS PROTEIN BINDING", collection="C5: Gene Ontology: Molecular Function", iteration=1, p="0.0026", q="0.81", community=C3, genes=5];
+    "CD209" [type=gene, degree=1, community=C3];
+    "CDHR3" [type=gene, degree=1, community=C3];
+    "CLDN15" [type=gene, degree=1, community=C3];
+    "DGAT1" [type=gene, degree=1, community=C3];
+    "DHCR24" [type=gene, degree=1, community=C3];
+    "LDLR" [type=gene, degree=3, community=C3];
+    "NPC1L1" [type=gene, degree=2, community=C3];
+    "SLC10A1" [type=gene, degree=1, community=C3];
+  }
+  subgraph cluster_C4 {
+    label="C4"; lead_term="GOBP: SKELETAL MUSCLE CELL DIFFERENTIATION"; terms=2; genes=6;
+    "term_WP_DEVELOPMENT_AND_HETEROGENEITY_OF_THE_ILC_FAMILY" [type=term, label="WP: DEVELOPMENT AND HETEROGENEITY OF THE ILC FAMILY", collection="C2: WikiPathways", iteration=3, p="0.0089", q="0.49", community=C4, genes=3];
+    "term_GOBP_SKELETAL_MUSCLE_CELL_DIFFERENTIATION" [type=term, label="GOBP: SKELETAL MUSCLE CELL DIFFERENTIATION", collection="C5: Gene Ontology: Biological Process", iteration=8, p="0.0087", q="0.65", community=C4, genes=4];
+    "AKIRIN1" [type=gene, degree=1, community=C4];
+    "B4GALNT2" [type=gene, degree=1, community=C4];
+    "EOMES" [type=gene, degree=2, community=C4];
+    "IL23A" [type=gene, degree=1, community=C4];
+    "SIX1" [type=gene, degree=1, community=C4];
+    "ZBTB16" [type=gene, degree=1, community=C4];
+  }
+  subgraph cluster_C5 {
+    label="C5"; lead_term="WP: BARDETBIEDL SYNDROME"; terms=1; genes=5;
+    "term_WP_BARDETBIEDL_SYNDROME" [type=term, label="WP: BARDETBIEDL SYNDROME", collection="C2: WikiPathways", iteration=2, p="0.0069", q="0.49", community=C5, genes=5];
+    "CEP41" [type=gene, degree=1, community=C5];
+    "CLUAP1" [type=gene, degree=1, community=C5];
+    "CRX" [type=gene, degree=1, community=C5];
+    "PKD1L1" [type=gene, degree=1, community=C5];
+    "SCAPER" [type=gene, degree=1, community=C5];
+  }
+  subgraph cluster_C6 {
+    label="C6"; lead_term="GOBP: NITRIC OXIDE MEDIATED SIGNAL TRANSDUCTION"; terms=1; genes=4;
+    "term_GOBP_NITRIC_OXIDE_MEDIATED_SIGNAL_TRANSDUCTION" [type=term, label="GOBP: NITRIC OXIDE MEDIATED SIGNAL TRANSDUCTION", collection="C5: Gene Ontology: Biological Process", iteration=2, p="0.00019", q="0.13", community=C6, genes=4];
+    "AGTR2" [type=gene, degree=1, community=C6];
+    "CBS" [type=gene, degree=1, community=C6];
+    "FPR1" [type=gene, degree=1, community=C6];
+    "NDNF" [type=gene, degree=1, community=C6];
+  }
+  subgraph cluster_C7 {
+    label="C7"; lead_term="GOBP: NEGATIVE REGULATION OF CELL MIGRATION INVOLVED IN SPROUTING ANGIOGENESIS"; terms=1; genes=3;
+    "term_GOBP_NEGATIVE_REGULATION_OF_CELL_MIGRATION_INVOLVED_IN_SPROUTING_ANGIOGENESIS" [type=term, label="GOBP: NEGATIVE REGULATION OF CELL MIGRATION INVOLVED IN SPROUTING ANGIOGENESIS", collection="C5: Gene Ontology: Biological Process", iteration=9, p="0.0089", q="0.65", community=C7, genes=3];
+    "MIR200C" [type=gene, degree=1, community=C7];
+    "MIR361" [type=gene, degree=1, community=C7];
+    "SPRED1" [type=gene, degree=1, community=C7];
+  }
+  subgraph cluster_C8 {
+    label="C8"; lead_term="GOBP: NEGATIVE REGULATION OF MUSCLE HYPERTROPHY"; terms=1; genes=3;
+    "term_GOBP_NEGATIVE_REGULATION_OF_MUSCLE_HYPERTROPHY" [type=term, label="GOBP: NEGATIVE REGULATION OF MUSCLE HYPERTROPHY", collection="C5: Gene Ontology: Biological Process", iteration=7, p="0.0077", q="0.65", community=C8, genes=3];
+    "MIR25" [type=gene, degree=1, community=C8];
+    "RGS2" [type=gene, degree=1, community=C8];
+    "STUB1" [type=gene, degree=1, community=C8];
+  }
+  subgraph cluster_C9 {
+    label="C9"; lead_term="GOBP: REGULATION OF CLATHRIN DEPENDENT ENDOCYTOSIS"; terms=1; genes=3;
+    "term_GOBP_REGULATION_OF_CLATHRIN_DEPENDENT_ENDOCYTOSIS" [type=term, label="GOBP: REGULATION OF CLATHRIN DEPENDENT ENDOCYTOSIS", collection="C5: Gene Ontology: Biological Process", iteration=3, p="0.0011", q="0.45", community=C9, genes=3];
+    "CCDC32" [type=gene, degree=1, community=C9];
+    "UBQLN2" [type=gene, degree=1, community=C9];
+    "UNC119" [type=gene, degree=1, community=C9];
+  }
+  // bridge genes: connect terms in different communities
+  "CR2" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  // edges: each term with its genes
+  "term_REACTOME_ASSEMBLY_OF_THE_ORC_COMPLEX_AT_THE_ORIGIN_OF_REPLICATION" -- {"H2AC14" "H2BC14" "H3C8" "ORC1"};
+  "term_WP_ENTEROCYTE_CHOLESTEROL_METABOLISM" -- {"DGAT1" "DHCR24" "LDLR" "NPC1L1"};
+  "term_WP_BARDETBIEDL_SYNDROME" -- {"CEP41" "CLUAP1" "CRX" "PKD1L1" "SCAPER"};
+  "term_WP_DEVELOPMENT_AND_HETEROGENEITY_OF_THE_ILC_FAMILY" -- {"EOMES" "IL23A" "ZBTB16"};
+  "term_KEGG_SYSTEMIC_LUPUS_ERYTHEMATOSUS" -- {"FCGR2B" "H2AC14" "H2BC14" "H3C8" "HLA-DQA2" "IL10"};
+  "term_GOBP_NEGATIVE_REGULATION_OF_B_CELL_MEDIATED_IMMUNITY" -- {"C4BPB" "CR2" "FCGR2B" "PARP3"};
+  "term_GOBP_NITRIC_OXIDE_MEDIATED_SIGNAL_TRANSDUCTION" -- {"AGTR2" "CBS" "FPR1" "NDNF"};
+  "term_GOBP_REGULATION_OF_CLATHRIN_DEPENDENT_ENDOCYTOSIS" -- {"CCDC32" "UBQLN2" "UNC119"};
+  "term_GOBP_INTESTINAL_LIPID_ABSORPTION" -- {"CLDN15" "LDLR" "NPC1L1"};
+  "term_GOBP_RNA_SPLICING" -- {"CELF3" "CENATAC" "CRNKL1" "ECD" "GEMIN2" "RBM28" "RBMX" "RNPC3" "RNU4-1" "SMN2" "SNRNP200" "THUMPD2" "TRRAP"};
+  "term_GOBP_RESPONSE_TO_CORTICOSTEROID" -- {"ABCA3" "AGL" "CCND1" "GHSR" "HSD11B2" "IL10"};
+  "term_GOBP_NEGATIVE_REGULATION_OF_MUSCLE_HYPERTROPHY" -- {"MIR25" "RGS2" "STUB1"};
+  "term_GOBP_SKELETAL_MUSCLE_CELL_DIFFERENTIATION" -- {"AKIRIN1" "B4GALNT2" "EOMES" "SIX1"};
+  "term_GOBP_NEGATIVE_REGULATION_OF_CELL_MIGRATION_INVOLVED_IN_SPROUTING_ANGIOGENESIS" -- {"MIR200C" "MIR361" "SPRED1"};
+  "term_GOMF_EXOGENOUS_PROTEIN_BINDING" -- {"CD209" "CDHR3" "CR2" "LDLR" "SLC10A1"};
+}
+
+**NETWORK INTERPRETATION GUIDE (background):**
+- **Term nodes** (`type=term`): enriched gene sets, with `collection` (source gene set collection), `iteration`, `p` (enrichment p-value in its iteration), `q` (term q-value) and `genes` (number of genes linked)
+- **Gene nodes** (`type=gene`): input genes, with `degree` (number of terms the gene connects to; in iGEA, the number of collections that place it in the network)
+- **Communities**: each `subgraph cluster_Cn` block is one community; term and gene nodes carry `community`. Bridge genes are listed outside the blocks with `bridge=true` and a `participation` value (0 = all terms in one community; higher = spread over communities).
+- **Edges**: each line `"term" -- {"GENE1" "GENE2" ...}` links a term to its genes. Edges are gene-set memberships from curated annotation, not physical interactions or directions of change.
+
+**Gene Set Collections:**
+- **C2: KEGG Legacy**: Metabolic and signaling pathways from KEGG (legacy release)
+- **C2: Reactome Pathways**: Expert-curated biological pathways
+- **C2: WikiPathways**: Community-curated biological pathways
+- **C5: Gene Ontology: Biological Process**: Biological processes from Gene Ontology
+- **C5: Gene Ontology: Molecular Function**: Molecular functions from Gene Ontology
+
+**YOUR TASK:**
+You are an experienced molecular biologist explaining to a colleague what this gene list reveals. Write in clear, natural prose. Explain the biology behind the network and why these processes appear together; do not describe the network itself. Your answer should be a conversation starter: it should make the reader want to dig further, and it ends by asking how the gene list was generated so that the interpretation can be rebuilt around the real experiment.
+
+**How to write it:**
+- Ground your claims in the network by naming a few key genes in parentheses, for example (GENE1, GENE2, GENE3). Do not quote term names verbatim or list memberships; describe them in plain words. The reader has the network.
+- Use your biological knowledge to explain mechanisms. When a central point depends on knowledge that is not in the network, say so once in plain words ("this is not in the network, but ...").
+- Do not repeat general caveats about annotation networks (memberships rather than interactions, no direction of change). Mention a limitation only where it changes the interpretation.
+- Point out what is surprising or unexpected.
+- About 900-1,200 words.
+
+**Structure:**
+1. **Executive summary**: the main findings in 4-6 plain sentences. Start with whether the network is distinguishable from random gene lists, then the overall biological picture and the most important modules and genes.
+2. **Communities**: one short section per community (C1, C2, ...), headed by the community ID and a plain biological name you choose. In 3-5 sentences, explain the biology it represents in plain language, which genes anchor it and why they matter, and anything surprising. If a community looks like a mix of unrelated processes, say so; if two communities belong together, say so.
+3. **Putting it together**: connected prose that combines the communities into one biological story. Give the key genes a role in that story: hubs that anchor a community, and bridge genes that link communities (what does each link suggest biologically?).
+4. **Estimated experimental context**: hypothesize what experiment most likely generated this gene list (for example the type of assay, perturbation, cell type or condition). Reason from the network: which communities and genes point to it, and how confident you are. Name one or two alternatives and what in the network would distinguish them.
+5. **Closing**: end with one or two sentences inviting the reader to share how the gene list was actually generated (assay, perturbation, cell type, comparison), so that you can rebuild the interpretation around it: what fits the experiment, what does not, what is already known and what may be new.

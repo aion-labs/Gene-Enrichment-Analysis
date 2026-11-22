@@ -1,0 +1,11 @@
+Parameter,Value in paper / stored nulls,User-adjustable,Can a matched null be derived from the stored random runs?,How / why
+Gene-set collections (any subset of the 10),10 collections,yes,Yes,Each collection is run independently per random list; the null for any subset is assembled by filtering stored rows by Library (this is what the code does).
+p-value threshold stricter than 0.01,0.01,yes,Yes (not implemented),Selection order does not depend on the threshold; truncate each stored run at the first iteration with p >= new threshold. Stored runs have no gaps so truncation is exact. Code currently only filters rows by p.
+p-value threshold looser than 0.01,0.01,yes,No,Stored rows stop at p < 0.01 (max stored p = 0.009999). Code refuses benchmarking above 0.01.
+Maximum iterations,30 (null); paper run reached 12,yes,Yes if <= 30,Filter stored rows to Iteration <= k (implemented; capped at 30).
+Minimum overlap,3,yes,No,Overlap filter is applied before choosing the top term; a different value changes which term is selected and therefore the whole path.
+Gene-set size limits,10-600,yes,No,Changes the tested sets and the collection background M.
+Background universe,all_genes.txt (23590 lines; 23391 after symbol validation in the real run),yes,No,Random lists were drawn from all_genes.txt; a different background needs new random lists.
+Statistical test,Fisher's exact test (two-sided) in code and nulls,yes,No,Different p-values change selection.
+Input list size,Binned: 50-1000 step 50; real size rounded UP to next bin (272 -> 300),implicit,Approximate only,Exact-size nulls need new runs (Step 11).
+Gene identifier format / symbol mapping,NCBI gene_info 9 Aug 2025,yes,n/a,Does not affect the null.

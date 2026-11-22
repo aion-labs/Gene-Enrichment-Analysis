@@ -1,0 +1,8 @@
+BH denominator	BH over	m	FDR < 0.05	FDR < 0.1	FDR < 0.25
+all sets 10-600 (paper; Enrichr-style)	each collection	10439	87	112.0	169
+all sets 10-600 (paper; Enrichr-style)	all 10 collections pooled	10439	83	99.0	172
+sets with >= 1 input gene	each collection	4895	116	146.0	367
+sets with >= 1 input gene	all 10 collections pooled	4895	101	156.0	366
+sets with >= 3 input genes (testable)	each collection	1508	219	383.0	780
+sets with >= 3 input genes (testable)	all 10 collections pooled	1508	228	403.0	798
+nominal p < 0.01 (no correction)	-	1508	255		

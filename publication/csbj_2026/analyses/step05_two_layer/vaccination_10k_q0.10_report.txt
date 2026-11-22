@@ -1,0 +1,106 @@
+====================================================================================================
+iGEA STATISTICAL REPORT (per-run random lists)
+====================================================================================================
+Random lists: 10000, each of 426 genes (= validated input size), drawn without replacement
+from the analysis background (23391 genes); seed 2026; chunked s on 4 process(es).
+Each random list was analysed with the same collections and parameters as the input:
+  p_value_method=Fisher's Exact Test, p_threshold=0.01, min_overlap=3, min_term_size=10, max_term_size=600, max_iterations=None, background=all_genes
+Collections: H: Hallmark Gene Sets; C2: Reactome Pathways; C2: KEGG Legacy; C2: KEGG MEDICUS; C2: BioCarta; C2: Pathway Interaction Database; C2: WikiPathways; C5: Gene Ontology: Biological Process; C5: Gene Ontology: Cellular Component; C5: Gene Ontology: Molecular Function
+
+TERM LEVEL (signal-adjusted empirical q-value)
+  A random list of this size selects on average 21.65 terms by chance.
+  q = expected chance terms with p' <= p / selected terms with p' <= p (per collection, monotone),
+  re-estimated after treating genes of accepted terms as signal (159 of 426 genes
+  treated as noise in the final round; 1000 random lists per size step).
+  Terms kept (q < 0.1): 66 of 75. Random lists are filtered the same way.
+
+NETWORK LEVEL (largest connected cluster)
+  z = (observed - random mean) / random SD
+  empirical p = (r + 1) / (n + 1), r = random lists with a value >= observed, n = 10000
+  (smallest attainable p = 9.999e-05). The metrics describe the same cluster and are not independent tests.
+
+  Metric                      Observed  Rand mean  Rand SD  Rand max       z     r    Emp. p
+  ------------------------------------------------------------------------------------------
+  Cluster Size                     333      6.152    7.164        62   45.62     0 9.999e-05
+  Number of Genes                  267      5.298    6.328        56   41.35     0 9.999e-05
+  Number of Terms                   66      0.855    1.019        12   63.94     0 9.999e-05
+  Number of Edges                  662      5.957    7.750        74   84.65     0 9.999e-05
+  Average Edges per Gene         2.479      0.655    0.570     3.333    3.20    30    0.0031
+
+TERMS
+  Library                                   It     p-value  q-value  Kept  Term
+  C2: KEGG Legacy                            1     2.8e-06    0.001  yes   KEGG_LYSOSOME
+  C2: KEGG Legacy                            2     0.00283   0.0735  yes   KEGG_FC_GAMMA_R_MEDIATED_PHAGOCYTOSIS
+  C2: KEGG Legacy                            3     0.00576   0.0735  yes   KEGG_SULFUR_METABOLISM
+  C2: KEGG Legacy                            4     0.00823   0.0735  yes   KEGG_AMINO_SUGAR_AND_NUCLEOTIDE_SUGAR_METABOLISM
+  C2: KEGG Legacy                            5     0.00914   0.0735  yes   KEGG_PANTOTHENATE_AND_COA_BIOSYNTHESIS
+  C2: KEGG Legacy                            6     0.00931   0.0735  yes   KEGG_APOPTOSIS
+  C2: KEGG MEDICUS                           1    0.000261    0.012  yes   KEGG_MEDICUS_REFERENCE_PRNP_PI3K_NOX2_SIGNALING_PATHWAY
+  C2: Pathway Interaction Database           1    0.000534     0.04  yes   PID_PDGFRB_PATHWAY
+  C2: Pathway Interaction Database           2     0.00418    0.102  no    PID_CASPASE_PATHWAY
+  C2: Pathway Interaction Database           3     0.00939    0.113  no    PID_RETINOIC_ACID_PATHWAY
+  C2: Reactome Pathways                      1    2.65e-28        0  yes   REACTOME_NEUTROPHIL_DEGRANULATION
+  C2: Reactome Pathways                      2    0.000121    0.013  yes   REACTOME_ROS_AND_RNS_PRODUCTION_IN_PHAGOCYTES
+  C2: Reactome Pathways                      3    0.000134    0.013  yes   REACTOME_OTHER_INTERLEUKIN_SIGNALING
+  C2: Reactome Pathways                      4    0.000116    0.013  yes   REACTOME_INTERLEUKIN_17_SIGNALING
+  C2: Reactome Pathways                      5     0.00014    0.013  yes   REACTOME_IMMUNOREGULATORY_INTERACTIONS_BETWEEN_A_LYMPHOID_AND_A_NON_LYMPHOID_CELL
+  C2: Reactome Pathways                      6    0.000994   0.0464  yes   REACTOME_LEISHMANIA_INFECTION
+  C2: Reactome Pathways                      7     0.00145   0.0464  yes   REACTOME_NF_KB_ACTIVATION_THROUGH_FADD_RIP_1_PATHWAY_MEDIATED_BY_CASPASE_8_AND_10
+  C2: Reactome Pathways                      8     0.00137   0.0464  yes   REACTOME_ASPARAGINE_N_LINKED_GLYCOSYLATION
+  C2: Reactome Pathways                      9     0.00194    0.051  yes   REACTOME_SPHINGOLIPID_METABOLISM
+  C2: Reactome Pathways                     10      0.0027   0.0589  yes   REACTOME_RHOH_GTPASE_CYCLE
+  C2: Reactome Pathways                     11     0.00345   0.0644  yes   REACTOME_VITAMIN_B5_PANTOTHENATE_METABOLISM
+  C2: Reactome Pathways                     12     0.00557   0.0805  yes   REACTOME_CYTOSOLIC_SULFONATION_OF_SMALL_MOLECULES
+  C2: Reactome Pathways                     13     0.00595   0.0805  yes   REACTOME_DEFECTIVE_INTRINSIC_PATHWAY_FOR_APOPTOSIS
+  C2: WikiPathways                           1    5.38e-10        0  yes   WP_TYROBP_CAUSAL_NETWORK_IN_MICROGLIA
+  C2: WikiPathways                           2    6.75e-06    0.001  yes   WP_MICROGLIA_PATHOGEN_PHAGOCYTOSIS_PATHWAY
+  C2: WikiPathways                           3    9.72e-05    0.005  yes   WP_FAS_LIGAND_PATHWAY_AND_STRESS_INDUCTION_OF_HEAT_SHOCK_PROTEINS
+  C2: WikiPathways                           4     0.00059   0.0307  yes   WP_CANNABINOID_RECEPTOR_SIGNALING
+  C2: WikiPathways                           5     0.00266    0.088  yes   WP_NUCLEOTIDEBINDING_OLIGOMERIZATION_DOMAIN_NOD_PATHWAY
+  C2: WikiPathways                           6     0.00536    0.104  no    WP_CONSTITUTIVE_ANDROSTANE_RECEPTOR_PATHWAY
+  C2: WikiPathways                           7     0.00518    0.104  no    WP_TCA_CYCLE_AND_DEFICIENCY_OF_PYRUVATE_DEHYDROGENASE_COMPLEX_PDHC
+  C2: WikiPathways                           8     0.00948    0.138  no    WP_AUTOPHAGY_IN_PANCREATIC_DUCTAL_ADENOCARCINOMA
+  C5: Gene Ontology: Biological Process      1    1.05e-13        0  yes   GOBP_PHAGOCYTOSIS
+  C5: Gene Ontology: Biological Process      2       4e-08        0  yes   GOBP_CYTOKINE_MEDIATED_SIGNALING_PATHWAY
+  C5: Gene Ontology: Biological Process      3    2.12e-08        0  yes   GOBP_VACUOLAR_ACIDIFICATION
+  C5: Gene Ontology: Biological Process      4    2.52e-06   0.0005  yes   GOBP_AMIDE_METABOLIC_PROCESS
+  C5: Gene Ontology: Biological Process      5    0.000119   0.0312  yes   GOBP_GOLGI_VESICLE_TRANSPORT
+  C5: Gene Ontology: Biological Process      6    0.000356   0.0715  yes   GOBP_ALCOHOL_CATABOLIC_PROCESS
+  C5: Gene Ontology: Biological Process      7    0.000796   0.0991  yes   GOBP_ANTIBACTERIAL_INNATE_IMMUNE_RESPONSE
+  C5: Gene Ontology: Biological Process      8     0.00076   0.0991  yes   GOBP_ARP2_3_COMPLEX_MEDIATED_ACTIN_NUCLEATION
+  C5: Gene Ontology: Biological Process      9     0.00143    0.133  no    GOBP_REGULATION_OF_PEPTIDASE_ACTIVITY
+  C5: Gene Ontology: Biological Process     10     0.00378    0.238  no    GOBP_MONOATOMIC_ANION_HOMEOSTASIS
+  C5: Gene Ontology: Biological Process     11     0.00711    0.299  no    GOBP_CARBOHYDRATE_DERIVATIVE_CATABOLIC_PROCESS
+  C5: Gene Ontology: Biological Process     12     0.00669    0.299  no    GOBP_BARBED_END_ACTIN_FILAMENT_CAPPING
+  C5: Gene Ontology: Cellular Component      1    1.39e-22        0  yes   GOCC_FICOLIN_1_RICH_GRANULE
+  C5: Gene Ontology: Cellular Component      2    2.73e-09        0  yes   GOCC_PHAGOCYTIC_VESICLE
+  C5: Gene Ontology: Cellular Component      3    3.37e-06        0  yes   GOCC_VACUOLAR_MEMBRANE
+  C5: Gene Ontology: Cellular Component      4    2.98e-05  0.00075  yes   GOCC_CELL_LEADING_EDGE
+  C5: Gene Ontology: Cellular Component      5     0.00013    0.003  yes   GOCC_CANONICAL_INFLAMMASOME_COMPLEX
+  C5: Gene Ontology: Cellular Component      6    0.000225  0.00567  yes   GOCC_MEMBRANE_MICRODOMAIN
+  C5: Gene Ontology: Cellular Component      7    0.000459   0.0121  yes   GOCC_PALMITOYLTRANSFERASE_COMPLEX
+  C5: Gene Ontology: Cellular Component      8     0.00192   0.0376  yes   GOCC_AZUROPHIL_GRANULE_LUMEN
+  C5: Gene Ontology: Cellular Component      9     0.00476   0.0764  yes   GOCC_COPI_COATED_VESICLE
+  C5: Gene Ontology: Cellular Component     10     0.00693   0.0954  yes   GOCC_ORGANELLE_MEMBRANE_CONTACT_SITE
+  C5: Gene Ontology: Molecular Function      1    1.36e-10        0  yes   GOMF_INHIBITORY_MHC_CLASS_I_RECEPTOR_ACTIVITY
+  C5: Gene Ontology: Molecular Function      2    1.66e-06        0  yes   GOMF_PATTERN_RECOGNITION_RECEPTOR_ACTIVITY
+  C5: Gene Ontology: Molecular Function      3    2.69e-06        0  yes   GOMF_SUPEROXIDE_GENERATING_NADPH_OXIDASE_ACTIVATOR_ACTIVITY
+  C5: Gene Ontology: Molecular Function      4    0.000116  0.00925  yes   GOMF_SIALIC_ACID_BINDING
+  C5: Gene Ontology: Molecular Function      5    0.000167   0.0106  yes   GOMF_ATPASE_COUPLED_ION_TRANSMEMBRANE_TRANSPORTER_ACTIVITY
+  C5: Gene Ontology: Molecular Function      6    0.000251   0.0127  yes   GOMF_PHOSPHOPROTEIN_BINDING
+  C5: Gene Ontology: Molecular Function      7    0.000236   0.0127  yes   GOMF_CYTOKINE_RECEPTOR_ACTIVITY
+  C5: Gene Ontology: Molecular Function      8    0.000798   0.0253  yes   GOMF_MYOSIN_BINDING
+  C5: Gene Ontology: Molecular Function      9    0.000898   0.0253  yes   GOMF_RETROMER_COMPLEX_BINDING
+  C5: Gene Ontology: Molecular Function     10     0.00132   0.0315  yes   GOMF_PHOSPHATIDYLINOSITOL_3_4_5_TRISPHOSPHATE_BINDING
+  C5: Gene Ontology: Molecular Function     11     0.00151   0.0315  yes   GOMF_PROTEIN_SERINE_THREONINE_TYROSINE_KINASE_ACTIVITY
+  C5: Gene Ontology: Molecular Function     12     0.00224   0.0382  yes   GOMF_GLUCOSIDASE_ACTIVITY
+  C5: Gene Ontology: Molecular Function     13     0.00277   0.0404  yes   GOMF_ACYLGLYCEROL_O_ACYLTRANSFERASE_ACTIVITY
+  C5: Gene Ontology: Molecular Function     14     0.00262   0.0404  yes   GOMF_CYSTEINE_TYPE_ENDOPEPTIDASE_REGULATOR_ACTIVITY_INVOLVED_IN_APOPTOTIC_PROCESS
+  C5: Gene Ontology: Molecular Function     15     0.00357   0.0461  yes   GOMF_NUCLEOSIDE_DIPHOSPHATE_PHOSPHATASE_ACTIVITY
+  C5: Gene Ontology: Molecular Function     16     0.00416    0.049  yes   GOMF_NUCLEAR_RECEPTOR_BINDING
+  C5: Gene Ontology: Molecular Function     17     0.00585   0.0607  yes   GOMF_CARBOHYDRATE_KINASE_ACTIVITY
+  C5: Gene Ontology: Molecular Function     18      0.0074   0.0678  yes   GOMF_LYASE_ACTIVITY
+  C5: Gene Ontology: Molecular Function     19      0.0095   0.0783  yes   GOMF_SNARE_BINDING
+  H: Hallmark Gene Sets                      1    0.000512   0.0055  yes   HALLMARK_COMPLEMENT
+  H: Hallmark Gene Sets                      2    0.000412   0.0055  yes   HALLMARK_MTORC1_SIGNALING
+  H: Hallmark Gene Sets                      3     0.00123   0.0103  yes   HALLMARK_IL6_JAK_STAT3_SIGNALING

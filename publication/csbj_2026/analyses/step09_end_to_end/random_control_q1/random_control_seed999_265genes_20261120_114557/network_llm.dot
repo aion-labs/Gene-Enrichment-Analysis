@@ -1,0 +1,125 @@
+graph enrichment_network {
+  // 264 validated input genes; network = terms passing the term-level filter
+  graph [input_genes=264, random_lists=10000, q_threshold="none", network_p="0.635"];
+  // communities: Leiden (igraph, modularity), modularity="0.4835"
+  graph [community_method="Leiden (igraph, modularity)", modularity="0.4835"];
+  subgraph cluster_C1 {
+    label="C1"; lead_term="GOBP: RESPONSE TO CORTICOSTEROID"; terms=4; genes=15;
+    "term_REACTOME_ASSEMBLY_OF_THE_ORC_COMPLEX_AT_THE_ORIGIN_OF_REPLICATION" [type=term, label="REACTOME: ASSEMBLY OF THE ORC COMPLEX AT THE ORIGIN OF REPLICATION", collection="C2: Reactome Pathways", iteration=1, p="0.0096", q="1", community=C1, genes=4];
+    "term_KEGG_SYSTEMIC_LUPUS_ERYTHEMATOSUS" [type=term, label="KEGG: SYSTEMIC LUPUS ERYTHEMATOSUS", collection="C2: KEGG Legacy", iteration=1, p="0.0072", q="0.46", community=C1, genes=6];
+    "term_GOBP_NEGATIVE_REGULATION_OF_B_CELL_MEDIATED_IMMUNITY" [type=term, label="GOBP: NEGATIVE REGULATION OF B CELL MEDIATED IMMUNITY", collection="C5: Gene Ontology: Biological Process", iteration=1, p="1.8e-05", q="0.026", community=C1, genes=4];
+    "term_GOBP_RESPONSE_TO_CORTICOSTEROID" [type=term, label="GOBP: RESPONSE TO CORTICOSTEROID", collection="C5: Gene Ontology: Biological Process", iteration=6, p="0.0049", q="0.65", community=C1, genes=6];
+    "ABCA3" [type=gene, degree=1, community=C1];
+    "AGL" [type=gene, degree=1, community=C1];
+    "C4BPB" [type=gene, degree=1, community=C1];
+    "CCND1" [type=gene, degree=1, community=C1];
+    "FCGR2B" [type=gene, degree=2, community=C1];
+    "GHSR" [type=gene, degree=1, community=C1];
+    "H2AC14" [type=gene, degree=2, community=C1];
+    "H2BC14" [type=gene, degree=2, community=C1];
+    "H3C8" [type=gene, degree=2, community=C1];
+    "HLA-DQA2" [type=gene, degree=1, community=C1];
+    "HSD11B2" [type=gene, degree=1, community=C1];
+    "IL10" [type=gene, degree=2, community=C1];
+    "ORC1" [type=gene, degree=1, community=C1];
+    "PARP3" [type=gene, degree=1, community=C1];
+  }
+  subgraph cluster_C2 {
+    label="C2"; lead_term="GOBP: RNA SPLICING"; terms=1; genes=13;
+    "term_GOBP_RNA_SPLICING" [type=term, label="GOBP: RNA SPLICING", collection="C5: Gene Ontology: Biological Process", iteration=5, p="0.0031", q="0.58", community=C2, genes=13];
+    "CELF3" [type=gene, degree=1, community=C2];
+    "CENATAC" [type=gene, degree=1, community=C2];
+    "CRNKL1" [type=gene, degree=1, community=C2];
+    "ECD" [type=gene, degree=1, community=C2];
+    "GEMIN2" [type=gene, degree=1, community=C2];
+    "RBM28" [type=gene, degree=1, community=C2];
+    "RBMX" [type=gene, degree=1, community=C2];
+    "RNPC3" [type=gene, degree=1, community=C2];
+    "RNU4-1" [type=gene, degree=1, community=C2];
+    "SMN2" [type=gene, degree=1, community=C2];
+    "SNRNP200" [type=gene, degree=1, community=C2];
+    "THUMPD2" [type=gene, degree=1, community=C2];
+    "TRRAP" [type=gene, degree=1, community=C2];
+  }
+  subgraph cluster_C3 {
+    label="C3"; lead_term="GOMF: EXOGENOUS PROTEIN BINDING"; terms=3; genes=9;
+    "term_WP_ENTEROCYTE_CHOLESTEROL_METABOLISM" [type=term, label="WP: ENTEROCYTE CHOLESTEROL METABOLISM", collection="C2: WikiPathways", iteration=1, p="0.0015", q="0.36", community=C3, genes=4];
+    "term_GOBP_INTESTINAL_LIPID_ABSORPTION" [type=term, label="GOBP: INTESTINAL LIPID ABSORPTION", collection="C5: Gene Ontology: Biological Process", iteration=4, p="0.0024", q="0.58", community=C3, genes=3];
+    "term_GOMF_EXOGENOUS_PROTEIN_BINDING" [type=term, label="GOMF: EXOGENOUS PROTEIN BINDING", collection="C5: Gene Ontology: Molecular Function", iteration=1, p="0.0026", q="0.81", community=C3, genes=5];
+    "CD209" [type=gene, degree=1, community=C3];
+    "CDHR3" [type=gene, degree=1, community=C3];
+    "CLDN15" [type=gene, degree=1, community=C3];
+    "DGAT1" [type=gene, degree=1, community=C3];
+    "DHCR24" [type=gene, degree=1, community=C3];
+    "LDLR" [type=gene, degree=3, community=C3];
+    "NPC1L1" [type=gene, degree=2, community=C3];
+    "SLC10A1" [type=gene, degree=1, community=C3];
+  }
+  subgraph cluster_C4 {
+    label="C4"; lead_term="GOBP: SKELETAL MUSCLE CELL DIFFERENTIATION"; terms=2; genes=6;
+    "term_WP_DEVELOPMENT_AND_HETEROGENEITY_OF_THE_ILC_FAMILY" [type=term, label="WP: DEVELOPMENT AND HETEROGENEITY OF THE ILC FAMILY", collection="C2: WikiPathways", iteration=3, p="0.0089", q="0.49", community=C4, genes=3];
+    "term_GOBP_SKELETAL_MUSCLE_CELL_DIFFERENTIATION" [type=term, label="GOBP: SKELETAL MUSCLE CELL DIFFERENTIATION", collection="C5: Gene Ontology: Biological Process", iteration=8, p="0.0087", q="0.65", community=C4, genes=4];
+    "AKIRIN1" [type=gene, degree=1, community=C4];
+    "B4GALNT2" [type=gene, degree=1, community=C4];
+    "EOMES" [type=gene, degree=2, community=C4];
+    "IL23A" [type=gene, degree=1, community=C4];
+    "SIX1" [type=gene, degree=1, community=C4];
+    "ZBTB16" [type=gene, degree=1, community=C4];
+  }
+  subgraph cluster_C5 {
+    label="C5"; lead_term="WP: BARDETBIEDL SYNDROME"; terms=1; genes=5;
+    "term_WP_BARDETBIEDL_SYNDROME" [type=term, label="WP: BARDETBIEDL SYNDROME", collection="C2: WikiPathways", iteration=2, p="0.0069", q="0.49", community=C5, genes=5];
+    "CEP41" [type=gene, degree=1, community=C5];
+    "CLUAP1" [type=gene, degree=1, community=C5];
+    "CRX" [type=gene, degree=1, community=C5];
+    "PKD1L1" [type=gene, degree=1, community=C5];
+    "SCAPER" [type=gene, degree=1, community=C5];
+  }
+  subgraph cluster_C6 {
+    label="C6"; lead_term="GOBP: NITRIC OXIDE MEDIATED SIGNAL TRANSDUCTION"; terms=1; genes=4;
+    "term_GOBP_NITRIC_OXIDE_MEDIATED_SIGNAL_TRANSDUCTION" [type=term, label="GOBP: NITRIC OXIDE MEDIATED SIGNAL TRANSDUCTION", collection="C5: Gene Ontology: Biological Process", iteration=2, p="0.00019", q="0.13", community=C6, genes=4];
+    "AGTR2" [type=gene, degree=1, community=C6];
+    "CBS" [type=gene, degree=1, community=C6];
+    "FPR1" [type=gene, degree=1, community=C6];
+    "NDNF" [type=gene, degree=1, community=C6];
+  }
+  subgraph cluster_C7 {
+    label="C7"; lead_term="GOBP: NEGATIVE REGULATION OF CELL MIGRATION INVOLVED IN SPROUTING ANGIOGENESIS"; terms=1; genes=3;
+    "term_GOBP_NEGATIVE_REGULATION_OF_CELL_MIGRATION_INVOLVED_IN_SPROUTING_ANGIOGENESIS" [type=term, label="GOBP: NEGATIVE REGULATION OF CELL MIGRATION INVOLVED IN SPROUTING ANGIOGENESIS", collection="C5: Gene Ontology: Biological Process", iteration=9, p="0.0089", q="0.65", community=C7, genes=3];
+    "MIR200C" [type=gene, degree=1, community=C7];
+    "MIR361" [type=gene, degree=1, community=C7];
+    "SPRED1" [type=gene, degree=1, community=C7];
+  }
+  subgraph cluster_C8 {
+    label="C8"; lead_term="GOBP: NEGATIVE REGULATION OF MUSCLE HYPERTROPHY"; terms=1; genes=3;
+    "term_GOBP_NEGATIVE_REGULATION_OF_MUSCLE_HYPERTROPHY" [type=term, label="GOBP: NEGATIVE REGULATION OF MUSCLE HYPERTROPHY", collection="C5: Gene Ontology: Biological Process", iteration=7, p="0.0077", q="0.65", community=C8, genes=3];
+    "MIR25" [type=gene, degree=1, community=C8];
+    "RGS2" [type=gene, degree=1, community=C8];
+    "STUB1" [type=gene, degree=1, community=C8];
+  }
+  subgraph cluster_C9 {
+    label="C9"; lead_term="GOBP: REGULATION OF CLATHRIN DEPENDENT ENDOCYTOSIS"; terms=1; genes=3;
+    "term_GOBP_REGULATION_OF_CLATHRIN_DEPENDENT_ENDOCYTOSIS" [type=term, label="GOBP: REGULATION OF CLATHRIN DEPENDENT ENDOCYTOSIS", collection="C5: Gene Ontology: Biological Process", iteration=3, p="0.0011", q="0.45", community=C9, genes=3];
+    "CCDC32" [type=gene, degree=1, community=C9];
+    "UBQLN2" [type=gene, degree=1, community=C9];
+    "UNC119" [type=gene, degree=1, community=C9];
+  }
+  // bridge genes: connect terms in different communities
+  "CR2" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  // edges: each term with its genes
+  "term_REACTOME_ASSEMBLY_OF_THE_ORC_COMPLEX_AT_THE_ORIGIN_OF_REPLICATION" -- {"H2AC14" "H2BC14" "H3C8" "ORC1"};
+  "term_WP_ENTEROCYTE_CHOLESTEROL_METABOLISM" -- {"DGAT1" "DHCR24" "LDLR" "NPC1L1"};
+  "term_WP_BARDETBIEDL_SYNDROME" -- {"CEP41" "CLUAP1" "CRX" "PKD1L1" "SCAPER"};
+  "term_WP_DEVELOPMENT_AND_HETEROGENEITY_OF_THE_ILC_FAMILY" -- {"EOMES" "IL23A" "ZBTB16"};
+  "term_KEGG_SYSTEMIC_LUPUS_ERYTHEMATOSUS" -- {"FCGR2B" "H2AC14" "H2BC14" "H3C8" "HLA-DQA2" "IL10"};
+  "term_GOBP_NEGATIVE_REGULATION_OF_B_CELL_MEDIATED_IMMUNITY" -- {"C4BPB" "CR2" "FCGR2B" "PARP3"};
+  "term_GOBP_NITRIC_OXIDE_MEDIATED_SIGNAL_TRANSDUCTION" -- {"AGTR2" "CBS" "FPR1" "NDNF"};
+  "term_GOBP_REGULATION_OF_CLATHRIN_DEPENDENT_ENDOCYTOSIS" -- {"CCDC32" "UBQLN2" "UNC119"};
+  "term_GOBP_INTESTINAL_LIPID_ABSORPTION" -- {"CLDN15" "LDLR" "NPC1L1"};
+  "term_GOBP_RNA_SPLICING" -- {"CELF3" "CENATAC" "CRNKL1" "ECD" "GEMIN2" "RBM28" "RBMX" "RNPC3" "RNU4-1" "SMN2" "SNRNP200" "THUMPD2" "TRRAP"};
+  "term_GOBP_RESPONSE_TO_CORTICOSTEROID" -- {"ABCA3" "AGL" "CCND1" "GHSR" "HSD11B2" "IL10"};
+  "term_GOBP_NEGATIVE_REGULATION_OF_MUSCLE_HYPERTROPHY" -- {"MIR25" "RGS2" "STUB1"};
+  "term_GOBP_SKELETAL_MUSCLE_CELL_DIFFERENTIATION" -- {"AKIRIN1" "B4GALNT2" "EOMES" "SIX1"};
+  "term_GOBP_NEGATIVE_REGULATION_OF_CELL_MIGRATION_INVOLVED_IN_SPROUTING_ANGIOGENESIS" -- {"MIR200C" "MIR361" "SPRED1"};
+  "term_GOMF_EXOGENOUS_PROTEIN_BINDING" -- {"CD209" "CDHR3" "CR2" "LDLR" "SLC10A1"};
+}

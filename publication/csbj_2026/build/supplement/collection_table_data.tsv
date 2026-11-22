@@ -1,0 +1,11 @@
+Collection	File	Gene sets in file	Gene sets used (10-600 genes)	Genes covered	Median set size	HIV genes covered	HIV: possible terms (>= 3 genes)	HIV: ORA p < 0.01	HIV: ORA FDR < 0.05	HIV: iGEA selected	HIV: iGEA kept (q < 0.10)
+H: Hallmark Gene Sets	h.all.v2025.1.Hs.symbols.gmt	50	50	4378	179	76	22	1	1	1	1
+C2: BioCarta	c2.cp.biocarta.v2025.1.Hs.symbols.gmt	292	226	1363	17	27	10	6	0	3	3
+C2: KEGG MEDICUS	c2.cp.kegg_medicus.v2025.1.Hs.symbols.gmt	658	402	2258	16	41	11	7	2	3	3
+C2: Pathway Interaction Database	c2.cp.pid.v2025.1.Hs.symbols.gmt	196	196	2534	37	46	33	3	0	2	2
+C2: Reactome Pathways	c2.cp.reactome.v2025.1.Hs.symbols.gmt	1787	1408	11019	31	169	228	85	65	9	9
+C2: WikiPathways	c2.cp.wikipathways.v2025.1.Hs.symbols.gmt	885	766	9035	32	134	113	19	0	6	6
+C2: KEGG Legacy	c2.cp.kegg_legacy.v2025.1.Hs.symbols.gmt	186	186	5230	52	73	47	9	0	5	5
+C5: Gene Ontology: Biological Process	c5.go.bp.v2025.1.Hs.symbols.gmt	7583	5357	16032	31	228	793	89	14	12	6
+C5: Gene Ontology: Cellular Component	c5.go.cc.v2025.1.Hs.symbols.gmt	1042	684	12091	30	191	136	19	3	11	11
+C5: Gene Ontology: Molecular Function	c5.go.mf.v2025.1.Hs.symbols.gmt	1855	1164	13870	24	195	115	17	2	10	10

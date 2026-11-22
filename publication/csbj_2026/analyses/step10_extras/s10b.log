@@ -1,0 +1,11 @@
+HIV done
+Hypoxia done
+Vaccination done
+{'list_size': 25, 'mean_chance_terms': np.float64(1.58), 'p95': 4, 'mean_chance_terms_iteration1': np.float64(1.31), 'max_iteration': 4}
+{'list_size': 50, 'mean_chance_terms': np.float64(3.7), 'p95': 8, 'mean_chance_terms_iteration1': np.float64(2.52), 'max_iteration': 6}
+{'list_size': 100, 'mean_chance_terms': np.float64(7.34), 'p95': 13, 'mean_chance_terms_iteration1': np.float64(3.92), 'max_iteration': 10}
+{'list_size': 200, 'mean_chance_terms': np.float64(13.43), 'p95': 21, 'mean_chance_terms_iteration1': np.float64(5.46), 'max_iteration': 13}
+{'list_size': 300, 'mean_chance_terms': np.float64(17.53), 'p95': 27, 'mean_chance_terms_iteration1': np.float64(6.17), 'max_iteration': 17}
+{'list_size': 400, 'mean_chance_terms': np.float64(21.25), 'p95': 32, 'mean_chance_terms_iteration1': np.float64(6.64), 'max_iteration': 21}
+{'list_size': 600, 'mean_chance_terms': np.float64(26.25), 'p95': 38, 'mean_chance_terms_iteration1': np.float64(7.12), 'max_iteration': 23}
+{'list_size': 800, 'mean_chance_terms': np.float64(29.5), 'p95': 41, 'mean_chance_terms_iteration1': np.float64(7.33), 'max_iteration': 23}

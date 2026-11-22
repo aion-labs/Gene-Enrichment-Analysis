@@ -1,0 +1,4 @@
+repeat	requested_model	returned_model	response_id	api	started_utc	seconds	input_tokens	output_tokens	response_file
+1	gpt-6.2-sol	gpt-6.2-sol	resp_062c98fc60a3b30c016b004acd597887d2a0874bba3766fb43	responses	2026-11-20T13:27:41+00:00	9.6	1812	457	response_r1.json
+2	gpt-6.2-sol	gpt-6.2-sol	resp_0344145586172b7a016b004ad6fbdc87d285342bf65fb718e2	responses	2026-11-20T13:27:50+00:00	9.5	1812	478	response_r2.json
+3	gpt-6.2-sol	gpt-6.2-sol	resp_0eebd0fbcf665167016b004ae0810087d2b0d5551ca469218a	responses	2026-11-20T13:28:00+00:00	9.4	1812	437	response_r3.json

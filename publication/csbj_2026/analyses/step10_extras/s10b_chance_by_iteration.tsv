@@ -1,0 +1,51 @@
+dataset	input_genes	iteration	observed_terms	expected_chance_terms	chance_fraction
+HIV	265	1	10	5.934	0.593
+HIV	265	2	9	3.574	0.397
+HIV	265	3	8	2.254	0.282
+HIV	265	4	6	1.462	0.244
+HIV	265	5	6	0.998	0.166
+HIV	265	6	5	0.695	0.139
+HIV	265	7	4	0.475	0.119
+HIV	265	8	4	0.302	0.076
+HIV	265	9	4	0.173	0.043
+HIV	265	10	3	0.094	0.031
+HIV	265	11	2	0.049	0.025
+HIV	265	12	1	0.024	0.024
+HIV	265	13	0	0.011	
+HIV	265	14	0	0.005	
+HIV	265	15	0	0.002	
+HIV	265	16	0	0.001	
+HIV	265	17	0	0.0	
+HIV	265	18	0	0.0	
+Hypoxia	75	1	9	3.355	0.373
+Hypoxia	75	2	7	1.376	0.197
+Hypoxia	75	3	5	0.595	0.119
+Hypoxia	75	4	4	0.253	0.063
+Hypoxia	75	5	3	0.095	0.032
+Hypoxia	75	6	2	0.033	0.016
+Hypoxia	75	7	1	0.008	0.008
+Hypoxia	75	8	1	0.001	0.001
+Hypoxia	75	9	0	0.0	
+Vaccination	426	1	9	6.72	0.747
+Vaccination	426	2	8	4.463	0.558
+Vaccination	426	3	8	3.066	0.383
+Vaccination	426	4	6	2.133	0.356
+Vaccination	426	5	6	1.54	0.257
+Vaccination	426	6	6	1.148	0.191
+Vaccination	426	7	5	0.885	0.177
+Vaccination	426	8	5	0.675	0.135
+Vaccination	426	9	4	0.492	0.123
+Vaccination	426	10	4	0.343	0.086
+Vaccination	426	11	3	0.226	0.076
+Vaccination	426	12	3	0.139	0.046
+Vaccination	426	13	3	0.081	0.027
+Vaccination	426	14	1	0.043	0.043
+Vaccination	426	15	1	0.023	0.023
+Vaccination	426	16	1	0.011	0.011
+Vaccination	426	17	1	0.006	0.006
+Vaccination	426	18	1	0.002	0.002
+Vaccination	426	19	1	0.001	0.001
+Vaccination	426	20	1	0.0	0.0
+Vaccination	426	21	1	0.0	0.0
+Vaccination	426	22	1	0.0	0.0
+Vaccination	426	23	1	0.0	0.0

@@ -1,0 +1,63 @@
+Library	Iteration	Term	Description	Overlap size	p-value	-log(p-value)	Genes
+H: Hallmark Gene Sets	1	HALLMARK: PROTEIN SECRETION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HALLMARK_PROTEIN_SECRETION			-0.0	
+C2: BioCarta	1	BIOCARTA: CARDIACEGF PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/BIOCARTA_CARDIACEGF_PATHWAY			-0.0	
+C2: BioCarta	2	BIOCARTA: RAB PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/BIOCARTA_RAB_PATHWAY			-0.0	
+C2: BioCarta	3	BIOCARTA: PTDINS PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/BIOCARTA_PTDINS_PATHWAY			-0.0	
+C2: KEGG MEDICUS	1	KEGG: MEDICUS REFERENCE EGF EGFR PI3K NFKB SIGNALING PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_MEDICUS_REFERENCE_EGF_EGFR_PI3K_NFKB_SIGNALING_PATHWAY			-0.0	
+C2: KEGG MEDICUS	2	KEGG: MEDICUS REFERENCE NUCLEAR EXPORT OF MRNA	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_MEDICUS_REFERENCE_NUCLEAR_EXPORT_OF_MRNA			-0.0	
+C2: KEGG MEDICUS	3	KEGG: MEDICUS REFERENCE GPI ANCHOR BIOSYNTHESIS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_MEDICUS_REFERENCE_GPI_ANCHOR_BIOSYNTHESIS			-0.0	
+C2: Pathway Interaction Database	1	PID: ARF 3PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/PID_ARF_3PATHWAY			-0.0	
+C2: Pathway Interaction Database	2	PID: ECADHERIN NASCENT AJ PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/PID_ECADHERIN_NASCENT_AJ_PATHWAY			-0.0	
+C2: Reactome Pathways	1	REACTOME: REGULATION OF GLUCOKINASE BY GLUCOKINASE REGULATORY PROTEIN	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_REGULATION_OF_GLUCOKINASE_BY_GLUCOKINASE_REGULATORY_PROTEIN			-0.0	
+C2: Reactome Pathways	2	REACTOME: ASPARAGINE N LINKED GLYCOSYLATION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_ASPARAGINE_N_LINKED_GLYCOSYLATION			-0.0	
+C2: Reactome Pathways	3	REACTOME: TRANSCRIPTIONAL REGULATION OF WHITE ADIPOCYTE DIFFERENTIATION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_TRANSCRIPTIONAL_REGULATION_OF_WHITE_ADIPOCYTE_DIFFERENTIATION			-0.0	
+C2: Reactome Pathways	4	REACTOME: CLATHRIN MEDIATED ENDOCYTOSIS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_CLATHRIN_MEDIATED_ENDOCYTOSIS			-0.0	
+C2: Reactome Pathways	5	REACTOME: NUCLEAR RNA DECAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_NUCLEAR_RNA_DECAY			-0.0	
+C2: Reactome Pathways	6	REACTOME: INTERLEUKIN 12 SIGNALING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_INTERLEUKIN_12_SIGNALING			-0.0	
+C2: Reactome Pathways	7	REACTOME: RETROGRADE TRANSPORT AT THE TRANS GOLGI NETWORK	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_RETROGRADE_TRANSPORT_AT_THE_TRANS_GOLGI_NETWORK			-0.0	
+C2: Reactome Pathways	8	REACTOME: POST TRANSLATIONAL MODIFICATION SYNTHESIS OF GPI ANCHORED PROTEINS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_POST_TRANSLATIONAL_MODIFICATION_SYNTHESIS_OF_GPI_ANCHORED_PROTEINS			-0.0	
+C2: Reactome Pathways	9	REACTOME: HIV TRANSCRIPTION ELONGATION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_HIV_TRANSCRIPTION_ELONGATION			-0.0	
+C2: WikiPathways	1	WP: PRADERWILLI AND ANGELMAN SYNDROME	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_PRADERWILLI_AND_ANGELMAN_SYNDROME			-0.0	
+C2: WikiPathways	2	WP: IL17 SIGNALING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_IL17_SIGNALING			-0.0	
+C2: WikiPathways	3	WP: GLYCOSYLPHOSPHATIDYL INOSITOL ANCHOR PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_GLYCOSYLPHOSPHATIDYL_INOSITOL_ANCHOR_PATHWAY			-0.0	
+C2: WikiPathways	4	WP: TGFBETA RECEPTOR SIGNALING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_TGFBETA_RECEPTOR_SIGNALING			-0.0	
+C2: WikiPathways	5	WP: MIRTARGETED GENES IN LYMPHOCYTES	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_MIRTARGETED_GENES_IN_LYMPHOCYTES			-0.0	
+C2: WikiPathways	6	WP: NGLYCAN BIOSYNTHESIS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_NGLYCAN_BIOSYNTHESIS			-0.0	
+C2: KEGG Legacy	1	KEGG: PANCREATIC CANCER	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_PANCREATIC_CANCER			-0.0	
+C2: KEGG Legacy	2	KEGG: N GLYCAN BIOSYNTHESIS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_N_GLYCAN_BIOSYNTHESIS			-0.0	
+C2: KEGG Legacy	3	KEGG: GLYCOSYLPHOSPHATIDYLINOSITOL GPI ANCHOR BIOSYNTHESIS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_GLYCOSYLPHOSPHATIDYLINOSITOL_GPI_ANCHOR_BIOSYNTHESIS			-0.0	
+C2: KEGG Legacy	4	KEGG: RNA POLYMERASE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_RNA_POLYMERASE			-0.0	
+C2: KEGG Legacy	5	KEGG: RNA DEGRADATION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_RNA_DEGRADATION			-0.0	
+C5: Gene Ontology: Biological Process	1	GOBP: GOLGI VESICLE TRANSPORT	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_GOLGI_VESICLE_TRANSPORT			-0.0	
+C5: Gene Ontology: Biological Process	2	GOBP: NUCLEAR EXPORT	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_NUCLEAR_EXPORT			-0.0	
+C5: Gene Ontology: Biological Process	3	GOBP: DNA TEMPLATED TRANSCRIPTION ELONGATION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_DNA_TEMPLATED_TRANSCRIPTION_ELONGATION			-0.0	
+C5: Gene Ontology: Biological Process	4	GOBP: GLYCOLIPID BIOSYNTHETIC PROCESS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_GLYCOLIPID_BIOSYNTHETIC_PROCESS			-0.0	
+C5: Gene Ontology: Biological Process	5	GOBP: REGULATION OF PROTEIN CONTAINING COMPLEX DISASSEMBLY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_REGULATION_OF_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY			-0.0	
+C5: Gene Ontology: Biological Process	6	GOBP: POSITIVE REGULATION OF MOLECULAR FUNCTION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_POSITIVE_REGULATION_OF_MOLECULAR_FUNCTION			-0.0	
+C5: Gene Ontology: Biological Process	7	GOBP: POSITIVE REGULATION BY HOST OF VIRAL PROCESS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_POSITIVE_REGULATION_BY_HOST_OF_VIRAL_PROCESS			-0.0	
+C5: Gene Ontology: Biological Process	8	GOBP: PROTEIN POLYUBIQUITINATION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_PROTEIN_POLYUBIQUITINATION			-0.0	
+C5: Gene Ontology: Biological Process	9	GOBP: RIBONUCLEOPROTEIN COMPLEX BIOGENESIS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_RIBONUCLEOPROTEIN_COMPLEX_BIOGENESIS			-0.0	
+C5: Gene Ontology: Biological Process	10	GOBP: POSITIVE REGULATION OF INTERFERON BETA PRODUCTION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_POSITIVE_REGULATION_OF_INTERFERON_BETA_PRODUCTION			-0.0	
+C5: Gene Ontology: Biological Process	11	GOBP: PROTEIN N LINKED GLYCOSYLATION VIA ASPARAGINE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_PROTEIN_N_LINKED_GLYCOSYLATION_VIA_ASPARAGINE			-0.0	
+C5: Gene Ontology: Biological Process	12	GOBP: ARP2 3 COMPLEX MEDIATED ACTIN NUCLEATION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_ARP2_3_COMPLEX_MEDIATED_ACTIN_NUCLEATION			-0.0	
+C5: Gene Ontology: Cellular Component	1	GOCC: NUCLEAR PORE OUTER RING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_NUCLEAR_PORE_OUTER_RING			-0.0	
+C5: Gene Ontology: Cellular Component	2	GOCC: CORE MEDIATOR COMPLEX	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_CORE_MEDIATOR_COMPLEX			-0.0	
+C5: Gene Ontology: Cellular Component	3	GOCC: GOLGI TRANSPORT COMPLEX	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_GOLGI_TRANSPORT_COMPLEX			-0.0	
+C5: Gene Ontology: Cellular Component	4	GOCC: ENDOPLASMIC RETICULUM PROTEIN CONTAINING COMPLEX	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_ENDOPLASMIC_RETICULUM_PROTEIN_CONTAINING_COMPLEX			-0.0	
+C5: Gene Ontology: Cellular Component	5	GOCC: ENDOPLASMIC RETICULUM GOLGI INTERMEDIATE COMPARTMENT MEMBRANE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_ENDOPLASMIC_RETICULUM_GOLGI_INTERMEDIATE_COMPARTMENT_MEMBRANE			-0.0	
+C5: Gene Ontology: Cellular Component	6	GOCC: NUCLEAR EXOSOME RNASE COMPLEX	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_NUCLEAR_EXOSOME_RNASE_COMPLEX			-0.0	
+C5: Gene Ontology: Cellular Component	7	GOCC: CULLIN RING UBIQUITIN LIGASE COMPLEX	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_CULLIN_RING_UBIQUITIN_LIGASE_COMPLEX			-0.0	
+C5: Gene Ontology: Cellular Component	8	GOCC: NUCLEAR PORE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_NUCLEAR_PORE			-0.0	
+C5: Gene Ontology: Cellular Component	9	GOCC: CLATHRIN COATED VESICLE MEMBRANE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_CLATHRIN_COATED_VESICLE_MEMBRANE			-0.0	
+C5: Gene Ontology: Cellular Component	10	GOCC: SPINDLE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_SPINDLE			-0.0	
+C5: Gene Ontology: Cellular Component	11	GOCC: AUTOPHAGOSOME	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_AUTOPHAGOSOME			-0.0	
+C5: Gene Ontology: Molecular Function	1	GOMF: STRUCTURAL CONSTITUENT OF NUCLEAR PORE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_STRUCTURAL_CONSTITUENT_OF_NUCLEAR_PORE			-0.0	
+C5: Gene Ontology: Molecular Function	2	GOMF: CATALYTIC ACTIVITY ACTING ON RNA	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_CATALYTIC_ACTIVITY_ACTING_ON_RNA			-0.0	
+C5: Gene Ontology: Molecular Function	3	GOMF: GTPASE ACTIVATOR ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_GTPASE_ACTIVATOR_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	4	GOMF: TRANSCRIPTION COREGULATOR ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_TRANSCRIPTION_COREGULATOR_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	5	GOMF: ENZYME SUBSTRATE ADAPTOR ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_ENZYME_SUBSTRATE_ADAPTOR_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	6	GOMF: ALPHA TUBULIN BINDING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_ALPHA_TUBULIN_BINDING			-0.0	
+C5: Gene Ontology: Molecular Function	7	GOMF: CARGO ADAPTOR ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_CARGO_ADAPTOR_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	8	GOMF: HEXOSYLTRANSFERASE ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_HEXOSYLTRANSFERASE_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	9	GOMF: G PROTEIN ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_G_PROTEIN_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	10	GOMF: GTPASE BINDING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_GTPASE_BINDING			-0.0	

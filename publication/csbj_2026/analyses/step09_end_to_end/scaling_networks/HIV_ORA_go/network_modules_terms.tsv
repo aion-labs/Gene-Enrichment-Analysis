@@ -1,0 +1,20 @@
+Library	Term	Community	Genes	Shared genes (weighted degree)	Genes bridging to other communities
+C5: Gene Ontology: Molecular Function	GOMF_CATALYTIC_ACTIVITY_ACTING_ON_RNA	C1	18	2	0
+C5: Gene Ontology: Biological Process	GOBP_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY	C1	13	24	5
+C5: Gene Ontology: Biological Process	GOBP_REGULATION_OF_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY	C1	12	22	4
+C5: Gene Ontology: Biological Process	GOBP_ESTABLISHMENT_OF_PROTEIN_LOCALIZATION_TO_ORGANELLE	C2	19	52	3
+C5: Gene Ontology: Biological Process	GOBP_NUCLEAR_TRANSPORT	C2	15	66	1
+C5: Gene Ontology: Biological Process	GOBP_NUCLEAR_EXPORT	C2	11	60	1
+C5: Gene Ontology: Biological Process	GOBP_MRNA_TRANSPORT	C2	9	58	1
+C5: Gene Ontology: Cellular Component	GOCC_NUCLEAR_PORE	C2	9	52	0
+C5: Gene Ontology: Biological Process	GOBP_RNA_EXPORT_FROM_NUCLEUS	C2	8	54	1
+C5: Gene Ontology: Biological Process	GOBP_MRNA_EXPORT_FROM_NUCLEUS	C2	7	48	1
+C5: Gene Ontology: Molecular Function	GOMF_STRUCTURAL_CONSTITUENT_OF_NUCLEAR_PORE	C2	6	44	0
+C5: Gene Ontology: Cellular Component	GOCC_NUCLEAR_PORE_OUTER_RING	C2	4	31	0
+C5: Gene Ontology: Biological Process	GOBP_GOLGI_VESICLE_TRANSPORT	C3	20	45	6
+C5: Gene Ontology: Biological Process	GOBP_GOLGI_ORGANIZATION	C3	11	27	2
+C5: Gene Ontology: Biological Process	GOBP_ENDOPLASMIC_RETICULUM_TO_GOLGI_VESICLE_MEDIATED_TRANSPORT	C3	10	23	1
+C5: Gene Ontology: Biological Process	GOBP_INTRA_GOLGI_VESICLE_MEDIATED_TRANSPORT	C3	8	20	1
+C5: Gene Ontology: Biological Process	GOBP_RETROGRADE_VESICLE_MEDIATED_TRANSPORT_GOLGI_TO_ENDOPLASMIC_RETICULUM	C3	8	22	1
+C5: Gene Ontology: Biological Process	GOBP_GLYCOLIPID_BIOSYNTHETIC_PROCESS	C4	7	0	0
+C5: Gene Ontology: Cellular Component	GOCC_CORE_MEDIATOR_COMPLEX	C5	5	0	0

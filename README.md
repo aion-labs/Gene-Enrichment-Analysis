@@ -192,6 +192,11 @@ The app offers various statistical methods to calculate p-values:
 Background Gene List Upload: Users can upload their background gene lists as .txt files containing newline-separated gene names or Entrez IDs.
 Gene Set Collections: add custom collections in .gmt format from the command line (see *Managing gene-set collections*).
 
+## Publication analyses
+
+Analyses, figures and supplementary material for the iGEA paper are archived in [`publication/`](publication/README.md),
+separate from the software.
+
 ## License
 
 This project is licensed under the **GNU General Public License v3.0**; see [LICENSE](LICENSE).

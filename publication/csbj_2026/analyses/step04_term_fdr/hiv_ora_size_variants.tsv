@@ -1,0 +1,5 @@
+Gene-set sizes	Sets tested	FDR<0.05, overlap>=3	FDR<0.05, any overlap	Genes (overlap>=3)
+10-600 (paper)	10439	87	87	123
+no size filter	14534	124	124	194
+>= 5 genes	14520	124	124	194
+15-500 (GSEA default)	8187	88	88	125

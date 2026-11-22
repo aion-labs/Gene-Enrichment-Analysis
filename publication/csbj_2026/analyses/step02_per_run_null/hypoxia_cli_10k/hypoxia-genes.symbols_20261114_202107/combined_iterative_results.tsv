@@ -1,0 +1,33 @@
+Library	Iteration	Term	Description	Overlap size	p-value	-log(p-value)	Genes
+H: Hallmark Gene Sets	1	HALLMARK: HYPOXIA	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HALLMARK_HYPOXIA			-0.0	
+C2: KEGG MEDICUS	1	KEGG: MEDICUS REFERENCE GLYCOLYSIS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_MEDICUS_REFERENCE_GLYCOLYSIS			-0.0	
+C2: Pathway Interaction Database	1	PID: HIF1 TFPATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/PID_HIF1_TFPATHWAY			-0.0	
+C2: Pathway Interaction Database	2	PID: MYC ACTIV PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/PID_MYC_ACTIV_PATHWAY			-0.0	
+C2: Reactome Pathways	1	REACTOME: GLUCONEOGENESIS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_GLUCONEOGENESIS			-0.0	
+C2: Reactome Pathways	2	REACTOME: COLLAGEN FORMATION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_COLLAGEN_FORMATION			-0.0	
+C2: Reactome Pathways	3	REACTOME: HDMS DEMETHYLATE HISTONES	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_HDMS_DEMETHYLATE_HISTONES			-0.0	
+C2: Reactome Pathways	4	REACTOME: TP53 REGULATES METABOLIC GENES	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_TP53_REGULATES_METABOLIC_GENES			-0.0	
+C2: Reactome Pathways	5	REACTOME: REGULATION OF PLK1 ACTIVITY AT G2 M TRANSITION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_REGULATION_OF_PLK1_ACTIVITY_AT_G2_M_TRANSITION			-0.0	
+C2: WikiPathways	1	WP: GLYCOLYSIS IN SENESCENCE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_GLYCOLYSIS_IN_SENESCENCE			-0.0	
+C2: WikiPathways	2	WP: METABOLIC PATHWAYS OF FIBROBLASTS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_METABOLIC_PATHWAYS_OF_FIBROBLASTS			-0.0	
+C2: WikiPathways	3	WP: ADIPOGENESIS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_ADIPOGENESIS			-0.0	
+C2: WikiPathways	4	WP: HEMATOPOIETIC STEM CELL DIFFERENTIATION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_HEMATOPOIETIC_STEM_CELL_DIFFERENTIATION			-0.0	
+C2: KEGG Legacy	1	KEGG: GLYCOLYSIS GLUCONEOGENESIS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_GLYCOLYSIS_GLUCONEOGENESIS			-0.0	
+C2: KEGG Legacy	2	KEGG: P53 SIGNALING PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_P53_SIGNALING_PATHWAY			-0.0	
+C5: Gene Ontology: Biological Process	1	GOBP: PYRUVATE METABOLIC PROCESS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_PYRUVATE_METABOLIC_PROCESS			-0.0	
+C5: Gene Ontology: Biological Process	2	GOBP: CELLULAR RESPONSE TO OXYGEN LEVELS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_CELLULAR_RESPONSE_TO_OXYGEN_LEVELS			-0.0	
+C5: Gene Ontology: Biological Process	3	GOBP: NUCLEAR RECEPTOR MEDIATED SIGNALING PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_NUCLEAR_RECEPTOR_MEDIATED_SIGNALING_PATHWAY			-0.0	
+C5: Gene Ontology: Biological Process	4	GOBP: COLLAGEN FIBRIL ORGANIZATION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_COLLAGEN_FIBRIL_ORGANIZATION			-0.0	
+C5: Gene Ontology: Biological Process	5	GOBP: RESPONSE TO STARVATION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_RESPONSE_TO_STARVATION			-0.0	
+C5: Gene Ontology: Biological Process	6	GOBP: SYMBIONT ENTRY INTO HOST	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_SYMBIONT_ENTRY_INTO_HOST			-0.0	
+C5: Gene Ontology: Biological Process	7	GOBP: POSITIVE REGULATION OF MAPK CASCADE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_POSITIVE_REGULATION_OF_MAPK_CASCADE			-0.0	
+C5: Gene Ontology: Biological Process	8	GOBP: GENERATION OF PRECURSOR METABOLITES AND ENERGY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_GENERATION_OF_PRECURSOR_METABOLITES_AND_ENERGY			-0.0	
+C5: Gene Ontology: Cellular Component	1	GOCC: ENDOPLASMIC RETICULUM LUMEN	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_ENDOPLASMIC_RETICULUM_LUMEN			-0.0	
+C5: Gene Ontology: Cellular Component	2	GOCC: MITOCHONDRIAL MATRIX	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_MITOCHONDRIAL_MATRIX			-0.0	
+C5: Gene Ontology: Cellular Component	3	GOCC: RECYCLING ENDOSOME	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_RECYCLING_ENDOSOME			-0.0	
+C5: Gene Ontology: Cellular Component	4	GOCC: TRANSCRIPTION REGULATOR COMPLEX	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_TRANSCRIPTION_REGULATOR_COMPLEX			-0.0	
+C5: Gene Ontology: Cellular Component	5	GOCC: FICOLIN 1 RICH GRANULE LUMEN	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_FICOLIN_1_RICH_GRANULE_LUMEN			-0.0	
+C5: Gene Ontology: Cellular Component	6	GOCC: NUCLEAR ENVELOPE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_NUCLEAR_ENVELOPE			-0.0	
+C5: Gene Ontology: Molecular Function	1	GOMF: 2 OXOGLUTARATE DEPENDENT DIOXYGENASE ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_2_OXOGLUTARATE_DEPENDENT_DIOXYGENASE_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	2	GOMF: PROTEIN SERINE THREONINE KINASE ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_PROTEIN_SERINE_THREONINE_KINASE_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	3	GOMF: STEROID BINDING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_STEROID_BINDING			-0.0	

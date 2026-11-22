@@ -1,0 +1,18 @@
+Library	Term	Community	Genes	Shared genes (weighted degree)	Genes bridging to other communities
+C5: Gene Ontology: Biological Process	GOBP: PYRUVATE METABOLIC PROCESS	C1	8	7	1
+C5: Gene Ontology: Cellular Component	GOCC: MITOCHONDRIAL MATRIX	C1	7	9	3
+C5: Gene Ontology: Molecular Function	GOMF: PROTEIN SERINE THREONINE KINASE ACTIVITY	C1	7	6	3
+C5: Gene Ontology: Biological Process	GOBP: POSITIVE REGULATION OF MAPK CASCADE	C1	5	1	0
+C5: Gene Ontology: Cellular Component	GOCC: FICOLIN 1 RICH GRANULE LUMEN	C1	3	3	0
+C5: Gene Ontology: Molecular Function	GOMF: STEROID BINDING	C1	3	4	1
+C5: Gene Ontology: Molecular Function	GOMF: 2 OXOGLUTARATE DEPENDENT DIOXYGENASE ACTIVITY	C2	9	7	0
+C5: Gene Ontology: Biological Process	GOBP: NUCLEAR RECEPTOR MEDIATED SIGNALING PATHWAY	C2	6	6	3
+C5: Gene Ontology: Cellular Component	GOCC: ENDOPLASMIC RETICULUM LUMEN	C2	6	6	2
+C5: Gene Ontology: Biological Process	GOBP: COLLAGEN FIBRIL ORGANIZATION	C2	4	4	1
+C5: Gene Ontology: Biological Process	GOBP: CELLULAR RESPONSE TO OXYGEN LEVELS	C3	7	6	3
+C5: Gene Ontology: Cellular Component	GOCC: NUCLEAR ENVELOPE	C3	5	2	1
+C5: Gene Ontology: Cellular Component	GOCC: RECYCLING ENDOSOME	C3	4	2	0
+C5: Gene Ontology: Biological Process	GOBP: SYMBIONT ENTRY INTO HOST	C3	3	1	0
+C5: Gene Ontology: Cellular Component	GOCC: TRANSCRIPTION REGULATOR COMPLEX	C4	6	3	1
+C5: Gene Ontology: Biological Process	GOBP: GENERATION OF PRECURSOR METABOLITES AND ENERGY	C4	4	2	1
+C5: Gene Ontology: Biological Process	GOBP: RESPONSE TO STARVATION	C4	4	1	0

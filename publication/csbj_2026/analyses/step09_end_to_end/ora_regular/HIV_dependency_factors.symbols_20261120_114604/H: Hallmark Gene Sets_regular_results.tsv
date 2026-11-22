@@ -1,0 +1,2 @@
+Library	Rank	Term	Description	Overlap size	p-value	-log(p-value)	FDR	Genes
+H: Hallmark Gene Sets	41	HALLMARK: PROTEIN SECRETION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HALLMARK_PROTEIN_SECRETION	9/96	3.403997760637301e-05	4.468010734293438	0.0017019988803186504	ADAM10, AP2M1, ARF1, CAV2, COG2, EGFR, GOSR2, RAB2A, TMED2

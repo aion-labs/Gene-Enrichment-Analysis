@@ -1,0 +1,10 @@
+Iter	Term	Genes	p	Real terms with p' <= p	Random terms with p' <= p (total over 10,000 lists)	Expected false (per list)	q (raw)	q
+1	regulation of glucokinase by glucokinase regulatory protein	8	1.9940721357762702e-08	1	0	0.0	0.0	0.0
+2	asparagine n linked glycosylation	19	1.36341123157389e-07	2	2	0.0002	0.0001	9.999999999999999e-05
+3	transcriptional regulation of white adipocyte differentiation	9	1.232443302327276e-06	3	2	0.0003	9.999999999999999e-05	9.999999999999999e-05
+4	clathrin mediated endocytosis	8	0.0003635819293452548	4	1350	0.135	0.03375	0.03375
+5	nuclear rna decay	4	0.0006294593782188524	5	2329	0.2329	0.046579999999999996	0.046579999999999996
+6	interleukin 12 signaling	4	0.0017139169716522632	6	5618	0.5618	0.09363333333333333	0.08198571428571429
+7	retrograde transport at the trans golgi network	4	0.0017698602293963214	7	5739	0.5739	0.08198571428571429	0.08198571428571429
+8	post translational modification synthesis of gpi anchored proteins	5	0.0026342666687091307	8	7925	0.7925	0.0990625	0.0990625
+9	hiv transcription elongation	3	0.00850250300314292	9	20287	2.0287	0.22541111111111112	0.22541111111111112

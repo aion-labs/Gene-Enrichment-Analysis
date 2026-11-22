@@ -1,0 +1,77 @@
+Supplementary Table 8. Robustness of iGEA results
+
+A. Analysis settings (one setting changed at a time; random lists generated with the same setting; 2,000 lists).
+
+dataset	setting	selected	kept	chance_terms_per_list	cluster_genes	cluster_terms	p_cluster_size	p_edges_per_gene	jaccard_kept_terms_vs_default	jaccard_genes_vs_default
+HIV	default	62	56	16.11	168	56	0.0004997501249375	0.0079960019990005	1.0	1.0
+HIV	p < 0.005	48	46	9.81	148	46	0.0004997501249375	0.0104947526236881	0.821	0.881
+HIV	p < 0.05	112	96	48.2	203	95	0.0004997501249375	0.0049975012493753	0.583	0.816
+HIV	min overlap 2	80	40	25.56	129	39	0.0004997501249375	0.0124937531234382	0.684	0.81
+HIV	min overlap 5	40	38	6.78	165	38	0.0004997501249375	0.0059970014992503	0.541	0.947
+HIV	set size 15-500	62	53	15.8	160	53	0.0004997501249375	0.0089955022488755	0.73	0.874
+HIV	set size 5-1000	59	52	16.24	179	51	0.0004997501249375	0.0064967516241879	0.565	0.813
+HIV	max 10 iterations	59	54	16.01	167	54	0.0004997501249375	0.009495252373813	0.964	0.994
+Random control	default	15	1	16.0	4	1	0.4817591204397801	0.5922038980509745	1.0	1.0
+Random control	p < 0.005	8	1	9.77	4	1	0.4772613693153423	0.5872063968015993	1.0	1.0
+Random control	p < 0.05	40	1	48.01	4	1	0.4812593703148425	0.5922038980509745	1.0	1.0
+Random control	min overlap 2	24	1	25.47	4	1	0.4822588705647176	0.5952023988005997	1.0	1.0
+Random control	min overlap 5	8	0	6.83	0	0	1.0	1.0	0.0	0.0
+Random control	set size 15-500	14	0	15.75	0	0	1.0	1.0	0.0	0.0
+Random control	set size 5-1000	15	1	16.16	4	1	0.4607696151924038	0.5892053973013494	1.0	1.0
+Random control	max 10 iterations	15	1	15.93	4	1	0.4817591204397801	0.5922038980509745	1.0	1.0
+
+B. Input subsampling (100 random subsamples of 90% of the HIV list, 238 genes; 5,000 random lists).
+
+Terms selected (p < 0.01)	59 (46–74)	(full list: 62)
+Terms kept (q < 0.10)	50 (31–64)	(full list: 56)
+Full-list kept terms recovered	39 (25–48)	(full list: of 56)
+Kept terms not kept in the full list	11 (3–23)	(full list: –)
+Largest cluster: genes	144 (88–168)	(full list: 168)
+Largest cluster: terms	50 (30–64)	(full list: 56)
+Cluster genes shared with the full-list cluster (Jaccard)	0.74 (0.50–0.86)	(full list: 1)
+Network p, number of genes	0.0002 in all 100	(full list: 0.0001)
+
+Full-list kept terms kept in >= 80% / >= 50% of subsamples: 18 / 46 of 56; median recurrence 0.71.
+Near ties (runner-up p within two-fold): 35 of 62 iterations; median recurrence 0.58 vs 0.74.
+
+Terms kept in fewer than half of the subsamples:
+Library	Term	q_full	recurrence_kept
+C5: Gene Ontology: Cellular Component	GOCC_CLATHRIN_COATED_VESICLE_MEMBRANE	0.0682	0.18
+C2: WikiPathways	WP_IL17_SIGNALING	0.0805	0.21
+C5: Gene Ontology: Cellular Component	GOCC_SPINDLE	0.0682	0.21
+C2: Reactome Pathways	REACTOME_HIV_TRANSCRIPTION_ELONGATION	0.0971111111111111	0.28
+C5: Gene Ontology: Biological Process	GOBP_NUCLEAR_EXPORT	0.0095	0.29
+C5: Gene Ontology: Cellular Component	GOCC_AUTOPHAGOSOME	0.0782727272727272	0.3
+C5: Gene Ontology: Biological Process	GOBP_POSITIVE_REGULATION_OF_MOLECULAR_FUNCTION	0.0743333333333333	0.32
+C5: Gene Ontology: Molecular Function	GOMF_GTPASE_ACTIVATOR_ACTIVITY	0.0282857142857142	0.4
+C5: Gene Ontology: Cellular Component	GOCC_ENDOPLASMIC_RETICULUM_GOLGI_INTERMEDIATE_COMPARTMENT_MEMBRANE	0.0224	0.45
+C5: Gene Ontology: Cellular Component	GOCC_GOLGI_TRANSPORT_COMPLEX	0.0165	0.49
+
+C. Redundancy between collections (gene sets with Jaccard >= 0.9 to a set in another collection).
+
+Collection	Gene sets (10-600)	Hallmark	Reactome	KEGG Legacy	KEGG MEDICUS	BioCarta	PID	WikiPathways	GO BP	GO CC	GO MF	Any other (J>=0.9)	Any other (identical)
+Hallmark	50		0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0	0
+Reactome	1408	0.0		0.0	0.0	0.0	0.0	1.0	1.0	3.0	3.0	8	1
+KEGG Legacy	186	0.0	0.0		0.0	0.0	0.0	5.0	0.0	0.0	1.0	6	1
+KEGG MEDICUS	402	0.0	0.0	0.0		0.0	0.0	1.0	0.0	4.0	0.0	5	0
+BioCarta	226	0.0	0.0	0.0	0.0		0.0	2.0	0.0	0.0	0.0	2	1
+PID	196	0.0	0.0	0.0	0.0	0.0		0.0	0.0	0.0	0.0	0	0
+WikiPathways	766	0.0	1.0	5.0	1.0	2.0	0.0		0.0	0.0	0.0	9	2
+GO BP	5357	0.0	1.0	0.0	0.0	0.0	0.0	0.0		4.0	14.0	19	2
+GO CC	684	0.0	3.0	0.0	1.0	0.0	0.0	0.0	4.0		3.0	11	2
+GO MF	1164	0.0	3.0	1.0	0.0	0.0	0.0	0.0	15.0	4.0		22	3
+
+Deduplication removed 40 sets (WikiPathways 9, GO BP 1, GO CC 8, GO MF 22). Re-analysis (1,000 random lists):
+
+Configuration	iGEA terms	Kept (q < 0.10)	Cluster genes	Cluster terms	Edges/gene	p Cluster Size	p Average Edges per Gene
+all 10 (deduplicated)	63	57	170	57	2.276	0.001	0.00799
+without Hallmark	61	54	166	54	2.223	0.001	0.00899
+without Reactome	53	47	158	47	2.006	0.001	0.01099
+without KEGG Legacy	57	50	167	50	2.144	0.001	0.00899
+without KEGG MEDICUS	59	53	168	53	2.185	0.001	0.00799
+without BioCarta	59	53	168	53	2.208	0.001	0.00899
+without PID	60	54	168	54	2.22	0.001	0.00899
+without WikiPathways	56	49	162	49	2.111	0.001	0.00899
+without GO BP	50	49	147	48	2.054	0.001	0.01199
+without GO CC	51	44	158	44	1.975	0.001	0.01798
+without GO MF	52	32	78	24	2.038	0.001	0.01199

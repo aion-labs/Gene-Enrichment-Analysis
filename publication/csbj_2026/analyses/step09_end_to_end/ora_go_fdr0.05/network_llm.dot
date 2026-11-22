@@ -1,0 +1,138 @@
+graph enrichment_network {
+  // communities: Leiden (igraph, modularity), modularity="0.3614"
+  graph [community_method="Leiden (igraph, modularity)", modularity="0.3614"];
+  subgraph cluster_C1 {
+    label="C1"; lead_term="GOMF: CATALYTIC ACTIVITY ACTING ON RNA"; terms=3; genes=30;
+    "term_GOBP_REGULATION_OF_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY" [type=term, label="GOBP: REGULATION OF PROTEIN CONTAINING COMPLEX DISASSEMBLY", collection="C5: Gene Ontology: Biological Process", p="4.7e-07", q="0.00084", community=C1, genes=12];
+    "term_GOBP_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY" [type=term, label="GOBP: PROTEIN CONTAINING COMPLEX DISASSEMBLY", collection="C5: Gene Ontology: Biological Process", p="0.00012", q="0.05", community=C1, genes=13];
+    "term_GOMF_CATALYTIC_ACTIVITY_ACTING_ON_RNA" [type=term, label="GOMF: CATALYTIC ACTIVITY ACTING ON RNA", collection="C5: Gene Ontology: Molecular Function", p="2.4e-05", q="0.014", community=C1, genes=18];
+    "AGO3" [type=gene, degree=1, community=C1];
+    "ALKBH8" [type=gene, degree=1, community=C1];
+    "ATG12" [type=gene, degree=2, community=C1];
+    "DDX10" [type=gene, degree=1, community=C1];
+    "DDX53" [type=gene, degree=1, community=C1];
+    "DDX55" [type=gene, degree=1, community=C1];
+    "DHX33" [type=gene, degree=1, community=C1];
+    "DIMT1" [type=gene, degree=1, community=C1];
+    "EPS8" [type=gene, degree=2, community=C1];
+    "ERI2" [type=gene, degree=1, community=C1];
+    "ETF1" [type=gene, degree=3, community=C1];
+    "EXOSC3" [type=gene, degree=1, community=C1];
+    "EXOSC5" [type=gene, degree=1, community=C1];
+    "FLII" [type=gene, degree=2, community=C1];
+    "IGHMBP2" [type=gene, degree=1, community=C1];
+    "LARS1" [type=gene, degree=1, community=C1];
+    "MID1IP1" [type=gene, degree=2, community=C1];
+    "POLR1H" [type=gene, degree=1, community=C1];
+    "POLR3A" [type=gene, degree=1, community=C1];
+    "POLR3F" [type=gene, degree=1, community=C1];
+    "SPTAN1" [type=gene, degree=2, community=C1];
+    "TAOK1" [type=gene, degree=2, community=C1];
+    "TRMT5" [type=gene, degree=1, community=C1];
+    "UBQLN4" [type=gene, degree=2, community=C1];
+    "YTHDC2" [type=gene, degree=1, community=C1];
+  }
+  subgraph cluster_C2 {
+    label="C2"; lead_term="GOBP: ESTABLISHMENT OF PROTEIN LOCALIZATION TO ORGANELLE"; terms=9; genes=24;
+    "term_GOBP_ESTABLISHMENT_OF_PROTEIN_LOCALIZATION_TO_ORGANELLE" [type=term, label="GOBP: ESTABLISHMENT OF PROTEIN LOCALIZATION TO ORGANELLE", collection="C5: Gene Ontology: Biological Process", p="3.3e-05", q="0.024", community=C2, genes=19];
+    "term_GOBP_NUCLEAR_EXPORT" [type=term, label="GOBP: NUCLEAR EXPORT", collection="C5: Gene Ontology: Biological Process", p="3.6e-05", q="0.024", community=C2, genes=11];
+    "term_GOBP_RNA_EXPORT_FROM_NUCLEUS" [type=term, label="GOBP: RNA EXPORT FROM NUCLEUS", collection="C5: Gene Ontology: Biological Process", p="5.8e-05", q="0.034", community=C2, genes=8];
+    "term_GOBP_MRNA_EXPORT_FROM_NUCLEUS" [type=term, label="GOBP: MRNA EXPORT FROM NUCLEUS", collection="C5: Gene Ontology: Biological Process", p="7.9e-05", q="0.042", community=C2, genes=7];
+    "term_GOBP_NUCLEAR_TRANSPORT" [type=term, label="GOBP: NUCLEAR TRANSPORT", collection="C5: Gene Ontology: Biological Process", p="0.00012", q="0.05", community=C2, genes=15];
+    "term_GOBP_MRNA_TRANSPORT" [type=term, label="GOBP: MRNA TRANSPORT", collection="C5: Gene Ontology: Biological Process", p="0.00012", q="0.05", community=C2, genes=9];
+    "term_GOCC_NUCLEAR_PORE_OUTER_RING" [type=term, label="GOCC: NUCLEAR PORE OUTER RING", collection="C5: Gene Ontology: Cellular Component", p="1.2e-05", q="0.0069", community=C2, genes=4];
+    "term_GOCC_NUCLEAR_PORE" [type=term, label="GOCC: NUCLEAR PORE", collection="C5: Gene Ontology: Cellular Component", p="2e-05", q="0.0069", community=C2, genes=9];
+    "term_GOMF_STRUCTURAL_CONSTITUENT_OF_NUCLEAR_PORE" [type=term, label="GOMF: STRUCTURAL CONSTITUENT OF NUCLEAR PORE", collection="C5: Gene Ontology: Molecular Function", p="1e-06", q="0.0012", community=C2, genes=6];
+    "AKT1" [type=gene, degree=2, community=C2];
+    "ANKRD6" [type=gene, degree=1, community=C2];
+    "FAM76B" [type=gene, degree=2, community=C2];
+    "MDN1" [type=gene, degree=2, community=C2];
+    "NMT1" [type=gene, degree=1, community=C2];
+    "NUP107" [type=gene, degree=9, community=C2];
+    "NUP133" [type=gene, degree=9, community=C2];
+    "NUP153" [type=gene, degree=7, community=C2];
+    "NUP155" [type=gene, degree=8, community=C2];
+    "NUP160" [type=gene, degree=8, community=C2];
+    "NUP85" [type=gene, degree=9, community=C2];
+    "RANBP2" [type=gene, degree=5, community=C2];
+    "RGPD5" [type=gene, degree=3, community=C2];
+    "RGPD8" [type=gene, degree=3, community=C2];
+    "SPCS3" [type=gene, degree=1, community=C2];
+    "THOC2" [type=gene, degree=5, community=C2];
+    "TIMM8A" [type=gene, degree=1, community=C2];
+    "TNPO3" [type=gene, degree=2, community=C2];
+    "TOMM70" [type=gene, degree=1, community=C2];
+    "VPS53" [type=gene, degree=1, community=C2];
+  }
+  subgraph cluster_C3 {
+    label="C3"; lead_term="GOBP: GOLGI VESICLE TRANSPORT"; terms=5; genes=21;
+    "term_GOBP_GOLGI_VESICLE_TRANSPORT" [type=term, label="GOBP: GOLGI VESICLE TRANSPORT", collection="C5: Gene Ontology: Biological Process", p="2.4e-08", q="6.7e-05", community=C3, genes=20];
+    "term_GOBP_INTRA_GOLGI_VESICLE_MEDIATED_TRANSPORT" [type=term, label="GOBP: INTRA GOLGI VESICLE MEDIATED TRANSPORT", collection="C5: Gene Ontology: Biological Process", p="2.5e-08", q="6.7e-05", community=C3, genes=8];
+    "term_GOBP_RETROGRADE_VESICLE_MEDIATED_TRANSPORT_GOLGI_TO_ENDOPLASMIC_RETICULUM" [type=term, label="GOBP: RETROGRADE VESICLE MEDIATED TRANSPORT GOLGI TO ENDOPLASMIC RETICULUM", collection="C5: Gene Ontology: Biological Process", p="6.5e-07", q="0.00087", community=C3, genes=8];
+    "term_GOBP_GOLGI_ORGANIZATION" [type=term, label="GOBP: GOLGI ORGANIZATION", collection="C5: Gene Ontology: Biological Process", p="1.4e-05", q="0.015", community=C3, genes=11];
+    "term_GOBP_ENDOPLASMIC_RETICULUM_TO_GOLGI_VESICLE_MEDIATED_TRANSPORT" [type=term, label="GOBP: ENDOPLASMIC RETICULUM TO GOLGI VESICLE MEDIATED TRANSPORT", collection="C5: Gene Ontology: Biological Process", p="3.2e-05", q="0.024", community=C3, genes=10];
+    "COG2" [type=gene, degree=3, community=C3];
+    "COG3" [type=gene, degree=5, community=C3];
+    "COG4" [type=gene, degree=4, community=C3];
+    "GOSR2" [type=gene, degree=3, community=C3];
+    "RAB1B" [type=gene, degree=3, community=C3];
+    "RAB2A" [type=gene, degree=3, community=C3];
+    "RAB6A" [type=gene, degree=3, community=C3];
+    "RAB6B" [type=gene, degree=4, community=C3];
+    "RAB6C" [type=gene, degree=3, community=C3];
+    "SCFD1" [type=gene, degree=3, community=C3];
+    "STX5" [type=gene, degree=4, community=C3];
+    "TMED2" [type=gene, degree=3, community=C3];
+    "TRAPPC1" [type=gene, degree=2, community=C3];
+    "TRAPPC8" [type=gene, degree=3, community=C3];
+  }
+  subgraph cluster_C4 {
+    label="C4"; lead_term="GOBP: GLYCOLIPID BIOSYNTHETIC PROCESS"; terms=1; genes=7;
+    "term_GOBP_GLYCOLIPID_BIOSYNTHETIC_PROCESS" [type=term, label="GOBP: GLYCOLIPID BIOSYNTHETIC PROCESS", collection="C5: Gene Ontology: Biological Process", p="0.00013", q="0.05", community=C4, genes=7];
+    "A4GALT" [type=gene, degree=1, community=C4];
+    "DPM1" [type=gene, degree=1, community=C4];
+    "PIGH" [type=gene, degree=1, community=C4];
+    "PIGK" [type=gene, degree=1, community=C4];
+    "PIGY" [type=gene, degree=1, community=C4];
+    "ST3GAL5" [type=gene, degree=1, community=C4];
+    "TM9SF2" [type=gene, degree=1, community=C4];
+  }
+  subgraph cluster_C5 {
+    label="C5"; lead_term="GOCC: CORE MEDIATOR COMPLEX"; terms=1; genes=5;
+    "term_GOCC_CORE_MEDIATOR_COMPLEX" [type=term, label="GOCC: CORE MEDIATOR COMPLEX", collection="C5: Gene Ontology: Cellular Component", p="4.7e-05", q="0.011", community=C5, genes=5];
+    "MED14" [type=gene, degree=1, community=C5];
+    "MED28" [type=gene, degree=1, community=C5];
+    "MED4" [type=gene, degree=1, community=C5];
+    "MED6" [type=gene, degree=1, community=C5];
+    "MED7" [type=gene, degree=1, community=C5];
+  }
+  // bridge genes: connect terms in different communities
+  "CLN3" [type=gene, degree=3, community=C1, bridge=true, participation="0.44"];
+  "GABARAPL2" [type=gene, degree=3, community=C3, bridge=true, participation="0.44"];
+  "GOLPH3" [type=gene, degree=4, community=C3, bridge=true, participation="0.38"];
+  "HUWE1" [type=gene, degree=2, community=C2, bridge=true, participation="0.5"];
+  "LAPTM5" [type=gene, degree=2, community=C2, bridge=true, participation="0.5"];
+  "SPAST" [type=gene, degree=4, community=C1, bridge=true, participation="0.5"];
+  "SPTBN1" [type=gene, degree=3, community=C1, bridge=true, participation="0.44"];
+  "WNK1" [type=gene, degree=7, community=C2, bridge=true, participation="0.41"];
+  // edges: each term with its genes
+  "term_GOBP_GOLGI_VESICLE_TRANSPORT" -- {"CLN3" "COG2" "COG3" "COG4" "GABARAPL2" "GOLPH3" "GOSR2" "LAPTM5" "RAB1B" "RAB2A" "RAB6A" "RAB6B" "RAB6C" "SCFD1" "SPAST" "SPTBN1" "STX5" "TMED2" "TRAPPC1" "TRAPPC8"};
+  "term_GOBP_INTRA_GOLGI_VESICLE_MEDIATED_TRANSPORT" -- {"COG2" "COG3" "COG4" "GABARAPL2" "GOSR2" "RAB6A" "RAB6B" "RAB6C"};
+  "term_GOBP_REGULATION_OF_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY" -- {"ATG12" "CLN3" "EPS8" "ETF1" "FLII" "MID1IP1" "SPAST" "SPTAN1" "SPTBN1" "TAOK1" "UBQLN4" "WNK1"};
+  "term_GOBP_RETROGRADE_VESICLE_MEDIATED_TRANSPORT_GOLGI_TO_ENDOPLASMIC_RETICULUM" -- {"COG3" "COG4" "GOLPH3" "RAB6A" "RAB6B" "RAB6C" "SCFD1" "STX5"};
+  "term_GOBP_GOLGI_ORGANIZATION" -- {"COG2" "COG3" "COG4" "GOLPH3" "HUWE1" "RAB1B" "RAB2A" "RAB6B" "STX5" "TMED2" "TRAPPC8"};
+  "term_GOBP_ENDOPLASMIC_RETICULUM_TO_GOLGI_VESICLE_MEDIATED_TRANSPORT" -- {"COG3" "GOSR2" "RAB1B" "RAB2A" "SCFD1" "SPAST" "STX5" "TMED2" "TRAPPC1" "TRAPPC8"};
+  "term_GOBP_ESTABLISHMENT_OF_PROTEIN_LOCALIZATION_TO_ORGANELLE" -- {"AKT1" "ANKRD6" "GOLPH3" "HUWE1" "LAPTM5" "NMT1" "NUP107" "NUP133" "NUP153" "NUP155" "NUP85" "RANBP2" "RGPD5" "RGPD8" "SPCS3" "TIMM8A" "TNPO3" "TOMM70" "VPS53"};
+  "term_GOBP_NUCLEAR_EXPORT" -- {"FAM76B" "MDN1" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "THOC2" "WNK1"};
+  "term_GOBP_RNA_EXPORT_FROM_NUCLEUS" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "THOC2" "WNK1"};
+  "term_GOBP_MRNA_EXPORT_FROM_NUCLEUS" -- {"NUP107" "NUP133" "NUP155" "NUP160" "NUP85" "THOC2" "WNK1"};
+  "term_GOBP_NUCLEAR_TRANSPORT" -- {"AKT1" "FAM76B" "MDN1" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "RGPD5" "RGPD8" "THOC2" "TNPO3" "WNK1"};
+  "term_GOBP_MRNA_TRANSPORT" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "THOC2" "WNK1"};
+  "term_GOBP_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY" -- {"ATG12" "CLN3" "EPS8" "ETF1" "FLII" "GABARAPL2" "MID1IP1" "SPAST" "SPTAN1" "SPTBN1" "TAOK1" "UBQLN4" "WNK1"};
+  "term_GOBP_GLYCOLIPID_BIOSYNTHETIC_PROCESS" -- {"A4GALT" "DPM1" "PIGH" "PIGK" "PIGY" "ST3GAL5" "TM9SF2"};
+  "term_GOCC_NUCLEAR_PORE_OUTER_RING" -- {"NUP107" "NUP133" "NUP160" "NUP85"};
+  "term_GOCC_NUCLEAR_PORE" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "RGPD5" "RGPD8"};
+  "term_GOCC_CORE_MEDIATOR_COMPLEX" -- {"MED14" "MED28" "MED4" "MED6" "MED7"};
+  "term_GOMF_STRUCTURAL_CONSTITUENT_OF_NUCLEAR_PORE" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85"};
+  "term_GOMF_CATALYTIC_ACTIVITY_ACTING_ON_RNA" -- {"AGO3" "ALKBH8" "DDX10" "DDX53" "DDX55" "DHX33" "DIMT1" "ERI2" "ETF1" "EXOSC3" "EXOSC5" "IGHMBP2" "LARS1" "POLR1H" "POLR3A" "POLR3F" "TRMT5" "YTHDC2"};
+}

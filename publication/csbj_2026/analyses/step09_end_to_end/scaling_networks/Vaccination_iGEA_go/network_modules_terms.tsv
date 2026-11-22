@@ -1,0 +1,42 @@
+Library	Term	Community	Genes	Shared genes (weighted degree)	Genes bridging to other communities
+C5: Gene Ontology: Cellular Component	GOCC: FICOLIN 1 RICH GRANULE	C1	36	28	12
+C5: Gene Ontology: Cellular Component	GOCC: VACUOLAR MEMBRANE	C1	27	25	11
+C5: Gene Ontology: Biological Process	GOBP: AMIDE METABOLIC PROCESS	C1	26	20	2
+C5: Gene Ontology: Molecular Function	GOMF: LYASE ACTIVITY	C1	10	5	1
+C5: Gene Ontology: Biological Process	GOBP: VACUOLAR ACIDIFICATION	C1	9	15	3
+C5: Gene Ontology: Molecular Function	GOMF: ATPASE COUPLED ION TRANSMEMBRANE TRANSPORTER ACTIVITY	C1	5	10	1
+C5: Gene Ontology: Molecular Function	GOMF: SIALIC ACID BINDING	C1	5	2	0
+C5: Gene Ontology: Cellular Component	GOCC: ORGANELLE MEMBRANE CONTACT SITE	C1	4	1	0
+C5: Gene Ontology: Molecular Function	GOMF: ACYLGLYCEROL O ACYLTRANSFERASE ACTIVITY	C1	4	2	0
+C5: Gene Ontology: Cellular Component	GOCC: PALMITOYLTRANSFERASE COMPLEX	C1	3	3	0
+C5: Gene Ontology: Molecular Function	GOMF: CARBOHYDRATE KINASE ACTIVITY	C1	3	3	1
+C5: Gene Ontology: Molecular Function	GOMF: GLUCOSIDASE ACTIVITY	C1	3	3	0
+C5: Gene Ontology: Molecular Function	GOMF: INWARD RECTIFIER POTASSIUM CHANNEL ACTIVITY	C1	3	1	0
+C5: Gene Ontology: Molecular Function	GOMF: NUCLEOSIDE DIPHOSPHATE PHOSPHATASE ACTIVITY	C1	3	2	1
+C5: Gene Ontology: Biological Process	GOBP: PHAGOCYTOSIS	C2	30	40	14
+C5: Gene Ontology: Cellular Component	GOCC: PHAGOCYTIC VESICLE	C2	18	27	2
+C5: Gene Ontology: Biological Process	GOBP: GOLGI VESICLE TRANSPORT	C2	16	14	3
+C5: Gene Ontology: Cellular Component	GOCC: MEMBRANE MICRODOMAIN	C2	14	13	6
+C5: Gene Ontology: Molecular Function	GOMF: PATTERN RECOGNITION RECEPTOR ACTIVITY	C2	9	10	3
+C5: Gene Ontology: Molecular Function	GOMF: PHOSPHOPROTEIN BINDING	C2	9	8	2
+C5: Gene Ontology: Molecular Function	GOMF: MYOSIN BINDING	C2	7	9	1
+C5: Gene Ontology: Molecular Function	GOMF: PROTEIN SERINE THREONINE TYROSINE KINASE ACTIVITY	C2	5	2	0
+C5: Gene Ontology: Molecular Function	GOMF: SUPEROXIDE GENERATING NADPH OXIDASE ACTIVATOR ACTIVITY	C2	5	5	0
+C5: Gene Ontology: Biological Process	GOBP: ANTIBACTERIAL INNATE IMMUNE RESPONSE	C2	3	4	1
+C5: Gene Ontology: Cellular Component	GOCC: COPI COATED VESICLE	C2	3	3	0
+C5: Gene Ontology: Molecular Function	GOMF: RETROMER COMPLEX BINDING	C2	3	5	2
+C5: Gene Ontology: Biological Process	GOBP: CYTOKINE MEDIATED SIGNALING PATHWAY	C3	34	35	11
+C5: Gene Ontology: Molecular Function	GOMF: CYTOKINE RECEPTOR ACTIVITY	C3	9	11	2
+C5: Gene Ontology: Molecular Function	GOMF: INHIBITORY MHC CLASS I RECEPTOR ACTIVITY	C3	8	9	2
+C5: Gene Ontology: Molecular Function	GOMF: NUCLEAR RECEPTOR BINDING	C3	8	3	1
+C5: Gene Ontology: Cellular Component	GOCC: AZUROPHIL GRANULE LUMEN	C3	6	3	1
+C5: Gene Ontology: Cellular Component	GOCC: CANONICAL INFLAMMASOME COMPLEX	C3	4	8	2
+C5: Gene Ontology: Molecular Function	GOMF: CYSTEINE TYPE ENDOPEPTIDASE REGULATOR ACTIVITY INVOLVED IN APOPTOTIC PROCESS	C3	4	5	1
+C5: Gene Ontology: Cellular Component	GOCC: CELL LEADING EDGE	C4	21	24	7
+C5: Gene Ontology: Molecular Function	GOMF: CADHERIN BINDING	C4	12	15	5
+C5: Gene Ontology: Molecular Function	GOMF: GTPASE BINDING	C4	12	13	6
+C5: Gene Ontology: Biological Process	GOBP: ARP2 3 COMPLEX MEDIATED ACTIN NUCLEATION	C4	5	5	0
+C5: Gene Ontology: Molecular Function	GOMF: PHOSPHATIDYLINOSITOL 3 4 5 TRISPHOSPHATE BINDING	C4	5	6	2
+C5: Gene Ontology: Biological Process	GOBP: ALCOHOL CATABOLIC PROCESS	C5	5	4	1
+C5: Gene Ontology: Molecular Function	GOMF: SULFOTRANSFERASE ACTIVITY	C5	4	3	0
+C5: Gene Ontology: Molecular Function	GOMF: OXIDOREDUCTASE ACTIVITY ACTING ON A SULFUR GROUP OF DONORS	C6	4	0	0

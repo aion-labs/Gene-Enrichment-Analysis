@@ -1,0 +1,16 @@
+graph enrichment_network {
+  // 264 validated input genes; network = terms passing the term-level filter
+  graph [input_genes=264, random_lists=10000, q_threshold="0.1", network_p="0.491"];
+  // communities: connected components (fewer than 6 terms)
+  graph [community_method="connected components (fewer than 6 terms)"];
+  subgraph cluster_C1 {
+    label="C1"; lead_term="GOBP: NEGATIVE REGULATION OF B CELL MEDIATED IMMUNITY"; terms=1; genes=4;
+    "term_GOBP_NEGATIVE_REGULATION_OF_B_CELL_MEDIATED_IMMUNITY" [type=term, label="GOBP: NEGATIVE REGULATION OF B CELL MEDIATED IMMUNITY", collection="C5: Gene Ontology: Biological Process", iteration=1, p="1.8e-05", q="0.026", community=C1, genes=4];
+    "C4BPB" [type=gene, degree=1, community=C1];
+    "CR2" [type=gene, degree=1, community=C1];
+    "FCGR2B" [type=gene, degree=1, community=C1];
+    "PARP3" [type=gene, degree=1, community=C1];
+  }
+  // edges: each term with its genes
+  "term_GOBP_NEGATIVE_REGULATION_OF_B_CELL_MEDIATED_IMMUNITY" -- {"C4BPB" "CR2" "FCGR2B" "PARP3"};
+}

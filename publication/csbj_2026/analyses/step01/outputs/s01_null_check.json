@@ -1,0 +1,98 @@
+{
+  "rows": 611110,
+  "max_p_stored": 0.0099999442358733,
+  "max_iteration": 30,
+  "libraries": [
+    "C2: CP: BioCarta",
+    "C2: CP: Canonical pathways",
+    "C2: CP: KEGG Legacy",
+    "C2: CP: KEGG MEDICUS",
+    "C2: CP: Pathway Interaction Database",
+    "C2: CP: Reactome Pathways",
+    "C2: CP: WikiPathways",
+    "C5: GO: Biological Process",
+    "C5: GO: Cellular Component",
+    "C5: GO: Molecular Function",
+    "H: Hallmark Gene Sets"
+  ],
+  "frac_library_runs_with_gap_by_size": {
+    "50": 0.0,
+    "100": 0.0,
+    "150": 0.0,
+    "200": 0.0,
+    "250": 0.0,
+    "300": 0.0,
+    "350": 0.0,
+    "400": 0.0,
+    "450": 0.0,
+    "500": 0.0,
+    "550": 0.0,
+    "600": 0.0,
+    "650": 0.0,
+    "700": 0.0,
+    "750": 0.0,
+    "800": 0.0,
+    "850": 0.0,
+    "900": 0.0,
+    "950": 0.0,
+    "1000": 0.0
+  },
+  "frac_random_lists_with_any_gap_by_size": {
+    "50": 0.0,
+    "100": 0.0,
+    "150": 0.0,
+    "200": 0.0,
+    "250": 0.0,
+    "300": 0.0,
+    "350": 0.0,
+    "400": 0.0,
+    "450": 0.0,
+    "500": 0.0,
+    "550": 0.0,
+    "600": 0.0,
+    "650": 0.0,
+    "700": 0.0,
+    "750": 0.0,
+    "800": 0.0,
+    "850": 0.0,
+    "900": 0.0,
+    "950": 0.0,
+    "1000": 0.0
+  },
+  "size300_null_as_used": {
+    "size": {
+      "mean": 46.43,
+      "std": 25.0
+    },
+    "genes": {
+      "mean": 36.0,
+      "std": 19.4
+    },
+    "terms": {
+      "mean": 10.43,
+      "std": 6.01
+    },
+    "edges": {
+      "mean": 53.54,
+      "std": 31.32
+    }
+  },
+  "size300_null_stopping_rule_respected": {
+    "size": {
+      "mean": 46.43,
+      "std": 25.0
+    },
+    "genes": {
+      "mean": 36.0,
+      "std": 19.4
+    },
+    "terms": {
+      "mean": 10.43,
+      "std": 6.01
+    },
+    "edges": {
+      "mean": 53.54,
+      "std": 31.32
+    }
+  }
+}

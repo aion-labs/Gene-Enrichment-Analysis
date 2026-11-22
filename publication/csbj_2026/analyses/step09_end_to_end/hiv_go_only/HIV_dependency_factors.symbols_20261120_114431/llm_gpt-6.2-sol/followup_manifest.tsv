@@ -1,0 +1,4 @@
+repeat	requested_model	returned_model	response_id	started_utc	seconds	input_tokens	output_tokens	context	response_file
+1	gpt-6.2-sol	gpt-6.2-sol	resp_008b92443221b91f016b004c235b8887d28ede727a2de72c19	2026-11-20T13:33:22+00:00	39.5	10296	1739	an siRNA screen in human cells for host factors required for HIV infection (HIV dependency factors)	followup_r1.json
+2	gpt-6.2-sol	gpt-6.2-sol	resp_0d236216faa5a1a0016b004c4a80d087d2819be82d08ff1896	2026-11-20T13:34:02+00:00	34.1	10297	1530	an siRNA screen in human cells for host factors required for HIV infection (HIV dependency factors)	followup_r2.json
+3	gpt-6.2-sol	gpt-6.2-sol	resp_0a3d5b43d7a4de7c016b004c6ca70c87d29a6448385221a7e9	2026-11-20T13:34:36+00:00	34.3	10267	1447	an siRNA screen in human cells for host factors required for HIV infection (HIV dependency factors)	followup_r3.json

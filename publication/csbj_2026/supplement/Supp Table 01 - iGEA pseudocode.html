@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Supplementary Table 1 — iGEA algorithm</title><style>
+:root{--ink:#22252b;--muted:#5d6470;--line:#e3e6ea;--bg:#fbfbfa;
+--a:#2a78d6;--a-bg:#eef5fd;--b:#1baf7a;--b-bg:#ecf8f3;--c:#eb6834;--c-bg:#fdf1ec;--d:#6250d6;--d-bg:#f1effc}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+main{max-width:1000px;margin:0 auto;padding:40px 28px 60px}
+.kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0}
+h1{font-size:26px;margin:4px 0 12px}
+h2{font-size:19px;margin:38px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+h3{font-size:15px;margin:0}
+p{margin:8px 0}
+.lead{color:#3a3f47;max-width:860px}
+.flow{display:flex;gap:10px;align-items:stretch;margin:22px 0 6px;flex-wrap:wrap}
+.box{flex:1 1 180px;border-radius:10px;padding:12px 14px;border:1px solid var(--line);background:#fff}
+.box b{display:block;font-size:13.5px;margin-bottom:3px}
+.box span{font-size:12.5px;color:var(--muted)}
+.box.a{border-top:4px solid var(--a)} .box.b{border-top:4px solid var(--b)}
+.box.c{border-top:4px solid var(--c)} .box.d{border-top:4px solid var(--d)}
+.arrow{align-self:center;color:#9aa1ab;font-size:20px}
+table{border-collapse:collapse;width:100%;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;font-size:14px;margin:10px 0}
+th{background:#f3f4f6;text-align:left;font-weight:600;padding:8px 12px;border-bottom:1px solid var(--line)}
+td{padding:7px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td code{font-size:13px;color:#7a3e9d}
+td.def{white-space:nowrap;font-weight:600}
+.step{border-radius:10px;margin:14px 0;border:1px solid var(--line);overflow:hidden;background:#fff}
+.steph{display:flex;align-items:center;gap:10px;padding:10px 14px}
+.tag{font-size:11.5px;font-weight:700;color:#fff;border-radius:999px;padding:2px 9px;white-space:nowrap}
+.a .steph{background:var(--a-bg)} .a .tag{background:var(--a)} .a{border-left:5px solid var(--a)}
+.b .steph{background:var(--b-bg)} .b .tag{background:var(--b)} .b{border-left:5px solid var(--b)}
+.c .steph{background:var(--c-bg)} .c .tag{background:var(--c)} .c{border-left:5px solid var(--c)}
+.d .steph{background:var(--d-bg)} .d .tag{background:var(--d)} .d{border-left:5px solid var(--d)}
+.note{margin:10px 14px 0;color:#3a3f47;font-size:14px}
+pre{margin:0;padding:12px 16px 14px;overflow-x:auto;background:#fff}
+code{font-family:"SF Mono",Menlo,Consolas,"Liberation Mono",monospace}
+pre code{font-size:13px;line-height:1.6;color:#2b2f36}
+.kw{color:#b4237a;font-weight:700} .cm{color:#6b7f6e;font-style:italic}
+.str{color:#0b7a75} .op{color:#c25e00;font-weight:600} .num{color:#2a62b8}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin:6px 0 0}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{font-family:"SF Mono",Menlo,monospace;font-size:12px;padding:1px 6px;border-radius:4px;background:#fff;border:1px solid var(--line)}
+pre code .ln{display:block;padding:0 10px;margin:0 -10px}
+.ln.b0,.ln.b2{background:#fff} .a .ln.b1,.a .ln.b3{background:#f4f8fd} .b .ln.b1,.b .ln.b3{background:#f0f9f5}
+.ln.bandh{font:600 11.5px/2 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--a);
+letter-spacing:.04em;text-transform:uppercase;border-top:1px dashed #c9dbf3;margin-top:4px}
+.ln.b1.bandh{border-top:none;margin-top:0} .b .ln.bandh{color:#13875e;border-top-color:#bfe6d6}
+footer{margin-top:36px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px}
+@media print{body{background:#fff;font-size:11.5pt} main{padding:0;max-width:none}
+.step,.flow,table{break-inside:avoid} pre code{font-size:9pt} h2{break-after:avoid}}
+</style></head>
+<body><main>
+<p class="kicker">Supplementary Table 1</p>
+<h1>Iterative Gene Enrichment Analysis (iGEA): algorithm</h1>
+<p class="lead">iGEA repeatedly identifies the most significant enriched term, removes its overlapping genes from the input list and repeats the enrichment analysis on the remaining genes. This is done separately for each gene-set collection, until termination criteria are met (Part 1). Random gene lists processed by the same procedure then give each selected term an empirical q-value (term level). Terms with q below the threshold form the cross-collection network, whose largest connected cluster is compared with those of the random lists (network level) (Part 2).</p>
+
+<div class="flow">
+ <div class="box a"><b>1 · Iterative selection</b><span>per collection; p &lt; 0.01; genes of each selected term removed</span></div>
+ <div class="arrow">→</div>
+ <div class="box b"><b>2 · Term level</b><span>empirical q-value from random lists; keep q &lt; 0.10</span></div>
+ <div class="arrow">→</div>
+ <div class="box c"><b>3 · Network level</b><span>largest cluster vs random lists; empirical p</span></div>
+ <div class="arrow">→</div>
+ <div class="box d"><b>4 · Communities</b><span>Leiden; hub and bridge genes (descriptive)</span></div>
+</div>
+
+<h2>Parameters</h2>
+<table><thead><tr><th>Parameter</th><th>Meaning</th><th>Default</th></tr></thead><tbody><tr><td><code>B</code></td><td>Background gene set</td><td class='def'>23,391 validated human gene symbols</td></tr><tr><td><code>G</code></td><td>Input genes</td><td class='def'>—</td></tr><tr><td><code>C</code></td><td>Gene-set collections</td><td class='def'>10 MSigDB collections (v2025.1)</td></tr><tr><td><code>p_threshold</code></td><td>p-value cutoff for selecting a term; also the stopping criterion</td><td class='def'>0.01</td></tr><tr><td><code>min_overlap</code></td><td>Minimum overlap between the remaining input genes and a gene set</td><td class='def'>3</td></tr><tr><td><code>min/max_gene_set_size</code></td><td>Gene-set size range, counted after restriction to B</td><td class='def'>10–600</td></tr><tr><td><code>max_iterations</code></td><td>Maximum iterations per collection</td><td class='def'>30</td></tr><tr><td><code>test</code></td><td>Fisher&#x27;s exact test, one-sided (over-representation); the hypergeometric test gives the same p-values</td><td class='def'>Fisher, one-sided</td></tr><tr><td><code>n_lists</code></td><td>Number of random gene lists</td><td class='def'>10,000 (web app: 1,000)</td></tr><tr><td><code>q_threshold</code></td><td>Term-level q-value threshold; 1 keeps all terms (q-values still reported)</td><td class='def'>0.10</td></tr><tr><td><code>seed</code></td><td>Random seed</td><td class='def'>2026</td></tr></tbody></table>
+
+<h2>Part 1 · Iterative selection</h2>
+<div class="legend"><span><span class="sw"><span class="kw">FOR</span></span> keyword</span><span><span class="sw"><span class="op">←</span></span> assignment / set operation</span><span><span class="sw"><span class="num">0.01</span></span> number</span><span><span class="sw"><span class="cm">// note</span></span> comment</span></div>
+<section class="step a"><div class="steph"><span class="tag">1</span><h3>Iterative selection, separately for each collection</h3></div><p class="note">Every gene set is restricted to the background before the size filter, so the input list, the gene sets and the random lists come from one gene universe. Worked example of the test: N = 350, M = 4,500, |T| = 50 and k = 15 give the table [[15, 35], [335, 4,115]].</p><pre><code><span class="ln b1 bandh">Prepare the collection</span><span class="ln b1">G <span class="op">←</span> G <span class="op">∩</span> B                                   <span class="cm">// input genes outside the background are removed (one gene universe)</span></span><span class="ln b1">results <span class="op">←</span> []</span><span class="ln b1"><span class="kw">FOR</span> Collection in C:</span><span class="ln b1">    terms <span class="op">←</span> {T <span class="op">∩</span> B : T in Collection}           <span class="cm">// every gene set restricted to the background</span></span><span class="ln b1">    terms <span class="op">←</span> {T in terms : min_gene_set_size <span class="op">&lt;=</span> |T| <span class="op">&lt;=</span> max_gene_set_size}</span><span class="ln b1">    U <span class="op">←</span> union of all genes in terms              <span class="cm">// collection-specific universe</span></span><span class="ln b1">    M <span class="op">←</span> |U|                                      <span class="cm">// collection-specific background size</span></span><span class="ln b1">    remaining_genes <span class="op">←</span> G <span class="op">∩</span> U                      <span class="cm">// each collection starts from the full input</span></span><span class="ln b1">    iteration <span class="op">←</span> <span class="num">1</span></span><span class="ln b2 bandh">Select the most significant term</span><span class="ln b2">    <span class="kw">WHILE</span> (|remaining_genes| <span class="op">&gt;</span> <span class="num">0</span> and iteration <span class="op">&lt;=</span> max_iterations):</span><span class="ln b2">        N <span class="op">←</span> |remaining_genes|</span><span class="ln b2">        <span class="kw">FOR</span> T in terms:</span><span class="ln b2">            k <span class="op">←</span> |T <span class="op">∩</span> remaining_genes|              <span class="cm">// overlap</span></span><span class="ln b2">            <span class="kw">IF</span> k <span class="op">&lt;</span> min_overlap: skip T</span><span class="ln b2">            table <span class="op">←</span> [[k, |T| - k], [N - k, M - |T| - N + k]]</span><span class="ln b2">            p(T) <span class="op">←</span> Fisher&#x27;s exact test, one-sided (over-representation), on table</span><span class="ln b2">                   <span class="cm">// = hypergeom.sf(k - 1, M, |T|, N) = P(overlap &gt;= k); under-represented sets get large p</span></span><span class="ln b2">        <span class="kw">IF</span> no term was tested: <span class="kw">BREAK</span></span><span class="ln b2">        top_term <span class="op">←</span> term with the lowest p(T)    <span class="cm">// ties: order of the gene sets in the collection file</span></span><span class="ln b2">        top_pvalue <span class="op">←</span> p(top_term)</span><span class="ln b2">        <span class="kw">IF</span> top_pvalue <span class="op">&gt;=</span> p_threshold: <span class="kw">BREAK</span></span><span class="ln b3 bandh">Record the term and remove its genes</span><span class="ln b3">        top_overlap_genes <span class="op">←</span> top_term <span class="op">∩</span> remaining_genes</span><span class="ln b3">        record <span class="op">←</span> {</span><span class="ln b3">            Collection: Collection.name,</span><span class="ln b3">            Iteration: iteration,</span><span class="ln b3">            Term: top_term.name,</span><span class="ln b3">            <span class="str">"iteration p-value"</span>: top_pvalue,</span><span class="ln b3">            <span class="str">"iteration overlapping genes"</span>: |top_overlap_genes|,</span><span class="ln b3">            <span class="str">"Genes removed for next iteration"</span>: top_overlap_genes</span><span class="ln b3">        }</span><span class="ln b3">        results.<span class="kw">APPEND</span>(record)</span><span class="ln b3">        remaining_genes <span class="op">←</span> remaining_genes - top_overlap_genes   <span class="cm">// each gene: at most one term per collection</span></span><span class="ln b3">        iteration <span class="op">←</span> iteration + <span class="num">1</span></span><span class="ln b0">    <span class="kw">END</span> <span class="kw">WHILE</span></span><span class="ln b0"><span class="kw">END</span> <span class="kw">FOR</span></span><span class="ln b0"><span class="kw">OUTPUT</span>: results (selected terms of all collections)</span></code></pre></section>
+
+<h2>Part 2 · Two-level empirical significance testing</h2>
+<section class="step b"><div class="steph"><span class="tag">2a</span><h3>Random gene lists, analysed exactly like the input</h3></div><p class="note">Two kinds of random lists are drawn, both independently from the background and both analysed exactly like the input. Lists of the input size are the reference for the network test and for the first q-value round. Reduced-size lists are needed because a q-value compares the input with chance, and chance selections come only from the input genes that are noise. Genes already explained by real terms cannot produce chance terms, so once terms are accepted the reference must be random lists the size of the unexplained part of the input (step 2b).</p><pre><code><span class="ln b1 bandh">Random lists of the input size (network test and first q-value round)</span><span class="ln b1">n <span class="op">←</span> |G|                                             <span class="cm">// HIV: 265</span></span><span class="ln b1"><span class="kw">FOR</span> i in <span class="num">1.</span>.n_lists:                                <span class="cm">// default 10,000</span></span><span class="ln b1">    R_i <span class="op">←</span> n genes drawn from B without replacement      <span class="cm">// generator seeded with (seed, n, i)</span></span><span class="ln b1">    random_results_i <span class="op">←</span> Part <span class="num">1</span> applied to R_i            <span class="cm">// all collections, all iterations, same parameters</span></span><span class="ln b3 bandh">Reduced-size random lists (later q-value rounds only)</span><span class="ln b3">reduced_sizes <span class="op">←</span> n - s, n - 2s, ..., not below n/<span class="num">4</span>      <span class="cm">// s = n/20, rounded up</span></span><span class="ln b3">                                                    <span class="cm">// HIV: 251, 237, ..., 97, ..., 69 (14 sizes)</span></span><span class="ln b3"><span class="kw">FOR</span> size in reduced_sizes:</span><span class="ln b3">    <span class="kw">FOR</span> j in <span class="num">1.</span>.max(<span class="num">200,</span> n_lists/<span class="num">10</span>):                   <span class="cm">// 10,000 lists: 1,000 per size</span></span><span class="ln b3">        R <span class="op">←</span> size genes drawn from B without replacement  <span class="cm">// seeded with (seed, size, j)</span></span><span class="ln b3">                                                          <span class="cm">// a fresh draw, not a subset of the lists above</span></span><span class="ln b3">        Part <span class="num">1</span> applied to R                               <span class="cm">// all collections, all iterations, same parameters</span></span><span class="ln b0"><span class="cm">// All random lists are drawn and analysed here, once, before any q-value is computed.</span></span></code></pre></section>
+<section class="step b"><div class="steph"><span class="tag">2b</span><h3>Term level: empirical q-value within each collection</h3></div><p class="note">HIV example. Round 1 compares the HIV terms with the 265-gene lists, which select about 16.0 terms per list by chance across the ten collections. The rounds settle when the accepted terms explain 168 genes; the other 97 genes are matched by the 97-gene lists, which select about 7.2 terms by chance. For Reactome HIV transcription elongation (p = 0.0085; 9 HIV Reactome terms have p ≤ 0.0085), the 265-gene lists give 2.07 chance Reactome terms per list with p ≤ 0.0085, so q = 2.07/9 = 0.23 and the term would be removed; the 97-gene lists give 0.87, so q = 0.87/9 = 0.097 and the term is kept.</p><pre><code><span class="kw">FUNCTION</span> q_values(selected_terms, list_size):
+    <span class="cm">// The rounds below are not iterations of Part 1: they start after the terms of</span>
+    <span class="cm">// all collections have been selected, and they change only the q-values.</span>
+    signal_genes <span class="op">←</span> {}                                     <span class="cm">// round 1: every gene is treated as noise</span>
+    <span class="kw">REPEAT</span> (at most <span class="num">10</span> rounds):
+        noise_size <span class="op">←</span> list_size - |signal_genes|            <span class="cm">// genes not explained by accepted terms</span>
+        ref_size <span class="op">←</span> smallest of n and reduced_sizes that is <span class="op">&gt;=</span> noise_size
+                   <span class="cm">// rounded UP: can only over-estimate chance terms</span>
+        <span class="kw">FOR</span> each collection c, <span class="kw">FOR</span> each term t selected in c with p-value p:
+            expected <span class="op">←</span> mean number of terms with p-value <span class="op">&lt;=</span> p selected in c from the random lists of ref_size
+                       <span class="cm">// when a random list of size n is scored, that list itself is left out</span>
+            observed <span class="op">←</span> number of terms with p-value <span class="op">&lt;=</span> p selected in c from the scored list
+            q_raw(t) <span class="op">←</span> min(<span class="num">1,</span> expected / observed)
+        q <span class="op">←</span> q_raw made monotone in p within each collection   <span class="cm">// as Benjamini-Hochberg</span>
+        new_signal <span class="op">←</span> all genes assigned to terms with q <span class="op">&lt;</span> accept_level, pooled across collections
+                     <span class="cm">// accept_level = q_threshold (0.10 when q_threshold = 1)</span>
+        <span class="kw">IF</span> new_signal = signal_genes: <span class="kw">STOP</span>                 <span class="cm">// the accepted terms no longer change</span>
+        signal_genes <span class="op">←</span> new_signal
+    <span class="kw">RETURN</span> q
+
+q <span class="op">←</span> q_values(results, n)                               <span class="cm">// the input list</span>
+kept <span class="op">←</span> terms in results with q <span class="op">&lt;</span> q_threshold          <span class="cm">// q_threshold = 1: all terms kept</span>
+<span class="cm">// Every random list of size n is scored by the same function in step 2d.</span></code></pre></section>
+<section class="step c"><div class="steph"><span class="tag">2c</span><h3>Network from the kept terms</h3></div><pre><code>network <span class="op">←</span> gene-term graph: an edge between each gene and the term it was assigned to (no edge weights)
+cluster <span class="op">←</span> largest connected component of network
+metrics <span class="op">←</span> cluster size (genes + terms), genes, terms, edges, edges per gene
+          <span class="cm">// number of collections in the cluster: descriptive</span></code></pre></section>
+<section class="step c"><div class="steph"><span class="tag">2d</span><h3>Network level: the same filter and network for every random list</h3></div><p class="note">The metrics describe the same cluster and are not independent tests. With 10,000 random lists the smallest attainable p-value is 0.0001.</p><pre><code><span class="kw">FOR</span> i in <span class="num">1.</span>.n_lists:
+    q_i <span class="op">←</span> q_values(random_results_i, n)
+    kept_i <span class="op">←</span> terms with q_i <span class="op">&lt;</span> q_threshold                <span class="cm">// q_threshold = 1: all terms kept</span>
+    metrics_i <span class="op">←</span> metrics of the largest connected component built from kept_i
+<span class="kw">FOR</span> each metric:
+    r <span class="op">←</span> number of random lists with metrics_i <span class="op">&gt;=</span> metrics
+    empirical p <span class="op">←</span> (r + <span class="num">1</span>) / (n_lists + <span class="num">1</span>)
+    z-score <span class="op">←</span> (metrics - mean(metrics_i)) / SD(metrics_i)      <span class="cm">// descriptive only</span></code></pre></section>
+<section class="step d"><div class="steph"><span class="tag">2e</span><h3>Communities, hub genes and bridge genes</h3></div><pre><code>communities <span class="op">←</span> Leiden (modularity) on the term-term projection of network
+              <span class="cm">// terms linked by shared genes, weighted by their number; best of 100 seeds</span>
+              <span class="cm">// networks with fewer than 6 terms: connected components</span>
+<span class="kw">OUTPUT</span>: q-value of every selected term, kept terms, network with communities, empirical p-values</code></pre></section>
+
+<footer>Implementation: <code>code/fast_igea.py</code> (Part 1), <code>code/per_run_null.py</code> (Part 2), <code>code/network_modules.py</code> (communities); iGEA source code (GPL-3.0).</footer>
+</main></body></html>

@@ -1,0 +1,53 @@
+Gene list: random_seed1001_265genes
+Validated input genes: 260
+Largest cluster: 67 nodes, 49 genes, 18 terms, 85 edges, 1.7347 edges per gene, 10 collections
+
+====================================================================================================
+iGEA STATISTICAL REPORT (per-run random lists)
+====================================================================================================
+Random lists: 1000, each of 260 genes (= validated input size), drawn without replacement
+from the analysis background (23391 genes); seed 2026; 6.6 s on 4 process(es).
+Each random list was analysed with the same collections and parameters as the input:
+  p_value_method=Fisher's Exact Test (one-sided), p_threshold=0.01, min_overlap=3, min_term_size=10, max_term_size=600, max_iterations=30, background=all_genes
+Collections: H: Hallmark Gene Sets; C2: BioCarta; C2: KEGG MEDICUS; C2: Pathway Interaction Database; C2: Reactome Pathways; C2: WikiPathways; C2: KEGG Legacy; C5: Gene Ontology: Biological Process; C5: Gene Ontology: Cellular Component; C5: Gene Ontology: Molecular Function
+
+TERM LEVEL (signal-adjusted empirical q-value)
+  A random list of this size selects on average 15.48 terms by chance.
+  q = expected chance terms with p' <= p / selected terms with p' <= p (per collection, monotone),
+  re-estimated after treating genes of accepted terms as signal (251 of 260 genes
+  treated as noise in the final round; 200 random lists per size step).
+  No term filter (q threshold 1.0): all 18 selected terms kept, in the input and the random lists.
+
+NETWORK LEVEL (largest connected cluster)
+  z = (observed - random mean) / random SD
+  empirical p = (r + 1) / (n + 1), r = random lists with a value >= observed, n = 1000
+  (smallest attainable p = 0.000999). The metrics describe the same cluster and are not independent tests.
+
+  Metric                      Observed  Rand mean  Rand SD  Rand max       z     r    Emp. p
+  ------------------------------------------------------------------------------------------
+  Cluster Size                      67     39.659   22.163       120    1.23   130    0.1309
+  Number of Genes                   49     30.565   16.949        96    1.09   166    0.1668
+  Number of Terms                   18      9.094    5.624        38    1.58    87   0.08791
+  Number of Edges                   85     45.356   28.040       173    1.41   100    0.1009
+  Average Edges per Gene         1.735      1.447    0.267         4    1.08   115    0.1159
+
+TERMS
+  Collection                                It     p-value  q-value  Kept  Term
+  C2: BioCarta                               1     0.00117     0.06  yes   BIOCARTA_CALCINEURIN_PATHWAY
+  C2: KEGG Legacy                            1     0.00473    0.318  yes   KEGG_WNT_SIGNALING_PATHWAY
+  C2: KEGG MEDICUS                           1    0.000572    0.047  yes   KEGG_MEDICUS_REFERENCE_CA2_CAM_CN_SIGNALING_PATHWAY
+  C2: Pathway Interaction Database           1     0.00497    0.164  yes   PID_NFAT_3PATHWAY
+  C2: Pathway Interaction Database           2     0.00643    0.164  yes   PID_NCADHERIN_PATHWAY
+  C2: Reactome Pathways                      1    0.000186    0.059  yes   REACTOME_CLEC7A_DECTIN_1_INDUCES_NFAT_ACTIVATION
+  C2: Reactome Pathways                      2     0.00539      0.7  yes   REACTOME_INTEGRATION_OF_ENERGY_METABOLISM
+  C2: WikiPathways                           1    0.000161    0.036  yes   WP_GNAQ_PR183Q_DRIVES_CAPILLARY_MALFORMATION
+  C2: WikiPathways                           2     0.00484    0.455  yes   WP_MALE_INFERTILITY
+  C5: Gene Ontology: Biological Process      1     0.00106        1  yes   GOBP_REGULATION_OF_RELEASE_OF_CYTOCHROME_C_FROM_MITOCHONDRIA
+  C5: Gene Ontology: Biological Process      2       0.002        1  yes   GOBP_NEGATIVE_REGULATION_OF_PROTEIN_CATABOLIC_PROCESS
+  C5: Gene Ontology: Biological Process      3     0.00403        1  yes   GOBP_TYROSINE_PHOSPHORYLATION_OF_STAT_PROTEIN
+  C5: Gene Ontology: Biological Process      4     0.00712        1  yes   GOBP_REGULATION_OF_HORMONE_SECRETION
+  C5: Gene Ontology: Cellular Component      1    0.000892    0.184  yes   GOCC_CYCLIN_DEPENDENT_PROTEIN_KINASE_HOLOENZYME_COMPLEX
+  C5: Gene Ontology: Cellular Component      2     0.00548     0.48  yes   GOCC_EXCITATORY_SYNAPSE
+  C5: Gene Ontology: Molecular Function      1    0.000144    0.034  yes   GOMF_CYCLIN_DEPENDENT_PROTEIN_SERINE_THREONINE_KINASE_REGULATOR_ACTIVITY
+  C5: Gene Ontology: Molecular Function      2     0.00472    0.665  yes   GOMF_IRON_ION_BINDING
+  H: Hallmark Gene Sets                      1     0.00847    0.199  yes   HALLMARK_HYPOXIA

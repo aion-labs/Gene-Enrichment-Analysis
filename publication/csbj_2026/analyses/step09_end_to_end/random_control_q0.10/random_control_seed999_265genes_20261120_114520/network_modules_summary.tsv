@@ -1,0 +1,11 @@
+method	connected components (fewer than 6 terms)
+n_terms	1
+n_genes	4
+n_communities	1
+modularity	
+partition_stability_mean_ARI	
+partition_identical_fraction	
+n_seeds	
+seed	2026
+n_bridge_genes	0
+max_gene_degree	1
