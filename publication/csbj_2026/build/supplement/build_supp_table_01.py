@@ -51,9 +51,8 @@ FOR Collection in C:
 		FOR T in terms:
 			k ← |T ∩ remaining_genes|              // overlap
 			IF k < min_overlap: skip T
-			table ← [[k, |T| - k], [N - k, M - |T| - N + k]]
-			p(T) ← Fisher's exact test, one-sided (over-representation), on table
-			       // = hypergeom.sf(k - 1, M, |T|, N) = P(overlap >= k); under-represented sets get large p
+			p(T) ← hypergeom.sf(k - 1, M, |T|, N)       // hypergeometric test, upper tail: P(overlap >= k)
+			                                            // under-represented sets get large p
 		IF no term was tested: BREAK
 		top_term ← term with the lowest p(T)    // ties: order of the gene sets in the collection file
 		top_pvalue ← p(top_term)
@@ -91,7 +90,7 @@ FOR size in reduced_sizes:
 		                                                  // a fresh draw, not a subset of the lists above
 		Part 1 applied to R                               // all collections, all iterations, same parameters
 @@b0|
-// All random lists are drawn and analysed here, once, before any q-value is computed.
+// All random lists are drawn and analyzed here, once, before any q-value is computed.
 """
 P2_Q = """
 FUNCTION q_values(selected_terms, list_size):
@@ -148,7 +147,7 @@ PARAMS1 = [("B", "Background gene set", "23,391 validated human gene symbols"),
            ("min_overlap", "Minimum overlap between the remaining input genes and a gene set", "3"),
            ("min/max_gene_set_size", "Gene-set size range, counted after restriction to B", "10–600"),
            ("max_iterations", "Maximum iterations per collection", "30"),
-           ("test", "Fisher's exact test, one-sided (over-representation); the hypergeometric test gives the same p-values", "Fisher, one-sided")]
+           ("test", "Hypergeometric test, upper tail (over-representation); gives the same p-values as a one-sided Fisher's exact test", "hypergeometric, upper tail")]
 PARAMS2 = [("n_lists", "Number of random gene lists", "10,000 (web app: 1,000)"),
            ("q_threshold", "Term-level q-value threshold; 1 keeps all terms (q-values still reported)", "0.10"),
            ("seed", "Random seed", "2026")]
@@ -234,7 +233,7 @@ page = f"""<!DOCTYPE html>
 {block("Iterative selection, separately for each collection", "1", "a", P1, "Every gene set is restricted to the background before the size filter, so the input list, the gene sets and the random lists come from one gene universe. Worked example of the test: N = 350, M = 4,500, |T| = 50 and k = 15 give the table [[15, 35], [335, 4,115]].")}
 
 <h2>Part 2 · Two-level empirical significance testing</h2>
-{block("Random gene lists, analysed exactly like the input", "2a", "b", P2_RAND, "Two kinds of random lists are drawn, both independently from the background and both analysed exactly like the input. Lists of the input size are the reference for the network test and for the first q-value round. Reduced-size lists are needed because a q-value compares the input with chance, and chance selections come only from the input genes that are noise. Genes already explained by real terms cannot produce chance terms, so once terms are accepted the reference must be random lists the size of the unexplained part of the input (step 2b).")}
+{block("Random gene lists, analyzed exactly like the input", "2a", "b", P2_RAND, "Two kinds of random lists are drawn, both independently from the background and both analyzed exactly like the input. Lists of the input size are the reference for the network test and for the first q-value round. Reduced-size lists are needed because a q-value compares the input with chance, and chance selections come only from the input genes that are noise. Genes already explained by real terms cannot produce chance terms, so once terms are accepted the reference must be random lists the size of the unexplained part of the input (step 2b).")}
 {block("Term level: empirical q-value within each collection", "2b", "b", P2_Q, "HIV example. Round 1 compares the HIV terms with the 265-gene lists, which select about 16.0 terms per list by chance across the ten collections. The rounds settle when the accepted terms explain 168 genes; the other 97 genes are matched by the 97-gene lists, which select about 7.2 terms by chance. For Reactome HIV transcription elongation (p = 0.0085; 9 HIV Reactome terms have p ≤ 0.0085), the 265-gene lists give 2.07 chance Reactome terms per list with p ≤ 0.0085, so q = 2.07/9 = 0.23 and the term would be removed; the 97-gene lists give 0.87, so q = 0.87/9 = 0.097 and the term is kept.")}
 {block("Network from the kept terms", "2c", "c", P2_NET)}
 {block("Network level: the same filter and network for every random list", "2d", "c", P2_TEST, "The metrics describe the same cluster and are not independent tests. With 10,000 random lists the smallest attainable p-value is 0.0001.")}

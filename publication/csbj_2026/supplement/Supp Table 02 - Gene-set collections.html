@@ -45,7 +45,7 @@ table.ct tr.tot td.hiv{background:#eef5fd}
 <li><b>Genes covered:</b> background genes in at least one used gene set; this is the collection-specific background size M of the enrichment test. *Totals of genes covered are the number of distinct genes, not the sum.</li>
 <li><b>Input genes covered:</b> HIV genes (265 in the background) present in the collection; this is the collection-specific input size N at the first iteration.</li>
 <li><b>Possible terms:</b> used gene sets that contain at least three HIV genes (the minimum overlap), i.e. the largest number of terms that could reach significance.</li>
-<li><b>ORA:</b> one-sided Fisher's exact test, p &lt; 0.01, minimum overlap 3; FDR = Benjamini–Hochberg within each collection (Supplementary Table 4).</li>
+<li><b>ORA:</b> hypergeometric test (upper tail), p &lt; 0.01, minimum overlap 3; FDR = Benjamini–Hochberg within each collection (Supplementary Table 4).</li>
 <li><b>iGEA:</b> terms selected by the iterative procedure (p &lt; 0.01) and kept by the term-level filter (empirical q &lt; 0.10, 10,000 random gene lists); kept terms form the network (Supplementary Table 5).</li>
 </ul>
 <footer>Gene sets: MSigDB v2025.1, human symbols harmonized to current NCBI gene symbols. Counts computed with the iGEA code (iGEA repository, publication/csbj_2026/build/supplement/collection_table_data.py and build_supp_table_02.py).</footer>

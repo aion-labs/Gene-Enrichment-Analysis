@@ -3,7 +3,7 @@ Inputs: q-filtered iGEA terms from the two-layer statistics (q < 0.10, 10,000 ra
   full network  -> analyses/step09_end_to_end/HIV_*/..._term_qvalues.tsv (CLI, 10 collections)
   GO network    -> hiv_go_terms.tsv   (random lists analysed with the 3 GO collections)
   GO BP         -> hiv_gobp_terms.tsv (random lists analysed with GO BP only)
-ORA (Figure 1A): GO BP sets 10-600, Fisher's exact test, overlap >= 3, p < 0.01, BH FDR over all tested sets.
+ORA (Figure 1A): GO BP sets 10-600, hypergeometric test (upper tail), overlap >= 3, p < 0.01, BH FDR over all tested sets.
 Figure 1B colours: iGEA terms shared with ORA at FDR < 0.05 vs iGEA-only (corrected 21 Nov; the first version compared with FDR < 0.10).
 Usage: python make_dots.py [<output folder>]   (default: this folder)"""
 import pathlib as _pl  # [publication] repository-relative paths (added when archived)

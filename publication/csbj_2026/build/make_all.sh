@@ -34,5 +34,10 @@ for s in supp_figure_01 supp_figures_02_03 supp_figure_04 supp_figure_05 supp_fi
 # PDFs of the supplementary tables
 if node -e "require('playwright')" 2>/dev/null; then run node "$HERE/render_pdfs.js" "$O/supplement"; else echo "-- skipped PDFs (needs Node.js with Playwright)"; fi
 
+# Supplementary Figures 1-6 combined into one PDF with legends (submission format)
+if node -e "require('playwright')" 2>/dev/null && command -v pdftocairo >/dev/null && command -v qpdf >/dev/null; then
+  cp "$PUB/supplement/Supp Figures - legends.txt" "$O/figures/"; run $PY "$HERE/build_supp_figures_pdf.py" "$O/figures" "$O/supplement/Supp Figures 1-6.pdf"
+else echo "-- skipped combined Supplementary Figures PDF (needs Playwright, pdftocairo, qpdf)"; fi
+
 # Compare with the submitted versions (text content)
 echo "== comparison with ../supplement"; $PY "$HERE/compare_outputs.py" "$O/supplement" "$PUB/supplement"

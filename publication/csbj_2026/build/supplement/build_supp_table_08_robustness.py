@@ -75,7 +75,7 @@ doc = f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name=
 <p class="kicker">Supplementary Table 8</p><h1>Robustness of iGEA results</h1>
 <p class="lead">Three analyses test whether the HIV results depend on choices that a user, or the data, could have made differently:
 (A) the analysis settings, (B) the composition of the input list and near ties in the iterative selection, and (C) redundancy between
-gene-set collections. In every analysis the random gene lists were generated and analysed in the same way as the gene list being tested.</p>
+gene-set collections. In every analysis the random gene lists were generated and analyzed in the same way as the gene list being tested.</p>
 <div class="cards">
 <div class="card b"><b>A · Settings</b><span>The HIV network stays significant under every setting (p &lt; 0.001); the random control never does
 (p ≥ {rnd[rnd.kept > 0].p_cluster_size.min():.2f}).</span></div>
@@ -91,7 +91,7 @@ duplicates or any one collection leaves the network significant.</span></div></d
 
 <h2>B. Input subsampling and near ties</h2>
 <p class="muted" style="font-size:13.5px">Selecting a term and removing its genes changes all later iterations, so the result is path dependent.
-{len(sub)} random subsamples of 90% of the HIV list ({int(round(0.9 * 265))} genes; seed 2026) were analysed with the default settings and compared
+{len(sub)} random subsamples of 90% of the HIV list ({int(round(0.9 * 265))} genes; seed 2026) were analyzed with the default settings and compared
 with the full-list analysis. All subsamples share one set of 5,000 random lists of their size (the smallest attainable empirical p is 0.0002).</p>
 <div class='tbl'><table><thead><tr><th>Quantity</th><th class='n'>Subsamples<br><span>median (range)</span></th><th class='n'>Full list</th></tr></thead><tbody>{brows}</tbody></table></div>
 <p class="notes">Of the 56 terms kept in the full list, {int((k.recurrence_kept >= 0.8).sum())} were kept in at least 80% of the subsamples and
@@ -108,11 +108,11 @@ Jaccard similarity of at least 0.9 with a gene set in another collection (column
 <div class='tbl'><table><thead><tr><th>Collection</th><th class='n'>Gene sets</th>{mhead}<th class='n'>Any other<br><span>J ≥ 0.9</span></th><th class='n'>Any other<br><span>identical</span></th></tr></thead><tbody>{mrows}</tbody></table></div>
 <p class="notes">Deduplication: collections were ordered Hallmark, Reactome, KEGG Legacy, KEGG MEDICUS, BioCarta, PID, WikiPathways, GO BP, GO CC, GO MF, and a
 gene set was removed if it had J ≥ 0.9 with a set in an earlier collection ({n_drop} sets removed: {E(drop_txt)}). Leave-one-out: each collection was
-removed in turn. The HIV list was re-analysed with 1,000 random lists per configuration (smallest attainable p = 0.001).</p>
+removed in turn. The HIV list was re-analyzed with 1,000 random lists per configuration (smallest attainable p = 0.001).</p>
 <div class='tbl'><table><thead>{CHEAD}</thead><tbody>{crows}</tbody></table></div>
 
 <h2>Notes</h2><ul class="notes">
-<li><b>Default analysis:</b> one-sided Fisher's exact test (the upper tail of the hypergeometric distribution); p &lt; 0.01 for selection; at least 3 input genes
+<li><b>Default analysis:</b> hypergeometric test (upper tail); p &lt; 0.01 for selection; at least 3 input genes
 per term; gene sets of 10–600 genes after restriction to the background; at most 30 iterations per collection; the ten collections of Supplementary Table 2.</li>
 <li><b>Random gene lists:</b> Part A, 2,000 lists of the input size and 200 per reduced size for the q-value adjustment (seed 2026), generated with the
 setting of each row; Part B, 5,000 lists; Part C, 1,000 lists. Empirical p = (r + 1)/(n + 1). The main analyses use 10,000 lists.</li>

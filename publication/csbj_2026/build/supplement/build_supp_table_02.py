@@ -1,5 +1,5 @@
 """Supplementary Table 2: the ten gene-set collections (HTML + tab-separated text).
-Input: collection_table_data.tsv (from collection_table_data.py: current code, one universe, one-sided Fisher;
+Input: collection_table_data.tsv (from collection_table_data.py: current code, one universe, hypergeometric upper tail;
 HIV counts read from Supplementary Tables 4 and 5)."""
 import csv, html, os, re, sys
 SRC, OUT = sys.argv[1], sys.argv[2]   # collection_table_data.tsv, output folder
@@ -35,7 +35,7 @@ with open(f"{OUT}/Supp Table 02 - Gene-set collections.txt", "w") as f:
     w.writerow([])
     for note in ["* Number of distinct genes, not the sum over collections.",
                  "Gene sets used: restricted to the background (23,391 validated symbols), then 10-600 genes. Genes covered = collection-specific background size M.",
-                 "Possible terms: used gene sets with at least 3 HIV genes. ORA: one-sided Fisher's exact test, p < 0.01, overlap >= 3, BH FDR per collection (Supplementary Table 4).",
+                 "Possible terms: used gene sets with at least 3 HIV genes. ORA: hypergeometric test (upper tail), p < 0.01, overlap >= 3, BH FDR per collection (Supplementary Table 4).",
                  "iGEA: selected at p < 0.01; kept at empirical q < 0.10 (10,000 random gene lists); kept terms form the network (Supplementary Table 5)."]:
         w.writerow([note])
 
@@ -85,7 +85,7 @@ page = f"""<!DOCTYPE html>
 <li><b>Genes covered:</b> background genes in at least one used gene set; this is the collection-specific background size M of the enrichment test. *Totals of genes covered are the number of distinct genes, not the sum.</li>
 <li><b>Input genes covered:</b> HIV genes (265 in the background) present in the collection; this is the collection-specific input size N at the first iteration.</li>
 <li><b>Possible terms:</b> used gene sets that contain at least three HIV genes (the minimum overlap), i.e. the largest number of terms that could reach significance.</li>
-<li><b>ORA:</b> one-sided Fisher's exact test, p &lt; 0.01, minimum overlap 3; FDR = Benjamini–Hochberg within each collection (Supplementary Table 4).</li>
+<li><b>ORA:</b> hypergeometric test (upper tail), p &lt; 0.01, minimum overlap 3; FDR = Benjamini–Hochberg within each collection (Supplementary Table 4).</li>
 <li><b>iGEA:</b> terms selected by the iterative procedure (p &lt; 0.01) and kept by the term-level filter (empirical q &lt; 0.10, 10,000 random gene lists); kept terms form the network (Supplementary Table 5).</li>
 </ul>
 <footer>Gene sets: MSigDB v2025.1, human symbols harmonized to current NCBI gene symbols. Counts computed with the iGEA code (iGEA repository, publication/csbj_2026/build/supplement/collection_table_data.py and build_supp_table_02.py).</footer>

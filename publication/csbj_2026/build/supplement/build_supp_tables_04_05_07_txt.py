@@ -49,12 +49,12 @@ cols = ["Collection", "Iteration", "Term", "Description", "Iteration overlap", "
         "Full list overlap", "Full list p-value", "Full list FDR (BH)", "Full list overlapping genes"]
 it.rename(columns={"Library": "Collection"})[cols].to_csv(f"{OUT}/Supp Table 05 - iGEA results.txt", sep="\t", index=False)
 hdr = lambda t: (t.replace("  Library                                   It ", "  Collection                                It ")  # newer CLI writes Collection
-                 .replace("method=Fisher's Exact Test,", "method=Fisher's Exact Test (one-sided),"))
+                 .replace("method=Fisher's Exact Test,", "method=hypergeometric test (upper tail),").replace("analysed", "analyzed"))  # American spelling   # the software labels the test "Fisher's Exact Test"; same p-values
 rep10 = hdr(open(glob.glob(f"{run}/*_statistical_report.txt")[0]).read())
 repgo = hdr(open(f"{NW}/hiv_go_statistical_report.txt").read())
 bar = "#" * 100
 open(f"{OUT}/Supp Table 07 - Network statistical report.txt", "w").write(
     f"{bar}\nPART A. HIV dependency factors, 10 collections (Supplementary Figure 2; Results)\n{bar}\n\n{rep10}\n\n"
-    f"{bar}\nPART B. HIV dependency factors, 3 Gene Ontology collections (Figure 2; random lists analysed with the same 3 collections)\n{bar}\n\n{repgo}\n")
+    f"{bar}\nPART B. HIV dependency factors, 3 Gene Ontology collections (Figure 2; random lists analyzed with the same 3 collections)\n{bar}\n\n{repgo}\n")
 print("Table 4:", len(ora), "terms;", int((ora.FDR < 0.05).sum()), "with FDR < 0.05")
 print("Table 5:", len(it), "terms;", int(it["In network"].sum()), "in network; full-list FDR < 0.05:", int((it["Full list FDR (BH)"] < 0.05).sum()))

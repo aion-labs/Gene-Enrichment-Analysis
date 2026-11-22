@@ -11,8 +11,8 @@ iGEA STATISTICAL REPORT (per-run random lists)
 ====================================================================================================
 Random lists: 10000, each of 265 genes (= validated input size), drawn without replacement
 from the analysis background (23391 genes); seed 2026; 31.6 s on 4 process(es).
-Each random list was analysed with the same collections and parameters as the input:
-  p_value_method=Fisher's Exact Test (one-sided), p_threshold=0.01, min_overlap=3, min_term_size=10, max_term_size=600, max_iterations=30, background=all_genes
+Each random list was analyzed with the same collections and parameters as the input:
+  p_value_method=hypergeometric test (upper tail), p_threshold=0.01, min_overlap=3, min_term_size=10, max_term_size=600, max_iterations=30, background=all_genes
 Collections: H: Hallmark Gene Sets; C2: BioCarta; C2: KEGG MEDICUS; C2: Pathway Interaction Database; C2: Reactome Pathways; C2: WikiPathways; C2: KEGG Legacy; C5: Gene Ontology: Biological Process; C5: Gene Ontology: Cellular Component; C5: Gene Ontology: Molecular Function
 
 TERM LEVEL (signal-adjusted empirical q-value)
@@ -102,12 +102,12 @@ TERMS
 
 
 ####################################################################################################
-PART B. HIV dependency factors, 3 Gene Ontology collections (Figure 2; random lists analysed with the same 3 collections)
+PART B. HIV dependency factors, 3 Gene Ontology collections (Figure 2; random lists analyzed with the same 3 collections)
 ####################################################################################################
 
 Gene list: HIV dependency factors
 Validated input genes: 265
-Collections analysed (input and random lists): 3
+Collections analyzed (input and random lists): 3
 Largest cluster: 164 nodes, 138 genes, 26 terms, 212 edges, 1.5362 edges per gene, 3 collections
 
 ====================================================================================================
@@ -115,8 +115,8 @@ iGEA STATISTICAL REPORT (per-run random lists)
 ====================================================================================================
 Random lists: 10000, each of 265 genes (= validated input size), drawn without replacement
 from the analysis background (23391 genes); seed 2026; 22.9 s on 4 process(es).
-Each random list was analysed with the same collections and parameters as the input:
-  p_value_method=Fisher's Exact Test (one-sided), p_threshold=0.01, min_overlap=3, min_term_size=10, max_term_size=600, max_iterations=30, background=all_genes
+Each random list was analyzed with the same collections and parameters as the input:
+  p_value_method=hypergeometric test (upper tail), p_threshold=0.01, min_overlap=3, min_term_size=10, max_term_size=600, max_iterations=30, background=all_genes
 Collections: C5: Gene Ontology: Biological Process; C5: Gene Ontology: Cellular Component; C5: Gene Ontology: Molecular Function
 
 TERM LEVEL (signal-adjusted empirical q-value)

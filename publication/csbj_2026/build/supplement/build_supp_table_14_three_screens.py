@@ -14,18 +14,18 @@ RUN = {"Brass": glob.glob(os.path.join(_A, "step09_end_to_end", "HIV_dependency_
        "Zhou": glob.glob(os.path.join(B, "Zhou_2008_HIV_dependency_factors.symbols_2*"))[0]}
 S = ["Brass", "König", "Zhou"]; F = {"Brass": "Brass", "König": "Konig", "Zhou": "Zhou"}
 REF = {"Brass": "Brass et al. 2008, Science", "König": "König et al. 2008, Cell", "Zhou": "Zhou et al. 2008, Cell Host Microbe"}
-NAME = {("Brass", "C1"): "Golgi transport", ("Brass", "C2"): "EGFR/AKT/NF-κB signalling, endocytosis", ("Brass", "C3"): "Mediator",
+NAME = {("Brass", "C1"): "Golgi transport", ("Brass", "C2"): "EGFR/AKT/NF-κB signaling, endocytosis", ("Brass", "C3"): "Mediator",
         ("Brass", "C4"): "Nuclear pore, export", ("Brass", "C5"): "RNA exosome, RNA processing", ("Brass", "C6"): "ER glycosylation, GPI anchor",
         ("Brass", "C7"): "Cullin-RING ligases", ("König", "C1"): "mRNA splicing", ("König", "C2"): "Proteasome",
         ("König", "C3"): "Mediator, transcription coregulators", ("König", "C4"): "Nuclear pore, import", ("König", "C5"): "RNA polymerase II, DNA repair",
         ("König", "C6"): "Nucleases", ("König", "C7"): "Tyrosine phosphatases", ("König", "C8"): "Perinuclear ER",
-        ("Zhou", "C1"): "NF-κB/AKT signalling, autophagy", ("Zhou", "C2"): "RNA polymerase II, entry receptors", ("Zhou", "C3"): "Mediator",
+        ("Zhou", "C1"): "NF-κB/AKT signaling, autophagy", ("Zhou", "C2"): "RNA polymerase II, entry receptors", ("Zhou", "C3"): "Mediator",
         ("Zhou", "C4"): "Mitochondrial complex I", ("Zhou", "C5"): "K48 ubiquitination"}
 THEMES = [("Mediator / transcription coregulators", "#2a78d6", {"Brass": ["C3"], "König": ["C3"], "Zhou": ["C3"]}),
           ("Ubiquitin–proteasome", "#1baf7a", {"Brass": ["C7"], "König": ["C2"], "Zhou": ["C5"]}),
           ("RNA processing and RNA polymerase", "#6250d6", {"Brass": ["C5"], "König": ["C1", "C5"], "Zhou": ["C2"]}),
           ("Nuclear pore and transport", "#eb6834", {"Brass": ["C4"], "König": ["C4"], "Zhou": []}),
-          ("NF-κB / AKT signalling", "#c2416b", {"Brass": ["C2"], "König": [], "Zhou": ["C1"]})]
+          ("NF-κB / AKT signaling", "#c2416b", {"Brass": ["C2"], "König": [], "Zhou": ["C1"]})]
 SPECIFIC = {"Brass": ["C1", "C6"], "König": ["C6", "C7", "C8"], "Zhou": ["C4"]}
 comm = {s: pd.read_csv(f"{RUN[s]}/network_modules_communities.tsv", sep="\t").set_index("Community") for s in S}
 rep = {s: open(glob.glob(f"{RUN[s]}/*_statistical_report.txt")[0]).read() for s in S}
@@ -103,7 +103,7 @@ doc = f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name=
 <title>Supplementary Table 14 — Three independent HIV screens</title><style>{CSS}</style></head><body><main>
 <p class="kicker">Supplementary Table 14</p><h1>iGEA networks of three independent genome-wide siRNA screens for HIV dependency factors</h1>
 <p class="lead">The hit lists of three genome-wide siRNA screens published in 2008 overlap little at the gene level [Bushman et al. 2009]. Each list was
-analysed separately with iGEA (ten collections, default settings, 10,000 random gene lists) and the resulting networks were compared at the
+analyzed separately with iGEA (ten collections, default settings, 10,000 random gene lists) and the resulting networks were compared at the
 level of genes, terms and communities. The same comparison was made with ORA.</p>
 <div class="cards"><div class="card c"><b>Genes: 2–3% shared</b><span>Pairwise Jaccard 0.017–0.029; three genes in all screens (MED6, MED7, RELA).</span></div>
 <div class="card a"><b>Terms: 4–8% shared</b><span>Pairwise Jaccard 0.035–0.080; two terms in all screens, both Mediator.</span></div>
@@ -126,7 +126,7 @@ level of genes, terms and communities. The same comparison was made with ORA.</p
 {''.join(lrows)}
 <h2>Notes</h2><ul class="notes">
 <li><b>Gene lists.</b> Brass: the list used throughout the paper. König: Table S3 of König et al. 2008 (295 Entrez Gene IDs; 292 current symbols). Zhou: Table S1 of Zhou et al. 2008, the 390 primary hits minus those not expressed in activated T cells or macrophages (the published 311 host factors; 311 current symbols). Identifiers mapped to current NCBI symbols through Entrez Gene IDs (gene_info, gene_history); input genes outside the background are removed by iGEA.</li>
-<li><b>iGEA.</b> One-sided Fisher's exact test, p &lt; 0.01, overlap ≥ 3, gene sets of 10–600 genes, ≤ 30 iterations, ten collections, 10,000 random gene lists per screen (seed 2026), terms kept at empirical q &lt; 0.10; Leiden communities on the term network (best of 100 seeds).</li>
+<li><b>iGEA.</b> Hypergeometric test (upper tail), p &lt; 0.01, overlap ≥ 3, gene sets of 10–600 genes, ≤ 30 iterations, ten collections, 10,000 random gene lists per screen (seed 2026), terms kept at empirical q &lt; 0.10; Leiden communities on the term network (best of 100 seeds).</li>
 <li><b>Themes.</b> Community pairs with p ≤ 0.01 were grouped into themes; themes with weaker matches (0.01 &lt; p &lt; 0.05: Brass–Zhou NF-κB/AKT, p 0.027; König–Zhou ubiquitin, p 0.021) are shown because they connect communities already linked to a theme or share hub genes (AKT1, RELA). The Brass Golgi community also matches the König nuclear pore community (Jaccard 0.19, p 0.003) through small-GTPase terms (GTPase binding).</li>
 <li><b>Comparison with Bushman et al. 2009.</b> The meta-analysis found shared functional categories by annotating the pooled screens; iGEA recovers the same shared themes (Mediator, proteasome, RNA polymerase and splicing, nuclear pore) from each screen separately, as communities, and keeps screen-specific biology visible. ER/Golgi transport, shared in the meta-analysis, is a community only in the Brass network.</li></ul>
 <footer>Code and data: iGEA repository, publication/csbj_2026/analyses/step11_three_screens (s11a gene lists, s11b–c comparison and chance level, s11d LLM checks, s11e ORA); this page: publication/csbj_2026/build/supplement/build_supp_table_14_three_screens.py.</footer>

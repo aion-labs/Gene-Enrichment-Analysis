@@ -197,7 +197,7 @@ def num(x):
 
 def stats_table(run):
     if run["ora"]:
-        return ('<p class="small">Over-representation analysis of the full gene list (one-sided Fisher\'s exact test, '
+        return ('<p class="small">Over-representation analysis of the full gene list (hypergeometric test, upper tail, '
                 'overlap of at least 3 genes, Benjamini-Hochberg FDR within each collection). The prompt is the iGEA prompt '
                 '(Supplementary Table 3) with only the method sentences changed: ORA introduction, FDR instead of the '
                 'random-list statistics, and gene degree = number of terms. Compare with the iGEA network of the same '
@@ -340,7 +340,7 @@ footer { margin-top: 24px; padding-top: 8px; border-top: 1px solid var(--rule); 
 
 def legend(run):
     chips = " ".join(chip(run, c["Community"]) for c in run["communities"])
-    return (f'<div class="legend"><span>Gene colours follow the communities: {chips}</span>'
+    return (f'<div class="legend"><span>Gene colors follow the communities: {chips}</span>'
             '<span><span class="g bridge" style="background:#eee;color:#333">GENE</span> underlined = bridge gene</span>'
             '<span><span class="g out">GENE</span> named by the model, not in the network</span></div>')
 

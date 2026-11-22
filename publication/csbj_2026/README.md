@@ -44,6 +44,7 @@ publication/csbj_2026/
 │   ├── make_all.sh               rebuild + comparison (above)
 │   ├── compare_outputs.py        text comparison of two folders of supplementary files
 │   ├── render_pdfs.js            HTML → PDF with the footer "iGEA · Supplementary Table N"
+│   ├── build_supp_figures_pdf.py Supplementary Figures 1–6 as one PDF, legend under each figure (submission format)
 │   ├── supplement/               one builder per supplementary item (old versions in superseded/)
 │   └── figures/                  Figure 1 DOT files, Figures 2–4, Supplementary Figures 1–6 (old versions in superseded/)
 └── supplement/                   submitted text/HTML versions of the supplementary items (reference for the comparison)

@@ -13,5 +13,5 @@ Total (10 collections)			14534	10439	18506*	—	246* of 265	1508	255	87	62	56
 
 * Number of distinct genes, not the sum over collections.
 Gene sets used: restricted to the background (23,391 validated symbols), then 10-600 genes. Genes covered = collection-specific background size M.
-Possible terms: used gene sets with at least 3 HIV genes. ORA: one-sided Fisher's exact test, p < 0.01, overlap >= 3, BH FDR per collection (Supplementary Table 4).
+Possible terms: used gene sets with at least 3 HIV genes. ORA: hypergeometric test (upper tail), p < 0.01, overlap >= 3, BH FDR per collection (Supplementary Table 4).
 iGEA: selected at p < 0.01; kept at empirical q < 0.10 (10,000 random gene lists); kept terms form the network (Supplementary Table 5).

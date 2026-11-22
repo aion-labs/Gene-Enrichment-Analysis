@@ -26,7 +26,7 @@ ORDER = ["H: Hallmark Gene Sets", "C2: BioCarta", "C2: KEGG Legacy", "C2: KEGG M
 outs = {}
 # ---------------- Table 4: ORA
 o = pd.read_csv(f"{D}/Supp Table 04 - ORA results.txt", sep="\t")
-body = (f"<div class='cards'><div class='card a'><b>{len(o)} terms with p &lt; 0.01</b><span>one-sided Fisher's exact test, at least 3 input genes</span></div>"
+body = (f"<div class='cards'><div class='card a'><b>{len(o)} terms with p &lt; 0.01</b><span>hypergeometric test (upper tail), at least 3 input genes</span></div>"
         f"<div class='card b'><b>{(o.FDR < 0.05).sum()} terms with FDR &lt; 0.05</b><span>Benjamini–Hochberg within each collection (shaded rows)</span></div></div>")
 for c in ORDER:
     s = o[o.Collection == c]
@@ -68,7 +68,7 @@ outs["Supp Table 05 - iGEA results.html"] = page(5, "iGEA results for the HIV de
     "Terms selected by iGEA for the 265 HIV dependency factors, in order of selection within each collection. Overlap and p-value refer to the "
     "iteration in which the term was selected (genes of earlier terms of the same collection removed); the full-list columns give the same term "
     "tested on the complete list, as in ORA. q-value: signal-adjusted empirical FDR from 10,000 random gene lists of the same size. Terms with "
-    "q &lt; 0.10 are kept and form the network (grey rows: not kept). Comm.: community in the network (Leiden).", body)
+    "q &lt; 0.10 are kept and form the network (gray rows: not kept). Comm.: community in the network (Leiden).", body)
 # ---------------- Table 6: ORA vs iGEA as collections are added
 L = open(f"{D}/Supp Table 06 - ORA vs iGEA as collections are added.txt").read().splitlines()
 start = next(i for i, l in enumerate(L) if l.startswith("Dataset\t"))
@@ -114,7 +114,8 @@ for k in range(1, len(parts), 2):
     body += "</table></div>"
 outs["Supp Table 07 - Network statistical report.html"] = page(7, "Statistical report of the iGEA network (per-run random gene lists)",
     "The report produced by iGEA for the HIV dependency factors: (A) with the ten collections (the network of Supplementary Figure 2) and (B) with "
-    "the three Gene Ontology collections, with random lists analysed with the same three collections (the network of Figure 2). Each random list "
-    "was analysed with the same collections and parameters as the input and filtered with the same term-level q-value before its network was built.", body)
+    "the three Gene Ontology collections, with random lists analyzed with the same three collections (the network of Figure 2). Each random list "
+    "was analyzed with the same collections and parameters as the input and filtered with the same term-level q-value before its network was built. "
+    "The iGEA software names the test \"Fisher's Exact Test\" in its report; it is the one-sided test, identical to the hypergeometric test (upper tail) described in the Methods.", body)
 for n, h in outs.items():
     open(os.path.join(D, n), "w").write(h); print("written", n, len(h))

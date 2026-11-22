@@ -15,7 +15,7 @@ INPUT:
 	- min_overlap: Minimum gene overlap between the remaining input genes and a gene set (term) (default: 3)
 	- min_gene_set_size, max_gene_set_size: Gene-set size range, counted after restriction to B (default: 10-600)
 	- max_iterations: Maximum iterations per collection (default: 30)
-	- test: Fisher's exact test, one-sided (over-representation; default); the hypergeometric test gives the same p-values
+	- test: hypergeometric test, upper tail (over-representation; default); gives the same p-values as a one-sided Fisher's exact test
 
 
 INITIALIZE:
@@ -39,9 +39,8 @@ FOR Collection in C:
 		FOR T in terms:
 			k ← |T ∩ remaining_genes|              // overlap
 			IF k < min_overlap: skip T
-			table ← [[k, |T| - k], [N - k, M - |T| - N + k]]
-			p(T) ← Fisher's exact test, one-sided (over-representation), on table
-			       // = hypergeom.sf(k - 1, M, |T|, N) = P(overlap >= k); under-represented sets get large p
+			p(T) ← hypergeom.sf(k - 1, M, |T|, N)       // hypergeometric test, upper tail: P(overlap >= k)
+			                                            // under-represented sets get large p
 
 		IF no term was tested:
 			BREAK (exit loop)
@@ -87,7 +86,7 @@ INPUT:
 	- q_threshold: term-level q-value threshold (default: 0.10; 1 = keep all terms, q-values still reported)
 	- seed: random seed (default: 2026)
 
-// Random gene lists, analysed exactly like the input.
+// Random gene lists, analyzed exactly like the input.
 // Two kinds, both drawn independently from the background. Lists of the input size are the reference
 // for the network test and the first q-value round. Reduced-size lists are needed because chance
 // selections come only from input genes that are noise: genes already explained by accepted terms
@@ -107,7 +106,7 @@ FOR size in reduced_sizes:
 		R ← size genes drawn from B without replacement  // seeded with (seed, size, j)
 		                                                  // a fresh draw, not a subset of the lists above
 		Part 1 applied to R                               // all collections, all iterations, same parameters
-// All random lists are drawn and analysed here, once, before any q-value is computed.
+// All random lists are drawn and analyzed here, once, before any q-value is computed.
 
 // Term level: empirical q-value, within each collection
 FUNCTION q_values(selected_terms, list_size):
