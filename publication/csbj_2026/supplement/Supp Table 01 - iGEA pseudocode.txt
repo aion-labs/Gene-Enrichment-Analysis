@@ -1,0 +1,162 @@
+Iterative Gene Enrichment Analysis (iGEA) Algorithm
+
+Algorithm Overview
+The iterative enrichment algorithm repeatedly identifies the most significant enriched term, removes its overlapping genes from the input gene set, and repeats the enrichment analysis on the remaining genes. This process is performed separately for each gene-set collection and continues until termination criteria are met. Part 1 describes the iterative selection. Part 2 describes the two-level empirical significance testing: random gene lists processed by Part 1 give each selected term an empirical q-value (term level), terms with q below the threshold form the cross-collection network, and the network's largest connected cluster is compared with those of the random lists (network level).
+
+Part 1. Iterative selection (performed separately for each collection)
+```
+ALGORITHM: Iterative Gene Enrichment Analysis
+
+INPUT:
+	- Background gene set (B)
+	- Input genes (G)
+	- Collections: list of gene-set collections (C)
+	- p_threshold: p-value cutoff used as the selection and stopping criterion (default: 0.01)
+	- min_overlap: Minimum gene overlap between the remaining input genes and a gene set (term) (default: 3)
+	- min_gene_set_size, max_gene_set_size: Gene-set size range, counted after restriction to B (default: 10-600)
+	- max_iterations: Maximum iterations per collection (default: 30)
+	- test: hypergeometric test, upper tail (over-representation; default); gives the same p-values as a one-sided Fisher's exact test
+
+
+INITIALIZE:
+	G ← G ∩ B                                   // input genes outside the background are removed (one gene universe)
+	results ← []
+
+FOR Collection in C:
+	// Prepare the collection once
+	terms ← {T ∩ B : T in Collection}           // every gene set restricted to the background
+	terms ← {T in terms : min_gene_set_size <= |T| <= max_gene_set_size}
+	U ← union of all genes in terms              // collection-specific universe
+	M ← |U|                                      // collection-specific background size
+
+	remaining_genes ← G ∩ U                      // collection-specific input; each collection starts from the full input
+	iteration ← 1
+
+	WHILE (|remaining_genes| > 0 and iteration <= max_iterations):
+		N ← |remaining_genes|
+
+		// Test every term against the remaining genes
+		FOR T in terms:
+			k ← |T ∩ remaining_genes|              // overlap
+			IF k < min_overlap: skip T
+			p(T) ← hypergeom.sf(k - 1, M, |T|, N)       // hypergeometric test, upper tail: P(overlap >= k)
+			                                            // under-represented sets get large p
+
+		IF no term was tested:
+			BREAK (exit loop)
+
+		// Select the top-ranked term (lowest p-value; ties broken by the order of the gene sets in the collection file)
+		top_term ← term with the lowest p(T)
+		top_pvalue ← p(top_term)
+
+		IF top_pvalue >= p_threshold:
+			BREAK (exit loop)
+
+		top_overlap_genes ← top_term ∩ remaining_genes
+
+		// Record iteration result
+		record ← {
+			Collection: Collection.name,
+			Iteration: iteration,
+			Term: top_term.name,
+			"iteration p-value": top_pvalue,
+			"iteration overlapping genes": |top_overlap_genes|,
+			"Genes removed for next iteration": top_overlap_genes
+		}
+		results.APPEND(record)
+
+		// Remove overlapping genes from the remaining set (each gene is assigned to at most one term per collection)
+		remaining_genes ← remaining_genes - top_overlap_genes
+
+		// Increment iteration counter
+		iteration ← iteration + 1
+
+	END WHILE
+
+END FOR
+
+OUTPUT: results (selected terms of all collections)
+```
+
+Part 2. Two-level empirical significance testing and network
+```
+INPUT:
+	- results: selected terms of the input list (Part 1)
+	- n_lists: number of random gene lists (default: 10,000)
+	- q_threshold: term-level q-value threshold (default: 0.10; 1 = keep all terms, q-values still reported)
+	- seed: random seed (default: 2026)
+
+// Random gene lists, analyzed exactly like the input.
+// Two kinds, both drawn independently from the background. Lists of the input size are the reference
+// for the network test and the first q-value round. Reduced-size lists are needed because chance
+// selections come only from input genes that are noise: genes already explained by accepted terms
+// cannot produce chance terms, so later q-value rounds use random lists the size of the unexplained part.
+
+// (a) Random lists of the input size
+n ← |G|                                             // HIV: 265
+FOR i in 1..n_lists:                                // default 10,000
+	R_i ← n genes drawn from B without replacement      // generator seeded with (seed, n, i)
+	random_results_i ← Part 1 applied to R_i            // all collections, all iterations, same parameters
+
+// (b) Reduced-size random lists (later q-value rounds only)
+reduced_sizes ← n - s, n - 2s, ..., not below n/4      // s = n/20, rounded up
+                                                    // HIV: 251, 237, ..., 97, ..., 69 (14 sizes)
+FOR size in reduced_sizes:
+	FOR j in 1..max(200, n_lists/10):                   // 10,000 lists: 1,000 per size
+		R ← size genes drawn from B without replacement  // seeded with (seed, size, j)
+		                                                  // a fresh draw, not a subset of the lists above
+		Part 1 applied to R                               // all collections, all iterations, same parameters
+// All random lists are drawn and analyzed here, once, before any q-value is computed.
+
+// Term level: empirical q-value, within each collection
+FUNCTION q_values(selected_terms, list_size):
+	// The rounds below are not iterations of Part 1: they start after the terms of
+	// all collections have been selected, and they change only the q-values.
+	signal_genes ← {}                                     // round 1: every gene is treated as noise
+	REPEAT (at most 10 rounds):
+		noise_size ← list_size - |signal_genes|            // genes not explained by accepted terms
+		ref_size ← smallest of n and reduced_sizes that is >= noise_size
+		           // rounded UP: can only over-estimate chance terms
+		FOR each collection c, FOR each term t selected in c with p-value p:
+			expected ← mean number of terms with p-value <= p selected in c from the random lists of ref_size
+			           // when a random list of size n is scored, that list itself is left out
+			observed ← number of terms with p-value <= p selected in c from the scored list
+			q_raw(t) ← min(1, expected / observed)
+		q ← q_raw made monotone in p within each collection   // as Benjamini-Hochberg
+		new_signal ← all genes assigned to terms with q < accept_level, pooled across collections
+		             // accept_level = q_threshold (0.10 when q_threshold = 1)
+		IF new_signal = signal_genes: STOP                 // the accepted terms no longer change
+		signal_genes ← new_signal
+	RETURN q
+
+// HIV example: round 1 uses the 265-gene lists (about 16.0 chance terms per list). The rounds settle when
+// the accepted terms explain 168 genes; the other 97 genes are matched by the 97-gene lists (about 7.2).
+// Reactome HIV transcription elongation (p = 0.0085; 9 HIV Reactome terms with p <= 0.0085):
+// 265-gene lists 2.07 chance terms -> q = 0.23 (removed); 97-gene lists 0.87 -> q = 0.097 (kept).
+
+q ← q_values(results, n)                               // the input list
+kept ← terms in results with q < q_threshold          // q_threshold = 1: all terms kept
+// Every random list of size n is scored by the same function (network level, below).
+
+// Network: kept terms of all collections joined through their genes
+network ← gene-term graph with an edge between a gene and the term it was assigned to (no edge weights)
+cluster ← largest connected component of network
+metrics ← cluster size (genes + terms), genes, terms, edges, edges per gene (and number of collections, descriptive)
+
+// Network level: the same filter and network for every random list
+FOR i in 1..n_lists:
+	q_i ← q_values(random_results_i, n)
+	kept_i ← terms with q_i < q_threshold                // q_threshold = 1: all terms kept
+	metrics_i ← metrics of the largest connected component built from kept_i
+
+FOR each metric:
+	r ← number of random lists with metrics_i >= metrics
+	empirical p ← (r + 1) / (n_lists + 1)
+	z-score ← (metrics - mean(metrics_i)) / SD(metrics_i)      // descriptive only
+
+// Communities (descriptive): Leiden (modularity) on the term-term projection of network,
+// terms linked by shared genes and weighted by their number; best of 100 seeds
+// (networks with fewer than 6 terms: connected components).
+
+OUTPUT: q-value of every selected term, kept terms, network (with communities), empirical p-values
+```

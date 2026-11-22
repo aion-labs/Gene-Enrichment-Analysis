@@ -1,0 +1,2 @@
+Library	Iteration	Term	Description	iteration overlapping genes	iteration p-value	iteration -log(p-value)	Genes removed for next iteration	Full list overlapping genes	Full list p-value	Regular FDR	Full list overlapping genes (gene names)
+C2: Reactome Pathways	1	REACTOME: ASSEMBLY OF THE ORC COMPLEX AT THE ORIGIN OF REPLICATION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_ASSEMBLY_OF_THE_ORC_COMPLEX_AT_THE_ORIGIN_OF_REPLICATION	4/68	0.009584074679315773	2.0184498109096474	H2AC14, H2BC14, H3C8, ORC1	4/68	0.009584074679315773	1.0	H2AC14, H2BC14, H3C8, ORC1

@@ -1,0 +1,41 @@
+iGEA manuscript (CSBJ revision, v7) - Supplementary Material index
+Numbered in order of first citation in the manuscript (renumbered again 21 Nov 2026, after the Results rewrite:
+hypoxia and vaccination moved to the end of the Results and to Supplementary Note 1).
+
+MAIN DISPLAY ITEMS
+  Table 1   iGEA workflow                                   in manuscript
+  Figure 1  ORA and iGEA (GO Biological Process)            02 Figures/Figure 1.jpg
+  Figure 2  iGEA network, 3 GO collections                  02 Figures/Figure 2 - iGEA GO network.pdf/.png
+  Figure 3  ORA vs iGEA networks, HIV                       02 Figures/Figure 3 - ORA vs iGEA networks.pdf/.png
+  Figure 4  Three independent HIV screens                   02 Figures/Figure 4 - Three HIV screens.pdf/.png
+
+SUPPLEMENTARY NOTE
+  1   Hypoxia and vaccination signatures                    Supp Note 1 - Hypoxia and vaccination signatures.html/.pdf
+
+SUPPLEMENTARY TABLES                                         (previous number)
+  1   iGEA pseudocode                                        (1)
+  2   Gene-set collections                                   (2)
+  3   Standardized LLM prompt (v5)                           (3)
+  4   ORA results, HIV, 10 collections                       (4)
+  5   iGEA results, HIV, 10 collections                      (5)
+  6   ORA vs iGEA as collections are added                   (6)
+  7   Network statistical report                             (7)
+  8   Robustness analyses (settings, subsampling, collections) (8)
+  9   LLM answers, HIV iGEA network, GO collections          (9)
+  10  LLM answers, HIV iGEA network, ten collections         (10)
+  11A/B LLM answers, HIV ORA networks                        (11A/B)
+  12  LLM answers, random control list                       (12)
+  13  DAVID functional clustering report                     (13)
+  14  Three independent HIV screens (14B König, 14C Zhou)    (16, 16B, 16C)
+  15  LLM answers, hypoxia signature                         (14)
+  16  LLM answers, vaccination signature                     (15)
+
+SUPPLEMENTARY FIGURES                                        (previous number)
+  1   ORA vs iGEA terms per collection                       (1)
+  2   HIV iGEA network, ten collections                      (3)
+  3   HIV iGEA network, GO collections, gene names           (4)
+  4   Random lists vs HIV network                            (5)
+  5   Random networks vs list size                           (6)
+  6   ORA vs iGEA networks, hypoxia and vaccination          (2)
+
+Previous files: _superseded_2026-11-21_renumbered_by_citation/

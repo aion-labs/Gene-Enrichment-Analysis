@@ -1,0 +1,12 @@
+Collection	ORA chance terms / list	iGEA chance terms / list
+Hallmark	0.26	0.27
+Reactome	4.41	2.27
+KEGG Legacy	0.73	0.62
+KEGG MEDICUS	0.62	0.32
+BioCarta	0.3	0.2
+PID	0.7	0.54
+WikiPathways	2.42	1.59
+GO BP	16.62	6.31
+GO CC	2.1	1.59
+GO MF	3.09	2.35
+Total	31.3	16.1

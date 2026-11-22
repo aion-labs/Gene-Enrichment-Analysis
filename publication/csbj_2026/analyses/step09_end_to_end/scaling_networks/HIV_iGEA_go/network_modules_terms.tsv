@@ -1,0 +1,28 @@
+Library	Term	Community	Genes	Shared genes (weighted degree)	Genes bridging to other communities
+C5: Gene Ontology: Molecular Function	GOMF: CATALYTIC ACTIVITY ACTING ON RNA	C1	18	5	1
+C5: Gene Ontology: Biological Process	GOBP: POSITIVE REGULATION OF MOLECULAR FUNCTION	C1	16	8	2
+C5: Gene Ontology: Cellular Component	GOCC: SPINDLE	C1	12	7	4
+C5: Gene Ontology: Cellular Component	GOCC: CLATHRIN COATED VESICLE MEMBRANE	C1	6	4	0
+C5: Gene Ontology: Cellular Component	GOCC: NUCLEAR EXOSOME RNASE COMPLEX	C1	3	2	0
+C5: Gene Ontology: Molecular Function	GOMF: CARGO ADAPTOR ACTIVITY	C1	3	3	1
+C5: Gene Ontology: Biological Process	GOBP: GOLGI VESICLE TRANSPORT	C2	20	16	2
+C5: Gene Ontology: Biological Process	GOBP: REGULATION OF PROTEIN CONTAINING COMPLEX DISASSEMBLY	C2	8	5	1
+C5: Gene Ontology: Molecular Function	GOMF: GTPASE BINDING	C2	8	2	0
+C5: Gene Ontology: Cellular Component	GOCC: ENDOPLASMIC RETICULUM GOLGI INTERMEDIATE COMPARTMENT MEMBRANE	C2	6	8	1
+C5: Gene Ontology: Cellular Component	GOCC: AUTOPHAGOSOME	C2	5	4	0
+C5: Gene Ontology: Molecular Function	GOMF: ALPHA TUBULIN BINDING	C2	4	3	1
+C5: Gene Ontology: Molecular Function	GOMF: G PROTEIN ACTIVITY	C2	4	4	0
+C5: Gene Ontology: Cellular Component	GOCC: GOLGI TRANSPORT COMPLEX	C2	3	3	0
+C5: Gene Ontology: Biological Process	GOBP: NUCLEAR EXPORT	C3	11	15	1
+C5: Gene Ontology: Molecular Function	GOMF: GTPASE ACTIVATOR ACTIVITY	C3	11	6	2
+C5: Gene Ontology: Molecular Function	GOMF: STRUCTURAL CONSTITUENT OF NUCLEAR PORE	C3	6	12	0
+C5: Gene Ontology: Cellular Component	GOCC: NUCLEAR PORE	C3	5	8	0
+C5: Gene Ontology: Cellular Component	GOCC: NUCLEAR PORE OUTER RING	C3	4	8	0
+C5: Gene Ontology: Molecular Function	GOMF: TRANSCRIPTION COREGULATOR ACTIVITY	C4	15	10	2
+C5: Gene Ontology: Biological Process	GOBP: DNA TEMPLATED TRANSCRIPTION ELONGATION	C4	9	10	1
+C5: Gene Ontology: Cellular Component	GOCC: CORE MEDIATOR COMPLEX	C4	5	9	0
+C5: Gene Ontology: Cellular Component	GOCC: ENDOPLASMIC RETICULUM PROTEIN CONTAINING COMPLEX	C5	8	5	0
+C5: Gene Ontology: Biological Process	GOBP: GLYCOLIPID BIOSYNTHETIC PROCESS	C5	7	6	0
+C5: Gene Ontology: Molecular Function	GOMF: HEXOSYLTRANSFERASE ACTIVITY	C5	7	6	1
+C5: Gene Ontology: Cellular Component	GOCC: CULLIN RING UBIQUITIN LIGASE COMPLEX	C6	9	7	1
+C5: Gene Ontology: Molecular Function	GOMF: ENZYME SUBSTRATE ADAPTOR ACTIVITY	C6	7	6	0

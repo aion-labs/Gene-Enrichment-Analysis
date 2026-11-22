@@ -1,0 +1,66 @@
+ORA term	ORA p	BH FDR	HIV genes	Covered by iGEA q<0.05 genes	Main iGEA term (genes shared)	Status
+regulation of glucokinase by glucokinase regulatory protein	1.9940721357762706e-08	2.8096476393087647e-05	8	8	regulation of glucokinase by glucokinase regulatory protein (8)	in both
+snrnp assembly	1.1163122448005672e-07	7.864419764619994e-05	9	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+asparagine n linked glycosylation	2.946172232920599e-07	0.0001158902965502	19	19	asparagine n linked glycosylation (19)	in both
+copi mediated anterograde transport	4.253316867508061e-07	0.0001158902965502	11	11	asparagine n linked glycosylation (11)	ORA only
+hiv life cycle	4.489958543848257e-07	0.0001158902965502	13	8	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+export of viral ribonucleoproteins from nucleus	5.382102045536368e-07	0.0001158902965502	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+nuclear import of rev protein	6.690522540401239e-07	0.0001158902965502	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+er to golgi anterograde transport	7.619401387863251e-07	0.0001158902965502	13	13	asparagine n linked glycosylation (13)	ORA only
+sumoylation of sumoylation proteins	8.255888268151293e-07	0.0001158902965502	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+nuclear pore complex npc disassembly	1.0117258966282413e-06	0.0001158902965502	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+transport of the slbp dependant mature mrna	1.0117258966282413e-06	0.0001158902965502	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+transport to the golgi and subsequent modification	1.03886716277667e-06	0.0001158902965502	14	14	asparagine n linked glycosylation (14)	ORA only
+interactions of rev with host cellular proteins	1.2317957390153136e-06	0.0001158902965502	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+interactions of vpr with host cellular proteins	1.2317957390153136e-06	0.0001158902965502	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+hiv infection	1.2337504955666886e-06	0.0001158902965502	15	10	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+sumoylation of ubiquitinylation proteins	1.7933637180180902e-06	0.0001579280924179	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+ns1 mediated effects on host pathways	2.5545580660059337e-06	0.0002117277832354	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+intra golgi and retrograde golgi to er traffic	2.760511570604362e-06	0.0002160867112767	14	9	asparagine n linked glycosylation (9)	ORA only
+transport of mature mrnas derived from intronless transcripts	3.5683107882373394e-06	0.0002646184158224	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+viral messenger rna synthesis	4.189041976433247e-06	0.0002858648485475	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+regulation of hsf1 mediated heat shock response	4.260583264371124e-06	0.0002858648485475	9	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+transcriptional regulation of white adipocyte differentiation	5.213769868923963e-06	0.0003339182611506	9	9	transcriptional regulation of white adipocyte differentiation (9)	in both
+sumoylation of dna replication proteins	5.702187909099924e-06	0.0003493209897357	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+sumoylation of rna binding proteins	6.614286189858668e-06	0.0003883137183962	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+retrograde transport at the trans golgi network	8.804341136407882e-06	0.0004962126664479	7	3	retrograde transport at the trans golgi network (4)	iGEA term, q>=0.05
+host interactions of hiv factors	1.2926184080263947e-05	0.000700499744965	10	10	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+nuclear envelope breakdown	1.5005635795431603e-05	0.000783071882806	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+isg15 antiviral mechanism	1.653171624253221e-05	0.0008318995780617	8	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+nuclear envelope ne reassembly	2.0152074568733915e-05	0.0009791128643912	8	6	regulation of glucokinase by glucokinase regulatory protein (5)	ORA only
+sars cov 2 activates modulates innate and adaptive immune responses	2.300123034275957e-05	0.0010760154239911	10	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+cellular response to heat stress	2.3673866674042403e-05	0.0010760154239911	9	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+trna processing in the nucleus	3.074294025910509e-05	0.0013536500882837	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+glucose metabolism	4.199327287288827e-05	0.0017402506317029	8	8	regulation of glucokinase by glucokinase regulatory protein (8)	ORA only
+transport of mature transcript to cytoplasm	4.199327287288827e-05	0.0017402506317029	8	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+adipogenesis	4.6792768904537393e-05	0.0018837431824712	9	9	transcriptional regulation of white adipocyte differentiation (9)	ORA only
+postmitotic nuclear pore complex npc reformation	4.912337201673039e-05	0.0019195953621078	5	5	regulation of glucokinase by glucokinase regulatory protein (5)	ORA only
+hcmv early events	5.040811099928476e-05	0.0019195953621078	10	10	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+intra golgi traffic	5.1868492875746095e-05	0.0019232291174191	6	6	asparagine n linked glycosylation (6)	ORA only
+trna processing	5.394200881558898e-05	0.001948827959517	9	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+sars cov 2 infection	6.412239652749794e-05	0.0022083855631837	15	10	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+mitotic prophase	6.426104193792445e-05	0.0022083855631837	10	8	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+sars cov 2 host interactions	7.005336958580575e-05	0.0023501237558666	12	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+sumoylation of chromatin organization proteins	0.0001027196438558	0.0033658599579735	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+antiviral mechanism by ifn stimulated genes	0.000107665557859	0.0034477447959851	10	8	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+sars cov infections	0.0001212958160657	0.0037979067741486	19	12	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+slc transporter disorders	0.0001357508572782	0.0041581077805445	8	8	regulation of glucokinase by glucokinase regulatory protein (8)	ORA only
+sumoylation of dna damage response and repair proteins	0.0001719831984093	0.0051558367352936	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+hcmv infection	0.0001922746112766	0.0056440609851819	10	10	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+transcriptional regulation by small rnas	0.0002184022037778	0.0062801776555703	8	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+gene silencing by rna	0.0002827674982586	0.0079683881009276	9	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+rab gefs exchange gtp for gdp on rabs	0.0004523641364871	0.0124976680060869	7	3	asparagine n linked glycosylation (2)	ORA only
+respiratory syncytial virus infection pathway	0.0005366727721878	0.0145417680002446	8	6	transcriptional regulation of white adipocyte differentiation (5)	ORA only
+rab regulation of trafficking	0.0005669605396124	0.0150725924587544	8	3	asparagine n linked glycosylation (2)	ORA only
+copii mediated vesicle transport	0.0006422770924274	0.0167586745042644	6	6	asparagine n linked glycosylation (6)	ORA only
+sumoylation	0.0006570593921366	0.0168326669731016	10	9	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+interleukin 12 signaling	0.0007288418663102	0.018338181957699	5	1	interleukin 12 signaling (4)	iGEA term, q>=0.05
+signaling by notch	0.0012092612011081	0.0298920882870416	11	4	clathrin mediated endocytosis (2)	ORA only
+clathrin mediated endocytosis	0.001742625290746	0.0420095270572446	8	8	clathrin mediated endocytosis (8)	in both
+interleukin 12 family signaling	0.0017590930421415	0.0420095270572446	5	1	interleukin 12 signaling (4)	ORA only
+nuclear rna decay	0.0019295889987402	0.0453131816537502	4	4	nuclear rna decay (4)	in both
+hcmv late events	0.0020258502151235	0.0460141930365907	7	7	regulation of glucokinase by glucokinase regulatory protein (7)	ORA only
+ksrp khsrp binds and destabilizes mrna	0.0020574124636658	0.0460141930365907	3	2	nuclear rna decay (2)	ORA only
+butyrate response factor 1 brf1 binds and destabilizes mrna	0.0020574124636658	0.0460141930365907	3	2	nuclear rna decay (2)	ORA only
+regulation of lipid metabolism by pparalpha	0.0022330735511969	0.0491625099005701	7	6	transcriptional regulation of white adipocyte differentiation (6)	ORA only
+mitotic metaphase and anaphase	0.0022871492019934	0.0495783573170579	10	7	regulation of glucokinase by glucokinase regulatory protein (6)	ORA only

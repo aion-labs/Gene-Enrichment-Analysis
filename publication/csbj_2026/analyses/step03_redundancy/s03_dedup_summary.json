@@ -1,0 +1,26 @@
+{
+  "removed_by_dedup": {
+    "Hallmark": 0,
+    "Reactome": 0,
+    "KEGG Legacy": 0,
+    "KEGG MEDICUS": 0,
+    "BioCarta": 0,
+    "PID": 0,
+    "WikiPathways": 9,
+    "GO BP": 1,
+    "GO CC": 8,
+    "GO MF": 22
+  },
+  "priority": [
+    "Hallmark",
+    "Reactome",
+    "KEGG Legacy",
+    "KEGG MEDICUS",
+    "BioCarta",
+    "PID",
+    "WikiPathways",
+    "GO BP",
+    "GO CC",
+    "GO MF"
+  ]
+}

@@ -1,0 +1,2 @@
+Library	Iteration	Term	Description	iteration overlapping genes	iteration p-value	iteration -log(p-value)	Genes removed for next iteration	Full list overlapping genes	Full list p-value	Regular FDR	Full list overlapping genes (gene names)
+H: Hallmark Gene Sets	1	HALLMARK: HYPOXIA	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HALLMARK_HYPOXIA	7/199	0.008471932192774494	2.0720175288710294	CCNG2, FAM162A, IGFBP3, KDM3A, NAGK, PRKCA, SDC2	7/199	0.008471932192774494	0.4235966096387247	CCNG2, FAM162A, IGFBP3, KDM3A, NAGK, PRKCA, SDC2

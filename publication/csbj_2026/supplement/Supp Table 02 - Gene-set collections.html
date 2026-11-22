@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Supplementary Table 2 — Gene-set collections</title><style>:root{--ink:#22252b;--muted:#5d6470;--line:#e3e6ea;--bg:#fbfbfa;--a:#2a78d6;--a-bg:#eef5fd;--b:#1baf7a;--b-bg:#ecf8f3;--c:#eb6834;--c-bg:#fdf1ec}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+main{max-width:1180px;margin:0 auto;padding:40px 28px 60px}.kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0}
+h1{font-size:26px;margin:4px 0 12px}h2{font-size:19px;margin:34px 0 4px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+p{margin:8px 0}.lead{color:#3a3f47;max-width:900px}.muted{color:var(--muted)}
+.cards{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 8px}.card{flex:1 1 260px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 15px}
+.card b{display:block;font-size:14px;margin-bottom:3px}.card span{font-size:13px;color:var(--muted)}
+.card.a{border-top:4px solid var(--a)}.card.b{border-top:4px solid var(--b)}.card.c{border-top:4px solid var(--c)}
+.tbl{overflow-x:auto;margin:12px 0}table{border-collapse:collapse;width:100%;background:#fff;border:1px solid var(--line);font-size:13.5px}
+th{background:#f3f4f6;text-align:left;font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:bottom;font-size:12.5px}
+th span{font-weight:400;color:var(--muted);font-size:11.5px}th.n,td.n{text-align:right}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:middle}tr:last-child td{border-bottom:none}
+tr.def td{background:#f6f9fe}tr.def td:first-child{box-shadow:inset 4px 0 0 var(--a)}.sub{font-size:12px;color:var(--muted)}
+.pb{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:1px 9px;white-space:nowrap}
+.pb.sig{background:var(--b-bg);color:#10845a;border:1px solid #bfe6d6}.pb.ns{background:#f3f4f6;color:#5d6470;border:1px solid var(--line)}
+.pb.na{background:#fff;color:#9aa1ab;border:1px dashed #d5d9de;font-weight:500}
+.bar{position:relative;width:130px;height:18px;background:#f1f3f5;border-radius:4px;overflow:hidden}.bar i{position:absolute;left:0;top:0;bottom:0;background:#9cc3ef}
+.bar span{position:relative;font-size:12px;font-weight:600;padding-left:6px;line-height:18px}
+.notes{font-size:13px;color:#3a3f47;max-width:960px}.notes li{margin:4px 0}
+footer{margin-top:30px;padding-top:12px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px}
+@media print{body{background:#fff;font-size:10.5pt}main{padding:0;max-width:none}table{break-inside:avoid}h2{break-after:avoid}}
+.tbl{overflow-x:auto;margin:16px 0}
+main{max-width:1240px} table.ct{font-size:13px} table.ct td,table.ct th{padding:6px 8px} table.ct td:first-child{white-space:nowrap}
+table.ct th{font-size:12px;vertical-align:bottom;line-height:1.25;max-width:92px}
+table.ct th.grp{text-align:center;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:#5d6470;background:#fff;border-bottom:none}
+table.ct th.grp.hiv{background:#eef5fd;color:#2a78d6}
+table.ct td.n,table.ct th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap} table.ct th.n{white-space:normal}
+table.ct td.hiv,table.ct th.hiv{background:#f6f9fe}
+table.ct tr.sec td{background:#f3f4f6;font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#5d6470;padding:5px 12px}
+table.ct tr.tot td{font-weight:700;border-top:2px solid #c9ced6;background:#fafafa}
+table.ct tr.tot td.hiv{background:#eef5fd}
+.cat{display:inline-block;font-size:11px;font-weight:600;border-radius:4px;padding:1px 6px;margin-left:6px;color:#5d6470;background:#eef0f3}
+.notes{font-size:13.5px;color:#3a3f47;margin-top:18px}
+.notes li{margin:5px 0}
+</style></head>
+<body><main>
+<p class="kicker">Supplementary Table 2</p>
+<h1>Gene-set collections</h1>
+<p class="lead">The ten MSigDB collections used in every analysis, figure and set of random gene lists in this study, unless a subset is stated. The aggregate Canonical Pathways collection (C2:CP), which contains the six canonical pathway subcollections, was not used, so that no gene set enters the analysis twice. The right-hand columns show, for the HIV dependency factors, how many terms each collection could select and how many ORA and iGEA select.</p>
+<div class="tbl"><table class="ct"><thead><tr><th class="grp" colspan="5">Collection (MSigDB v2025.1)</th><th class="grp hiv" colspan="6">HIV dependency factors (265 genes)</th></tr><tr><th>Collection</th><th class="n">Gene sets in file</th><th class="n">Gene sets used (10–600 genes)</th><th class="n">Genes covered</th><th class="n">Median set size</th><th class="n hiv">Input genes covered</th><th class="n hiv">Possible terms (≥ 3 genes)</th><th class="n hiv">ORA p < 0.01</th><th class="n hiv">ORA FDR < 0.05</th><th class="n hiv">iGEA selected</th><th class="n hiv">iGEA kept (q < 0.10)</th></tr></thead><tbody><tr class="sec"><td colspan="11">Hallmark</td></tr><tr><td>Hallmark</td><td class="n">50</td><td class="n">50</td><td class="n">4,378</td><td class="n">179</td><td class="n hiv">76</td><td class="n hiv">22</td><td class="n hiv">1</td><td class="n hiv">1</td><td class="n hiv">1</td><td class="n hiv">1</td></tr><tr class="sec"><td colspan="11">C2 · Canonical pathways (six subcollections)</td></tr><tr><td>BioCarta</td><td class="n">292</td><td class="n">226</td><td class="n">1,363</td><td class="n">17</td><td class="n hiv">27</td><td class="n hiv">10</td><td class="n hiv">6</td><td class="n hiv">0</td><td class="n hiv">3</td><td class="n hiv">3</td></tr><tr><td>KEGG Legacy</td><td class="n">186</td><td class="n">186</td><td class="n">5,230</td><td class="n">52</td><td class="n hiv">73</td><td class="n hiv">47</td><td class="n hiv">9</td><td class="n hiv">0</td><td class="n hiv">5</td><td class="n hiv">5</td></tr><tr><td>KEGG MEDICUS</td><td class="n">658</td><td class="n">402</td><td class="n">2,258</td><td class="n">16</td><td class="n hiv">41</td><td class="n hiv">11</td><td class="n hiv">7</td><td class="n hiv">2</td><td class="n hiv">3</td><td class="n hiv">3</td></tr><tr><td>Pathway Interaction Database</td><td class="n">196</td><td class="n">196</td><td class="n">2,534</td><td class="n">37</td><td class="n hiv">46</td><td class="n hiv">33</td><td class="n hiv">3</td><td class="n hiv">0</td><td class="n hiv">2</td><td class="n hiv">2</td></tr><tr><td>Reactome</td><td class="n">1,787</td><td class="n">1,408</td><td class="n">11,019</td><td class="n">31</td><td class="n hiv">169</td><td class="n hiv">228</td><td class="n hiv">85</td><td class="n hiv">65</td><td class="n hiv">9</td><td class="n hiv">9</td></tr><tr><td>WikiPathways</td><td class="n">885</td><td class="n">766</td><td class="n">9,035</td><td class="n">32</td><td class="n hiv">134</td><td class="n hiv">113</td><td class="n hiv">19</td><td class="n hiv">0</td><td class="n hiv">6</td><td class="n hiv">6</td></tr><tr class="sec"><td colspan="11">C5 · Gene Ontology</td></tr><tr><td>GO Biological Process</td><td class="n">7,583</td><td class="n">5,357</td><td class="n">16,032</td><td class="n">31</td><td class="n hiv">228</td><td class="n hiv">793</td><td class="n hiv">89</td><td class="n hiv">14</td><td class="n hiv">12</td><td class="n hiv">6</td></tr><tr><td>GO Cellular Component</td><td class="n">1,042</td><td class="n">684</td><td class="n">12,091</td><td class="n">30</td><td class="n hiv">191</td><td class="n hiv">136</td><td class="n hiv">19</td><td class="n hiv">3</td><td class="n hiv">11</td><td class="n hiv">11</td></tr><tr><td>GO Molecular Function</td><td class="n">1,855</td><td class="n">1,164</td><td class="n">13,870</td><td class="n">24</td><td class="n hiv">195</td><td class="n hiv">115</td><td class="n hiv">17</td><td class="n hiv">2</td><td class="n hiv">10</td><td class="n hiv">10</td></tr><tr class="tot"><td>Total (10 collections)</td><td class="n">14,534</td><td class="n">10,439</td><td class="n">18,506*</td><td class="n">—</td><td class="n hiv">246* of 265</td><td class="n hiv">1,508</td><td class="n hiv">255</td><td class="n hiv">87</td><td class="n hiv">62</td><td class="n hiv">56</td></tr></tbody></table></div>
+<ul class="notes">
+<li><b>Gene sets used:</b> each gene set is first restricted to the background (23,391 validated human gene symbols) and kept if it then has 10–600 genes.</li>
+<li><b>Genes covered:</b> background genes in at least one used gene set; this is the collection-specific background size M of the enrichment test. *Totals of genes covered are the number of distinct genes, not the sum.</li>
+<li><b>Input genes covered:</b> HIV genes (265 in the background) present in the collection; this is the collection-specific input size N at the first iteration.</li>
+<li><b>Possible terms:</b> used gene sets that contain at least three HIV genes (the minimum overlap), i.e. the largest number of terms that could reach significance.</li>
+<li><b>ORA:</b> hypergeometric test (upper tail), p &lt; 0.01, minimum overlap 3; FDR = Benjamini–Hochberg within each collection (Supplementary Table 4).</li>
+<li><b>iGEA:</b> terms selected by the iterative procedure (p &lt; 0.01) and kept by the term-level filter (empirical q &lt; 0.10, 10,000 random gene lists); kept terms form the network (Supplementary Table 5).</li>
+</ul>
+<footer>Gene sets: MSigDB v2025.1, human symbols harmonized to current NCBI gene symbols. Counts computed with the iGEA code (iGEA repository, publication/csbj_2026/build/supplement/collection_table_data.py and build_supp_table_02.py).</footer>
+</main></body></html>

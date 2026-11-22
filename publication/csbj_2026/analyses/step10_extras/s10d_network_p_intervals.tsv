@@ -1,0 +1,5 @@
+network	metric	r	n	empirical_p	tail_prob_low	tail_prob_high
+HIV	Cluster Size	0	10000	0.0001	0.0	0.00037
+HIV	Average Edges per Gene	62	10000	0.0063	0.00476	0.00794
+HIV GO (Figure 2)	Cluster Size	0	10000	0.0001	0.0	0.00037
+HIV GO (Figure 2)	Average Edges per Gene	46	10000	0.0047	0.00337	0.00613

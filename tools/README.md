@@ -51,40 +51,18 @@ python tools/generate_permutation_statistics_report.py [options]
 
 ## Managing Libraries
 
-### `update_msigdb.py`
+Use **`code/libraries.py`** (see the main README, "Managing gene-set collections") to list, activate,
+deactivate, add and remove collections, and to update MSigDB and the NCBI gene data. It harmonises gene
+symbols with `data/recent_release` exactly as the bundled MSigDB 2025.1 files were prepared (re-running it on
+the official 2025.1 zip reproduces them byte for byte), keeps collection names, colours and active flags, and
+moves replaced files to `data/libraries/previous/` instead of deleting them.
 
-Downloads and updates MSigDB gene set libraries to the latest version.
-
-**Usage:**
-```bash
-# Update from a downloaded zip file
-python tools/update_msigdb.py --zip-file path/to/msigdb_v2025.1.Hs_files_to_download_locally.zip
-
-# Download and update (requires MSigDB login)
-python tools/update_msigdb.py --download
-```
-
-**Features:**
-- Downloads latest MSigDB libraries
-- Updates gene symbols to match NCBI gene_info database
-- Creates backups of existing libraries
-- Updates background gene lists automatically
-
-### `update_msigdb_libraries.py`
-
-Validates and updates existing MSigDB libraries for gene symbol consistency.
-
-**Usage:**
-```bash
-# Update libraries in place with backups
-python tools/update_msigdb_libraries.py data/libraries/
-
-# Update libraries and save to new directory
-python tools/update_msigdb_libraries.py data/libraries/ -o data/libraries_validated/
-
-# Update without creating backups
-python tools/update_msigdb_libraries.py data/libraries/ --no-backup
-```
+The older scripts below are kept for reference only. Do not use them for analyses reported with this
+version: `update_msigdb.py` copies only C2 and C5 files (not Hallmark), gives collections different names
+from `alias.json`, adds new files inactive alongside old versions, and **rewrites `data/backgrounds/all_genes.txt`**
+from the C2/C5 genes, which changes every result; it also takes the MSigDB password on the command line.
+`update_msigdb_libraries.py` / `library_validator.py` perform the symbol harmonisation now built into
+`code/libraries.py` (and require Python 3.12+).
 
 ### `create_stringdb_library.py`
 

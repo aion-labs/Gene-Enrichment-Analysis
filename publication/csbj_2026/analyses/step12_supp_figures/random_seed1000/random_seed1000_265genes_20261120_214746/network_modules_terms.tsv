@@ -1,0 +1,12 @@
+Library	Term	Community	Genes	Shared genes (weighted degree)	Genes bridging to other communities
+C5: Gene Ontology: Cellular Component	GOCC: CILIARY PLASM	C1	8	1	0
+C5: Gene Ontology: Biological Process	GOBP: NEGATIVE REGULATION OF CELL PROJECTION ORGANIZATION	C1	6	3	1
+C5: Gene Ontology: Cellular Component	GOCC: BRUSH BORDER MEMBRANE	C1	4	1	0
+C5: Gene Ontology: Biological Process	GOBP: REGULATION OF LONG TERM SYNAPTIC POTENTIATION	C2	5	1	0
+C5: Gene Ontology: Molecular Function	GOMF: ACTININ BINDING	C2	3	2	1
+C5: Gene Ontology: Biological Process	GOBP: NUCLEAR TRANSCRIBED MRNA CATABOLIC PROCESS	C3	5	0	0
+C5: Gene Ontology: Biological Process	GOBP: EXPLORATION BEHAVIOR	C4	3	0	0
+C5: Gene Ontology: Biological Process	GOBP: POSITIVE REGULATION OF RESPONSE TO ENDOPLASMIC RETICULUM STRESS	C5	3	0	0
+C5: Gene Ontology: Biological Process	GOBP: PROSTAGLANDIN SECRETION	C6	3	0	0
+C5: Gene Ontology: Molecular Function	GOMF: ASPARTIC TYPE PEPTIDASE ACTIVITY	C7	3	0	0
+C2: Reactome Pathways	REACTOME: BETA DEFENSINS	C8	3	0	0

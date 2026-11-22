@@ -1,0 +1,76 @@
+Library	Iteration	Term	Description	Overlap size	p-value	-log(p-value)	Genes
+H: Hallmark Gene Sets	1	HALLMARK: COMPLEMENT	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HALLMARK_COMPLEMENT			-0.0	
+H: Hallmark Gene Sets	2	HALLMARK: MTORC1 SIGNALING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HALLMARK_MTORC1_SIGNALING			-0.0	
+H: Hallmark Gene Sets	3	HALLMARK: IL6 JAK STAT3 SIGNALING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HALLMARK_IL6_JAK_STAT3_SIGNALING			-0.0	
+C2: KEGG MEDICUS	1	KEGG: MEDICUS REFERENCE PRNP PI3K NOX2 SIGNALING PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_MEDICUS_REFERENCE_PRNP_PI3K_NOX2_SIGNALING_PATHWAY			-0.0	
+C2: Pathway Interaction Database	1	PID: PDGFRB PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/PID_PDGFRB_PATHWAY			-0.0	
+C2: Pathway Interaction Database	2	PID: CASPASE PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/PID_CASPASE_PATHWAY			-0.0	
+C2: Pathway Interaction Database	3	PID: RETINOIC ACID PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/PID_RETINOIC_ACID_PATHWAY			-0.0	
+C2: Reactome Pathways	1	REACTOME: NEUTROPHIL DEGRANULATION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_NEUTROPHIL_DEGRANULATION			-0.0	
+C2: Reactome Pathways	2	REACTOME: ROS AND RNS PRODUCTION IN PHAGOCYTES	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_ROS_AND_RNS_PRODUCTION_IN_PHAGOCYTES			-0.0	
+C2: Reactome Pathways	3	REACTOME: OTHER INTERLEUKIN SIGNALING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_OTHER_INTERLEUKIN_SIGNALING			-0.0	
+C2: Reactome Pathways	4	REACTOME: INTERLEUKIN 17 SIGNALING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_INTERLEUKIN_17_SIGNALING			-0.0	
+C2: Reactome Pathways	5	REACTOME: IMMUNOREGULATORY INTERACTIONS BETWEEN A LYMPHOID AND A NON LYMPHOID CELL	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_IMMUNOREGULATORY_INTERACTIONS_BETWEEN_A_LYMPHOID_AND_A_NON_LYMPHOID_CELL			-0.0	
+C2: Reactome Pathways	6	REACTOME: LEISHMANIA INFECTION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_LEISHMANIA_INFECTION			-0.0	
+C2: Reactome Pathways	7	REACTOME: NF KB ACTIVATION THROUGH FADD RIP 1 PATHWAY MEDIATED BY CASPASE 8 AND 10	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_NF_KB_ACTIVATION_THROUGH_FADD_RIP_1_PATHWAY_MEDIATED_BY_CASPASE_8_AND_10			-0.0	
+C2: Reactome Pathways	8	REACTOME: ASPARAGINE N LINKED GLYCOSYLATION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_ASPARAGINE_N_LINKED_GLYCOSYLATION			-0.0	
+C2: Reactome Pathways	9	REACTOME: SPHINGOLIPID METABOLISM	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_SPHINGOLIPID_METABOLISM			-0.0	
+C2: Reactome Pathways	10	REACTOME: RHOH GTPASE CYCLE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_RHOH_GTPASE_CYCLE			-0.0	
+C2: Reactome Pathways	11	REACTOME: VITAMIN B5 PANTOTHENATE METABOLISM	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_VITAMIN_B5_PANTOTHENATE_METABOLISM			-0.0	
+C2: Reactome Pathways	12	REACTOME: CYTOSOLIC SULFONATION OF SMALL MOLECULES	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_CYTOSOLIC_SULFONATION_OF_SMALL_MOLECULES			-0.0	
+C2: Reactome Pathways	13	REACTOME: DEFECTIVE INTRINSIC PATHWAY FOR APOPTOSIS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_DEFECTIVE_INTRINSIC_PATHWAY_FOR_APOPTOSIS			-0.0	
+C2: WikiPathways	1	WP: TYROBP CAUSAL NETWORK IN MICROGLIA	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_TYROBP_CAUSAL_NETWORK_IN_MICROGLIA			-0.0	
+C2: WikiPathways	2	WP: MICROGLIA PATHOGEN PHAGOCYTOSIS PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_MICROGLIA_PATHOGEN_PHAGOCYTOSIS_PATHWAY			-0.0	
+C2: WikiPathways	3	WP: FAS LIGAND PATHWAY AND STRESS INDUCTION OF HEAT SHOCK PROTEINS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_FAS_LIGAND_PATHWAY_AND_STRESS_INDUCTION_OF_HEAT_SHOCK_PROTEINS			-0.0	
+C2: WikiPathways	4	WP: CANNABINOID RECEPTOR SIGNALING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_CANNABINOID_RECEPTOR_SIGNALING			-0.0	
+C2: WikiPathways	5	WP: NUCLEOTIDEBINDING OLIGOMERIZATION DOMAIN NOD PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_NUCLEOTIDEBINDING_OLIGOMERIZATION_DOMAIN_NOD_PATHWAY			-0.0	
+C2: WikiPathways	6	WP: CONSTITUTIVE ANDROSTANE RECEPTOR PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_CONSTITUTIVE_ANDROSTANE_RECEPTOR_PATHWAY			-0.0	
+C2: WikiPathways	7	WP: TCA CYCLE AND DEFICIENCY OF PYRUVATE DEHYDROGENASE COMPLEX PDHC	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_TCA_CYCLE_AND_DEFICIENCY_OF_PYRUVATE_DEHYDROGENASE_COMPLEX_PDHC			-0.0	
+C2: WikiPathways	8	WP: AUTOPHAGY IN PANCREATIC DUCTAL ADENOCARCINOMA	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_AUTOPHAGY_IN_PANCREATIC_DUCTAL_ADENOCARCINOMA			-0.0	
+C2: KEGG Legacy	1	KEGG: LYSOSOME	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_LYSOSOME			-0.0	
+C2: KEGG Legacy	2	KEGG: FC GAMMA R MEDIATED PHAGOCYTOSIS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_FC_GAMMA_R_MEDIATED_PHAGOCYTOSIS			-0.0	
+C2: KEGG Legacy	3	KEGG: SULFUR METABOLISM	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_SULFUR_METABOLISM			-0.0	
+C2: KEGG Legacy	4	KEGG: AMINO SUGAR AND NUCLEOTIDE SUGAR METABOLISM	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_AMINO_SUGAR_AND_NUCLEOTIDE_SUGAR_METABOLISM			-0.0	
+C2: KEGG Legacy	5	KEGG: PANTOTHENATE AND COA BIOSYNTHESIS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_PANTOTHENATE_AND_COA_BIOSYNTHESIS			-0.0	
+C2: KEGG Legacy	6	KEGG: APOPTOSIS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_APOPTOSIS			-0.0	
+C5: Gene Ontology: Biological Process	1	GOBP: PHAGOCYTOSIS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_PHAGOCYTOSIS			-0.0	
+C5: Gene Ontology: Biological Process	2	GOBP: CYTOKINE MEDIATED SIGNALING PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_CYTOKINE_MEDIATED_SIGNALING_PATHWAY			-0.0	
+C5: Gene Ontology: Biological Process	3	GOBP: VACUOLAR ACIDIFICATION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_VACUOLAR_ACIDIFICATION			-0.0	
+C5: Gene Ontology: Biological Process	4	GOBP: AMIDE METABOLIC PROCESS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_AMIDE_METABOLIC_PROCESS			-0.0	
+C5: Gene Ontology: Biological Process	5	GOBP: GOLGI VESICLE TRANSPORT	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_GOLGI_VESICLE_TRANSPORT			-0.0	
+C5: Gene Ontology: Biological Process	6	GOBP: ALCOHOL CATABOLIC PROCESS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_ALCOHOL_CATABOLIC_PROCESS			-0.0	
+C5: Gene Ontology: Biological Process	7	GOBP: ANTIBACTERIAL INNATE IMMUNE RESPONSE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_ANTIBACTERIAL_INNATE_IMMUNE_RESPONSE			-0.0	
+C5: Gene Ontology: Biological Process	8	GOBP: ARP2 3 COMPLEX MEDIATED ACTIN NUCLEATION	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_ARP2_3_COMPLEX_MEDIATED_ACTIN_NUCLEATION			-0.0	
+C5: Gene Ontology: Biological Process	9	GOBP: REGULATION OF PEPTIDASE ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_REGULATION_OF_PEPTIDASE_ACTIVITY			-0.0	
+C5: Gene Ontology: Biological Process	10	GOBP: MONOATOMIC ANION HOMEOSTASIS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_MONOATOMIC_ANION_HOMEOSTASIS			-0.0	
+C5: Gene Ontology: Biological Process	11	GOBP: CARBOHYDRATE DERIVATIVE CATABOLIC PROCESS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_CARBOHYDRATE_DERIVATIVE_CATABOLIC_PROCESS			-0.0	
+C5: Gene Ontology: Biological Process	12	GOBP: BARBED END ACTIN FILAMENT CAPPING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_BARBED_END_ACTIN_FILAMENT_CAPPING			-0.0	
+C5: Gene Ontology: Cellular Component	1	GOCC: FICOLIN 1 RICH GRANULE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_FICOLIN_1_RICH_GRANULE			-0.0	
+C5: Gene Ontology: Cellular Component	2	GOCC: PHAGOCYTIC VESICLE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_PHAGOCYTIC_VESICLE			-0.0	
+C5: Gene Ontology: Cellular Component	3	GOCC: VACUOLAR MEMBRANE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_VACUOLAR_MEMBRANE			-0.0	
+C5: Gene Ontology: Cellular Component	4	GOCC: CELL LEADING EDGE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_CELL_LEADING_EDGE			-0.0	
+C5: Gene Ontology: Cellular Component	5	GOCC: CANONICAL INFLAMMASOME COMPLEX	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_CANONICAL_INFLAMMASOME_COMPLEX			-0.0	
+C5: Gene Ontology: Cellular Component	6	GOCC: MEMBRANE MICRODOMAIN	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_MEMBRANE_MICRODOMAIN			-0.0	
+C5: Gene Ontology: Cellular Component	7	GOCC: PALMITOYLTRANSFERASE COMPLEX	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_PALMITOYLTRANSFERASE_COMPLEX			-0.0	
+C5: Gene Ontology: Cellular Component	8	GOCC: AZUROPHIL GRANULE LUMEN	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_AZUROPHIL_GRANULE_LUMEN			-0.0	
+C5: Gene Ontology: Cellular Component	9	GOCC: COPI COATED VESICLE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_COPI_COATED_VESICLE			-0.0	
+C5: Gene Ontology: Cellular Component	10	GOCC: ORGANELLE MEMBRANE CONTACT SITE	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOCC_ORGANELLE_MEMBRANE_CONTACT_SITE			-0.0	
+C5: Gene Ontology: Molecular Function	1	GOMF: INHIBITORY MHC CLASS I RECEPTOR ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_INHIBITORY_MHC_CLASS_I_RECEPTOR_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	2	GOMF: PATTERN RECOGNITION RECEPTOR ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_PATTERN_RECOGNITION_RECEPTOR_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	3	GOMF: SUPEROXIDE GENERATING NADPH OXIDASE ACTIVATOR ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_SUPEROXIDE_GENERATING_NADPH_OXIDASE_ACTIVATOR_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	4	GOMF: SIALIC ACID BINDING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_SIALIC_ACID_BINDING			-0.0	
+C5: Gene Ontology: Molecular Function	5	GOMF: ATPASE COUPLED ION TRANSMEMBRANE TRANSPORTER ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_ATPASE_COUPLED_ION_TRANSMEMBRANE_TRANSPORTER_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	6	GOMF: PHOSPHOPROTEIN BINDING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_PHOSPHOPROTEIN_BINDING			-0.0	
+C5: Gene Ontology: Molecular Function	7	GOMF: CYTOKINE RECEPTOR ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_CYTOKINE_RECEPTOR_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	8	GOMF: MYOSIN BINDING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_MYOSIN_BINDING			-0.0	
+C5: Gene Ontology: Molecular Function	9	GOMF: RETROMER COMPLEX BINDING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_RETROMER_COMPLEX_BINDING			-0.0	
+C5: Gene Ontology: Molecular Function	10	GOMF: PHOSPHATIDYLINOSITOL 3 4 5 TRISPHOSPHATE BINDING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_PHOSPHATIDYLINOSITOL_3_4_5_TRISPHOSPHATE_BINDING			-0.0	
+C5: Gene Ontology: Molecular Function	11	GOMF: PROTEIN SERINE THREONINE TYROSINE KINASE ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_PROTEIN_SERINE_THREONINE_TYROSINE_KINASE_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	12	GOMF: GLUCOSIDASE ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_GLUCOSIDASE_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	13	GOMF: ACYLGLYCEROL O ACYLTRANSFERASE ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_ACYLGLYCEROL_O_ACYLTRANSFERASE_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	14	GOMF: CYSTEINE TYPE ENDOPEPTIDASE REGULATOR ACTIVITY INVOLVED IN APOPTOTIC PROCESS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_CYSTEINE_TYPE_ENDOPEPTIDASE_REGULATOR_ACTIVITY_INVOLVED_IN_APOPTOTIC_PROCESS			-0.0	
+C5: Gene Ontology: Molecular Function	15	GOMF: NUCLEOSIDE DIPHOSPHATE PHOSPHATASE ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_NUCLEOSIDE_DIPHOSPHATE_PHOSPHATASE_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	16	GOMF: NUCLEAR RECEPTOR BINDING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_NUCLEAR_RECEPTOR_BINDING			-0.0	
+C5: Gene Ontology: Molecular Function	17	GOMF: CARBOHYDRATE KINASE ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_CARBOHYDRATE_KINASE_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	18	GOMF: LYASE ACTIVITY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_LYASE_ACTIVITY			-0.0	
+C5: Gene Ontology: Molecular Function	19	GOMF: SNARE BINDING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_SNARE_BINDING			-0.0	

@@ -1,0 +1,104 @@
+Gene list: Konig_2008_HIV_dependency_factors.symbols
+Validated input genes: 285
+Largest cluster: 196 nodes, 148 genes, 48 terms, 473 edges, 3.1959 edges per gene, 9 collections
+
+====================================================================================================
+iGEA STATISTICAL REPORT (per-run random lists)
+====================================================================================================
+Random lists: 10000, each of 285 genes (= validated input size), drawn without replacement
+from the analysis background (23391 genes); seed 2026; 30.4 s on 4 process(es).
+Each random list was analysed with the same collections and parameters as the input:
+  p_value_method=Fisher's Exact Test (one-sided), p_threshold=0.01, min_overlap=3, min_term_size=10, max_term_size=600, max_iterations=30, background=all_genes
+Collections: H: Hallmark Gene Sets; C2: BioCarta; C2: KEGG MEDICUS; C2: Pathway Interaction Database; C2: Reactome Pathways; C2: WikiPathways; C2: KEGG Legacy; C5: Gene Ontology: Biological Process; C5: Gene Ontology: Cellular Component; C5: Gene Ontology: Molecular Function
+
+TERM LEVEL (signal-adjusted empirical q-value)
+  A random list of this size selects on average 16.9 terms by chance.
+  q = expected chance terms with p' <= p / selected terms with p' <= p (per collection, monotone),
+  re-estimated after treating genes of accepted terms as signal (122 of 285 genes
+  treated as noise in the final round; 1000 random lists per size step).
+  Terms kept (q < 0.1): 52 of 69. Random lists are filtered the same way.
+
+NETWORK LEVEL (largest connected cluster)
+  z = (observed - random mean) / random SD
+  empirical p = (r + 1) / (n + 1), r = random lists with a value >= observed, n = 10000
+  (smallest attainable p = 9.999e-05). The metrics describe the same cluster and are not independent tests.
+
+  Metric                      Observed  Rand mean  Rand SD  Rand max       z     r    Emp. p
+  ------------------------------------------------------------------------------------------
+  Cluster Size                     196      5.073    5.768        71   33.10     0 9.999e-05
+  Number of Genes                  148      4.218    4.917        56   29.24     0 9.999e-05
+  Number of Terms                   48      0.856    1.024        15   46.04     0 9.999e-05
+  Number of Edges                  473      4.832    6.248        90   74.94     0 9.999e-05
+  Average Edges per Gene         3.196      0.662    0.585     3.857    4.33     9 0.0009999
+
+TERMS
+  Collection                                It     p-value  q-value  Kept  Term
+  C2: BioCarta                               1    6.02e-06        0  yes   BIOCARTA_NPC_PATHWAY
+  C2: BioCarta                               2    3.28e-06        0  yes   BIOCARTA_PROTEASOME_PATHWAY
+  C2: BioCarta                               3    0.000124    0.003  yes   BIOCARTA_SM_PATHWAY
+  C2: BioCarta                               4    0.000622  0.00425  yes   BIOCARTA_VDR_PATHWAY
+  C2: KEGG Legacy                            1    2.98e-11        0  yes   KEGG_SPLICEOSOME
+  C2: KEGG Legacy                            2    4.91e-10        0  yes   KEGG_PROTEASOME
+  C2: KEGG Legacy                            3    0.000104    0.002  yes   KEGG_RNA_POLYMERASE
+  C2: KEGG Legacy                            4     0.00124   0.0168  yes   KEGG_UBIQUITIN_MEDIATED_PROTEOLYSIS
+  C2: KEGG Legacy                            5     0.00404   0.0346  yes   KEGG_NOTCH_SIGNALING_PATHWAY
+  C2: KEGG Legacy                            6     0.00498   0.0346  yes   KEGG_GALACTOSE_METABOLISM
+  C2: KEGG Legacy                            7     0.00546   0.0346  yes   KEGG_HOMOLOGOUS_RECOMBINATION
+  C2: KEGG MEDICUS                           1    5.38e-10        0  yes   KEGG_MEDICUS_VARIANT_MUTATION_CAUSED_ABERRANT_ABETA_TO_26S_PROTEASOME_MEDIATED_PROTEIN_DEGRADATION
+  C2: KEGG MEDICUS                           2    0.000394   0.0055  yes   KEGG_MEDICUS_REFERENCE_TRANSCRIPTION_COUPLED_NER
+  C2: KEGG MEDICUS                           3     0.00218   0.0113  yes   KEGG_MEDICUS_REFERENCE_NUCLEAR_EXPORT_OF_MRNA
+  C2: Pathway Interaction Database           1     0.00568     0.23  no    PID_SMAD2_3PATHWAY
+  C2: Reactome Pathways                      1     3.6e-23        0  yes   REACTOME_PROCESSING_OF_CAPPED_INTRON_CONTAINING_PRE_MRNA
+  C2: Reactome Pathways                      2    2.57e-13        0  yes   REACTOME_APC_C_CDH1_MEDIATED_DEGRADATION_OF_CDC20_AND_OTHER_APC_C_CDH1_TARGETED_PROTEINS_IN_LATE_MITOSIS_EARLY_G1
+  C2: Reactome Pathways                      3    3.01e-06 0.000333  yes   REACTOME_ADIPOGENESIS
+  C2: Reactome Pathways                      4     0.00232    0.114  no    REACTOME_FORMATION_OF_INCISION_COMPLEX_IN_GG_NER
+  C2: Reactome Pathways                      5     0.00576    0.139  no    REACTOME_TRANSLATION_OF_SARS_COV_1_STRUCTURAL_PROTEINS
+  C2: Reactome Pathways                      6     0.00543    0.139  no    REACTOME_TNF_SIGNALING
+  C2: Reactome Pathways                      7     0.00849    0.139  no    REACTOME_LYSOSOME_VESICLE_BIOGENESIS
+  C2: Reactome Pathways                      8     0.00931    0.139  no    REACTOME_RESOLUTION_OF_D_LOOP_STRUCTURES
+  C2: Reactome Pathways                      9     0.00904    0.139  no    REACTOME_NEUTROPHIL_DEGRANULATION
+  C2: WikiPathways                           1    2.06e-10        0  yes   WP_PROTEASOME_DEGRADATION
+  C2: WikiPathways                           2    1.48e-10        0  yes   WP_MRNA_PROCESSING
+  C2: WikiPathways                           3    0.000486   0.0248  yes   WP_NOTCH_SIGNALING_WP61
+  C2: WikiPathways                           4    0.000541   0.0248  yes   WP_EUKARYOTIC_TRANSCRIPTION_INITIATION
+  C2: WikiPathways                           5     0.00154   0.0496  yes   WP_PRADERWILLI_AND_ANGELMAN_SYNDROME
+  C5: Gene Ontology: Biological Process      1    4.73e-13        0  yes   GOBP_RNA_SPLICING_VIA_TRANSESTERIFICATION_REACTIONS
+  C5: Gene Ontology: Biological Process      2    5.42e-08        0  yes   GOBP_DNA_TEMPLATED_TRANSCRIPTION_INITIATION
+  C5: Gene Ontology: Biological Process      3    2.56e-06    0.001  yes   GOBP_ESTABLISHMENT_OF_RNA_LOCALIZATION
+  C5: Gene Ontology: Biological Process      4    2.93e-06    0.001  yes   GOBP_PROTEASOME_MEDIATED_UBIQUITIN_DEPENDENT_PROTEIN_CATABOLIC_PROCESS
+  C5: Gene Ontology: Biological Process      5    3.55e-05   0.0098  yes   GOBP_IMPORT_INTO_THE_MITOCHONDRION
+  C5: Gene Ontology: Biological Process      6     0.00036   0.0658  yes   GOBP_GALACTOSE_METABOLIC_PROCESS
+  C5: Gene Ontology: Biological Process      7     0.00102    0.115  no    GOBP_POSITIVE_REGULATION_OF_GLIOGENESIS
+  C5: Gene Ontology: Biological Process      8     0.00119    0.115  no    GOBP_PYRIMIDINE_NUCLEOBASE_METABOLIC_PROCESS
+  C5: Gene Ontology: Biological Process      9     0.00129    0.115  no    GOBP_DEPHOSPHORYLATION
+  C5: Gene Ontology: Biological Process     10     0.00218    0.153  no    GOBP_CELLULAR_RESPONSE_TO_CADMIUM_ION
+  C5: Gene Ontology: Biological Process     11     0.00453     0.19  no    GOBP_HOMOLOGOUS_RECOMBINATION
+  C5: Gene Ontology: Biological Process     12     0.00411     0.19  no    GOBP_PROTEIN_POLYUBIQUITINATION
+  C5: Gene Ontology: Biological Process     13       0.004     0.19  no    GOBP_COLLAGEN_FIBRIL_ORGANIZATION
+  C5: Gene Ontology: Biological Process     14      0.0088    0.245  no    GOBP_NEGATIVE_REGULATION_OF_PEPTIDE_SECRETION
+  C5: Gene Ontology: Biological Process     15     0.00912    0.245  no    GOBP_MICROTUBULE_POLYMERIZATION_OR_DEPOLYMERIZATION
+  C5: Gene Ontology: Cellular Component      1    2.37e-11        0  yes   GOCC_SPLICEOSOMAL_COMPLEX
+  C5: Gene Ontology: Cellular Component      2     7.5e-09        0  yes   GOCC_PROTEASOME_COMPLEX
+  C5: Gene Ontology: Cellular Component      3     2.3e-06 0.000333  yes   GOCC_NUCLEAR_PORE
+  C5: Gene Ontology: Cellular Component      4    3.35e-05  0.00175  yes   GOCC_CORE_MEDIATOR_COMPLEX
+  C5: Gene Ontology: Cellular Component      5    8.33e-05   0.0026  yes   GOCC_RNA_POLYMERASE_II_CORE_COMPLEX
+  C5: Gene Ontology: Cellular Component      6     0.00387    0.082  yes   GOCC_PERINUCLEAR_ENDOPLASMIC_RETICULUM
+  C5: Gene Ontology: Cellular Component      7     0.00519   0.0893  yes   GOCC_INNER_MITOCHONDRIAL_MEMBRANE_PROTEIN_COMPLEX
+  C5: Gene Ontology: Cellular Component      8     0.00751    0.103  no    GOCC_CYTOSOLIC_LARGE_RIBOSOMAL_SUBUNIT
+  C5: Gene Ontology: Molecular Function      1    2.97e-07        0  yes   GOMF_TRANSCRIPTION_COREGULATOR_ACTIVITY
+  C5: Gene Ontology: Molecular Function      2    3.83e-05    0.008  yes   GOMF_SINGLE_STRANDED_RNA_BINDING
+  C5: Gene Ontology: Molecular Function      3    0.000417   0.0387  yes   GOMF_GTPASE_BINDING
+  C5: Gene Ontology: Molecular Function      4    0.000564   0.0387  yes   GOMF_GENERAL_TRANSCRIPTION_INITIATION_FACTOR_BINDING
+  C5: Gene Ontology: Molecular Function      5    0.000829   0.0387  yes   GOMF_RNA_POLYMERASE_ACTIVITY
+  C5: Gene Ontology: Molecular Function      6     0.00139   0.0387  yes   GOMF_PROLINE_RICH_REGION_BINDING
+  C5: Gene Ontology: Molecular Function      7     0.00151   0.0387  yes   GOMF_PROTEIN_TYROSINE_PHOSPHATASE_ACTIVITY
+  C5: Gene Ontology: Molecular Function      8     0.00137   0.0387  yes   GOMF_MONOSACCHARIDE_BINDING
+  C5: Gene Ontology: Molecular Function      9     0.00216   0.0387  yes   GOMF_UNFOLDED_PROTEIN_BINDING
+  C5: Gene Ontology: Molecular Function     10     0.00217   0.0387  yes   GOMF_STRUCTURAL_CONSTITUENT_OF_NUCLEAR_PORE
+  C5: Gene Ontology: Molecular Function     11      0.0024   0.0387  yes   GOMF_SNRNA_BINDING
+  C5: Gene Ontology: Molecular Function     12     0.00218   0.0387  yes   GOMF_AMINOACYLTRANSFERASE_ACTIVITY
+  C5: Gene Ontology: Molecular Function     13     0.00346   0.0454  yes   GOMF_MANGANESE_ION_BINDING
+  C5: Gene Ontology: Molecular Function     14     0.00363   0.0454  yes   GOMF_LIGASE_ACTIVITY
+  H: Hallmark Gene Sets                      1    3.86e-06        0  yes   HALLMARK_MYC_TARGETS_V1
+  H: Hallmark Gene Sets                      2     0.00124   0.0115  yes   HALLMARK_DNA_REPAIR
+  H: Hallmark Gene Sets                      3     0.00378   0.0247  yes   HALLMARK_MTORC1_SIGNALING

@@ -1,0 +1,2 @@
+Configuration,iGEA terms,Kept (q < 0.10),Cluster genes,Cluster terms,Cluster edges,Edges/gene,Collections in cluster,z Cluster Size,z Number of Genes,z Number of Terms,z Number of Edges,z Average Edges per Gene,p Cluster Size,p Number of Genes,p Number of Terms,p Number of Edges,p Average Edges per Gene,Random lists
+all 10 (deduplicated),63,57,170,57,387,2.276,10,37.61,33.11,52.48,57.31,2.69,0.001,0.001,0.001,0.001,0.00799,1000

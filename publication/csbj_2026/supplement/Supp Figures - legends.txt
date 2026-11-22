@@ -1,0 +1,38 @@
+Supplementary Figure legends (iGEA, CSBJ revision v7; numbered in order of first citation)
+
+Supplementary Figure 1. Terms selected by ORA and iGEA in each gene-set collection for the HIV dependency factors (265 genes).
+Stacked bars: terms found by both methods (blue), by iGEA only (teal) and by ORA only (orange); numbers give
+both/iGEA only/ORA only. (A) Both methods at p < 0.01 (ORA 255 terms, iGEA 62). (B) ORA terms with Benjamini-Hochberg
+FDR < 0.05 within each collection (87) and iGEA terms that passed the term-level filter (empirical q < 0.10; 56). ORA used
+the same gene sets (10-600 genes), background and minimum overlap as iGEA. Term lists: Supplementary Tables 4 and 5.
+
+Supplementary Figure 2. Complete iGEA network of the HIV dependency factors with ten gene-set collections (56 terms with
+q < 0.10, 168 genes, seven communities). Numbered squares, terms (key on the right, grouped by community; number of genes in
+parentheses); dots and labels, genes; bold labels with black outline, bridge genes, which link terms of different
+communities. Communities are shaded and colored as in the key. Each gene is linked to at most one term per collection.
+
+Supplementary Figure 3. iGEA network of the HIV dependency factors with the three Gene Ontology collections (the network of
+Figure 2; 26 terms, 138 genes, six communities), with all gene names. Symbols as in Supplementary Figure 2.
+
+Supplementary Figure 4. Networks of random gene lists compared with the HIV network. (A-C) iGEA networks of three random
+lists of 265 genes drawn from the analysis background (260-264 genes after validation) and analyzed with the same ten
+collections and settings, without the term-level filter (all terms selected at p < 0.01); colors mark communities. The
+network of panel A is the random control list of the Results; LLM answers for it are in Supplementary Table 12.
+(D) Largest connected cluster of the HIV network (red line) compared with the largest clusters of the networks of 10,000
+random lists of the same size, built after the same term-level filter (q < 0.10); left, number of nodes (genes + terms);
+right, edges per gene. Empirical p = (r + 1)/(n + 1). Note the logarithmic y axes.
+
+Supplementary Figure 5. Size and density of random-list networks as a function of list size. Random lists of 50 to 1,000
+genes (1,000 lists per size) drawn from the analysis background and analyzed with the ten collections and default settings.
+(A) Networks of all terms selected at p < 0.01. (B) Networks after the term-level filter (q < 0.10). Left, number of nodes in
+the largest connected cluster; right, edges per gene in that cluster. Boxes, interquartile range with median; whiskers,
+1.5 x interquartile range; red, mean. Without the filter, the largest cluster grows with list size (median 7 nodes for 50
+genes, 147 for 1,000) while edges per gene stays between 1.2 and 1.5; after the filter, random networks remain small
+(median 0-7 nodes) at every size.
+
+Supplementary Figure 6. ORA and iGEA networks of the hypoxia (A, B) and influenza vaccination (C, D) gene lists with ten
+gene-set collections. (A) ORA, hypoxia. (B) iGEA, hypoxia. (C) ORA, vaccination. (D) iGEA, vaccination. Squares, terms (size
+proportional to the number of genes); circles, genes; black outline, bridge genes. Communities were detected with the same
+procedure in all panels and are shaded; each legend lists the communities by their lead term (the term with the most genes)
+and number of terms. ORA: terms with FDR < 0.05; iGEA: terms with q < 0.10. Network statistics: Supplementary Table 6.
+Described in Supplementary Note 1.

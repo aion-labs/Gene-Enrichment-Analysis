@@ -7,7 +7,7 @@
 ## Prerequisites
 - Have a list of genes for enrichment analysis in official human gene symbols or entrez IDs.
 - Unless you use all genes as a background, have a background file with all measured genes ready in the human gene symbols or entrez IDs.
-- You may add new gene set libraries in GMT format. Make sure they are properly listed in the data folder and added to the alias.json file.  
+- You may add your own gene set collections in GMT format with `python code/libraries.py add` (see "Managing gene-set collections").
 - NCBI gene data used to validate symbols ship with the repository (`data/recent_release/Homo_sapiens.gene_info.gz`,
   `gene_history_9606.gz`). iGEA stops with an error if they are missing, so results never depend on the working directory.
 - One universe: input genes outside the background are removed (and listed), and gene sets are restricted to the
@@ -31,9 +31,9 @@ For automated analysis, batch processing, or integration into workflows, use the
 
 ```bash
 # Basic usage
-python code/cli.py --genelist your_genes.txt --libraries "H: Hallmark Gene Sets"
+python code/cli.py --genelist your_genes.txt --collections data/libraries/h.all.v2025.1.Hs.symbols.gmt
 
-# Run with all active libraries
+# Run with all active collections
 python code/cli.py --genelist your_genes.txt
 
 # Iterative enrichment mode
@@ -100,6 +100,35 @@ Statistics run by default in iterative mode; `--q-threshold 1` keeps all selecte
 statistics (network from all terms, unfiltered); `--null-source stored` reproduces the previous behaviour
 (precomputed permutations, default background only).
 
+## Managing gene-set collections
+
+Collections live in `data/libraries/` and are listed in `data/libraries/alias.json` (name, file, active,
+colour). Active collections are used by default by the CLI and the app (the 10 used in the paper are active).
+
+```
+python code/libraries.py list                                        # * = active
+python code/libraries.py activate "C5: Human Phenotype Ontology"
+python code/libraries.py deactivate "C2: BioCarta"
+python code/libraries.py add my_sets.gmt --name "Custom: My sets"    # --inactive, --color "#1F77B4"
+python code/libraries.py remove "Custom: My sets"                    # file moved to data/libraries/previous/removed/
+```
+
+Updating to a new MSigDB release (download the release zip from the MSigDB website, free login) and,
+first, the NCBI gene data it should be harmonised with (`Homo_sapiens.gene_info.gz` and `gene_history.gz`
+from NCBI's `gene/DATA` area):
+
+```
+python code/libraries.py update-gene-data --gene-info Homo_sapiens.gene_info.gz --gene-history gene_history.gz
+python code/libraries.py update-msigdb --zip msigdb_v2026.1.Hs_files_to_download_locally.zip --dry-run
+python code/libraries.py update-msigdb --zip msigdb_v2026.1.Hs_files_to_download_locally.zip
+```
+
+Every MSigDB collection listed in `alias.json` is replaced by its new version (`--only c2.cp.reactome ...` or
+`--active-only` to limit), keeping its name, colour and active flag; gene symbols are mapped to current NCBI
+symbols (unmapped symbols are kept); previous files are moved to `data/libraries/previous/vYYYY.N/`. The
+background (`data/backgrounds/all_genes.txt`) is not changed. Results depend on the MSigDB release and NCBI
+gene data, so record both; the paper uses MSigDB 2025.1 with the bundled gene data (tag `csbj-v7-revision`).
+
 ## Communities, hubs and LLM interpretation
 
 Each iterative run also writes:
@@ -137,11 +166,11 @@ The app performs crucial validation steps to ensure the accuracy of the analysis
 - **Background Check**: Validates the input gene set against a predefined background gene list, which helps in identifying any genes that might not be present in the background list.
 
 #### Results Display and Interaction
-- Interactive Bar Graph: An interactive bar graph provides a visual representation of the results for each gene set library.
+- Interactive Bar Graph: An interactive bar graph provides a visual representation of the results for each gene set collection.
 
 #### Data Export Options
-- Individual Library Export: Users can save the results for each gene set library in TSV and JSON formats.
-- Consolidated Export: There is an option to save results for all libraries in a single TSV file.
+- Individual Collection Export: Users can save the results for each gene set collection in TSV and JSON formats.
+- Consolidated Export: There is an option to save results for all collections in a single TSV file.
 
 #### Results Management
 All results, along with the complementary metadata, are stored in the `results` folder and are assigned unique filenames.
@@ -153,7 +182,7 @@ Users can customize the number of results to display in both the chart and the b
 
 #### P-value Calculation Methods
 The app offers various statistical methods to calculate p-values:
-- Fisher's Exact Test.
+- Fisher's exact test, one-sided (over-representation; default; same p-values as the hypergeometric test).
 - Hypergeometric Test.
 - Chi-Squared Test.
 
@@ -161,4 +190,13 @@ The app offers various statistical methods to calculate p-values:
 
 #### Custom Reference Data Upload
 Background Gene List Upload: Users can upload their background gene lists as .txt files containing newline-separated gene names or Entrez IDs.
-Gene Set Libraries Upload: The app allows for the upload of gene set libraries in the .gmt file format, enabling the use of custom gene sets in the analysis.
+Gene Set Collections: add custom collections in .gmt format from the command line (see *Managing gene-set collections*).
+
+## Publication analyses
+
+Analyses, figures and supplementary material for the iGEA paper are archived in [`publication/`](publication/README.md),
+separate from the software.
+
+## License
+
+This project is licensed under the **GNU General Public License v3.0**; see [LICENSE](LICENSE).

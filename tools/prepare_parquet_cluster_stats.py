@@ -150,7 +150,7 @@ def main():
         help='Output directory for Parquet files'
     )
     parser.add_argument(
-        '--libraries',
+        '--collections',
         type=str,
         nargs='+',
         default=None,

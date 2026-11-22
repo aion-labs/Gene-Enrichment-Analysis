@@ -1,0 +1,274 @@
+Below is an iterative gene set enrichment (iGEA) network computed from a gene list. Iterative means that for each gene set collection, the top enriched gene set is found, saved and its genes are removed from the gene list; the remaining genes are then tested again. Thus each gene appears at most once per collection but can be linked to terms from different collections. The network of genes and gene sets (= terms) is given in DOT format, preceded by its statistics and communities.
+
+**STATISTICAL CONTEXT:**
+The input contained 265 validated genes. iGEA selected 33 terms; 26 passed the term-level filter (q-value < 0.1, an empirical false discovery rate estimated from 10,000 random gene lists of the same size, background and settings) and form this network. A random gene list of this size selects about 10.25 terms by chance.
+
+Network-level test: the largest connected cluster of this network compared with the networks built the same way (same filter) from the 10,000 random gene lists. Empirical p = (r + 1) / (10,000 + 1), where r is the number of random lists with a value at least as large. The metrics describe the same cluster and are not independent tests.
+
+| Metric | This network | Random mean | Empirical p |
+|---|---|---|---|
+| Nodes (genes + terms) in the largest connected cluster | 164 | 2.06 | p < 0.0001 (no random list reached this value) |
+| Genes in the largest cluster | 138 | 1.78 | p < 0.0001 (no random list reached this value) |
+| Terms in the largest cluster | 26 | 0.283 | p < 0.0001 (no random list reached this value) |
+| Edges in the largest cluster | 212 | 1.83 | p < 0.0001 (no random list reached this value) |
+| Average edges per gene | 1.536 | 0.269 | p = 0.0047 |
+
+How to use the statistics: the network is not distinguishable from what random gene lists produce if the empirical p for the number of nodes in the largest cluster is 0.05 or higher. In that case, say so plainly, keep the rest short and tentative, and do not propose an experimental context. Do not use p-values, q-values or iteration numbers to rank biological importance.
+
+**COMMUNITIES:**
+Terms were grouped into communities with Leiden (igraph, modularity) on the term network, in which two terms are linked when they share genes (modularity 0.68; the same partition was found with 100% of 100 random seeds). Communities are algorithmic groupings, not biological labels; the cluster blocks in the DOT list each community's terms and genes. Gene degree is the number of terms a gene connects to; in iGEA this equals the number of collections that place the gene in the network. Bridge genes connect terms in different communities.
+
+| Community | Terms | Genes | Lead term (most genes) | Top hub genes (degree) | Bridge genes |
+|---|---|---|---|---|---|
+| C1 | 6 | 48 | GOMF: CATALYTIC ACTIVITY ACTING ON RNA | AGAP2 (2), AKT1 (2), AP2M1 (2), CD4 (2), CRTC2 (2) | 7 |
+| C2 | 7 | 34 | GOBP: GOLGI VESICLE TRANSPORT | RAB1B (3), RAB2A (3), SPAST (3), ATG12 (2), CLN3 (2) | 2 |
+| C3 | 5 | 21 | GOBP: NUCLEAR EXPORT | NUP107 (3), NUP133 (3), NUP153 (3), NUP155 (3), NUP160 (3) | 1 |
+| C4 | 3 | 20 | GOMF: TRANSCRIPTION COREGULATOR ACTIVITY | MED14 (3), MED4 (3), MED6 (3), MED7 (3), MED28 (2) | 0 |
+| C5 | 3 | 15 | GOCC: ENDOPLASMIC RETICULUM PROTEIN CONTAINING COMPLEX | PIGY (3), A4GALT (2), DPM1 (2), PIGH (2), PIGK (2) | 0 |
+| C6 | 2 | 10 | GOCC: CULLIN RING UBIQUITIN LIGASE COMPLEX | ANKRD9 (2), DCAF1 (2), FBXW11 (2), KBTBD7 (2), KLHDC2 (2) | 0 |
+
+**NETWORK (DOT):**
+graph enrichment_network {
+  // 265 validated input genes; network = terms passing the term-level filter
+  graph [input_genes=265, random_lists=10000, q_threshold="0.1", network_p="<0.0001"];
+  // communities: Leiden (igraph, modularity), modularity="0.68"
+  graph [community_method="Leiden (igraph, modularity)", modularity="0.68"];
+  subgraph cluster_C1 {
+    label="C1"; lead_term="GOMF: CATALYTIC ACTIVITY ACTING ON RNA"; terms=6; genes=48;
+    "term_GOBP_POSITIVE_REGULATION_OF_MOLECULAR_FUNCTION" [type=term, label="GOBP: POSITIVE REGULATION OF MOLECULAR FUNCTION", collection="C5: Gene Ontology: Biological Process", iteration=6, p="0.00057", q="0.098", community=C1, genes=16];
+    "term_GOCC_NUCLEAR_EXOSOME_RNASE_COMPLEX" [type=term, label="GOCC: NUCLEAR EXOSOME RNASE COMPLEX", collection="C5: Gene Ontology: Cellular Component", iteration=6, p="0.0012", q="0.035", community=C1, genes=3];
+    "term_GOCC_CLATHRIN_COATED_VESICLE_MEMBRANE" [type=term, label="GOCC: CLATHRIN COATED VESICLE MEMBRANE", collection="C5: Gene Ontology: Cellular Component", iteration=9, p="0.0075", q="0.085", community=C1, genes=6];
+    "term_GOCC_SPINDLE" [type=term, label="GOCC: SPINDLE", collection="C5: Gene Ontology: Cellular Component", iteration=10, p="0.0066", q="0.085", community=C1, genes=12];
+    "term_GOMF_CATALYTIC_ACTIVITY_ACTING_ON_RNA" [type=term, label="GOMF: CATALYTIC ACTIVITY ACTING ON RNA", collection="C5: Gene Ontology: Molecular Function", iteration=2, p="1.6e-05", q="0.0015", community=C1, genes=18];
+    "term_GOMF_CARGO_ADAPTOR_ACTIVITY" [type=term, label="GOMF: CARGO ADAPTOR ACTIVITY", collection="C5: Gene Ontology: Molecular Function", iteration=7, p="0.001", q="0.036", community=C1, genes=3];
+    "AGBL5" [type=gene, degree=1, community=C1];
+    "AGO3" [type=gene, degree=1, community=C1];
+    "AKT1" [type=gene, degree=2, community=C1];
+    "ALKBH8" [type=gene, degree=1, community=C1];
+    "AP2M1" [type=gene, degree=2, community=C1];
+    "ATP6V0A1" [type=gene, degree=1, community=C1];
+    "CAPN6" [type=gene, degree=1, community=C1];
+    "CARD16" [type=gene, degree=1, community=C1];
+    "CD4" [type=gene, degree=2, community=C1];
+    "CSPP1" [type=gene, degree=1, community=C1];
+    "DDX10" [type=gene, degree=1, community=C1];
+    "DDX53" [type=gene, degree=1, community=C1];
+    "DDX55" [type=gene, degree=1, community=C1];
+    "DHX33" [type=gene, degree=2, community=C1];
+    "DIMT1" [type=gene, degree=1, community=C1];
+    "EDNRA" [type=gene, degree=1, community=C1];
+    "EGF" [type=gene, degree=2, community=C1];
+    "EGFR" [type=gene, degree=1, community=C1];
+    "ERI2" [type=gene, degree=1, community=C1];
+    "EXOSC3" [type=gene, degree=2, community=C1];
+    "EXOSC5" [type=gene, degree=2, community=C1];
+    "HIP1R" [type=gene, degree=2, community=C1];
+    "IGHMBP2" [type=gene, degree=1, community=C1];
+    "IKBKG" [type=gene, degree=2, community=C1];
+    "KDM4D" [type=gene, degree=1, community=C1];
+    "KMT5B" [type=gene, degree=1, community=C1];
+    "LARS1" [type=gene, degree=2, community=C1];
+    "LCP2" [type=gene, degree=1, community=C1];
+    "MAP4" [type=gene, degree=1, community=C1];
+    "MPHOSPH6" [type=gene, degree=1, community=C1];
+    "NIPSNAP2" [type=gene, degree=1, community=C1];
+    "POLR1H" [type=gene, degree=1, community=C1];
+    "POLR3A" [type=gene, degree=1, community=C1];
+    "POLR3F" [type=gene, degree=1, community=C1];
+    "RAPGEF1" [type=gene, degree=1, community=C1];
+    "RELA" [type=gene, degree=1, community=C1];
+    "STAC2" [type=gene, degree=1, community=C1];
+    "TFDP2" [type=gene, degree=1, community=C1];
+    "TRMT5" [type=gene, degree=1, community=C1];
+    "YTHDC2" [type=gene, degree=1, community=C1];
+  }
+  subgraph cluster_C2 {
+    label="C2"; lead_term="GOBP: GOLGI VESICLE TRANSPORT"; terms=7; genes=34;
+    "term_GOBP_GOLGI_VESICLE_TRANSPORT" [type=term, label="GOBP: GOLGI VESICLE TRANSPORT", collection="C5: Gene Ontology: Biological Process", iteration=1, p="2.4e-08", q="0", community=C2, genes=20];
+    "term_GOBP_REGULATION_OF_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY" [type=term, label="GOBP: REGULATION OF PROTEIN CONTAINING COMPLEX DISASSEMBLY", collection="C5: Gene Ontology: Biological Process", iteration=5, p="0.00014", q="0.035", community=C2, genes=8];
+    "term_GOCC_GOLGI_TRANSPORT_COMPLEX" [type=term, label="GOCC: GOLGI TRANSPORT COMPLEX", collection="C5: Gene Ontology: Cellular Component", iteration=3, p="0.00037", q="0.021", community=C2, genes=3];
+    "term_GOCC_ENDOPLASMIC_RETICULUM_GOLGI_INTERMEDIATE_COMPARTMENT_MEMBRANE" [type=term, label="GOCC: ENDOPLASMIC RETICULUM GOLGI INTERMEDIATE COMPARTMENT MEMBRANE", collection="C5: Gene Ontology: Cellular Component", iteration=5, p="0.00087", q="0.031", community=C2, genes=6];
+    "term_GOCC_AUTOPHAGOSOME" [type=term, label="GOCC: AUTOPHAGOSOME", collection="C5: Gene Ontology: Cellular Component", iteration=11, p="0.0098", q="0.098", community=C2, genes=5];
+    "term_GOMF_ALPHA_TUBULIN_BINDING" [type=term, label="GOMF: ALPHA TUBULIN BINDING", collection="C5: Gene Ontology: Molecular Function", iteration=6, p="0.00094", q="0.036", community=C2, genes=4];
+    "term_GOMF_G_PROTEIN_ACTIVITY" [type=term, label="GOMF: G PROTEIN ACTIVITY", collection="C5: Gene Ontology: Molecular Function", iteration=9, p="0.003", q="0.066", community=C2, genes=4];
+    "ATG12" [type=gene, degree=2, community=C2];
+    "ATG16L2" [type=gene, degree=1, community=C2];
+    "CLN3" [type=gene, degree=2, community=C2];
+    "COG2" [type=gene, degree=2, community=C2];
+    "COG3" [type=gene, degree=2, community=C2];
+    "COG4" [type=gene, degree=2, community=C2];
+    "DNAL1" [type=gene, degree=1, community=C2];
+    "EPS8" [type=gene, degree=1, community=C2];
+    "FLII" [type=gene, degree=1, community=C2];
+    "FNTA" [type=gene, degree=1, community=C2];
+    "GABARAPL2" [type=gene, degree=2, community=C2];
+    "GOSR2" [type=gene, degree=2, community=C2];
+    "LAPTM5" [type=gene, degree=1, community=C2];
+    "MID1IP1" [type=gene, degree=1, community=C2];
+    "RAB1B" [type=gene, degree=3, community=C2];
+    "RAB28" [type=gene, degree=1, community=C2];
+    "RAB2A" [type=gene, degree=3, community=C2];
+    "RAB6A" [type=gene, degree=1, community=C2];
+    "RAB6B" [type=gene, degree=1, community=C2];
+    "RAB6C" [type=gene, degree=1, community=C2];
+    "RAP1B" [type=gene, degree=1, community=C2];
+    "SCFD1" [type=gene, degree=1, community=C2];
+    "SPTAN1" [type=gene, degree=1, community=C2];
+    "SPTBN1" [type=gene, degree=1, community=C2];
+    "STX5" [type=gene, degree=2, community=C2];
+    "TAOK1" [type=gene, degree=2, community=C2];
+    "TMED2" [type=gene, degree=2, community=C2];
+    "TRAPPC1" [type=gene, degree=1, community=C2];
+    "TRAPPC8" [type=gene, degree=1, community=C2];
+    "UBQLN4" [type=gene, degree=2, community=C2];
+  }
+  subgraph cluster_C3 {
+    label="C3"; lead_term="GOBP: NUCLEAR EXPORT"; terms=5; genes=21;
+    "term_GOBP_NUCLEAR_EXPORT" [type=term, label="GOBP: NUCLEAR EXPORT", collection="C5: Gene Ontology: Biological Process", iteration=2, p="1.5e-05", q="0.006", community=C3, genes=11];
+    "term_GOCC_NUCLEAR_PORE_OUTER_RING" [type=term, label="GOCC: NUCLEAR PORE OUTER RING", collection="C5: Gene Ontology: Cellular Component", iteration=1, p="1.2e-05", q="0.002", community=C3, genes=4];
+    "term_GOCC_NUCLEAR_PORE" [type=term, label="GOCC: NUCLEAR PORE", collection="C5: Gene Ontology: Cellular Component", iteration=8, p="0.0074", q="0.085", community=C3, genes=5];
+    "term_GOMF_STRUCTURAL_CONSTITUENT_OF_NUCLEAR_PORE" [type=term, label="GOMF: STRUCTURAL CONSTITUENT OF NUCLEAR PORE", collection="C5: Gene Ontology: Molecular Function", iteration=1, p="1e-06", q="0", community=C3, genes=6];
+    "term_GOMF_GTPASE_ACTIVATOR_ACTIVITY" [type=term, label="GOMF: GTPASE ACTIVATOR ACTIVITY", collection="C5: Gene Ontology: Molecular Function", iteration=3, p="0.00061", q="0.036", community=C3, genes=11];
+    "ARHGAP32" [type=gene, degree=1, community=C3];
+    "ARHGEF12" [type=gene, degree=1, community=C3];
+    "ARHGEF19" [type=gene, degree=1, community=C3];
+    "FAM76B" [type=gene, degree=1, community=C3];
+    "GAPVD1" [type=gene, degree=1, community=C3];
+    "GRTP1" [type=gene, degree=1, community=C3];
+    "MDN1" [type=gene, degree=1, community=C3];
+    "NUP107" [type=gene, degree=3, community=C3];
+    "NUP133" [type=gene, degree=3, community=C3];
+    "NUP153" [type=gene, degree=3, community=C3];
+    "NUP155" [type=gene, degree=3, community=C3];
+    "NUP160" [type=gene, degree=3, community=C3];
+    "NUP85" [type=gene, degree=3, community=C3];
+    "RANBP2" [type=gene, degree=3, community=C3];
+    "RGPD5" [type=gene, degree=2, community=C3];
+    "RGPD8" [type=gene, degree=2, community=C3];
+    "THOC2" [type=gene, degree=1, community=C3];
+    "TIAM2" [type=gene, degree=1, community=C3];
+  }
+  subgraph cluster_C4 {
+    label="C4"; lead_term="GOMF: TRANSCRIPTION COREGULATOR ACTIVITY"; terms=3; genes=20;
+    "term_GOBP_DNA_TEMPLATED_TRANSCRIPTION_ELONGATION" [type=term, label="GOBP: DNA TEMPLATED TRANSCRIPTION ELONGATION", collection="C5: Gene Ontology: Biological Process", iteration=3, p="4.9e-05", q="0.019", community=C4, genes=9];
+    "term_GOCC_CORE_MEDIATOR_COMPLEX" [type=term, label="GOCC: CORE MEDIATOR COMPLEX", collection="C5: Gene Ontology: Cellular Component", iteration=2, p="4.2e-05", q="0.0045", community=C4, genes=5];
+    "term_GOMF_TRANSCRIPTION_COREGULATOR_ACTIVITY" [type=term, label="GOMF: TRANSCRIPTION COREGULATOR ACTIVITY", collection="C5: Gene Ontology: Molecular Function", iteration=4, p="0.0011", q="0.036", community=C4, genes=15];
+    "ARGLU1" [type=gene, degree=1, community=C4];
+    "BCL9" [type=gene, degree=1, community=C4];
+    "CRTC3" [type=gene, degree=1, community=C4];
+    "DNAJB1" [type=gene, degree=1, community=C4];
+    "ELOA" [type=gene, degree=1, community=C4];
+    "ERCC3" [type=gene, degree=1, community=C4];
+    "FHL3" [type=gene, degree=1, community=C4];
+    "INTS7" [type=gene, degree=1, community=C4];
+    "KDM7A" [type=gene, degree=1, community=C4];
+    "MED14" [type=gene, degree=3, community=C4];
+    "MED28" [type=gene, degree=2, community=C4];
+    "MED4" [type=gene, degree=3, community=C4];
+    "MED6" [type=gene, degree=3, community=C4];
+    "MED7" [type=gene, degree=3, community=C4];
+    "NCOR2" [type=gene, degree=1, community=C4];
+    "NR0B2" [type=gene, degree=1, community=C4];
+    "PHF12" [type=gene, degree=1, community=C4];
+  }
+  subgraph cluster_C5 {
+    label="C5"; lead_term="GOCC: ENDOPLASMIC RETICULUM PROTEIN CONTAINING COMPLEX"; terms=3; genes=15;
+    "term_GOBP_GLYCOLIPID_BIOSYNTHETIC_PROCESS" [type=term, label="GOBP: GLYCOLIPID BIOSYNTHETIC PROCESS", collection="C5: Gene Ontology: Biological Process", iteration=4, p="3.9e-05", q="0.019", community=C5, genes=7];
+    "term_GOCC_ENDOPLASMIC_RETICULUM_PROTEIN_CONTAINING_COMPLEX" [type=term, label="GOCC: ENDOPLASMIC RETICULUM PROTEIN CONTAINING COMPLEX", collection="C5: Gene Ontology: Cellular Component", iteration=4, p="0.00043", q="0.021", community=C5, genes=8];
+    "term_GOMF_HEXOSYLTRANSFERASE_ACTIVITY" [type=term, label="GOMF: HEXOSYLTRANSFERASE ACTIVITY", collection="C5: Gene Ontology: Molecular Function", iteration=8, p="0.0027", q="0.066", community=C5, genes=7];
+    "A4GALT" [type=gene, degree=2, community=C5];
+    "DDOST" [type=gene, degree=1, community=C5];
+    "DPM1" [type=gene, degree=2, community=C5];
+    "PDIA6" [type=gene, degree=1, community=C5];
+    "PIGH" [type=gene, degree=2, community=C5];
+    "PIGK" [type=gene, degree=2, community=C5];
+    "PIGY" [type=gene, degree=3, community=C5];
+    "PLOD3" [type=gene, degree=1, community=C5];
+    "PPIB" [type=gene, degree=1, community=C5];
+    "SPCS3" [type=gene, degree=1, community=C5];
+    "ST3GAL5" [type=gene, degree=1, community=C5];
+    "STT3A" [type=gene, degree=2, community=C5];
+    "TM9SF2" [type=gene, degree=1, community=C5];
+    "TMTC1" [type=gene, degree=1, community=C5];
+  }
+  subgraph cluster_C6 {
+    label="C6"; lead_term="GOCC: CULLIN RING UBIQUITIN LIGASE COMPLEX"; terms=2; genes=10;
+    "term_GOCC_CULLIN_RING_UBIQUITIN_LIGASE_COMPLEX" [type=term, label="GOCC: CULLIN RING UBIQUITIN LIGASE COMPLEX", collection="C5: Gene Ontology: Cellular Component", iteration=7, p="0.004", q="0.077", community=C6, genes=9];
+    "term_GOMF_ENZYME_SUBSTRATE_ADAPTOR_ACTIVITY" [type=term, label="GOMF: ENZYME SUBSTRATE ADAPTOR ACTIVITY", collection="C5: Gene Ontology: Molecular Function", iteration=5, p="0.00085", q="0.036", community=C6, genes=7];
+    "ANKRD9" [type=gene, degree=2, community=C6];
+    "DCAF1" [type=gene, degree=2, community=C6];
+    "FBH1" [type=gene, degree=1, community=C6];
+    "FBXW11" [type=gene, degree=2, community=C6];
+    "KBTBD7" [type=gene, degree=2, community=C6];
+    "KLHDC2" [type=gene, degree=2, community=C6];
+    "KLHL1" [type=gene, degree=2, community=C6];
+    "PPP2R2A" [type=gene, degree=1, community=C6];
+    "WDTC1" [type=gene, degree=1, community=C6];
+  }
+  // bridge genes: connect terms in different communities
+  "AGAP2" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  "CRTC2" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  "CTDP1" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  "DEPDC5" [type=gene, degree=2, community=C3, bridge=true, participation="0.5"];
+  "ETF1" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  "GOLPH3" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  "KAT2A" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  "MGAT1" [type=gene, degree=2, community=C2, bridge=true, participation="0.5"];
+  "SPAST" [type=gene, degree=3, community=C2, bridge=true, participation="0.44"];
+  "WNK1" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  // edges: each term with its genes
+  "term_GOBP_GOLGI_VESICLE_TRANSPORT" -- {"CLN3" "COG2" "COG3" "COG4" "GABARAPL2" "GOLPH3" "GOSR2" "LAPTM5" "RAB1B" "RAB2A" "RAB6A" "RAB6B" "RAB6C" "SCFD1" "SPAST" "SPTBN1" "STX5" "TMED2" "TRAPPC1" "TRAPPC8"};
+  "term_GOBP_NUCLEAR_EXPORT" -- {"FAM76B" "MDN1" "NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85" "RANBP2" "THOC2" "WNK1"};
+  "term_GOBP_DNA_TEMPLATED_TRANSCRIPTION_ELONGATION" -- {"CTDP1" "ELOA" "ERCC3" "INTS7" "MED14" "MED28" "MED4" "MED6" "MED7"};
+  "term_GOBP_GLYCOLIPID_BIOSYNTHETIC_PROCESS" -- {"A4GALT" "DPM1" "PIGH" "PIGK" "PIGY" "ST3GAL5" "TM9SF2"};
+  "term_GOBP_REGULATION_OF_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY" -- {"ATG12" "EPS8" "ETF1" "FLII" "MID1IP1" "SPTAN1" "TAOK1" "UBQLN4"};
+  "term_GOBP_POSITIVE_REGULATION_OF_MOLECULAR_FUNCTION" -- {"AGAP2" "AKT1" "CARD16" "CD4" "CRTC2" "DHX33" "EDNRA" "EGF" "IKBKG" "KDM4D" "LARS1" "LCP2" "NIPSNAP2" "RAPGEF1" "RELA" "STAC2"};
+  "term_GOCC_NUCLEAR_PORE_OUTER_RING" -- {"NUP107" "NUP133" "NUP160" "NUP85"};
+  "term_GOCC_CORE_MEDIATOR_COMPLEX" -- {"MED14" "MED28" "MED4" "MED6" "MED7"};
+  "term_GOCC_GOLGI_TRANSPORT_COMPLEX" -- {"COG2" "COG3" "COG4"};
+  "term_GOCC_ENDOPLASMIC_RETICULUM_PROTEIN_CONTAINING_COMPLEX" -- {"DDOST" "PDIA6" "PIGH" "PIGK" "PIGY" "PPIB" "SPCS3" "STT3A"};
+  "term_GOCC_ENDOPLASMIC_RETICULUM_GOLGI_INTERMEDIATE_COMPARTMENT_MEMBRANE" -- {"GOSR2" "MGAT1" "RAB1B" "RAB2A" "STX5" "TMED2"};
+  "term_GOCC_NUCLEAR_EXOSOME_RNASE_COMPLEX" -- {"EXOSC3" "EXOSC5" "MPHOSPH6"};
+  "term_GOCC_CULLIN_RING_UBIQUITIN_LIGASE_COMPLEX" -- {"ANKRD9" "DCAF1" "DEPDC5" "FBH1" "FBXW11" "KBTBD7" "KLHDC2" "KLHL1" "WDTC1"};
+  "term_GOCC_NUCLEAR_PORE" -- {"NUP153" "NUP155" "RANBP2" "RGPD5" "RGPD8"};
+  "term_GOCC_CLATHRIN_COATED_VESICLE_MEMBRANE" -- {"AP2M1" "ATP6V0A1" "CD4" "EGF" "EGFR" "HIP1R"};
+  "term_GOCC_SPINDLE" -- {"AGBL5" "AKT1" "CAPN6" "CSPP1" "CTDP1" "IKBKG" "KAT2A" "KMT5B" "MAP4" "SPAST" "TFDP2" "WNK1"};
+  "term_GOCC_AUTOPHAGOSOME" -- {"ATG12" "ATG16L2" "CLN3" "GABARAPL2" "UBQLN4"};
+  "term_GOMF_STRUCTURAL_CONSTITUENT_OF_NUCLEAR_PORE" -- {"NUP107" "NUP133" "NUP153" "NUP155" "NUP160" "NUP85"};
+  "term_GOMF_CATALYTIC_ACTIVITY_ACTING_ON_RNA" -- {"AGO3" "ALKBH8" "DDX10" "DDX53" "DDX55" "DHX33" "DIMT1" "ERI2" "ETF1" "EXOSC3" "EXOSC5" "IGHMBP2" "LARS1" "POLR1H" "POLR3A" "POLR3F" "TRMT5" "YTHDC2"};
+  "term_GOMF_GTPASE_ACTIVATOR_ACTIVITY" -- {"AGAP2" "ARHGAP32" "ARHGEF12" "ARHGEF19" "DEPDC5" "GAPVD1" "GRTP1" "RANBP2" "RGPD5" "RGPD8" "TIAM2"};
+  "term_GOMF_TRANSCRIPTION_COREGULATOR_ACTIVITY" -- {"ARGLU1" "BCL9" "CRTC2" "CRTC3" "DNAJB1" "FHL3" "KAT2A" "KDM7A" "MED14" "MED4" "MED6" "MED7" "NCOR2" "NR0B2" "PHF12"};
+  "term_GOMF_ENZYME_SUBSTRATE_ADAPTOR_ACTIVITY" -- {"ANKRD9" "DCAF1" "FBXW11" "KBTBD7" "KLHDC2" "KLHL1" "PPP2R2A"};
+  "term_GOMF_ALPHA_TUBULIN_BINDING" -- {"DNAL1" "FNTA" "SPAST" "TAOK1"};
+  "term_GOMF_CARGO_ADAPTOR_ACTIVITY" -- {"AP2M1" "GOLPH3" "HIP1R"};
+  "term_GOMF_HEXOSYLTRANSFERASE_ACTIVITY" -- {"A4GALT" "DPM1" "MGAT1" "PIGY" "PLOD3" "STT3A" "TMTC1"};
+  "term_GOMF_G_PROTEIN_ACTIVITY" -- {"RAB1B" "RAB28" "RAB2A" "RAP1B"};
+}
+
+**NETWORK INTERPRETATION GUIDE (background):**
+- **Term nodes** (`type=term`): enriched gene sets, with `collection` (source gene set collection), `iteration`, `p` (enrichment p-value in its iteration), `q` (term q-value) and `genes` (number of genes linked)
+- **Gene nodes** (`type=gene`): input genes, with `degree` (number of terms the gene connects to; in iGEA, the number of collections that place it in the network)
+- **Communities**: each `subgraph cluster_Cn` block is one community; term and gene nodes carry `community`. Bridge genes are listed outside the blocks with `bridge=true` and a `participation` value (0 = all terms in one community; higher = spread over communities).
+- **Edges**: each line `"term" -- {"GENE1" "GENE2" ...}` links a term to its genes. Edges are gene-set memberships from curated annotation, not physical interactions or directions of change.
+
+**Gene Set Collections:**
+- **C5: Gene Ontology: Biological Process**: Biological processes from Gene Ontology
+- **C5: Gene Ontology: Cellular Component**: Cellular components from Gene Ontology
+- **C5: Gene Ontology: Molecular Function**: Molecular functions from Gene Ontology
+
+**YOUR TASK:**
+You are an experienced molecular biologist explaining to a colleague what this gene list reveals. Write in clear, natural prose. Explain the biology behind the network and why these processes appear together; do not describe the network itself. Your answer should be a conversation starter: it should make the reader want to dig further, and it ends by asking how the gene list was generated so that the interpretation can be rebuilt around the real experiment.
+
+**How to write it:**
+- Ground your claims in the network by naming a few key genes in parentheses, for example (GENE1, GENE2, GENE3). Do not quote term names verbatim or list memberships; describe them in plain words. The reader has the network.
+- Use your biological knowledge to explain mechanisms. When a central point depends on knowledge that is not in the network, say so once in plain words ("this is not in the network, but ...").
+- Do not repeat general caveats about annotation networks (memberships rather than interactions, no direction of change). Mention a limitation only where it changes the interpretation.
+- Point out what is surprising or unexpected.
+- About 900-1,200 words.
+
+**Structure:**
+1. **Executive summary**: the main findings in 4-6 plain sentences. Start with whether the network is distinguishable from random gene lists, then the overall biological picture and the most important modules and genes.
+2. **Communities**: one short section per community (C1, C2, ...), headed by the community ID and a plain biological name you choose. In 3-5 sentences, explain the biology it represents in plain language, which genes anchor it and why they matter, and anything surprising. If a community looks like a mix of unrelated processes, say so; if two communities belong together, say so.
+3. **Putting it together**: connected prose that combines the communities into one biological story. Give the key genes a role in that story: hubs that anchor a community, and bridge genes that link communities (what does each link suggest biologically?).
+4. **Estimated experimental context**: hypothesize what experiment most likely generated this gene list (for example the type of assay, perturbation, cell type or condition). Reason from the network: which communities and genes point to it, and how confident you are. Name one or two alternatives and what in the network would distinguish them.
+5. **Closing**: end with one or two sentences inviting the reader to share how the gene list was actually generated (assay, perturbation, cell type, comparison), so that you can rebuild the interpretation around it: what fits the experiment, what does not, what is already known and what may be new.

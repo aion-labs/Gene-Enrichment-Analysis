@@ -1,0 +1,4 @@
+repeat	requested_model	returned_model	response_id	started_utc	seconds	input_tokens	output_tokens	context	response_file
+1	gpt-6-astra	gpt-6-astra	resp_0f4021b2233ac516016b003c19a18087d28c3a163d826d541a	2026-11-20T12:24:57+00:00	40.2	9267	1732	a meta analysis of genes that are consistently regulated by mRNA expression when cells are exposed to hypoxia	followup_r1.json
+2	gpt-6-astra	gpt-6-astra	resp_0aa5b9d25e0386d8016b003c41c53087d2970913b19c88ee19	2026-11-20T12:25:37+00:00	43.0	9298	1803	a meta analysis of genes that are consistently regulated by mRNA expression when cells are exposed to hypoxia	followup_r2.json
+3	gpt-6-astra	gpt-6-astra	resp_0e1cef7a116ea405016b003c6cb92487d2a543bf8d9ff6ae95	2026-11-20T12:26:20+00:00	44.3	9266	1815	a meta analysis of genes that are consistently regulated by mRNA expression when cells are exposed to hypoxia	followup_r3.json

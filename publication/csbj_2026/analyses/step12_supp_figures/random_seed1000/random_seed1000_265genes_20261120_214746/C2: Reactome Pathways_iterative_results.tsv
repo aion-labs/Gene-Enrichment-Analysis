@@ -1,0 +1,2 @@
+Library	Iteration	Term	Description	iteration overlapping genes	iteration p-value	iteration -log(p-value)	Genes removed for next iteration	Full list overlapping genes	Full list p-value	Regular FDR	Full list overlapping genes (gene names)
+C2: Reactome Pathways	1	REACTOME: BETA DEFENSINS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_BETA_DEFENSINS	3/43	0.007870511987726168	2.103997015263309	DEFB104A, DEFB114, DEFB126	3/43	0.007870511987726168	1.0	DEFB104A, DEFB114, DEFB126

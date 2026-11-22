@@ -1,0 +1,96 @@
+graph enrichment_network {
+  // 263 validated input genes; network = terms passing the term-level filter
+  graph [input_genes=263, random_lists=1000, q_threshold="none", network_p="0.679"];
+  // communities: Leiden (igraph, modularity), modularity="0.2188"
+  graph [community_method="Leiden (igraph, modularity)", modularity="0.2188"];
+  subgraph cluster_C1 {
+    label="C1"; lead_term="GOCC: CILIARY PLASM"; terms=3; genes=16;
+    "term_GOBP_NEGATIVE_REGULATION_OF_CELL_PROJECTION_ORGANIZATION" [type=term, label="GOBP: NEGATIVE REGULATION OF CELL PROJECTION ORGANIZATION", collection="C5: Gene Ontology: Biological Process", iteration=6, p="0.0074", q="0.86", community=C1, genes=6];
+    "term_GOCC_CILIARY_PLASM" [type=term, label="GOCC: CILIARY PLASM", collection="C5: Gene Ontology: Cellular Component", iteration=1, p="0.00083", q="0.21", community=C1, genes=8];
+    "term_GOCC_BRUSH_BORDER_MEMBRANE" [type=term, label="GOCC: BRUSH BORDER MEMBRANE", collection="C5: Gene Ontology: Cellular Component", iteration=2, p="0.0026", q="0.26", community=C1, genes=4];
+    "CFAP52" [type=gene, degree=1, community=C1];
+    "CFAP90" [type=gene, degree=1, community=C1];
+    "CLTRN" [type=gene, degree=1, community=C1];
+    "DGUOK" [type=gene, degree=1, community=C1];
+    "DNAH11" [type=gene, degree=1, community=C1];
+    "DPYSL3" [type=gene, degree=1, community=C1];
+    "EFHC2" [type=gene, degree=1, community=C1];
+    "EFNB3" [type=gene, degree=1, community=C1];
+    "GLI1" [type=gene, degree=1, community=C1];
+    "LIMA1" [type=gene, degree=2, community=C1];
+    "MAK" [type=gene, degree=2, community=C1];
+    "RPGRIP1" [type=gene, degree=1, community=C1];
+    "SEPTIN2" [type=gene, degree=1, community=C1];
+    "SLC22A12" [type=gene, degree=1, community=C1];
+    "SLC28A3" [type=gene, degree=1, community=C1];
+  }
+  subgraph cluster_C2 {
+    label="C2"; lead_term="GOBP: REGULATION OF LONG TERM SYNAPTIC POTENTIATION"; terms=2; genes=7;
+    "term_GOBP_REGULATION_OF_LONG_TERM_SYNAPTIC_POTENTIATION" [type=term, label="GOBP: REGULATION OF LONG TERM SYNAPTIC POTENTIATION", collection="C5: Gene Ontology: Biological Process", iteration=1, p="9e-05", q="0.12", community=C2, genes=5];
+    "term_GOMF_ACTININ_BINDING" [type=term, label="GOMF: ACTININ BINDING", collection="C5: Gene Ontology: Molecular Function", iteration=2, p="0.0067", q="0.89", community=C2, genes=3];
+    "ADORA1" [type=gene, degree=1, community=C2];
+    "ADORA2A" [type=gene, degree=2, community=C2];
+    "APOE" [type=gene, degree=1, community=C2];
+    "NRGN" [type=gene, degree=1, community=C2];
+    "PDE9A" [type=gene, degree=1, community=C2];
+    "PDLIM5" [type=gene, degree=1, community=C2];
+  }
+  subgraph cluster_C3 {
+    label="C3"; lead_term="GOBP: NUCLEAR TRANSCRIBED MRNA CATABOLIC PROCESS"; terms=1; genes=5;
+    "term_GOBP_NUCLEAR_TRANSCRIBED_MRNA_CATABOLIC_PROCESS" [type=term, label="GOBP: NUCLEAR TRANSCRIBED MRNA CATABOLIC PROCESS", collection="C5: Gene Ontology: Biological Process", iteration=5, p="0.0071", q="0.86", community=C3, genes=5];
+    "CNOT7" [type=gene, degree=1, community=C3];
+    "DCP1B" [type=gene, degree=1, community=C3];
+    "HNRNPAB" [type=gene, degree=1, community=C3];
+    "LSM7" [type=gene, degree=1, community=C3];
+    "SYNCRIP" [type=gene, degree=1, community=C3];
+  }
+  subgraph cluster_C4 {
+    label="C4"; lead_term="GOBP: EXPLORATION BEHAVIOR"; terms=1; genes=3;
+    "term_GOBP_EXPLORATION_BEHAVIOR" [type=term, label="GOBP: EXPLORATION BEHAVIOR", collection="C5: Gene Ontology: Biological Process", iteration=3, p="0.0067", q="0.86", community=C4, genes=3];
+    "CRBN" [type=gene, degree=1, community=C4];
+    "DLG4" [type=gene, degree=1, community=C4];
+    "GABRB3" [type=gene, degree=1, community=C4];
+  }
+  subgraph cluster_C5 {
+    label="C5"; lead_term="GOBP: POSITIVE REGULATION OF RESPONSE TO ENDOPLASMIC RETICULUM STRESS"; terms=1; genes=3;
+    "term_GOBP_POSITIVE_REGULATION_OF_RESPONSE_TO_ENDOPLASMIC_RETICULUM_STRESS" [type=term, label="GOBP: POSITIVE REGULATION OF RESPONSE TO ENDOPLASMIC RETICULUM STRESS", collection="C5: Gene Ontology: Biological Process", iteration=4, p="0.0068", q="0.86", community=C5, genes=3];
+    "RNFT2" [type=gene, degree=1, community=C5];
+    "TMEM33" [type=gene, degree=1, community=C5];
+    "UBQLN1" [type=gene, degree=1, community=C5];
+  }
+  subgraph cluster_C6 {
+    label="C6"; lead_term="GOBP: PROSTAGLANDIN SECRETION"; terms=1; genes=3;
+    "term_GOBP_PROSTAGLANDIN_SECRETION" [type=term, label="GOBP: PROSTAGLANDIN SECRETION", collection="C5: Gene Ontology: Biological Process", iteration=2, p="0.00058", q="0.39", community=C6, genes=3];
+    "ABCC4" [type=gene, degree=1, community=C6];
+    "ACSL4" [type=gene, degree=1, community=C6];
+    "TNFRSF11A" [type=gene, degree=1, community=C6];
+  }
+  subgraph cluster_C7 {
+    label="C7"; lead_term="GOMF: ASPARTIC TYPE PEPTIDASE ACTIVITY"; terms=1; genes=3;
+    "term_GOMF_ASPARTIC_TYPE_PEPTIDASE_ACTIVITY" [type=term, label="GOMF: ASPARTIC TYPE PEPTIDASE ACTIVITY", collection="C5: Gene Ontology: Molecular Function", iteration=1, p="0.0052", q="0.89", community=C7, genes=3];
+    "CTSD" [type=gene, degree=1, community=C7];
+    "DDI2" [type=gene, degree=1, community=C7];
+    "PGC" [type=gene, degree=1, community=C7];
+  }
+  subgraph cluster_C8 {
+    label="C8"; lead_term="REACTOME: BETA DEFENSINS"; terms=1; genes=3;
+    "term_REACTOME_BETA_DEFENSINS" [type=term, label="REACTOME: BETA DEFENSINS", collection="C2: Reactome Pathways", iteration=1, p="0.0079", q="1", community=C8, genes=3];
+    "DEFB104A" [type=gene, degree=1, community=C8];
+    "DEFB114" [type=gene, degree=1, community=C8];
+    "DEFB126" [type=gene, degree=1, community=C8];
+  }
+  // bridge genes: connect terms in different communities
+  "TRPC5" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  // edges: each term with its genes
+  "term_REACTOME_BETA_DEFENSINS" -- {"DEFB104A" "DEFB114" "DEFB126"};
+  "term_GOBP_REGULATION_OF_LONG_TERM_SYNAPTIC_POTENTIATION" -- {"ADORA1" "ADORA2A" "APOE" "NRGN" "PDE9A"};
+  "term_GOBP_PROSTAGLANDIN_SECRETION" -- {"ABCC4" "ACSL4" "TNFRSF11A"};
+  "term_GOBP_EXPLORATION_BEHAVIOR" -- {"CRBN" "DLG4" "GABRB3"};
+  "term_GOBP_POSITIVE_REGULATION_OF_RESPONSE_TO_ENDOPLASMIC_RETICULUM_STRESS" -- {"RNFT2" "TMEM33" "UBQLN1"};
+  "term_GOBP_NUCLEAR_TRANSCRIBED_MRNA_CATABOLIC_PROCESS" -- {"CNOT7" "DCP1B" "HNRNPAB" "LSM7" "SYNCRIP"};
+  "term_GOBP_NEGATIVE_REGULATION_OF_CELL_PROJECTION_ORGANIZATION" -- {"DGUOK" "DPYSL3" "EFNB3" "LIMA1" "MAK" "TRPC5"};
+  "term_GOCC_CILIARY_PLASM" -- {"CFAP52" "CFAP90" "DNAH11" "EFHC2" "GLI1" "MAK" "RPGRIP1" "SEPTIN2"};
+  "term_GOCC_BRUSH_BORDER_MEMBRANE" -- {"CLTRN" "LIMA1" "SLC22A12" "SLC28A3"};
+  "term_GOMF_ASPARTIC_TYPE_PEPTIDASE_ACTIVITY" -- {"CTSD" "DDI2" "PGC"};
+  "term_GOMF_ACTININ_BINDING" -- {"ADORA2A" "PDLIM5" "TRPC5"};
+}

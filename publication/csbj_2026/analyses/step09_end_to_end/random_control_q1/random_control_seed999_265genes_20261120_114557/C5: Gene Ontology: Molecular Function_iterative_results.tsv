@@ -1,0 +1,2 @@
+Library	Iteration	Term	Description	iteration overlapping genes	iteration p-value	iteration -log(p-value)	Genes removed for next iteration	Full list overlapping genes	Full list p-value	Regular FDR	Full list overlapping genes (gene names)
+C5: Gene Ontology: Molecular Function	1	GOMF: EXOGENOUS PROTEIN BINDING	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOMF_EXOGENOUS_PROTEIN_BINDING	5/84	0.0025517621487848247	2.5931598089024126	CD209, CDHR3, CR2, LDLR, SLC10A1	5/84	0.0025517621487848247	1.0	CD209, CDHR3, CR2, LDLR, SLC10A1

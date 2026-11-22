@@ -1,0 +1,63 @@
+====================================================================================================
+iGEA STATISTICAL REPORT (per-run random lists)
+====================================================================================================
+Random lists: 10000, each of 75 genes (= validated input size), drawn without replacement
+from the analysis background (23391 genes); seed 2026; 17.8 s on 4 process(es).
+Each random list was analysed with the same collections and parameters as the input:
+  p_value_method=Fisher's Exact Test, p_threshold=0.01, min_overlap=3, min_term_size=10, max_term_size=600, max_iterations=None, background=all_genes
+Collections: H: Hallmark Gene Sets; C2: Reactome Pathways; C2: KEGG Legacy; C2: KEGG MEDICUS; C2: BioCarta; C2: Pathway Interaction Database; C2: WikiPathways; C5: Gene Ontology: Biological Process; C5: Gene Ontology: Cellular Component; C5: Gene Ontology: Molecular Function
+
+TERM LEVEL (signal-adjusted empirical q-value)
+  A random list of this size selects on average 5.68 terms by chance.
+  q = expected chance terms with p' <= p / selected terms with p' <= p (per collection, monotone),
+  re-estimated after treating genes of accepted terms as signal (11 of 75 genes
+  treated as noise in the final round; 1000 random lists per size step).
+  Terms kept (q < 0.1): 32 of 32. Random lists are filtered the same way.
+
+NETWORK LEVEL (largest connected cluster)
+  z = (observed - random mean) / random SD
+  empirical p = (r + 1) / (n + 1), r = random lists with a value >= observed, n = 10000
+  (smallest attainable p = 9.999e-05). The metrics describe the same cluster and are not independent tests.
+
+  Metric                      Observed  Rand mean  Rand SD  Rand max       z     r    Emp. p
+  ------------------------------------------------------------------------------------------
+  Cluster Size                      96      3.128    3.883        38   23.92     0 9.999e-05
+  Number of Genes                   64      2.377    2.927        27   21.05     0 9.999e-05
+  Number of Terms                   32      0.751    1.046        11   29.86     0 9.999e-05
+  Number of Edges                  171      2.876    4.147        43   40.54     0 9.999e-05
+  Average Edges per Gene         2.672      0.579    0.631         4    3.32    52  0.005299
+
+TERMS
+  Library                                   It     p-value  q-value  Kept  Term
+  C2: KEGG Legacy                            1    2.67e-05        0  yes   KEGG_GLYCOLYSIS_GLUCONEOGENESIS
+  C2: KEGG Legacy                            2     0.00441    0.006  yes   KEGG_P53_SIGNALING_PATHWAY
+  C2: KEGG MEDICUS                           1     1.5e-06        0  yes   KEGG_MEDICUS_REFERENCE_GLYCOLYSIS
+  C2: Pathway Interaction Database           1    0.000533   0.0005  yes   PID_HIF1_TFPATHWAY
+  C2: Pathway Interaction Database           2     0.00417   0.0005  yes   PID_MYC_ACTIV_PATHWAY
+  C2: Reactome Pathways                      1    1.09e-05    0.003  yes   REACTOME_GLUCONEOGENESIS
+  C2: Reactome Pathways                      2     0.00111   0.0177  yes   REACTOME_COLLAGEN_FORMATION
+  C2: Reactome Pathways                      3     0.00166   0.0177  yes   REACTOME_HDMS_DEMETHYLATE_HISTONES
+  C2: Reactome Pathways                      4     0.00612   0.0182  yes   REACTOME_TP53_REGULATES_METABOLIC_GENES
+  C2: Reactome Pathways                      5     0.00565   0.0182  yes   REACTOME_REGULATION_OF_PLK1_ACTIVITY_AT_G2_M_TRANSITION
+  C2: WikiPathways                           1    2.89e-07        0  yes   WP_GLYCOLYSIS_IN_SENESCENCE
+  C2: WikiPathways                           2    2.08e-05    0.001  yes   WP_METABOLIC_PATHWAYS_OF_FIBROBLASTS
+  C2: WikiPathways                           3    0.000367    0.004  yes   WP_ADIPOGENESIS
+  C2: WikiPathways                           4     0.00229    0.008  yes   WP_HEMATOPOIETIC_STEM_CELL_DIFFERENTIATION
+  C5: Gene Ontology: Biological Process      1    4.57e-08        0  yes   GOBP_PYRUVATE_METABOLIC_PROCESS
+  C5: Gene Ontology: Biological Process      2    3.68e-06   0.0015  yes   GOBP_CELLULAR_RESPONSE_TO_OXYGEN_LEVELS
+  C5: Gene Ontology: Biological Process      3    4.75e-05  0.00575  yes   GOBP_NUCLEAR_RECEPTOR_MEDIATED_SIGNALING_PATHWAY
+  C5: Gene Ontology: Biological Process      4    4.19e-05  0.00575  yes   GOBP_COLLAGEN_FIBRIL_ORGANIZATION
+  C5: Gene Ontology: Biological Process      5     0.00225   0.0427  yes   GOBP_RESPONSE_TO_STARVATION
+  C5: Gene Ontology: Biological Process      6     0.00362   0.0454  yes   GOBP_SYMBIONT_ENTRY_INTO_HOST
+  C5: Gene Ontology: Biological Process      7     0.00255   0.0427  yes   GOBP_POSITIVE_REGULATION_OF_MAPK_CASCADE
+  C5: Gene Ontology: Biological Process      8     0.00919     0.06  yes   GOBP_GENERATION_OF_PRECURSOR_METABOLITES_AND_ENERGY
+  C5: Gene Ontology: Cellular Component      1     0.00371    0.025  yes   GOCC_ENDOPLASMIC_RETICULUM_LUMEN
+  C5: Gene Ontology: Cellular Component      2      0.0061    0.025  yes   GOCC_MITOCHONDRIAL_MATRIX
+  C5: Gene Ontology: Cellular Component      3     0.00721    0.025  yes   GOCC_RECYCLING_ENDOSOME
+  C5: Gene Ontology: Cellular Component      4     0.00698    0.025  yes   GOCC_TRANSCRIPTION_REGULATOR_COMPLEX
+  C5: Gene Ontology: Cellular Component      5       0.005    0.025  yes   GOCC_FICOLIN_1_RICH_GRANULE_LUMEN
+  C5: Gene Ontology: Cellular Component      6     0.00948    0.025  yes   GOCC_NUCLEAR_ENVELOPE
+  C5: Gene Ontology: Molecular Function      1    8.67e-12        0  yes   GOMF_2_OXOGLUTARATE_DEPENDENT_DIOXYGENASE_ACTIVITY
+  C5: Gene Ontology: Molecular Function      2     0.00889   0.0397  yes   GOMF_PROTEIN_SERINE_THREONINE_KINASE_ACTIVITY
+  C5: Gene Ontology: Molecular Function      3     0.00726   0.0397  yes   GOMF_STEROID_BINDING
+  H: Hallmark Gene Sets                      1    3.29e-21        0  yes   HALLMARK_HYPOXIA

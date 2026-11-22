@@ -1,0 +1,67 @@
+Below is an iterative gene set enrichment (iGEA) network computed from a gene list. Iterative means that for each gene set collection, the top enriched gene set is found, saved and its genes are removed from the gene list; the remaining genes are then tested again. Thus each gene appears at most once per collection but can be linked to terms from different collections. The network of genes and gene sets (= terms) is given in DOT format, preceded by its statistics and communities.
+
+**STATISTICAL CONTEXT:**
+The input contained 264 validated genes. iGEA selected 15 terms; 1 passed the term-level filter (q-value < 0.1, an empirical false discovery rate estimated from 10,000 random gene lists of the same size, background and settings) and form this network. A random gene list of this size selects about 15.95 terms by chance.
+
+Network-level test: the largest connected cluster of this network compared with the networks built the same way (same filter) from the 10,000 random gene lists. Empirical p = (r + 1) / (10,000 + 1), where r is the number of random lists with a value at least as large. The metrics describe the same cluster and are not independent tests.
+
+| Metric | This network | Random mean | Empirical p |
+|---|---|---|---|
+| Nodes (genes + terms) in the largest connected cluster | 5 | 4.91 | p = 0.49 |
+| Genes in the largest cluster | 4 | 4.05 | p = 0.49 |
+| Terms in the largest cluster | 1 | 0.856 | p = 0.6 |
+| Edges in the largest cluster | 4 | 4.67 | p = 0.49 |
+| Average edges per gene | 1 | 0.664 | p = 0.6 |
+
+How to use the statistics: the network is not distinguishable from what random gene lists produce if the empirical p for the number of nodes in the largest cluster is 0.05 or higher. In that case, say so plainly, keep the rest short and tentative, and do not propose an experimental context. Do not use p-values, q-values or iteration numbers to rank biological importance.
+
+**COMMUNITIES:**
+The network has too few terms for community detection; communities are its connected components. Communities are algorithmic groupings, not biological labels; the cluster blocks in the DOT list each community's terms and genes. Gene degree is the number of terms a gene connects to; in iGEA this equals the number of collections that place the gene in the network. Bridge genes connect terms in different communities.
+
+| Community | Terms | Genes | Lead term (most genes) | Top hub genes (degree) | Bridge genes |
+|---|---|---|---|---|---|
+| C1 | 1 | 4 | GOBP: NEGATIVE REGULATION OF B CELL MEDIATED IMMUNITY | C4BPB (1), CR2 (1), FCGR2B (1), PARP3 (1) | 0 |
+
+**NETWORK (DOT):**
+graph enrichment_network {
+  // 264 validated input genes; network = terms passing the term-level filter
+  graph [input_genes=264, random_lists=10000, q_threshold="0.1", network_p="0.491"];
+  // communities: connected components (fewer than 6 terms)
+  graph [community_method="connected components (fewer than 6 terms)"];
+  subgraph cluster_C1 {
+    label="C1"; lead_term="GOBP: NEGATIVE REGULATION OF B CELL MEDIATED IMMUNITY"; terms=1; genes=4;
+    "term_GOBP_NEGATIVE_REGULATION_OF_B_CELL_MEDIATED_IMMUNITY" [type=term, label="GOBP: NEGATIVE REGULATION OF B CELL MEDIATED IMMUNITY", collection="C5: Gene Ontology: Biological Process", iteration=1, p="1.8e-05", q="0.026", community=C1, genes=4];
+    "C4BPB" [type=gene, degree=1, community=C1];
+    "CR2" [type=gene, degree=1, community=C1];
+    "FCGR2B" [type=gene, degree=1, community=C1];
+    "PARP3" [type=gene, degree=1, community=C1];
+  }
+  // edges: each term with its genes
+  "term_GOBP_NEGATIVE_REGULATION_OF_B_CELL_MEDIATED_IMMUNITY" -- {"C4BPB" "CR2" "FCGR2B" "PARP3"};
+}
+
+**NETWORK INTERPRETATION GUIDE (background):**
+- **Term nodes** (`type=term`): enriched gene sets, with `collection` (source gene set collection), `iteration`, `p` (enrichment p-value in its iteration), `q` (term q-value) and `genes` (number of genes linked)
+- **Gene nodes** (`type=gene`): input genes, with `degree` (number of terms the gene connects to; in iGEA, the number of collections that place it in the network)
+- **Communities**: each `subgraph cluster_Cn` block is one community; term and gene nodes carry `community`. Bridge genes are listed outside the blocks with `bridge=true` and a `participation` value (0 = all terms in one community; higher = spread over communities).
+- **Edges**: each line `"term" -- {"GENE1" "GENE2" ...}` links a term to its genes. Edges are gene-set memberships from curated annotation, not physical interactions or directions of change.
+
+**Gene Set Collections:**
+- **C5: Gene Ontology: Biological Process**: Biological processes from Gene Ontology
+
+**YOUR TASK:**
+You are an experienced molecular biologist explaining to a colleague what this gene list reveals. Write in clear, natural prose. Explain the biology behind the network and why these processes appear together; do not describe the network itself. Your answer should be a conversation starter: it should make the reader want to dig further, and it ends by asking how the gene list was generated so that the interpretation can be rebuilt around the real experiment.
+
+**How to write it:**
+- Ground your claims in the network by naming a few key genes in parentheses, for example (GENE1, GENE2, GENE3). Do not quote term names verbatim or list memberships; describe them in plain words. The reader has the network.
+- Use your biological knowledge to explain mechanisms. When a central point depends on knowledge that is not in the network, say so once in plain words ("this is not in the network, but ...").
+- Do not repeat general caveats about annotation networks (memberships rather than interactions, no direction of change). Mention a limitation only where it changes the interpretation.
+- Point out what is surprising or unexpected.
+- About 900-1,200 words.
+
+**Structure:**
+1. **Executive summary**: the main findings in 4-6 plain sentences. Start with whether the network is distinguishable from random gene lists, then the overall biological picture and the most important modules and genes.
+2. **Communities**: one short section per community (C1, C2, ...), headed by the community ID and a plain biological name you choose. In 3-5 sentences, explain the biology it represents in plain language, which genes anchor it and why they matter, and anything surprising. If a community looks like a mix of unrelated processes, say so; if two communities belong together, say so.
+3. **Putting it together**: connected prose that combines the communities into one biological story. Give the key genes a role in that story: hubs that anchor a community, and bridge genes that link communities (what does each link suggest biologically?).
+4. **Estimated experimental context**: hypothesize what experiment most likely generated this gene list (for example the type of assay, perturbation, cell type or condition). Reason from the network: which communities and genes point to it, and how confident you are. Name one or two alternatives and what in the network would distinguish them.
+5. **Closing**: end with one or two sentences inviting the reader to share how the gene list was actually generated (assay, perturbation, cell type, comparison), so that you can rebuild the interpretation around it: what fits the experiment, what does not, what is already known and what may be new.

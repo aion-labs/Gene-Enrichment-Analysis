@@ -1,0 +1,414 @@
+🎯 Using default background: all_genes.txt
+📚 Using active collections from alias.json: 10 files
+   - h.all.v2025.1.Hs.symbols.gmt
+   - c2.cp.biocarta.v2025.1.Hs.symbols.gmt
+   - c2.cp.kegg_medicus.v2025.1.Hs.symbols.gmt
+   - c2.cp.pid.v2025.1.Hs.symbols.gmt
+   - c2.cp.reactome.v2025.1.Hs.symbols.gmt
+   - c2.cp.wikipathways.v2025.1.Hs.symbols.gmt
+   - c2.cp.kegg_legacy.v2025.1.Hs.symbols.gmt
+   - c5.go.bp.v2025.1.Hs.symbols.gmt
+   - c5.go.cc.v2025.1.Hs.symbols.gmt
+   - c5.go.mf.v2025.1.Hs.symbols.gmt
+
+Analysis Mode: iterative
+Gene Sets: 1 files
+Background: /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/backgrounds/all_genes.txt
+Collections: 10 files
+P-value Method: Fisher's Exact Test
+P-value Threshold: 0.01
+Min Overlap: 3
+Term Size Range: 10-600
+Max Iterations: 30
+Statistical Benchmarking: Enabled
+Output Directory: /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000
+
+2026-11-20 21:47:45,595 - INFO - Loading background gene set: /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/backgrounds/all_genes.txt
+2026-11-20 21:47:45,598 - INFO - Loading gene info from /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/recent_release/Homo_sapiens.gene_info.gz
+2026-11-20 21:47:45,778 - INFO - Loaded 193577 human Entrez ID mappings (taxonomy ID 9606)
+2026-11-20 21:47:45,778 - INFO - Loaded 69379 synonym mappings
+2026-11-20 21:47:45,780 - INFO - Sample Entrez IDs: ['1', '2', '9']
+2026-11-20 21:47:45,781 - INFO - Sample symbols: ['A1BG', 'A2M', 'NAT1']
+2026-11-20 21:47:45,781 - INFO - Loading gene history from /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/recent_release/gene_history_9606.gz
+2026-11-20 21:47:45,846 - INFO - Loaded 166606 unique old-to-current symbol mappings
+2026-11-20 21:47:45,852 - WARNING - 199 symbols not found in database: ['DDX12B', 'ENSG00000181123', 'ENSG00000187185', 'ENSG00000187951', 'ENSG00000188897', 'ENSG00000189229', 'ENSG00000200063', 'ENSG00000201329', 'ENSG00000201957', 'ENSG00000202231']...
+2026-11-20 21:47:45,858 - INFO - Loading 10 gene set collections
+2026-11-20 21:47:45,859 - INFO - Gene Set Library
+H: Hallmark Gene Sets (Homo Sapiens)
+	50 terms
+	4384 genes
+2026-11-20 21:47:45,860 - INFO - Loaded collection H: Hallmark Gene Sets: 50 terms
+2026-11-20 21:47:45,862 - INFO - Gene Set Library
+C2: BioCarta (Homo Sapiens)
+	292 terms
+	1509 genes
+2026-11-20 21:47:45,862 - INFO - Loaded collection C2: BioCarta: 226 terms
+2026-11-20 21:47:45,863 - INFO - Gene Set Library
+C2: KEGG MEDICUS (Homo Sapiens)
+	658 terms
+	2788 genes
+2026-11-20 21:47:45,864 - INFO - Loaded collection C2: KEGG MEDICUS: 403 terms
+2026-11-20 21:47:45,865 - INFO - Gene Set Library
+C2: Pathway Interaction Database (Homo Sapiens)
+	196 terms
+	2534 genes
+2026-11-20 21:47:45,865 - INFO - Loaded collection C2: Pathway Interaction Database: 196 terms
+2026-11-20 21:47:45,870 - INFO - Gene Set Library
+C2: Reactome Pathways (Homo Sapiens)
+	1787 terms
+	11369 genes
+2026-11-20 21:47:45,872 - INFO - Loaded collection C2: Reactome Pathways: 1409 terms
+2026-11-20 21:47:45,875 - INFO - Gene Set Library
+C2: WikiPathways (Homo Sapiens)
+	885 terms
+	9127 genes
+2026-11-20 21:47:45,875 - INFO - Loaded collection C2: WikiPathways: 766 terms
+2026-11-20 21:47:45,877 - INFO - Gene Set Library
+C2: KEGG Legacy (Homo Sapiens)
+	186 terms
+	5245 genes
+2026-11-20 21:47:45,877 - INFO - Loaded collection C2: KEGG Legacy: 186 terms
+2026-11-20 21:47:45,934 - INFO - Gene Set Library
+C5: Gene Ontology: Biological Process (Homo Sapiens)
+	7583 terms
+	17999 genes
+2026-11-20 21:47:45,941 - INFO - Loaded collection C5: Gene Ontology: Biological Process: 5360 terms
+2026-11-20 21:47:45,949 - INFO - Gene Set Library
+C5: Gene Ontology: Cellular Component (Homo Sapiens)
+	1042 terms
+	14868 genes
+2026-11-20 21:47:45,951 - INFO - Loaded collection C5: Gene Ontology: Cellular Component: 684 terms
+2026-11-20 21:47:45,961 - INFO - Gene Set Library
+C5: Gene Ontology: Molecular Function (Homo Sapiens)
+	1855 terms
+	15698 genes
+2026-11-20 21:47:45,963 - INFO - Loaded collection C5: Gene Ontology: Molecular Function: 1165 terms
+2026-11-20 21:47:45,964 - INFO - Processing gene set: /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000_265genes.txt
+2026-11-20 21:47:45,965 - INFO - Loading gene info from /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/recent_release/Homo_sapiens.gene_info.gz
+2026-11-20 21:47:46,158 - INFO - Loaded 193577 human Entrez ID mappings (taxonomy ID 9606)
+2026-11-20 21:47:46,158 - INFO - Loaded 69379 synonym mappings
+2026-11-20 21:47:46,161 - INFO - Sample Entrez IDs: ['1', '2', '9']
+2026-11-20 21:47:46,161 - INFO - Sample symbols: ['A1BG', 'A2M', 'NAT1']
+2026-11-20 21:47:46,161 - INFO - Loading gene history from /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/recent_release/gene_history_9606.gz
+2026-11-20 21:47:46,233 - INFO - Loaded 166606 unique old-to-current symbol mappings
+2026-11-20 21:47:46,234 - WARNING - Warning: 2 gene symbols not found in database
+2026-11-20 21:47:46,234 - INFO - Input Gene Set
+random_seed1000_265genes
+	263 genes
+2026-11-20 21:47:46,234 - INFO - Gene set random_seed1000_265genes: 263 genes in the background (used for the analysis)
+2026-11-20 21:47:46,235 - INFO - Created unique output directory: random_seed1000_265genes_20261120_214746
+2026-11-20 21:47:46,235 - INFO - Running iterative enrichment analysis
+2026-11-20 21:47:46,235 - INFO - Generated shared run ID: 20261120_214746_235
+2026-11-20 21:47:46,235 - INFO - Processing collection: H: Hallmark Gene Sets
+2026-11-20 21:47:46,236 - INFO - Collection H: Hallmark Gene Sets: Starting iterative enrichment with 263 genes
+2026-11-20 21:47:46,236 - INFO - Collection H: Hallmark Gene Sets: Iteration 1: Processing 263 remaining genes
+2026-11-20 21:47:46,236 - INFO - Input Gene Set
+
+	263 genes
+2026-11-20 21:47:46,236 - INFO - Calculating p-values for H: Hallmark Gene Sets
+2026-11-20 21:47:46,237 - INFO - Library-specific background size: 4378 genes (intersection of 23391 background genes and 4378 filtered library genes from 50 terms within size range [10, 600])
+2026-11-20 21:47:46,237 - INFO - Input gene set filtered: 263 → 51 genes (intersected with library-specific background)
+2026-11-20 21:47:46,240 - INFO - Top term p-value >= threshold; terminating.
+2026-11-20 21:47:46,240 - INFO - Collection H: Hallmark Gene Sets: Top term p-value (0.029127366108867778) >= threshold (0.01); terminating.
+2026-11-20 21:47:46,240 - INFO - Collection H: Hallmark Gene Sets: Completed iterative enrichment: 0 iterations, 263 genes remaining
+2026-11-20 21:47:46,241 - INFO - Processing collection: C2: BioCarta
+2026-11-20 21:47:46,241 - INFO - Collection C2: BioCarta: Starting iterative enrichment with 263 genes
+2026-11-20 21:47:46,241 - INFO - Collection C2: BioCarta: Iteration 1: Processing 263 remaining genes
+2026-11-20 21:47:46,242 - INFO - Input Gene Set
+
+	263 genes
+2026-11-20 21:47:46,242 - INFO - Calculating p-values for C2: BioCarta
+2026-11-20 21:47:46,243 - INFO - Library-specific background size: 1363 genes (intersection of 23391 background genes and 1363 filtered library genes from 226 terms within size range [10, 600])
+2026-11-20 21:47:46,243 - INFO - Input gene set filtered: 263 → 16 genes (intersected with library-specific background)
+2026-11-20 21:47:46,250 - INFO - No results meet minimum overlap requirement (3); terminating.
+2026-11-20 21:47:46,250 - INFO - Collection C2: BioCarta: No results meet minimum overlap requirement (3); terminating.
+2026-11-20 21:47:46,250 - INFO - Collection C2: BioCarta: Completed iterative enrichment: 0 iterations, 263 genes remaining
+2026-11-20 21:47:46,250 - INFO - Processing collection: C2: KEGG MEDICUS
+2026-11-20 21:47:46,250 - INFO - Collection C2: KEGG MEDICUS: Starting iterative enrichment with 263 genes
+2026-11-20 21:47:46,250 - INFO - Collection C2: KEGG MEDICUS: Iteration 1: Processing 263 remaining genes
+2026-11-20 21:47:46,251 - INFO - Input Gene Set
+
+	263 genes
+2026-11-20 21:47:46,251 - INFO - Calculating p-values for C2: KEGG MEDICUS
+2026-11-20 21:47:46,252 - INFO - Library-specific background size: 2258 genes (intersection of 23391 background genes and 2258 filtered library genes from 402 terms within size range [10, 600])
+2026-11-20 21:47:46,252 - INFO - Input gene set filtered: 263 → 20 genes (intersected with library-specific background)
+2026-11-20 21:47:46,263 - INFO - No results meet minimum overlap requirement (3); terminating.
+2026-11-20 21:47:46,264 - INFO - Collection C2: KEGG MEDICUS: No results meet minimum overlap requirement (3); terminating.
+2026-11-20 21:47:46,264 - INFO - Collection C2: KEGG MEDICUS: Completed iterative enrichment: 0 iterations, 263 genes remaining
+2026-11-20 21:47:46,264 - INFO - Processing collection: C2: Pathway Interaction Database
+2026-11-20 21:47:46,264 - INFO - Collection C2: Pathway Interaction Database: Starting iterative enrichment with 263 genes
+2026-11-20 21:47:46,265 - INFO - Collection C2: Pathway Interaction Database: Iteration 1: Processing 263 remaining genes
+2026-11-20 21:47:46,265 - INFO - Input Gene Set
+
+	263 genes
+2026-11-20 21:47:46,265 - INFO - Calculating p-values for C2: Pathway Interaction Database
+2026-11-20 21:47:46,266 - INFO - Library-specific background size: 2534 genes (intersection of 23391 background genes and 2534 filtered library genes from 196 terms within size range [10, 600])
+2026-11-20 21:47:46,266 - INFO - Input gene set filtered: 263 → 26 genes (intersected with library-specific background)
+2026-11-20 21:47:46,272 - INFO - Top term p-value >= threshold; terminating.
+2026-11-20 21:47:46,273 - INFO - Collection C2: Pathway Interaction Database: Top term p-value (0.024296985296209425) >= threshold (0.01); terminating.
+2026-11-20 21:47:46,273 - INFO - Collection C2: Pathway Interaction Database: Completed iterative enrichment: 0 iterations, 263 genes remaining
+2026-11-20 21:47:46,273 - INFO - Processing collection: C2: Reactome Pathways
+2026-11-20 21:47:46,273 - INFO - Collection C2: Reactome Pathways: Starting iterative enrichment with 263 genes
+2026-11-20 21:47:46,273 - INFO - Collection C2: Reactome Pathways: Iteration 1: Processing 263 remaining genes
+2026-11-20 21:47:46,274 - INFO - Input Gene Set
+
+	263 genes
+2026-11-20 21:47:46,274 - INFO - Calculating p-values for C2: Reactome Pathways
+2026-11-20 21:47:46,280 - INFO - Library-specific background size: 11019 genes (intersection of 23391 background genes and 11019 filtered library genes from 1408 terms within size range [10, 600])
+2026-11-20 21:47:46,280 - INFO - Input gene set filtered: 263 → 105 genes (intersected with library-specific background)
+2026-11-20 21:47:46,288 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 21:47:46,344 - INFO - Iteration 1: Top term 'REACTOME_BETA_DEFENSINS' has p-value 0.007870511987726168 and overlap size 3
+2026-11-20 21:47:46,345 - INFO - Overlap genes: {'DEFB114', 'DEFB104A', 'DEFB126'}
+2026-11-20 21:47:46,345 - INFO - Minimum overlap requirement: 3
+2026-11-20 21:47:46,345 - INFO - Collection C2: Reactome Pathways: Iteration 1: Found term 'REACTOME_BETA_DEFENSINS' (p=0.0079, overlap=3)
+2026-11-20 21:47:46,345 - INFO - Saved first iteration as regular enrichment
+2026-11-20 21:47:46,366 - INFO - Saved iteration 1 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/run_20261120_214746_235/C2.Reactome.Pathways_iteration_001.tsv
+2026-11-20 21:47:46,366 - INFO - Collection C2: Reactome Pathways: Iteration 2: Processing 260 remaining genes
+2026-11-20 21:47:46,367 - INFO - Input Gene Set
+
+	260 genes
+2026-11-20 21:47:46,367 - INFO - Calculating p-values for C2: Reactome Pathways
+2026-11-20 21:47:46,368 - INFO - Library-specific background size: 11019 genes (intersection of 23391 background genes and 11019 filtered library genes from 1408 terms within size range [10, 600])
+2026-11-20 21:47:46,369 - INFO - Input gene set filtered: 260 → 102 genes (intersected with library-specific background)
+2026-11-20 21:47:46,373 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 21:47:46,434 - INFO - Top term p-value >= threshold; terminating.
+2026-11-20 21:47:46,434 - INFO - Collection C2: Reactome Pathways: Top term p-value (0.01497403658716401) >= threshold (0.01); terminating.
+2026-11-20 21:47:46,434 - INFO - Collection C2: Reactome Pathways: Completed iterative enrichment: 1 iterations, 260 genes remaining
+2026-11-20 21:47:46,438 - INFO - Saved 1 iterations to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/random_seed1000_265genes_20261120_214746/C2: Reactome Pathways_iterative_results.tsv
+2026-11-20 21:47:46,438 - INFO - Processing collection: C2: WikiPathways
+2026-11-20 21:47:46,438 - INFO - Collection C2: WikiPathways: Starting iterative enrichment with 263 genes
+2026-11-20 21:47:46,439 - INFO - Collection C2: WikiPathways: Iteration 1: Processing 263 remaining genes
+2026-11-20 21:47:46,439 - INFO - Input Gene Set
+
+	263 genes
+2026-11-20 21:47:46,439 - INFO - Calculating p-values for C2: WikiPathways
+2026-11-20 21:47:46,444 - INFO - Library-specific background size: 9035 genes (intersection of 23391 background genes and 9035 filtered library genes from 766 terms within size range [10, 600])
+2026-11-20 21:47:46,444 - INFO - Input gene set filtered: 263 → 91 genes (intersected with library-specific background)
+2026-11-20 21:47:46,448 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 21:47:46,491 - INFO - Top term p-value >= threshold; terminating.
+2026-11-20 21:47:46,491 - INFO - Collection C2: WikiPathways: Top term p-value (0.019553667887463443) >= threshold (0.01); terminating.
+2026-11-20 21:47:46,491 - INFO - Collection C2: WikiPathways: Completed iterative enrichment: 0 iterations, 263 genes remaining
+2026-11-20 21:47:46,491 - INFO - Processing collection: C2: KEGG Legacy
+2026-11-20 21:47:46,492 - INFO - Collection C2: KEGG Legacy: Starting iterative enrichment with 263 genes
+2026-11-20 21:47:46,492 - INFO - Collection C2: KEGG Legacy: Iteration 1: Processing 263 remaining genes
+2026-11-20 21:47:46,492 - INFO - Input Gene Set
+
+	263 genes
+2026-11-20 21:47:46,492 - INFO - Calculating p-values for C2: KEGG Legacy
+2026-11-20 21:47:46,494 - INFO - Library-specific background size: 5230 genes (intersection of 23391 background genes and 5230 filtered library genes from 186 terms within size range [10, 600])
+2026-11-20 21:47:46,494 - INFO - Input gene set filtered: 263 → 54 genes (intersected with library-specific background)
+2026-11-20 21:47:46,501 - INFO - Top term p-value >= threshold; terminating.
+2026-11-20 21:47:46,502 - INFO - Collection C2: KEGG Legacy: Top term p-value (0.021529153658045586) >= threshold (0.01); terminating.
+2026-11-20 21:47:46,502 - INFO - Collection C2: KEGG Legacy: Completed iterative enrichment: 0 iterations, 263 genes remaining
+2026-11-20 21:47:46,502 - INFO - Processing collection: C5: Gene Ontology: Biological Process
+2026-11-20 21:47:46,502 - INFO - Collection C5: Gene Ontology: Biological Process: Starting iterative enrichment with 263 genes
+2026-11-20 21:47:46,502 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 1: Processing 263 remaining genes
+2026-11-20 21:47:46,503 - INFO - Input Gene Set
+
+	263 genes
+2026-11-20 21:47:46,503 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 21:47:46,533 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 21:47:46,533 - INFO - Input gene set filtered: 263 → 163 genes (intersected with library-specific background)
+2026-11-20 21:47:46,539 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 21:47:46,689 - INFO - Iteration 1: Top term 'GOBP_REGULATION_OF_LONG_TERM_SYNAPTIC_POTENTIATION' has p-value 8.986492586265943e-05 and overlap size 5
+2026-11-20 21:47:46,689 - INFO - Overlap genes: {'NRGN', 'ADORA1', 'APOE', 'PDE9A', 'ADORA2A'}
+2026-11-20 21:47:46,689 - INFO - Minimum overlap requirement: 3
+2026-11-20 21:47:46,689 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 1: Found term 'GOBP_REGULATION_OF_LONG_TERM_SYNAPTIC_POTENTIATION' (p=0.0001, overlap=5)
+2026-11-20 21:47:46,690 - INFO - Saved first iteration as regular enrichment
+2026-11-20 21:47:46,756 - INFO - Saved iteration 1 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/run_20261120_214746_235/C5.Gene.Ontology.Biological.Process_iteration_001.tsv
+2026-11-20 21:47:46,757 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 2: Processing 258 remaining genes
+2026-11-20 21:47:46,757 - INFO - Input Gene Set
+
+	258 genes
+2026-11-20 21:47:46,757 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 21:47:46,762 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 21:47:46,762 - INFO - Input gene set filtered: 258 → 158 genes (intersected with library-specific background)
+2026-11-20 21:47:46,768 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 21:47:46,921 - INFO - Iteration 2: Top term 'GOBP_PROSTAGLANDIN_SECRETION' has p-value 0.0005770042930494093 and overlap size 3
+2026-11-20 21:47:46,921 - INFO - Overlap genes: {'ACSL4', 'ABCC4', 'TNFRSF11A'}
+2026-11-20 21:47:46,921 - INFO - Minimum overlap requirement: 3
+2026-11-20 21:47:46,921 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 2: Found term 'GOBP_PROSTAGLANDIN_SECRETION' (p=0.0006, overlap=3)
+2026-11-20 21:47:47,025 - INFO - Saved iteration 2 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/run_20261120_214746_235/C5.Gene.Ontology.Biological.Process_iteration_002.tsv
+2026-11-20 21:47:47,026 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 3: Processing 255 remaining genes
+2026-11-20 21:47:47,026 - INFO - Input Gene Set
+
+	255 genes
+2026-11-20 21:47:47,027 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 21:47:47,031 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 21:47:47,032 - INFO - Input gene set filtered: 255 → 155 genes (intersected with library-specific background)
+2026-11-20 21:47:47,037 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 21:47:47,187 - INFO - Iteration 3: Top term 'GOBP_EXPLORATION_BEHAVIOR' has p-value 0.006739601195841205 and overlap size 3
+2026-11-20 21:47:47,188 - INFO - Overlap genes: {'CRBN', 'DLG4', 'GABRB3'}
+2026-11-20 21:47:47,188 - INFO - Minimum overlap requirement: 3
+2026-11-20 21:47:47,188 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 3: Found term 'GOBP_EXPLORATION_BEHAVIOR' (p=0.0067, overlap=3)
+2026-11-20 21:47:47,248 - INFO - Saved iteration 3 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/run_20261120_214746_235/C5.Gene.Ontology.Biological.Process_iteration_003.tsv
+2026-11-20 21:47:47,248 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 4: Processing 252 remaining genes
+2026-11-20 21:47:47,249 - INFO - Input Gene Set
+
+	252 genes
+2026-11-20 21:47:47,249 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 21:47:47,253 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 21:47:47,254 - INFO - Input gene set filtered: 252 → 152 genes (intersected with library-specific background)
+2026-11-20 21:47:47,260 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 21:47:47,421 - INFO - Iteration 4: Top term 'GOBP_POSITIVE_REGULATION_OF_RESPONSE_TO_ENDOPLASMIC_RETICULUM_STRESS' has p-value 0.006842998264782562 and overlap size 3
+2026-11-20 21:47:47,421 - INFO - Overlap genes: {'UBQLN1', 'TMEM33', 'RNFT2'}
+2026-11-20 21:47:47,422 - INFO - Minimum overlap requirement: 3
+2026-11-20 21:47:47,422 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 4: Found term 'GOBP_POSITIVE_REGULATION_OF_RESPONSE_TO_ENDOPLASMIC_RETICULUM_STRESS' (p=0.0068, overlap=3)
+2026-11-20 21:47:47,483 - INFO - Saved iteration 4 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/run_20261120_214746_235/C5.Gene.Ontology.Biological.Process_iteration_004.tsv
+2026-11-20 21:47:47,483 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 5: Processing 249 remaining genes
+2026-11-20 21:47:47,484 - INFO - Input Gene Set
+
+	249 genes
+2026-11-20 21:47:47,484 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 21:47:47,488 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 21:47:47,489 - INFO - Input gene set filtered: 249 → 149 genes (intersected with library-specific background)
+2026-11-20 21:47:47,495 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 21:47:47,648 - INFO - Iteration 5: Top term 'GOBP_NUCLEAR_TRANSCRIBED_MRNA_CATABOLIC_PROCESS' has p-value 0.007099781255840003 and overlap size 5
+2026-11-20 21:47:47,648 - INFO - Overlap genes: {'LSM7', 'HNRNPAB', 'CNOT7', 'SYNCRIP', 'DCP1B'}
+2026-11-20 21:47:47,648 - INFO - Minimum overlap requirement: 3
+2026-11-20 21:47:47,649 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 5: Found term 'GOBP_NUCLEAR_TRANSCRIBED_MRNA_CATABOLIC_PROCESS' (p=0.0071, overlap=5)
+2026-11-20 21:47:47,715 - INFO - Saved iteration 5 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/run_20261120_214746_235/C5.Gene.Ontology.Biological.Process_iteration_005.tsv
+2026-11-20 21:47:47,716 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 6: Processing 244 remaining genes
+2026-11-20 21:47:47,716 - INFO - Input Gene Set
+
+	244 genes
+2026-11-20 21:47:47,717 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 21:47:47,722 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 21:47:47,722 - INFO - Input gene set filtered: 244 → 144 genes (intersected with library-specific background)
+2026-11-20 21:47:47,729 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 21:47:47,994 - INFO - Iteration 6: Top term 'GOBP_NEGATIVE_REGULATION_OF_CELL_PROJECTION_ORGANIZATION' has p-value 0.007408904369452517 and overlap size 6
+2026-11-20 21:47:47,994 - INFO - Overlap genes: {'TRPC5', 'LIMA1', 'EFNB3', 'MAK', 'DPYSL3', 'DGUOK'}
+2026-11-20 21:47:47,994 - INFO - Minimum overlap requirement: 3
+2026-11-20 21:47:47,995 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 6: Found term 'GOBP_NEGATIVE_REGULATION_OF_CELL_PROJECTION_ORGANIZATION' (p=0.0074, overlap=6)
+2026-11-20 21:47:48,059 - INFO - Saved iteration 6 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/run_20261120_214746_235/C5.Gene.Ontology.Biological.Process_iteration_006.tsv
+2026-11-20 21:47:48,060 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 7: Processing 238 remaining genes
+2026-11-20 21:47:48,061 - INFO - Input Gene Set
+
+	238 genes
+2026-11-20 21:47:48,061 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 21:47:48,066 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 21:47:48,066 - INFO - Input gene set filtered: 238 → 138 genes (intersected with library-specific background)
+2026-11-20 21:47:48,072 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 21:47:48,223 - INFO - Top term p-value >= threshold; terminating.
+2026-11-20 21:47:48,224 - INFO - Collection C5: Gene Ontology: Biological Process: Top term p-value (0.011240435992288056) >= threshold (0.01); terminating.
+2026-11-20 21:47:48,224 - INFO - Collection C5: Gene Ontology: Biological Process: Completed iterative enrichment: 6 iterations, 238 genes remaining
+2026-11-20 21:47:48,230 - INFO - Saved 6 iterations to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/random_seed1000_265genes_20261120_214746/C5: Gene Ontology: Biological Process_iterative_results.tsv
+2026-11-20 21:47:48,230 - INFO - Processing collection: C5: Gene Ontology: Cellular Component
+2026-11-20 21:47:48,230 - INFO - Collection C5: Gene Ontology: Cellular Component: Starting iterative enrichment with 263 genes
+2026-11-20 21:47:48,230 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 1: Processing 263 remaining genes
+2026-11-20 21:47:48,231 - INFO - Input Gene Set
+
+	263 genes
+2026-11-20 21:47:48,231 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-20 21:47:48,237 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-20 21:47:48,237 - INFO - Input gene set filtered: 263 → 128 genes (intersected with library-specific background)
+2026-11-20 21:47:48,243 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 21:47:48,291 - INFO - Iteration 1: Top term 'GOCC_CILIARY_PLASM' has p-value 0.0008300379769556876 and overlap size 8
+2026-11-20 21:47:48,291 - INFO - Overlap genes: {'EFHC2', 'GLI1', 'RPGRIP1', 'DNAH11', 'CFAP90', 'MAK', 'SEPTIN2', 'CFAP52'}
+2026-11-20 21:47:48,291 - INFO - Minimum overlap requirement: 3
+2026-11-20 21:47:48,292 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 1: Found term 'GOCC_CILIARY_PLASM' (p=0.0008, overlap=8)
+2026-11-20 21:47:48,292 - INFO - Saved first iteration as regular enrichment
+2026-11-20 21:47:48,303 - INFO - Saved iteration 1 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/run_20261120_214746_235/C5.Gene.Ontology.Cellular.Component_iteration_001.tsv
+2026-11-20 21:47:48,303 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 2: Processing 255 remaining genes
+2026-11-20 21:47:48,304 - INFO - Input Gene Set
+
+	255 genes
+2026-11-20 21:47:48,304 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-20 21:47:48,305 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-20 21:47:48,306 - INFO - Input gene set filtered: 255 → 120 genes (intersected with library-specific background)
+2026-11-20 21:47:48,311 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 21:47:48,355 - INFO - Iteration 2: Top term 'GOCC_BRUSH_BORDER_MEMBRANE' has p-value 0.002590165999115383 and overlap size 4
+2026-11-20 21:47:48,355 - INFO - Overlap genes: {'CLTRN', 'LIMA1', 'SLC22A12', 'SLC28A3'}
+2026-11-20 21:47:48,355 - INFO - Minimum overlap requirement: 3
+2026-11-20 21:47:48,355 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 2: Found term 'GOCC_BRUSH_BORDER_MEMBRANE' (p=0.0026, overlap=4)
+2026-11-20 21:47:48,366 - INFO - Saved iteration 2 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/run_20261120_214746_235/C5.Gene.Ontology.Cellular.Component_iteration_002.tsv
+2026-11-20 21:47:48,366 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 3: Processing 251 remaining genes
+2026-11-20 21:47:48,367 - INFO - Input Gene Set
+
+	251 genes
+2026-11-20 21:47:48,367 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-20 21:47:48,368 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-20 21:47:48,369 - INFO - Input gene set filtered: 251 → 116 genes (intersected with library-specific background)
+2026-11-20 21:47:48,374 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 21:47:48,416 - INFO - Top term p-value >= threshold; terminating.
+2026-11-20 21:47:48,417 - INFO - Collection C5: Gene Ontology: Cellular Component: Top term p-value (0.015720892509244654) >= threshold (0.01); terminating.
+2026-11-20 21:47:48,417 - INFO - Collection C5: Gene Ontology: Cellular Component: Completed iterative enrichment: 2 iterations, 251 genes remaining
+2026-11-20 21:47:48,420 - INFO - Saved 2 iterations to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/random_seed1000_265genes_20261120_214746/C5: Gene Ontology: Cellular Component_iterative_results.tsv
+2026-11-20 21:47:48,420 - INFO - Processing collection: C5: Gene Ontology: Molecular Function
+2026-11-20 21:47:48,421 - INFO - Collection C5: Gene Ontology: Molecular Function: Starting iterative enrichment with 263 genes
+2026-11-20 21:47:48,421 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 1: Processing 263 remaining genes
+2026-11-20 21:47:48,421 - INFO - Input Gene Set
+
+	263 genes
+2026-11-20 21:47:48,422 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-20 21:47:48,430 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-20 21:47:48,430 - INFO - Input gene set filtered: 263 → 144 genes (intersected with library-specific background)
+2026-11-20 21:47:48,435 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 21:47:48,492 - INFO - Iteration 1: Top term 'GOMF_ASPARTIC_TYPE_PEPTIDASE_ACTIVITY' has p-value 0.0051820358517491935 and overlap size 3
+2026-11-20 21:47:48,492 - INFO - Overlap genes: {'CTSD', 'DDI2', 'PGC'}
+2026-11-20 21:47:48,492 - INFO - Minimum overlap requirement: 3
+2026-11-20 21:47:48,493 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 1: Found term 'GOMF_ASPARTIC_TYPE_PEPTIDASE_ACTIVITY' (p=0.0052, overlap=3)
+2026-11-20 21:47:48,493 - INFO - Saved first iteration as regular enrichment
+2026-11-20 21:47:48,509 - INFO - Saved iteration 1 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/run_20261120_214746_235/C5.Gene.Ontology.Molecular.Function_iteration_001.tsv
+2026-11-20 21:47:48,510 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 2: Processing 260 remaining genes
+2026-11-20 21:47:48,510 - INFO - Input Gene Set
+
+	260 genes
+2026-11-20 21:47:48,510 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-20 21:47:48,512 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-20 21:47:48,512 - INFO - Input gene set filtered: 260 → 141 genes (intersected with library-specific background)
+2026-11-20 21:47:48,518 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 21:47:48,571 - INFO - Iteration 2: Top term 'GOMF_ACTININ_BINDING' has p-value 0.006689124090317766 and overlap size 3
+2026-11-20 21:47:48,572 - INFO - Overlap genes: {'PDLIM5', 'ADORA2A', 'TRPC5'}
+2026-11-20 21:47:48,572 - INFO - Minimum overlap requirement: 3
+2026-11-20 21:47:48,572 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 2: Found term 'GOMF_ACTININ_BINDING' (p=0.0067, overlap=3)
+2026-11-20 21:47:48,588 - INFO - Saved iteration 2 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/run_20261120_214746_235/C5.Gene.Ontology.Molecular.Function_iteration_002.tsv
+2026-11-20 21:47:48,588 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 3: Processing 257 remaining genes
+2026-11-20 21:47:48,589 - INFO - Input Gene Set
+
+	257 genes
+2026-11-20 21:47:48,589 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-20 21:47:48,590 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-20 21:47:48,591 - INFO - Input gene set filtered: 257 → 138 genes (intersected with library-specific background)
+2026-11-20 21:47:48,596 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 21:47:48,650 - INFO - Top term p-value >= threshold; terminating.
+2026-11-20 21:47:48,650 - INFO - Collection C5: Gene Ontology: Molecular Function: Top term p-value (0.012719264525045442) >= threshold (0.01); terminating.
+2026-11-20 21:47:48,651 - INFO - Collection C5: Gene Ontology: Molecular Function: Completed iterative enrichment: 2 iterations, 257 genes remaining
+2026-11-20 21:47:48,654 - INFO - Saved 2 iterations to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/random_seed1000_265genes_20261120_214746/C5: Gene Ontology: Molecular Function_iterative_results.tsv
+2026-11-20 21:47:48,654 - INFO - Computing term q-values and network statistics...
+2026-11-20 21:47:48,657 - INFO - Generating 1000 random lists of 263 genes from the run background
+2026-11-20 21:47:51,115 - INFO - step 1/3: random lists of 263 genes (network test): 500/1000
+2026-11-20 21:47:51,784 - INFO - step 1/3: random lists of 263 genes (network test): 1000/1000
+2026-11-20 21:47:51,786 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 200): 500/2800
+2026-11-20 21:47:52,152 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 200): 1000/2800
+2026-11-20 21:47:52,599 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 200): 1500/2800
+2026-11-20 21:47:53,160 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 200): 2000/2800
+2026-11-20 21:47:53,738 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 200): 2500/2800
+2026-11-20 21:47:54,159 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 200): 2800/2800
+2026-11-20 21:47:55,526 - INFO - step 3/3: scoring random networks: 50/1000
+2026-11-20 21:47:55,533 - INFO - step 3/3: scoring random networks: 100/1000
+2026-11-20 21:47:55,533 - INFO - step 3/3: scoring random networks: 150/1000
+2026-11-20 21:47:55,533 - INFO - step 3/3: scoring random networks: 200/1000
+2026-11-20 21:47:55,534 - INFO - step 3/3: scoring random networks: 250/1000
+2026-11-20 21:47:55,538 - INFO - step 3/3: scoring random networks: 300/1000
+2026-11-20 21:47:55,542 - INFO - step 3/3: scoring random networks: 350/1000
+2026-11-20 21:47:55,544 - INFO - step 3/3: scoring random networks: 400/1000
+2026-11-20 21:47:55,547 - INFO - step 3/3: scoring random networks: 450/1000
+2026-11-20 21:47:55,556 - INFO - step 3/3: scoring random networks: 500/1000
+2026-11-20 21:47:55,557 - INFO - step 3/3: scoring random networks: 550/1000
+2026-11-20 21:47:55,560 - INFO - step 3/3: scoring random networks: 600/1000
+2026-11-20 21:47:55,567 - INFO - step 3/3: scoring random networks: 650/1000
+2026-11-20 21:47:55,567 - INFO - step 3/3: scoring random networks: 700/1000
+2026-11-20 21:47:55,567 - INFO - step 3/3: scoring random networks: 750/1000
+2026-11-20 21:47:55,575 - INFO - step 3/3: scoring random networks: 800/1000
+2026-11-20 21:47:55,581 - INFO - step 3/3: scoring random networks: 850/1000
+2026-11-20 21:47:55,581 - INFO - step 3/3: scoring random networks: 900/1000
+2026-11-20 21:47:55,581 - INFO - step 3/3: scoring random networks: 950/1000
+2026-11-20 21:47:55,581 - INFO - step 3/3: scoring random networks: 1000/1000
+2026-11-20 21:47:55,593 - INFO - Per-run statistics: 1000 random lists of 263 genes (+2800 for q) in 6.9 s (4 processes)
+2026-11-20 21:47:55,604 - INFO - Saved per-run statistical report to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/random_seed1000_265genes_20261120_214746
+2026-11-20 21:47:55,624 - INFO - Network communities: 8 (Leiden (igraph, modularity)); saved network_modules_*.tsv
+2026-11-20 21:47:55,625 - INFO - Saved combined iterative results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/random_seed1000_265genes_20261120_214746/combined_iterative_results.tsv
+2026-11-20 21:47:55,652 - INFO - Saved combined network DOT to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/random_seed1000_265genes_20261120_214746/combined_network.dot (11 terms)
+2026-11-20 21:47:55,655 - INFO - Saved semantic network (network_llm.dot) and LLM prompt (llm_prompt.txt) to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000/random_seed1000_265genes_20261120_214746
+✅ Analysis completed successfully! Results saved to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step12_supp_figures/random_seed1000

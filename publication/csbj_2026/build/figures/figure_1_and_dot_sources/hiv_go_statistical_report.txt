@@ -1,0 +1,69 @@
+Gene list: HIV dependency factors
+Validated input genes: 265
+Collections analysed (input and random lists): 3
+Largest cluster: 164 nodes, 138 genes, 26 terms, 212 edges, 1.5362 edges per gene, 3 collections
+
+====================================================================================================
+iGEA STATISTICAL REPORT (per-run random lists)
+====================================================================================================
+Random lists: 10000, each of 265 genes (= validated input size), drawn without replacement
+from the analysis background (23391 genes); seed 2026; 22.9 s on 4 process(es).
+Each random list was analysed with the same collections and parameters as the input:
+  p_value_method=Fisher's Exact Test, p_threshold=0.01, min_overlap=3, min_term_size=10, max_term_size=600, max_iterations=30, background=all_genes
+Collections: C5: Gene Ontology: Biological Process; C5: Gene Ontology: Cellular Component; C5: Gene Ontology: Molecular Function
+
+TERM LEVEL (signal-adjusted empirical q-value)
+  A random list of this size selects on average 10.25 terms by chance.
+  q = expected chance terms with p' <= p / selected terms with p' <= p (per collection, monotone),
+  re-estimated after treating genes of accepted terms as signal (127 of 265 genes
+  treated as noise in the final round; 1000 random lists per size step).
+  Terms kept (q < 0.1): 26 of 33. Random lists are filtered the same way.
+
+NETWORK LEVEL (largest connected cluster)
+  z = (observed - random mean) / random SD
+  empirical p = (r + 1) / (n + 1), r = random lists with a value >= observed, n = 10000
+  (smallest attainable p = 9.999e-05). The metrics describe the same cluster and are not independent tests.
+
+  Metric                      Observed  Rand mean  Rand SD  Rand max       z     r    Emp. p
+  ------------------------------------------------------------------------------------------
+  Cluster Size                     164      2.062    4.072        37   39.77     0 9.999e-05
+  Number of Genes                  138      1.779    3.635        33   37.47     0 9.999e-05
+  Number of Terms                   26      0.283    0.501         5   51.29     0 9.999e-05
+  Number of Edges                  212      1.835    3.832        44   54.84     0 9.999e-05
+  Average Edges per Gene         1.536      0.269    0.456         3    2.78    46    0.0047
+
+TERMS
+  Collection                                It     p-value  q-value  Kept  Term
+  C5: Gene Ontology: Biological Process      1     2.4e-08        0  yes   GOBP_GOLGI_VESICLE_TRANSPORT
+  C5: Gene Ontology: Biological Process      2    1.53e-05    0.006  yes   GOBP_NUCLEAR_EXPORT
+  C5: Gene Ontology: Biological Process      3    4.92e-05   0.0192  yes   GOBP_DNA_TEMPLATED_TRANSCRIPTION_ELONGATION
+  C5: Gene Ontology: Biological Process      4    3.88e-05   0.0192  yes   GOBP_GLYCOLIPID_BIOSYNTHETIC_PROCESS
+  C5: Gene Ontology: Biological Process      5    0.000141   0.0354  yes   GOBP_REGULATION_OF_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY
+  C5: Gene Ontology: Biological Process      6    0.000574   0.0982  yes   GOBP_POSITIVE_REGULATION_OF_MOLECULAR_FUNCTION
+  C5: Gene Ontology: Biological Process      7     0.00108    0.131  no    GOBP_POSITIVE_REGULATION_BY_HOST_OF_VIRAL_PROCESS
+  C5: Gene Ontology: Biological Process      8     0.00411    0.249  no    GOBP_PROTEIN_POLYUBIQUITINATION
+  C5: Gene Ontology: Biological Process      9     0.00548    0.249  no    GOBP_RIBONUCLEOPROTEIN_COMPLEX_BIOGENESIS
+  C5: Gene Ontology: Biological Process     10     0.00527    0.249  no    GOBP_POSITIVE_REGULATION_OF_INTERFERON_BETA_PRODUCTION
+  C5: Gene Ontology: Biological Process     11     0.00529    0.249  no    GOBP_PROTEIN_N_LINKED_GLYCOSYLATION_VIA_ASPARAGINE
+  C5: Gene Ontology: Biological Process     12       0.006    0.249  no    GOBP_ARP2_3_COMPLEX_MEDIATED_ACTIN_NUCLEATION
+  C5: Gene Ontology: Cellular Component      1    1.18e-05    0.002  yes   GOCC_NUCLEAR_PORE_OUTER_RING
+  C5: Gene Ontology: Cellular Component      2    4.24e-05   0.0045  yes   GOCC_CORE_MEDIATOR_COMPLEX
+  C5: Gene Ontology: Cellular Component      3    0.000372   0.0205  yes   GOCC_GOLGI_TRANSPORT_COMPLEX
+  C5: Gene Ontology: Cellular Component      4    0.000428   0.0205  yes   GOCC_ENDOPLASMIC_RETICULUM_PROTEIN_CONTAINING_COMPLEX
+  C5: Gene Ontology: Cellular Component      5    0.000868   0.0308  yes   GOCC_ENDOPLASMIC_RETICULUM_GOLGI_INTERMEDIATE_COMPARTMENT_MEMBRANE
+  C5: Gene Ontology: Cellular Component      6     0.00123   0.0348  yes   GOCC_NUCLEAR_EXOSOME_RNASE_COMPLEX
+  C5: Gene Ontology: Cellular Component      7     0.00403   0.0767  yes   GOCC_CULLIN_RING_UBIQUITIN_LIGASE_COMPLEX
+  C5: Gene Ontology: Cellular Component      8     0.00738   0.0847  yes   GOCC_NUCLEAR_PORE
+  C5: Gene Ontology: Cellular Component      9     0.00745   0.0847  yes   GOCC_CLATHRIN_COATED_VESICLE_MEMBRANE
+  C5: Gene Ontology: Cellular Component     10      0.0066   0.0847  yes   GOCC_SPINDLE
+  C5: Gene Ontology: Cellular Component     11      0.0098   0.0976  yes   GOCC_AUTOPHAGOSOME
+  C5: Gene Ontology: Molecular Function      1    1.01e-06        0  yes   GOMF_STRUCTURAL_CONSTITUENT_OF_NUCLEAR_PORE
+  C5: Gene Ontology: Molecular Function      2    1.55e-05   0.0015  yes   GOMF_CATALYTIC_ACTIVITY_ACTING_ON_RNA
+  C5: Gene Ontology: Molecular Function      3    0.000611   0.0361  yes   GOMF_GTPASE_ACTIVATOR_ACTIVITY
+  C5: Gene Ontology: Molecular Function      4     0.00113   0.0361  yes   GOMF_TRANSCRIPTION_COREGULATOR_ACTIVITY
+  C5: Gene Ontology: Molecular Function      5    0.000854   0.0361  yes   GOMF_ENZYME_SUBSTRATE_ADAPTOR_ACTIVITY
+  C5: Gene Ontology: Molecular Function      6    0.000935   0.0361  yes   GOMF_ALPHA_TUBULIN_BINDING
+  C5: Gene Ontology: Molecular Function      7     0.00103   0.0361  yes   GOMF_CARGO_ADAPTOR_ACTIVITY
+  C5: Gene Ontology: Molecular Function      8     0.00273   0.0658  yes   GOMF_HEXOSYLTRANSFERASE_ACTIVITY
+  C5: Gene Ontology: Molecular Function      9     0.00302   0.0658  yes   GOMF_G_PROTEIN_ACTIVITY
+  C5: Gene Ontology: Molecular Function     10     0.00675    0.109  no    GOMF_GTPASE_BINDING

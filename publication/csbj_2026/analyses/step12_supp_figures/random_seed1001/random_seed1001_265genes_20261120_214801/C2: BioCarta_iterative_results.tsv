@@ -1,0 +1,2 @@
+Library	Iteration	Term	Description	iteration overlapping genes	iteration p-value	iteration -log(p-value)	Genes removed for next iteration	Full list overlapping genes	Full list p-value	Regular FDR	Full list overlapping genes (gene names)
+C2: BioCarta	1	BIOCARTA: CALCINEURIN PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/BIOCARTA_CALCINEURIN_PATHWAY	3/18	0.0011730251493197105	2.9306926766366543	NFATC1, PPP3CB, PRKCA	3/18	0.0011730251493197105	0.1325518418731273	NFATC1, PPP3CB, PRKCA

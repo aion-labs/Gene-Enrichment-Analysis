@@ -217,6 +217,7 @@ def _pool_map(fn, items, init, initargs, n_jobs, progress=None, label=""):
 
 # ----------------------------------------------------------------------------- optional disk cache
 CACHE_BLOCK = 500
+CACHE_VERSION = "2-fisher-one-sided"   # bump when results of the same parameters change
 
 
 def _cache_key(background, collections, params, seed) -> str:
@@ -231,6 +232,7 @@ def _cache_key(background, collections, params, seed) -> str:
         h.update("\n".join(col.genes).encode())
     h.update(repr(sorted(params.items())).encode())
     h.update(str(seed).encode())
+    h.update(CACHE_VERSION.encode())   # changes whenever the computation changes (e.g. the test)
     return h.hexdigest()[:16]
 
 
@@ -307,7 +309,23 @@ def run_statistics(observed_records: Sequence[Record], libraries, background_gen
     tasks = [(n_genes, i) for i in range(n_lists)]
     grid = grid_sizes(n_genes) if q_threshold is not None else [n_genes]
     tasks += [(s, i) for s in grid if s != n_genes for i in range(grid_lists)]
-    stage = lambda d, n, lab: progress_callback(d, n, lab) if progress_callback else None
+    n_grid = len(tasks) - n_lists
+    n_steps = 3 if n_grid else 2
+
+    def stage(d, n, lab):
+        """Progress per step: (1) lists of the input size for the network test, (2) smaller lists for the
+        q-value signal adjustment, (3) building and scoring the random networks."""
+        if not progress_callback:
+            return
+        if lab == "random lists":
+            if d <= n_lists:
+                progress_callback(d, n_lists, f"step 1/{n_steps}: random lists of {n_genes} genes (network test)")
+            else:
+                progress_callback(d - n_lists, n_grid, f"step 2/{n_steps}: lists for the q-value adjustment "
+                                                       f"({len(grid) - 1} sizes × {grid_lists:,})")
+        else:
+            progress_callback(d, n, f"step {n_steps}/{n_steps}: scoring {lab}")
+
     if cache_dir:
         generated = _generate_cached(tasks, collections, background, seed, params, n_jobs, stage, cache_dir)
     else:
@@ -388,7 +406,7 @@ def format_report(table: pd.DataFrame, attrs: Dict, libraries: List[str], params
         f"Random lists: {n}, each of {attrs['n_genes']} genes (= validated input size), drawn without replacement",
         f"from the analysis background ({attrs['background_size']} genes); seed {attrs['seed']}; {attrs['seconds']} s on {attrs['n_jobs']} process(es).",
         "Each random list was analysed with the same collections and parameters as the input:",
-        "  " + ", ".join(f"{k}={v}" for k, v in params.items()),
+        "  " + ", ".join(f"{k}={v}" + (" (one-sided)" if v == FISHER else "") for k, v in params.items()),
         "Collections: " + "; ".join(libraries),
         "",
     ]
@@ -417,7 +435,7 @@ def format_report(table: pd.DataFrame, attrs: Dict, libraries: List[str], params
         lines.append(f"  {r['Metric']:<26}{r['Observed']:>10.4g}{r['Null Mean']:>11.3f}{r['Null SD']:>9.3f}"
                      f"{r['Null Max']:>10.4g}{r['Z-score']:>8.2f}{r['Random >= Observed']:>6d}{r['Empirical p']:>10.4g}")
     if observed_terms is not None and len(observed_terms):
-        lines += ["", "TERMS", f"  {'Library':<40}{'It':>4}  {'p-value':>10}{'q-value':>9}  Kept  Term"]
+        lines += ["", "TERMS", f"  {'Collection':<40}{'It':>4}  {'p-value':>10}{'q-value':>9}  Kept  Term"]
         for _, r in observed_terms.sort_values(["Library", "Iteration"]).iterrows():
             lines.append(f"  {r['Library'][:39]:<40}{r['Iteration']:>4}  {r['p-value']:>10.3g}{r['q-value']:>9.3g}  "
                          f"{'yes ' if r['Kept'] else 'no  '}  {r['Term']}")

@@ -1,0 +1,25 @@
+Gene list: HIV_dependency_factors.symbols
+Validated input genes: 272
+Largest cluster: 241 nodes, 179 genes, 62 terms, 412 edges, 2.3017 edges per gene, 10 collections
+
+====================================================================================================
+iGEA NETWORK STATISTICAL REPORT (per-run random-list null)
+====================================================================================================
+Random lists: 1000, each of 272 genes (= validated input size), drawn without replacement
+from the analysis background (23391 genes); seed 2026; 7.7 s on 4 process(es).
+Each random list was analysed with the same collections and parameters as the input:
+  p_value_method=Fisher's Exact Test, p_threshold=0.01, min_overlap=3, min_term_size=10, max_term_size=600, max_iterations=None, background=all_genes
+Collections: H: Hallmark Gene Sets; C2: BioCarta; C2: KEGG MEDICUS; C2: Pathway Interaction Database; C2: Reactome Pathways; C2: WikiPathways; C2: KEGG Legacy; C5: Gene Ontology: Biological Process; C5: Gene Ontology: Cellular Component; C5: Gene Ontology: Molecular Function
+
+Statistics for the largest connected cluster:
+  z = (observed - random mean) / random SD
+  empirical p = (r + 1) / (n + 1), r = random lists with a value >= observed, n = 1000
+  (smallest attainable p = 0.000999). The metrics describe the same cluster and are not independent tests.
+
+  Metric                      Observed  Rand mean  Rand SD  Rand max       z     r    Emp. p
+  ------------------------------------------------------------------------------------------
+  Cluster Size                     241     42.461   23.444       125    8.47     0  0.000999
+  Number of Genes                  179     32.747   18.002        99    8.12     0  0.000999
+  Number of Terms                   62      9.714    5.834        29    8.96     0  0.000999
+  Number of Edges                  412     48.656   29.562       160   12.29     0  0.000999
+  Average Edges per Gene         2.302      1.451    0.258     3.375    3.31    11   0.01199

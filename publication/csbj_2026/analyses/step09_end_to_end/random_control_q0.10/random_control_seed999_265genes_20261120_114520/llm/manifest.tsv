@@ -1,0 +1,4 @@
+repeat	requested_model	returned_model	response_id	api	started_utc	seconds	input_tokens	output_tokens	response_file
+1	gpt-6-astra	gpt-6-astra	resp_05ba31d4f5ec31af016b0038b9f88c87d288a838c76bdc28dc	responses	2026-11-20T12:10:33+00:00	22.4	1812	555	response_r1.json
+2	gpt-6-astra	gpt-6-astra	resp_0438ab02ebf533a8016b0038d0f90087d294cdf008ae0b89d7	responses	2026-11-20T12:10:56+00:00	23.6	1812	592	response_r2.json
+3	gpt-6-astra	gpt-6-astra	resp_0d4c5fc18d12afeb016b0038e811dc87d2abeafb37570f7e1c	responses	2026-11-20T12:11:19+00:00	18.7	1812	607	response_r3.json

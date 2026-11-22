@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Supplementary Note 1 — Hypoxia and vaccination signatures</title>
+<style>@page{size:A4;margin:18mm 18mm 20mm 18mm}body{font-family:Georgia,'DejaVu Serif',serif;font-size:10.5pt;line-height:1.55;color:#1d2329;max-width:170mm;margin:0 auto}
+.kicker{font:600 8.5pt Helvetica,Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#1F5FA8;margin:0 0 4px}h1{font:700 18pt Helvetica,Arial,sans-serif;margin:0 0 14px}h2{font:700 11.5pt Helvetica,Arial,sans-serif;margin:16px 0 6px}p{margin:0 0 9px}.refs p{font-size:9.5pt}</style></head>
+<body>
+<p class="kicker">Supplementary Note 1</p>
+<h1>Hypoxia and influenza vaccination signatures</h1>
+<p>To test iGEA on a short and a long gene list, we analyzed a hypoxia signature of 75 genes [1] and an influenza vaccination signature of 426 genes [2] with the ten gene-set collections and default settings used for the HIV dependency factors.</p>
+<h2>Networks and communities</h2>
+<p>Both iGEA networks were significant (empirical p &lt; 0.0001). For hypoxia, all 32 selected terms passed the term-level filter (q &lt; 0.10) and formed four communities, and each collection contributed a different perspective on the response to low oxygen: Hallmark and the Pathway Interaction Database the HIF-1 program, GO Cellular Component the mitochondrial matrix, KEGG, Reactome and WikiPathways glycolysis, and GO Molecular Function the oxygen-dependent 2-oxoglutarate dioxygenases, which Reactome linked to collagen formation and histone demethylation. For vaccination, 70 of 80 terms passed and formed six communities led by neutrophil degranulation, cytokine signaling and phagocytosis.</p>
+<p>As for the HIV list, the two methods diverged as collections were added. With ten collections, the ORA networks had 6.7 (hypoxia) and 10.8 (vaccination) edges per gene and the iGEA networks 2.7 and 2.5, and iGEA modularity remained higher than that of ORA at every step (Supplementary Figure 6; Supplementary Table 6).</p>
+<h2>LLM interpretation</h2>
+<p>In the context-blinded first turn, all three answers for the hypoxia network proposed an expression comparison under sustained low oxygen (Supplementary Table 15), and all three for the vaccination network a bulk expression signature from blood or inflamed tissue with a strong myeloid contribution, without inferring vaccination (Supplementary Table 16). When told how the vaccination list was generated, the model noted that its estimate was “wrong about the comparison: this was variation among vaccine recipients, not a contrast between inflamed and control samples”, and asked whether people with higher antibody titers had more myeloid cells in their day-3 blood sample, a different state within those cells, or both.</p>
+<div class="refs"><h2>References</h2>
+<p>1. Benita Y, Kikuchi H, Smith AD, Zhang MQ, Chung DC, Xavier RJ. An integrative genomics approach identifies Hypoxia Inducible Factor-1 (HIF-1)-target genes that form the core response to hypoxia. Nucleic Acids Res. 2009;37:4587–4602.</p>
+<p>2. Nakaya HI, Wrammert J, Lee EK, et al. Systems biology of vaccination for seasonal influenza in humans. Nat Immunol. 2011;12:786–795.</p></div>
+</body></html>

@@ -1,0 +1,25 @@
+Gene list: vaccination (Nakaya, C7 VAX HAI 28d, 3d positive)
+Validated input genes: 426
+Largest cluster: 347 nodes, 272 genes, 75 terms, 702 edges, 2.5809 edges per gene, 9 collections
+
+====================================================================================================
+iGEA NETWORK STATISTICAL REPORT (per-run random-list null)
+====================================================================================================
+Random lists: 10000, each of 426 genes (= validated input size), drawn without replacement
+from the analysis background (23391 genes); seed 2026; ~240 (3 chunks) s on 4 process(es).
+Each random list was analysed with the same collections and parameters as the input:
+  p_value_method=Fisher's Exact Test, p_threshold=0.01, min_overlap=3, min_term_size=10, max_term_size=600, max_iterations=None, background=all_genes
+Collections: H: Hallmark Gene Sets; C2: BioCarta; C2: KEGG MEDICUS; C2: Pathway Interaction Database; C2: Reactome Pathways; C2: WikiPathways; C2: KEGG Legacy; C5: Gene Ontology: Biological Process; C5: Gene Ontology: Cellular Component; C5: Gene Ontology: Molecular Function
+
+Statistics for the largest connected cluster:
+  z = (observed - random mean) / random SD
+  empirical p = (r + 1) / (n + 1), r = random lists with a value >= observed, n = 10000
+  (smallest attainable p = 9.999e-05). The metrics describe the same cluster and are not independent tests.
+
+  Metric                      Observed  Rand mean  Rand SD  Rand max       z     r    Emp. p
+  ------------------------------------------------------------------------------------------
+  Cluster Size                     347     63.101   32.811       214    8.65     0 9.999e-05
+  Number of Genes                  272     50.101   26.122       175    8.49     0 9.999e-05
+  Number of Terms                   75     13.001    7.158        45    8.66     0 9.999e-05
+  Number of Edges                  702     73.433   41.515       270   15.14     0 9.999e-05
+  Average Edges per Gene         2.581      1.439    0.203     3.357    5.64    12    0.0013

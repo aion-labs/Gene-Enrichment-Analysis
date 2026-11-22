@@ -1,0 +1,2 @@
+Library	Iteration	Term	Description	iteration overlapping genes	iteration p-value	iteration -log(p-value)	Genes removed for next iteration	Full list overlapping genes	Full list p-value	Regular FDR	Full list overlapping genes (gene names)
+C2: KEGG Legacy	1	KEGG: WNT SIGNALING PATHWAY	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_WNT_SIGNALING_PATHWAY	6/151	0.004732101321143385	2.3249459650706537	AXIN1, NFATC1, PPP3CB, PPP3R1, PRKCA, TBL1X	6/151	0.004732101321143385	0.7460766703894538	AXIN1, NFATC1, PPP3CB, PPP3R1, PRKCA, TBL1X

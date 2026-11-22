@@ -1,0 +1,18 @@
+graph iterative_enrichment_all {
+  graph [layout=neato];
+  node [shape=ellipse];
+  subgraph cluster_legend_libs {
+    label="Collections";
+    node [shape=box, style=filled, fontcolor="white"];
+    legend_lib_1 [label="C5: Gene Ontology: Biological Process", fillcolor="#C50A00"];
+  }
+    "gene_C4BPB" [label="C4BPB", type="gene", width=0.7, height=0.7];
+    "gene_CR2" [label="CR2", type="gene", width=0.7, height=0.7];
+    "gene_FCGR2B" [label="FCGR2B", type="gene", width=0.7, height=0.7];
+    "gene_PARP3" [label="PARP3", type="gene", width=0.7, height=0.7];
+    "term_1_GOBP_NEGATIVE_REGULATION_OF_B_CELL_MEDIATED_IMMUNITY" [label="GOBP: NEGATIVE REGULATION OF B CELL MEDIATED IMMUNITY", style=filled, fillcolor="#C50A00", fontcolor="white", type="term", collection="C5: Gene Ontology: Biological Process", width=2, height=2];
+    "gene_C4BPB" -- "term_1_GOBP_NEGATIVE_REGULATION_OF_B_CELL_MEDIATED_IMMUNITY" [color="#C50A00"];
+    "gene_CR2" -- "term_1_GOBP_NEGATIVE_REGULATION_OF_B_CELL_MEDIATED_IMMUNITY" [color="#C50A00"];
+    "gene_FCGR2B" -- "term_1_GOBP_NEGATIVE_REGULATION_OF_B_CELL_MEDIATED_IMMUNITY" [color="#C50A00"];
+    "gene_PARP3" -- "term_1_GOBP_NEGATIVE_REGULATION_OF_B_CELL_MEDIATED_IMMUNITY" [color="#C50A00"];
+}

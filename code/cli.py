@@ -8,7 +8,7 @@ import typer
 import pandas as pd
 
 from background_gene_set import BackgroundGeneSet
-from enrichment import Enrichment
+from enrichment import format_term_name, Enrichment
 from gene_set import GeneSet
 from gene_set_library import GeneSetLibrary
 from iter_enrichment import IterativeEnrichment
@@ -55,7 +55,7 @@ def run_enrichment(
     background_gene_set = BackgroundGeneSet(str(background))
     
     # Load gene set libraries
-    logger.info(f"Loading {len(libraries)} gene set libraries")
+    logger.info(f"Loading {len(libraries)} gene set collections")
     gene_set_libraries = []
     for lib_path in libraries:
         # Get library name from alias.json
@@ -70,7 +70,7 @@ def run_enrichment(
         library.unique_genes = library.compute_unique_genes()
         library.size = len(library.unique_genes)
         gene_set_libraries.append(library)
-        logger.info(f"Loaded library {lib_name}: {library.num_terms} terms")
+        logger.info(f"Loaded collection {lib_name}: {library.num_terms} terms")
     
     # Process each gene set
     for gene_set_path in gene_sets:
@@ -154,7 +154,7 @@ def run_enrichment(
             run_regular_enrichment(
                 gene_set, gene_set_libraries, background_gene_set,
                 p_value_method, p_threshold, min_overlap,
-                gene_set_output_dir
+                gene_set_output_dir, min_term_size=min_term_size, max_term_size=max_term_size,
             )
         elif mode == "iterative":
             # Pass output_dir (may be None) to IterativeEnrichment for intermediate files
@@ -175,22 +175,25 @@ def run_regular_enrichment(
     p_threshold: float,
     min_overlap: int,
     output_dir: Path,
+    min_term_size: int = 10,
+    max_term_size: int = 600,
 ):
-    """Run regular enrichment analysis."""
+    """Run regular enrichment analysis (ORA): every gene set tested once, BH FDR per collection over all
+    tested sets; reported sets have p <= p_threshold and overlap >= min_overlap."""
     logger.info("Running regular enrichment analysis")
     
     all_results = []
     
     for library in gene_set_libraries:
-        logger.info(f"Processing library: {library.name}")
+        logger.info(f"Processing collection: {library.name}")
         
         try:
             enrich = Enrichment(
                 gene_set,
                 library,
                 background_gene_set,
-                min_term_size=library.library[0]["size"] if library.library else 10,
-                max_term_size=library.library[-1]["size"] if library.library else 600,
+                min_term_size=min_term_size,
+                max_term_size=max_term_size,
                 p_value_method_name=p_value_method,
             )
             
@@ -239,7 +242,7 @@ def run_regular_enrichment(
             combined_rows.append({
                 "Library": library_name,
                 "Rank": result.get("rank", ""),
-                "Term": result.get("term", "").replace("_", " ") if result.get("term") else "",
+                "Term": format_term_name(result.get("term", "")) if result.get("term") else "",
                 "Description": result.get("description", ""),
                 "Overlap size": result.get("overlap_size", ""),
                 "p-value": result.get("p-value", ""),
@@ -252,6 +255,11 @@ def run_regular_enrichment(
         column_order = ["Library", "Rank", "Term", "Description", "Overlap size", "p-value", "-log(p-value)", "FDR", "Genes"]
         combined_df = pd.DataFrame(combined_rows)
         if not combined_df.empty:
+            # Rank = position by p-value within each collection (collections in the order analysed)
+            order = {lib.name: i for i, lib in enumerate(gene_set_libraries)}
+            combined_df = combined_df.assign(_o=combined_df["Library"].map(order)).sort_values(
+                ["_o", "p-value"], kind="stable").drop(columns="_o")
+            combined_df["Rank"] = combined_df.groupby("Library").cumcount() + 1
             combined_df = combined_df[column_order]
         
         combined_file = output_dir / "combined_regular_results.tsv"
@@ -856,12 +864,12 @@ def run_iterative_enrichment(
     all_iter_enrich_objects = {}  # Store IterativeEnrichment objects for benchmarking
     
     for library in gene_set_libraries:
-        logger.info(f"Processing library: {library.name}")
+        logger.info(f"Processing collection: {library.name}")
         
         try:
             # Create progress callback for logging
             def progress_callback(message: str):
-                logger.info(f"Library {library.name}: {message}")
+                logger.info(f"Collection {library.name}: {message}")
             
             # Pass output_dir to IterativeEnrichment
             # If None, IterativeEnrichment will use its default results/ directory
@@ -1066,12 +1074,16 @@ def main(
     ),
     libraries: List[Path] = typer.Option(
         None,
+        "--collections",
+        "-c",
         "--libraries",
         "-l",
         exists=True,
         file_okay=True,
         dir_okay=False,
-        help="Paths to gene set library files. Default: active libraries from alias.json.",
+        help="Gene set collection files (GMT); repeat the option for each file. Default: the active "
+             "collections in data/libraries/alias.json (see code/libraries.py list). "
+             "--libraries/-l is the former name and still works.",
         show_default=False,
     ),
     mode: str = typer.Option(
@@ -1083,7 +1095,8 @@ def main(
     p_value_method: str = typer.Option(
         "Fisher's Exact Test",
         "--method",
-        help="P-value calculation method: 'fisher' (Fisher's Exact Test), 'hga' (Hypergeometric Test), or 'chi' (Chi-squared Test)",
+        help="P-value calculation method: 'fisher' (Fisher's exact test, one-sided: over-representation; default), "
+             "'hga' (hypergeometric test; same p-values as one-sided Fisher), or 'chi' (chi-squared test)",
     ),
     p_threshold: float = typer.Option(
         0.01,
@@ -1217,14 +1230,14 @@ def main(
                     if lib_file.exists():
                         active_libraries.append(lib_file)
                     else:
-                        typer.echo(f"Warning: Active library file not found: {alias['file']}", err=True)
+                        typer.echo(f"Warning: Active collection file not found: {alias['file']}", err=True)
             
             if not active_libraries:
-                typer.echo("Error: No active library files found in alias.json", err=True)
+                typer.echo("Error: No active collection files found in alias.json", err=True)
                 raise typer.Exit(code=1)
             
             libraries = active_libraries
-            typer.echo(f"📚 Using active libraries from alias.json: {len(libraries)} files")
+            typer.echo(f"📚 Using active collections from alias.json: {len(libraries)} files")
             for lib in libraries:
                 typer.echo(f"   - {lib.name}")
             typer.echo("")
@@ -1235,14 +1248,14 @@ def main(
 
     # Ensure that the resulting variables are not empty
     if not gene_sets or not libraries:
-        typer.echo("Error: Gene sets and libraries cannot be empty.", err=True)
+        typer.echo("Error: Gene sets and collections cannot be empty.", err=True)
         raise typer.Exit(code=1)
 
     # Display analysis parameters
     typer.echo(f"Analysis Mode: {mode}")
     typer.echo(f"Gene Sets: {len(gene_sets)} files")
     typer.echo(f"Background: {background}")
-    typer.echo(f"Libraries: {len(libraries)} files")
+    typer.echo(f"Collections: {len(libraries)} files")
     typer.echo(f"P-value Method: {p_value_method}")
     typer.echo(f"P-value Threshold: {p_threshold}")
     typer.echo(f"Min Overlap: {min_overlap}")

@@ -1,0 +1,2 @@
+Library	Iteration	Term	Description	iteration overlapping genes	iteration p-value	iteration -log(p-value)	Genes removed for next iteration	Full list overlapping genes	Full list p-value	Regular FDR	Full list overlapping genes (gene names)
+C2: KEGG Legacy	1	KEGG: SYSTEMIC LUPUS ERYTHEMATOSUS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_SYSTEMIC_LUPUS_ERYTHEMATOSUS	6/139	0.007213588864096728	2.141848613770126	FCGR2B, H2AC14, H2BC14, H3C8, HLA-DQA2, IL10	6/139	0.007213588864096728	1.0	FCGR2B, H2AC14, H2BC14, H3C8, HLA-DQA2, IL10

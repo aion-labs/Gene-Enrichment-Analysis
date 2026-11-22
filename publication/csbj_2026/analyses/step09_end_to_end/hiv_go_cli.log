@@ -1,0 +1,606 @@
+🎯 Using default background: all_genes.txt
+Analysis Mode: iterative
+Gene Sets: 1 files
+Background: /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/backgrounds/all_genes.txt
+Collections: 3 files
+P-value Method: Fisher's Exact Test
+P-value Threshold: 0.01
+Min Overlap: 3
+Term Size Range: 10-600
+Max Iterations: 30
+Statistical Benchmarking: Enabled
+Output Directory: /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only
+
+2026-11-20 11:44:30,498 - INFO - Loading background gene set: /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/backgrounds/all_genes.txt
+2026-11-20 11:44:30,500 - INFO - Loading gene info from /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/recent_release/Homo_sapiens.gene_info.gz
+2026-11-20 11:44:30,686 - INFO - Loaded 193577 human Entrez ID mappings (taxonomy ID 9606)
+2026-11-20 11:44:30,686 - INFO - Loaded 69379 synonym mappings
+2026-11-20 11:44:30,688 - INFO - Sample Entrez IDs: ['1', '2', '9']
+2026-11-20 11:44:30,689 - INFO - Sample symbols: ['A1BG', 'A2M', 'NAT1']
+2026-11-20 11:44:30,689 - INFO - Loading gene history from /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/recent_release/gene_history_9606.gz
+2026-11-20 11:44:30,755 - INFO - Loaded 166606 unique old-to-current symbol mappings
+2026-11-20 11:44:30,761 - WARNING - 199 symbols not found in database: ['DDX12B', 'ENSG00000181123', 'ENSG00000187185', 'ENSG00000187951', 'ENSG00000188897', 'ENSG00000189229', 'ENSG00000200063', 'ENSG00000201329', 'ENSG00000201957', 'ENSG00000202231']...
+2026-11-20 11:44:30,768 - INFO - Loading 3 gene set collections
+2026-11-20 11:44:30,801 - INFO - Gene Set Library
+C5: Gene Ontology: Biological Process (Homo Sapiens)
+	7583 terms
+	17999 genes
+2026-11-20 11:44:30,808 - INFO - Loaded collection C5: Gene Ontology: Biological Process: 5360 terms
+2026-11-20 11:44:30,814 - INFO - Gene Set Library
+C5: Gene Ontology: Cellular Component (Homo Sapiens)
+	1042 terms
+	14868 genes
+2026-11-20 11:44:30,815 - INFO - Loaded collection C5: Gene Ontology: Cellular Component: 684 terms
+2026-11-20 11:44:30,843 - INFO - Gene Set Library
+C5: Gene Ontology: Molecular Function (Homo Sapiens)
+	1855 terms
+	15698 genes
+2026-11-20 11:44:30,845 - INFO - Loaded collection C5: Gene Ontology: Molecular Function: 1165 terms
+2026-11-20 11:44:30,845 - INFO - Processing gene set: /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/inputs/HIV_dependency_factors.symbols.txt
+2026-11-20 11:44:30,846 - INFO - Loading gene info from /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/recent_release/Homo_sapiens.gene_info.gz
+2026-11-20 11:44:31,035 - INFO - Loaded 193577 human Entrez ID mappings (taxonomy ID 9606)
+2026-11-20 11:44:31,036 - INFO - Loaded 69379 synonym mappings
+2026-11-20 11:44:31,037 - INFO - Sample Entrez IDs: ['1', '2', '9']
+2026-11-20 11:44:31,038 - INFO - Sample symbols: ['A1BG', 'A2M', 'NAT1']
+2026-11-20 11:44:31,038 - INFO - Loading gene history from /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/recent_release/gene_history_9606.gz
+2026-11-20 11:44:31,104 - INFO - Loaded 166606 unique old-to-current symbol mappings
+2026-11-20 11:44:31,104 - INFO - Input Gene Set
+HIV_dependency_factors.symbols
+	265 genes
+2026-11-20 11:44:31,104 - WARNING - 7 non valid
+2026-11-20 11:44:31,105 - WARNING - 7 validated genes are not in the background (all_genes) and were removed: FAM226A, IGHV1OR21-1, KRABD5, LINC00208, LINC01994, LOC400627, RPL32P3
+2026-11-20 11:44:31,105 - INFO - Gene set HIV_dependency_factors.symbols: 265 genes in the background (used for the analysis)
+2026-11-20 11:44:31,105 - INFO - Created unique output directory: HIV_dependency_factors.symbols_20261120_114431
+2026-11-20 11:44:31,105 - INFO - Running iterative enrichment analysis
+2026-11-20 11:44:31,106 - INFO - Generated shared run ID: 20261120_114431_105
+2026-11-20 11:44:31,106 - INFO - Processing collection: C5: Gene Ontology: Biological Process
+2026-11-20 11:44:31,106 - INFO - Collection C5: Gene Ontology: Biological Process: Starting iterative enrichment with 265 genes
+2026-11-20 11:44:31,106 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 1: Processing 265 remaining genes
+2026-11-20 11:44:31,106 - INFO - Input Gene Set
+
+	265 genes
+2026-11-20 11:44:31,107 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 11:44:31,133 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 11:44:31,133 - INFO - Input gene set filtered: 265 → 228 genes (intersected with library-specific background)
+2026-11-20 11:44:31,140 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:31,300 - INFO - Iteration 1: Top term 'GOBP_GOLGI_VESICLE_TRANSPORT' has p-value 2.3961894059929198e-08 and overlap size 20
+2026-11-20 11:44:31,301 - INFO - Overlap genes: {'LAPTM5', 'SPTBN1', 'STX5', 'COG4', 'CLN3', 'RAB6C', 'GABARAPL2', 'TRAPPC8', 'GOSR2', 'TRAPPC1', 'COG2', 'SCFD1', 'RAB1B', 'GOLPH3', 'RAB2A', 'RAB6A', 'TMED2', 'SPAST', 'RAB6B', 'COG3'}
+2026-11-20 11:44:31,301 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:31,301 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 1: Found term 'GOBP_GOLGI_VESICLE_TRANSPORT' (p=0.0000, overlap=20)
+2026-11-20 11:44:31,301 - INFO - Saved first iteration as regular enrichment
+2026-11-20 11:44:31,387 - INFO - Saved iteration 1 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Biological.Process_iteration_001.tsv
+2026-11-20 11:44:31,387 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 2: Processing 245 remaining genes
+2026-11-20 11:44:31,388 - INFO - Input Gene Set
+
+	245 genes
+2026-11-20 11:44:31,388 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 11:44:31,392 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 11:44:31,393 - INFO - Input gene set filtered: 245 → 208 genes (intersected with library-specific background)
+2026-11-20 11:44:31,398 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:31,558 - INFO - Iteration 2: Top term 'GOBP_NUCLEAR_EXPORT' has p-value 1.5334962559076078e-05 and overlap size 11
+2026-11-20 11:44:31,558 - INFO - Overlap genes: {'WNK1', 'NUP107', 'RANBP2', 'NUP85', 'MDN1', 'FAM76B', 'NUP153', 'NUP155', 'NUP133', 'NUP160', 'THOC2'}
+2026-11-20 11:44:31,558 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:31,558 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 2: Found term 'GOBP_NUCLEAR_EXPORT' (p=0.0000, overlap=11)
+2026-11-20 11:44:31,626 - INFO - Saved iteration 2 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Biological.Process_iteration_002.tsv
+2026-11-20 11:44:31,626 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 3: Processing 234 remaining genes
+2026-11-20 11:44:31,627 - INFO - Input Gene Set
+
+	234 genes
+2026-11-20 11:44:31,627 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 11:44:31,632 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 11:44:31,632 - INFO - Input gene set filtered: 234 → 197 genes (intersected with library-specific background)
+2026-11-20 11:44:31,637 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:31,793 - INFO - Iteration 3: Top term 'GOBP_DNA_TEMPLATED_TRANSCRIPTION_ELONGATION' has p-value 4.920838069339545e-05 and overlap size 9
+2026-11-20 11:44:31,793 - INFO - Overlap genes: {'MED28', 'MED6', 'MED14', 'CTDP1', 'ELOA', 'MED4', 'MED7', 'ERCC3', 'INTS7'}
+2026-11-20 11:44:31,794 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:31,794 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 3: Found term 'GOBP_DNA_TEMPLATED_TRANSCRIPTION_ELONGATION' (p=0.0000, overlap=9)
+2026-11-20 11:44:31,889 - INFO - Saved iteration 3 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Biological.Process_iteration_003.tsv
+2026-11-20 11:44:31,893 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 4: Processing 225 remaining genes
+2026-11-20 11:44:31,894 - INFO - Input Gene Set
+
+	225 genes
+2026-11-20 11:44:31,894 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 11:44:31,898 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 11:44:31,899 - INFO - Input gene set filtered: 225 → 188 genes (intersected with library-specific background)
+2026-11-20 11:44:31,903 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:32,058 - INFO - Iteration 4: Top term 'GOBP_GLYCOLIPID_BIOSYNTHETIC_PROCESS' has p-value 3.8774441867331467e-05 and overlap size 7
+2026-11-20 11:44:32,059 - INFO - Overlap genes: {'A4GALT', 'TM9SF2', 'PIGH', 'DPM1', 'ST3GAL5', 'PIGY', 'PIGK'}
+2026-11-20 11:44:32,059 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:32,059 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 4: Found term 'GOBP_GLYCOLIPID_BIOSYNTHETIC_PROCESS' (p=0.0000, overlap=7)
+2026-11-20 11:44:32,129 - INFO - Saved iteration 4 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Biological.Process_iteration_004.tsv
+2026-11-20 11:44:32,133 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 5: Processing 218 remaining genes
+2026-11-20 11:44:32,133 - INFO - Input Gene Set
+
+	218 genes
+2026-11-20 11:44:32,133 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 11:44:32,138 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 11:44:32,138 - INFO - Input gene set filtered: 218 → 181 genes (intersected with library-specific background)
+2026-11-20 11:44:32,144 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:32,301 - INFO - Iteration 5: Top term 'GOBP_REGULATION_OF_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY' has p-value 0.0001405318867862083 and overlap size 8
+2026-11-20 11:44:32,301 - INFO - Overlap genes: {'MID1IP1', 'EPS8', 'ETF1', 'TAOK1', 'FLII', 'SPTAN1', 'UBQLN4', 'ATG12'}
+2026-11-20 11:44:32,301 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:32,301 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 5: Found term 'GOBP_REGULATION_OF_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY' (p=0.0001, overlap=8)
+2026-11-20 11:44:32,376 - INFO - Saved iteration 5 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Biological.Process_iteration_005.tsv
+2026-11-20 11:44:32,377 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 6: Processing 210 remaining genes
+2026-11-20 11:44:32,377 - INFO - Input Gene Set
+
+	210 genes
+2026-11-20 11:44:32,378 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 11:44:32,382 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 11:44:32,383 - INFO - Input gene set filtered: 210 → 173 genes (intersected with library-specific background)
+2026-11-20 11:44:32,388 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:32,541 - INFO - Iteration 6: Top term 'GOBP_POSITIVE_REGULATION_OF_MOLECULAR_FUNCTION' has p-value 0.0005741276725315938 and overlap size 16
+2026-11-20 11:44:32,541 - INFO - Overlap genes: {'CD4', 'LARS1', 'IKBKG', 'NIPSNAP2', 'DHX33', 'RAPGEF1', 'CARD16', 'EDNRA', 'EGF', 'KDM4D', 'CRTC2', 'LCP2', 'STAC2', 'AGAP2', 'AKT1', 'RELA'}
+2026-11-20 11:44:32,542 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:32,542 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 6: Found term 'GOBP_POSITIVE_REGULATION_OF_MOLECULAR_FUNCTION' (p=0.0006, overlap=16)
+2026-11-20 11:44:32,628 - INFO - Saved iteration 6 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Biological.Process_iteration_006.tsv
+2026-11-20 11:44:32,630 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 7: Processing 194 remaining genes
+2026-11-20 11:44:32,631 - INFO - Input Gene Set
+
+	194 genes
+2026-11-20 11:44:32,631 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 11:44:32,636 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 11:44:32,636 - INFO - Input gene set filtered: 194 → 157 genes (intersected with library-specific background)
+2026-11-20 11:44:32,641 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:32,894 - INFO - Iteration 7: Top term 'GOBP_POSITIVE_REGULATION_BY_HOST_OF_VIRAL_PROCESS' has p-value 0.001076476170379608 and overlap size 3
+2026-11-20 11:44:32,894 - INFO - Overlap genes: {'CAV2', 'PPIB', 'YTHDC2'}
+2026-11-20 11:44:32,894 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:32,895 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 7: Found term 'GOBP_POSITIVE_REGULATION_BY_HOST_OF_VIRAL_PROCESS' (p=0.0011, overlap=3)
+2026-11-20 11:44:32,951 - INFO - Saved iteration 7 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Biological.Process_iteration_007.tsv
+2026-11-20 11:44:32,952 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 8: Processing 191 remaining genes
+2026-11-20 11:44:32,952 - INFO - Input Gene Set
+
+	191 genes
+2026-11-20 11:44:32,953 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 11:44:32,957 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 11:44:32,958 - INFO - Input gene set filtered: 191 → 154 genes (intersected with library-specific background)
+2026-11-20 11:44:32,963 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:33,118 - INFO - Iteration 8: Top term 'GOBP_PROTEIN_POLYUBIQUITINATION' has p-value 0.004114702083248253 and overlap size 8
+2026-11-20 11:44:33,118 - INFO - Overlap genes: {'RNF26', 'FBXW11', 'RNF170', 'MKRN2', 'KBTBD7', 'HUWE1', 'TRIM58', 'TRIM55'}
+2026-11-20 11:44:33,118 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:33,118 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 8: Found term 'GOBP_PROTEIN_POLYUBIQUITINATION' (p=0.0041, overlap=8)
+2026-11-20 11:44:33,182 - INFO - Saved iteration 8 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Biological.Process_iteration_008.tsv
+2026-11-20 11:44:33,182 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 9: Processing 183 remaining genes
+2026-11-20 11:44:33,183 - INFO - Input Gene Set
+
+	183 genes
+2026-11-20 11:44:33,183 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 11:44:33,188 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 11:44:33,188 - INFO - Input gene set filtered: 183 → 146 genes (intersected with library-specific background)
+2026-11-20 11:44:33,194 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:33,346 - INFO - Iteration 9: Top term 'GOBP_RIBONUCLEOPROTEIN_COMPLEX_BIOGENESIS' has p-value 0.005480617682376537 and overlap size 11
+2026-11-20 11:44:33,347 - INFO - Overlap genes: {'MPHOSPH6', 'EXOSC5', 'GEMIN2', 'CLNS1A', 'AGO3', 'DDX10', 'EXOSC3', 'HTATSF1', 'EIF3H', 'HEATR1', 'DIMT1'}
+2026-11-20 11:44:33,347 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:33,347 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 9: Found term 'GOBP_RIBONUCLEOPROTEIN_COMPLEX_BIOGENESIS' (p=0.0055, overlap=11)
+2026-11-20 11:44:33,410 - INFO - Saved iteration 9 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Biological.Process_iteration_009.tsv
+2026-11-20 11:44:33,417 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 10: Processing 172 remaining genes
+2026-11-20 11:44:33,417 - INFO - Input Gene Set
+
+	172 genes
+2026-11-20 11:44:33,417 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 11:44:33,422 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 11:44:33,422 - INFO - Input gene set filtered: 172 → 135 genes (intersected with library-specific background)
+2026-11-20 11:44:33,427 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:33,573 - INFO - Iteration 10: Top term 'GOBP_POSITIVE_REGULATION_OF_INTERFERON_BETA_PRODUCTION' has p-value 0.005274245169015587 and overlap size 3
+2026-11-20 11:44:33,574 - INFO - Overlap genes: {'TOMM70', 'POLR3A', 'POLR3F'}
+2026-11-20 11:44:33,574 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:33,574 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 10: Found term 'GOBP_POSITIVE_REGULATION_OF_INTERFERON_BETA_PRODUCTION' (p=0.0053, overlap=3)
+2026-11-20 11:44:33,681 - INFO - Saved iteration 10 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Biological.Process_iteration_010.tsv
+2026-11-20 11:44:33,682 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 11: Processing 169 remaining genes
+2026-11-20 11:44:33,682 - INFO - Input Gene Set
+
+	169 genes
+2026-11-20 11:44:33,683 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 11:44:33,687 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 11:44:33,687 - INFO - Input gene set filtered: 169 → 132 genes (intersected with library-specific background)
+2026-11-20 11:44:33,693 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:33,840 - INFO - Iteration 11: Top term 'GOBP_PROTEIN_N_LINKED_GLYCOSYLATION_VIA_ASPARAGINE' has p-value 0.005294579744977522 and overlap size 3
+2026-11-20 11:44:33,841 - INFO - Overlap genes: {'STT3A', 'MGAT1', 'DDOST'}
+2026-11-20 11:44:33,842 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:33,842 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 11: Found term 'GOBP_PROTEIN_N_LINKED_GLYCOSYLATION_VIA_ASPARAGINE' (p=0.0053, overlap=3)
+2026-11-20 11:44:33,963 - INFO - Saved iteration 11 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Biological.Process_iteration_011.tsv
+2026-11-20 11:44:33,964 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 12: Processing 166 remaining genes
+2026-11-20 11:44:33,965 - INFO - Input Gene Set
+
+	166 genes
+2026-11-20 11:44:33,965 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 11:44:33,970 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 11:44:33,971 - INFO - Input gene set filtered: 166 → 129 genes (intersected with library-specific background)
+2026-11-20 11:44:33,977 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:34,122 - INFO - Iteration 12: Top term 'GOBP_ARP2_3_COMPLEX_MEDIATED_ACTIN_NUCLEATION' has p-value 0.006003341595384604 and overlap size 3
+2026-11-20 11:44:34,122 - INFO - Overlap genes: {'ARF1', 'ARPC1A', 'HIP1R'}
+2026-11-20 11:44:34,123 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:34,123 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 12: Found term 'GOBP_ARP2_3_COMPLEX_MEDIATED_ACTIN_NUCLEATION' (p=0.0060, overlap=3)
+2026-11-20 11:44:34,186 - INFO - Saved iteration 12 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Biological.Process_iteration_012.tsv
+2026-11-20 11:44:34,186 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 13: Processing 163 remaining genes
+2026-11-20 11:44:34,187 - INFO - Input Gene Set
+
+	163 genes
+2026-11-20 11:44:34,187 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-20 11:44:34,192 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-20 11:44:34,192 - INFO - Input gene set filtered: 163 → 126 genes (intersected with library-specific background)
+2026-11-20 11:44:34,198 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:34,343 - INFO - Top term p-value >= threshold; terminating.
+2026-11-20 11:44:34,344 - INFO - Collection C5: Gene Ontology: Biological Process: Top term p-value (0.013251376868430571) >= threshold (0.01); terminating.
+2026-11-20 11:44:34,344 - INFO - Collection C5: Gene Ontology: Biological Process: Completed iterative enrichment: 12 iterations, 163 genes remaining
+2026-11-20 11:44:34,351 - INFO - Saved 12 iterations to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/HIV_dependency_factors.symbols_20261120_114431/C5: Gene Ontology: Biological Process_iterative_results.tsv
+2026-11-20 11:44:34,351 - INFO - Processing collection: C5: Gene Ontology: Cellular Component
+2026-11-20 11:44:34,352 - INFO - Collection C5: Gene Ontology: Cellular Component: Starting iterative enrichment with 265 genes
+2026-11-20 11:44:34,352 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 1: Processing 265 remaining genes
+2026-11-20 11:44:34,353 - INFO - Input Gene Set
+
+	265 genes
+2026-11-20 11:44:34,353 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-20 11:44:34,358 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-20 11:44:34,358 - INFO - Input gene set filtered: 265 → 191 genes (intersected with library-specific background)
+2026-11-20 11:44:34,364 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:34,407 - INFO - Iteration 1: Top term 'GOCC_NUCLEAR_PORE_OUTER_RING' has p-value 1.1764598241737916e-05 and overlap size 4
+2026-11-20 11:44:34,407 - INFO - Overlap genes: {'NUP133', 'NUP85', 'NUP107', 'NUP160'}
+2026-11-20 11:44:34,407 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:34,408 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 1: Found term 'GOCC_NUCLEAR_PORE_OUTER_RING' (p=0.0000, overlap=4)
+2026-11-20 11:44:34,408 - INFO - Saved first iteration as regular enrichment
+2026-11-20 11:44:34,418 - INFO - Saved iteration 1 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Cellular.Component_iteration_001.tsv
+2026-11-20 11:44:34,419 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 2: Processing 261 remaining genes
+2026-11-20 11:44:34,419 - INFO - Input Gene Set
+
+	261 genes
+2026-11-20 11:44:34,419 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-20 11:44:34,421 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-20 11:44:34,421 - INFO - Input gene set filtered: 261 → 187 genes (intersected with library-specific background)
+2026-11-20 11:44:34,425 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:34,534 - INFO - Iteration 2: Top term 'GOCC_CORE_MEDIATOR_COMPLEX' has p-value 4.2375109824458426e-05 and overlap size 5
+2026-11-20 11:44:34,534 - INFO - Overlap genes: {'MED28', 'MED6', 'MED14', 'MED4', 'MED7'}
+2026-11-20 11:44:34,535 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:34,535 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 2: Found term 'GOCC_CORE_MEDIATOR_COMPLEX' (p=0.0000, overlap=5)
+2026-11-20 11:44:34,546 - INFO - Saved iteration 2 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Cellular.Component_iteration_002.tsv
+2026-11-20 11:44:34,546 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 3: Processing 256 remaining genes
+2026-11-20 11:44:34,547 - INFO - Input Gene Set
+
+	256 genes
+2026-11-20 11:44:34,547 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-20 11:44:34,548 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-20 11:44:34,549 - INFO - Input gene set filtered: 256 → 182 genes (intersected with library-specific background)
+2026-11-20 11:44:34,555 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:34,603 - INFO - Iteration 3: Top term 'GOCC_GOLGI_TRANSPORT_COMPLEX' has p-value 0.00037242868916481073 and overlap size 3
+2026-11-20 11:44:34,604 - INFO - Overlap genes: {'COG4', 'COG2', 'COG3'}
+2026-11-20 11:44:34,604 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:34,604 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 3: Found term 'GOCC_GOLGI_TRANSPORT_COMPLEX' (p=0.0004, overlap=3)
+2026-11-20 11:44:34,614 - INFO - Saved iteration 3 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Cellular.Component_iteration_003.tsv
+2026-11-20 11:44:34,615 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 4: Processing 253 remaining genes
+2026-11-20 11:44:34,615 - INFO - Input Gene Set
+
+	253 genes
+2026-11-20 11:44:34,615 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-20 11:44:34,617 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-20 11:44:34,617 - INFO - Input gene set filtered: 253 → 179 genes (intersected with library-specific background)
+2026-11-20 11:44:34,622 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:34,667 - INFO - Iteration 4: Top term 'GOCC_ENDOPLASMIC_RETICULUM_PROTEIN_CONTAINING_COMPLEX' has p-value 0.0004281347810800718 and overlap size 8
+2026-11-20 11:44:34,667 - INFO - Overlap genes: {'DDOST', 'PPIB', 'SPCS3', 'PIGH', 'PDIA6', 'STT3A', 'PIGY', 'PIGK'}
+2026-11-20 11:44:34,668 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:34,668 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 4: Found term 'GOCC_ENDOPLASMIC_RETICULUM_PROTEIN_CONTAINING_COMPLEX' (p=0.0004, overlap=8)
+2026-11-20 11:44:34,678 - INFO - Saved iteration 4 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Cellular.Component_iteration_004.tsv
+2026-11-20 11:44:34,679 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 5: Processing 245 remaining genes
+2026-11-20 11:44:34,679 - INFO - Input Gene Set
+
+	245 genes
+2026-11-20 11:44:34,679 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-20 11:44:34,681 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-20 11:44:34,681 - INFO - Input gene set filtered: 245 → 171 genes (intersected with library-specific background)
+2026-11-20 11:44:34,686 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:34,729 - INFO - Iteration 5: Top term 'GOCC_ENDOPLASMIC_RETICULUM_GOLGI_INTERMEDIATE_COMPARTMENT_MEMBRANE' has p-value 0.0008681108703867103 and overlap size 6
+2026-11-20 11:44:34,729 - INFO - Overlap genes: {'RAB2A', 'STX5', 'GOSR2', 'TMED2', 'RAB1B', 'MGAT1'}
+2026-11-20 11:44:34,730 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:34,730 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 5: Found term 'GOCC_ENDOPLASMIC_RETICULUM_GOLGI_INTERMEDIATE_COMPARTMENT_MEMBRANE' (p=0.0009, overlap=6)
+2026-11-20 11:44:34,743 - INFO - Saved iteration 5 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Cellular.Component_iteration_005.tsv
+2026-11-20 11:44:34,743 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 6: Processing 239 remaining genes
+2026-11-20 11:44:34,744 - INFO - Input Gene Set
+
+	239 genes
+2026-11-20 11:44:34,744 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-20 11:44:34,745 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-20 11:44:34,746 - INFO - Input gene set filtered: 239 → 165 genes (intersected with library-specific background)
+2026-11-20 11:44:34,751 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:34,796 - INFO - Iteration 6: Top term 'GOCC_NUCLEAR_EXOSOME_RNASE_COMPLEX' has p-value 0.001226314471305689 and overlap size 3
+2026-11-20 11:44:34,796 - INFO - Overlap genes: {'MPHOSPH6', 'EXOSC5', 'EXOSC3'}
+2026-11-20 11:44:34,797 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:34,797 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 6: Found term 'GOCC_NUCLEAR_EXOSOME_RNASE_COMPLEX' (p=0.0012, overlap=3)
+2026-11-20 11:44:34,807 - INFO - Saved iteration 6 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Cellular.Component_iteration_006.tsv
+2026-11-20 11:44:34,807 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 7: Processing 236 remaining genes
+2026-11-20 11:44:34,808 - INFO - Input Gene Set
+
+	236 genes
+2026-11-20 11:44:34,808 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-20 11:44:34,809 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-20 11:44:34,810 - INFO - Input gene set filtered: 236 → 162 genes (intersected with library-specific background)
+2026-11-20 11:44:34,815 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:34,859 - INFO - Iteration 7: Top term 'GOCC_CULLIN_RING_UBIQUITIN_LIGASE_COMPLEX' has p-value 0.004030729718612457 and overlap size 9
+2026-11-20 11:44:34,859 - INFO - Overlap genes: {'ANKRD9', 'DEPDC5', 'FBXW11', 'FBH1', 'KLHDC2', 'DCAF1', 'KBTBD7', 'WDTC1', 'KLHL1'}
+2026-11-20 11:44:34,859 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:34,859 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 7: Found term 'GOCC_CULLIN_RING_UBIQUITIN_LIGASE_COMPLEX' (p=0.0040, overlap=9)
+2026-11-20 11:44:34,870 - INFO - Saved iteration 7 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Cellular.Component_iteration_007.tsv
+2026-11-20 11:44:34,870 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 8: Processing 227 remaining genes
+2026-11-20 11:44:34,871 - INFO - Input Gene Set
+
+	227 genes
+2026-11-20 11:44:34,871 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-20 11:44:34,873 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-20 11:44:34,873 - INFO - Input gene set filtered: 227 → 153 genes (intersected with library-specific background)
+2026-11-20 11:44:34,878 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:34,922 - INFO - Iteration 8: Top term 'GOCC_NUCLEAR_PORE' has p-value 0.0073822156894048745 and overlap size 5
+2026-11-20 11:44:34,922 - INFO - Overlap genes: {'RANBP2', 'NUP153', 'RGPD8', 'NUP155', 'RGPD5'}
+2026-11-20 11:44:34,922 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:34,922 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 8: Found term 'GOCC_NUCLEAR_PORE' (p=0.0074, overlap=5)
+2026-11-20 11:44:34,932 - INFO - Saved iteration 8 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Cellular.Component_iteration_008.tsv
+2026-11-20 11:44:34,933 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 9: Processing 222 remaining genes
+2026-11-20 11:44:34,933 - INFO - Input Gene Set
+
+	222 genes
+2026-11-20 11:44:34,933 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-20 11:44:34,935 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-20 11:44:34,935 - INFO - Input gene set filtered: 222 → 148 genes (intersected with library-specific background)
+2026-11-20 11:44:34,940 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:34,985 - INFO - Iteration 9: Top term 'GOCC_CLATHRIN_COATED_VESICLE_MEMBRANE' has p-value 0.007453016476981835 and overlap size 6
+2026-11-20 11:44:34,985 - INFO - Overlap genes: {'CD4', 'EGFR', 'AP2M1', 'ATP6V0A1', 'EGF', 'HIP1R'}
+2026-11-20 11:44:34,985 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:34,985 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 9: Found term 'GOCC_CLATHRIN_COATED_VESICLE_MEMBRANE' (p=0.0075, overlap=6)
+2026-11-20 11:44:34,997 - INFO - Saved iteration 9 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Cellular.Component_iteration_009.tsv
+2026-11-20 11:44:34,997 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 10: Processing 216 remaining genes
+2026-11-20 11:44:34,997 - INFO - Input Gene Set
+
+	216 genes
+2026-11-20 11:44:34,998 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-20 11:44:34,999 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-20 11:44:34,999 - INFO - Input gene set filtered: 216 → 142 genes (intersected with library-specific background)
+2026-11-20 11:44:35,004 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:35,047 - INFO - Iteration 10: Top term 'GOCC_SPINDLE' has p-value 0.006601765618043821 and overlap size 12
+2026-11-20 11:44:35,048 - INFO - Overlap genes: {'CSPP1', 'WNK1', 'IKBKG', 'MAP4', 'CAPN6', 'CTDP1', 'KAT2A', 'SPAST', 'TFDP2', 'AKT1', 'KMT5B', 'AGBL5'}
+2026-11-20 11:44:35,048 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:35,048 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 10: Found term 'GOCC_SPINDLE' (p=0.0066, overlap=12)
+2026-11-20 11:44:35,059 - INFO - Saved iteration 10 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Cellular.Component_iteration_010.tsv
+2026-11-20 11:44:35,059 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 11: Processing 204 remaining genes
+2026-11-20 11:44:35,060 - INFO - Input Gene Set
+
+	204 genes
+2026-11-20 11:44:35,060 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-20 11:44:35,062 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-20 11:44:35,062 - INFO - Input gene set filtered: 204 → 130 genes (intersected with library-specific background)
+2026-11-20 11:44:35,067 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:35,111 - INFO - Iteration 11: Top term 'GOCC_AUTOPHAGOSOME' has p-value 0.00980107905792743 and overlap size 5
+2026-11-20 11:44:35,112 - INFO - Overlap genes: {'GABARAPL2', 'ATG16L2', 'UBQLN4', 'ATG12', 'CLN3'}
+2026-11-20 11:44:35,112 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:35,112 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 11: Found term 'GOCC_AUTOPHAGOSOME' (p=0.0098, overlap=5)
+2026-11-20 11:44:35,121 - INFO - Saved iteration 11 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Cellular.Component_iteration_011.tsv
+2026-11-20 11:44:35,121 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 12: Processing 199 remaining genes
+2026-11-20 11:44:35,122 - INFO - Input Gene Set
+
+	199 genes
+2026-11-20 11:44:35,122 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-20 11:44:35,123 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-20 11:44:35,124 - INFO - Input gene set filtered: 199 → 125 genes (intersected with library-specific background)
+2026-11-20 11:44:35,128 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:35,174 - INFO - Top term p-value >= threshold; terminating.
+2026-11-20 11:44:35,175 - INFO - Collection C5: Gene Ontology: Cellular Component: Top term p-value (0.015662456328050075) >= threshold (0.01); terminating.
+2026-11-20 11:44:35,175 - INFO - Collection C5: Gene Ontology: Cellular Component: Completed iterative enrichment: 11 iterations, 199 genes remaining
+2026-11-20 11:44:35,178 - INFO - Saved 11 iterations to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/HIV_dependency_factors.symbols_20261120_114431/C5: Gene Ontology: Cellular Component_iterative_results.tsv
+2026-11-20 11:44:35,179 - INFO - Processing collection: C5: Gene Ontology: Molecular Function
+2026-11-20 11:44:35,179 - INFO - Collection C5: Gene Ontology: Molecular Function: Starting iterative enrichment with 265 genes
+2026-11-20 11:44:35,179 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 1: Processing 265 remaining genes
+2026-11-20 11:44:35,180 - INFO - Input Gene Set
+
+	265 genes
+2026-11-20 11:44:35,180 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-20 11:44:35,188 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-20 11:44:35,188 - INFO - Input gene set filtered: 265 → 195 genes (intersected with library-specific background)
+2026-11-20 11:44:35,194 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:35,252 - INFO - Iteration 1: Top term 'GOMF_STRUCTURAL_CONSTITUENT_OF_NUCLEAR_PORE' has p-value 1.013650591851593e-06 and overlap size 6
+2026-11-20 11:44:35,252 - INFO - Overlap genes: {'NUP107', 'NUP85', 'NUP153', 'NUP155', 'NUP133', 'NUP160'}
+2026-11-20 11:44:35,252 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:35,253 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 1: Found term 'GOMF_STRUCTURAL_CONSTITUENT_OF_NUCLEAR_PORE' (p=0.0000, overlap=6)
+2026-11-20 11:44:35,253 - INFO - Saved first iteration as regular enrichment
+2026-11-20 11:44:35,271 - INFO - Saved iteration 1 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Molecular.Function_iteration_001.tsv
+2026-11-20 11:44:35,271 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 2: Processing 259 remaining genes
+2026-11-20 11:44:35,271 - INFO - Input Gene Set
+
+	259 genes
+2026-11-20 11:44:35,272 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-20 11:44:35,273 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-20 11:44:35,273 - INFO - Input gene set filtered: 259 → 189 genes (intersected with library-specific background)
+2026-11-20 11:44:35,279 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:35,335 - INFO - Iteration 2: Top term 'GOMF_CATALYTIC_ACTIVITY_ACTING_ON_RNA' has p-value 1.551595840161238e-05 and overlap size 18
+2026-11-20 11:44:35,335 - INFO - Overlap genes: {'LARS1', 'ALKBH8', 'DDX55', 'DDX53', 'ERI2', 'IGHMBP2', 'DHX33', 'ETF1', 'EXOSC5', 'POLR3F', 'YTHDC2', 'TRMT5', 'AGO3', 'DDX10', 'EXOSC3', 'POLR1H', 'POLR3A', 'DIMT1'}
+2026-11-20 11:44:35,336 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:35,336 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 2: Found term 'GOMF_CATALYTIC_ACTIVITY_ACTING_ON_RNA' (p=0.0000, overlap=18)
+2026-11-20 11:44:35,360 - INFO - Saved iteration 2 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Molecular.Function_iteration_002.tsv
+2026-11-20 11:44:35,360 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 3: Processing 241 remaining genes
+2026-11-20 11:44:35,360 - INFO - Input Gene Set
+
+	241 genes
+2026-11-20 11:44:35,361 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-20 11:44:35,362 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-20 11:44:35,363 - INFO - Input gene set filtered: 241 → 171 genes (intersected with library-specific background)
+2026-11-20 11:44:35,368 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:35,426 - INFO - Iteration 3: Top term 'GOMF_GTPASE_ACTIVATOR_ACTIVITY' has p-value 0.0006112594941316607 and overlap size 11
+2026-11-20 11:44:35,426 - INFO - Overlap genes: {'ARHGEF19', 'DEPDC5', 'RANBP2', 'GRTP1', 'TIAM2', 'RGPD8', 'ARHGAP32', 'GAPVD1', 'ARHGEF12', 'AGAP2', 'RGPD5'}
+2026-11-20 11:44:35,426 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:35,427 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 3: Found term 'GOMF_GTPASE_ACTIVATOR_ACTIVITY' (p=0.0006, overlap=11)
+2026-11-20 11:44:35,445 - INFO - Saved iteration 3 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Molecular.Function_iteration_003.tsv
+2026-11-20 11:44:35,445 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 4: Processing 230 remaining genes
+2026-11-20 11:44:35,446 - INFO - Input Gene Set
+
+	230 genes
+2026-11-20 11:44:35,446 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-20 11:44:35,448 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-20 11:44:35,448 - INFO - Input gene set filtered: 230 → 160 genes (intersected with library-specific background)
+2026-11-20 11:44:35,453 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:35,507 - INFO - Iteration 4: Top term 'GOMF_TRANSCRIPTION_COREGULATOR_ACTIVITY' has p-value 0.001126924625207138 and overlap size 15
+2026-11-20 11:44:35,507 - INFO - Overlap genes: {'NCOR2', 'MED6', 'MED14', 'DNAJB1', 'KAT2A', 'CRTC3', 'ARGLU1', 'CRTC2', 'BCL9', 'FHL3', 'MED4', 'NR0B2', 'KDM7A', 'PHF12', 'MED7'}
+2026-11-20 11:44:35,507 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:35,508 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 4: Found term 'GOMF_TRANSCRIPTION_COREGULATOR_ACTIVITY' (p=0.0011, overlap=15)
+2026-11-20 11:44:35,528 - INFO - Saved iteration 4 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Molecular.Function_iteration_004.tsv
+2026-11-20 11:44:35,528 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 5: Processing 215 remaining genes
+2026-11-20 11:44:35,529 - INFO - Input Gene Set
+
+	215 genes
+2026-11-20 11:44:35,529 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-20 11:44:35,530 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-20 11:44:35,531 - INFO - Input gene set filtered: 215 → 145 genes (intersected with library-specific background)
+2026-11-20 11:44:35,536 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:35,594 - INFO - Iteration 5: Top term 'GOMF_ENZYME_SUBSTRATE_ADAPTOR_ACTIVITY' has p-value 0.0008541945746998735 and overlap size 7
+2026-11-20 11:44:35,594 - INFO - Overlap genes: {'ANKRD9', 'PPP2R2A', 'FBXW11', 'KLHDC2', 'DCAF1', 'KBTBD7', 'KLHL1'}
+2026-11-20 11:44:35,594 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:35,594 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 5: Found term 'GOMF_ENZYME_SUBSTRATE_ADAPTOR_ACTIVITY' (p=0.0009, overlap=7)
+2026-11-20 11:44:35,611 - INFO - Saved iteration 5 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Molecular.Function_iteration_005.tsv
+2026-11-20 11:44:35,611 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 6: Processing 208 remaining genes
+2026-11-20 11:44:35,612 - INFO - Input Gene Set
+
+	208 genes
+2026-11-20 11:44:35,612 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-20 11:44:35,614 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-20 11:44:35,614 - INFO - Input gene set filtered: 208 → 138 genes (intersected with library-specific background)
+2026-11-20 11:44:35,619 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:35,672 - INFO - Iteration 6: Top term 'GOMF_ALPHA_TUBULIN_BINDING' has p-value 0.0009353880653791672 and overlap size 4
+2026-11-20 11:44:35,672 - INFO - Overlap genes: {'TAOK1', 'DNAL1', 'SPAST', 'FNTA'}
+2026-11-20 11:44:35,672 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:35,672 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 6: Found term 'GOMF_ALPHA_TUBULIN_BINDING' (p=0.0009, overlap=4)
+2026-11-20 11:44:35,688 - INFO - Saved iteration 6 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Molecular.Function_iteration_006.tsv
+2026-11-20 11:44:35,688 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 7: Processing 204 remaining genes
+2026-11-20 11:44:35,689 - INFO - Input Gene Set
+
+	204 genes
+2026-11-20 11:44:35,689 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-20 11:44:35,691 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-20 11:44:35,691 - INFO - Input gene set filtered: 204 → 134 genes (intersected with library-specific background)
+2026-11-20 11:44:35,695 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:35,747 - INFO - Iteration 7: Top term 'GOMF_CARGO_ADAPTOR_ACTIVITY' has p-value 0.0010324357865592094 and overlap size 3
+2026-11-20 11:44:35,747 - INFO - Overlap genes: {'GOLPH3', 'HIP1R', 'AP2M1'}
+2026-11-20 11:44:35,747 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:35,748 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 7: Found term 'GOMF_CARGO_ADAPTOR_ACTIVITY' (p=0.0010, overlap=3)
+2026-11-20 11:44:35,766 - INFO - Saved iteration 7 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Molecular.Function_iteration_007.tsv
+2026-11-20 11:44:35,766 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 8: Processing 201 remaining genes
+2026-11-20 11:44:35,767 - INFO - Input Gene Set
+
+	201 genes
+2026-11-20 11:44:35,767 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-20 11:44:35,769 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-20 11:44:35,769 - INFO - Input gene set filtered: 201 → 131 genes (intersected with library-specific background)
+2026-11-20 11:44:35,774 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:35,827 - INFO - Iteration 8: Top term 'GOMF_HEXOSYLTRANSFERASE_ACTIVITY' has p-value 0.0027338402438686397 and overlap size 7
+2026-11-20 11:44:35,828 - INFO - Overlap genes: {'PLOD3', 'A4GALT', 'DPM1', 'STT3A', 'PIGY', 'TMTC1', 'MGAT1'}
+2026-11-20 11:44:35,828 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:35,828 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 8: Found term 'GOMF_HEXOSYLTRANSFERASE_ACTIVITY' (p=0.0027, overlap=7)
+2026-11-20 11:44:35,847 - INFO - Saved iteration 8 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Molecular.Function_iteration_008.tsv
+2026-11-20 11:44:35,847 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 9: Processing 194 remaining genes
+2026-11-20 11:44:35,847 - INFO - Input Gene Set
+
+	194 genes
+2026-11-20 11:44:35,848 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-20 11:44:35,849 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-20 11:44:35,849 - INFO - Input gene set filtered: 194 → 124 genes (intersected with library-specific background)
+2026-11-20 11:44:35,855 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:35,908 - INFO - Iteration 9: Top term 'GOMF_G_PROTEIN_ACTIVITY' has p-value 0.003021299424323375 and overlap size 4
+2026-11-20 11:44:35,908 - INFO - Overlap genes: {'RAP1B', 'RAB2A', 'RAB28', 'RAB1B'}
+2026-11-20 11:44:35,908 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:35,908 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 9: Found term 'GOMF_G_PROTEIN_ACTIVITY' (p=0.0030, overlap=4)
+2026-11-20 11:44:35,925 - INFO - Saved iteration 9 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Molecular.Function_iteration_009.tsv
+2026-11-20 11:44:35,925 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 10: Processing 190 remaining genes
+2026-11-20 11:44:35,925 - INFO - Input Gene Set
+
+	190 genes
+2026-11-20 11:44:35,926 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-20 11:44:35,927 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-20 11:44:35,927 - INFO - Input gene set filtered: 190 → 120 genes (intersected with library-specific background)
+2026-11-20 11:44:35,933 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:35,989 - INFO - Iteration 10: Top term 'GOMF_GTPASE_BINDING' has p-value 0.006745006478689585 and overlap size 8
+2026-11-20 11:44:35,990 - INFO - Overlap genes: {'RRAGB', 'EPS8', 'FGD6', 'SPTBN1', 'ITPKA', 'RUSC2', 'RIMS4', 'TNPO3'}
+2026-11-20 11:44:35,990 - INFO - Minimum overlap requirement: 3
+2026-11-20 11:44:35,990 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 10: Found term 'GOMF_GTPASE_BINDING' (p=0.0067, overlap=8)
+2026-11-20 11:44:36,007 - INFO - Saved iteration 10 results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/run_20261120_114431_105/C5.Gene.Ontology.Molecular.Function_iteration_010.tsv
+2026-11-20 11:44:36,007 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 11: Processing 182 remaining genes
+2026-11-20 11:44:36,008 - INFO - Input Gene Set
+
+	182 genes
+2026-11-20 11:44:36,008 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-20 11:44:36,010 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-20 11:44:36,010 - INFO - Input gene set filtered: 182 → 112 genes (intersected with library-specific background)
+2026-11-20 11:44:36,015 - INFO - Initializing the MP pool with 2 processes
+2026-11-20 11:44:36,069 - INFO - Top term p-value >= threshold; terminating.
+2026-11-20 11:44:36,070 - INFO - Collection C5: Gene Ontology: Molecular Function: Top term p-value (0.011000930832338466) >= threshold (0.01); terminating.
+2026-11-20 11:44:36,070 - INFO - Collection C5: Gene Ontology: Molecular Function: Completed iterative enrichment: 10 iterations, 182 genes remaining
+2026-11-20 11:44:36,073 - INFO - Saved 10 iterations to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/HIV_dependency_factors.symbols_20261120_114431/C5: Gene Ontology: Molecular Function_iterative_results.tsv
+2026-11-20 11:44:36,074 - INFO - Computing term q-values and network statistics...
+2026-11-20 11:44:36,076 - INFO - Generating 10000 random lists of 265 genes from the run background
+2026-11-20 11:44:38,158 - INFO - step 1/3: random lists of 265 genes (network test): 500/10000
+2026-11-20 11:44:38,729 - INFO - step 1/3: random lists of 265 genes (network test): 1000/10000
+2026-11-20 11:44:39,256 - INFO - step 1/3: random lists of 265 genes (network test): 1500/10000
+2026-11-20 11:44:39,766 - INFO - step 1/3: random lists of 265 genes (network test): 2000/10000
+2026-11-20 11:44:40,278 - INFO - step 1/3: random lists of 265 genes (network test): 2500/10000
+2026-11-20 11:44:40,788 - INFO - step 1/3: random lists of 265 genes (network test): 3000/10000
+2026-11-20 11:44:41,324 - INFO - step 1/3: random lists of 265 genes (network test): 3500/10000
+2026-11-20 11:44:41,836 - INFO - step 1/3: random lists of 265 genes (network test): 4000/10000
+2026-11-20 11:44:42,359 - INFO - step 1/3: random lists of 265 genes (network test): 4500/10000
+2026-11-20 11:44:42,890 - INFO - step 1/3: random lists of 265 genes (network test): 5000/10000
+2026-11-20 11:44:43,497 - INFO - step 1/3: random lists of 265 genes (network test): 5500/10000
+2026-11-20 11:44:44,016 - INFO - step 1/3: random lists of 265 genes (network test): 6000/10000
+2026-11-20 11:44:44,545 - INFO - step 1/3: random lists of 265 genes (network test): 6500/10000
+2026-11-20 11:44:45,063 - INFO - step 1/3: random lists of 265 genes (network test): 7000/10000
+2026-11-20 11:44:45,632 - INFO - step 1/3: random lists of 265 genes (network test): 7500/10000
+2026-11-20 11:44:46,232 - INFO - step 1/3: random lists of 265 genes (network test): 8000/10000
+2026-11-20 11:44:46,790 - INFO - step 1/3: random lists of 265 genes (network test): 8500/10000
+2026-11-20 11:44:47,319 - INFO - step 1/3: random lists of 265 genes (network test): 9000/10000
+2026-11-20 11:44:47,867 - INFO - step 1/3: random lists of 265 genes (network test): 9500/10000
+2026-11-20 11:44:48,423 - INFO - step 1/3: random lists of 265 genes (network test): 10000/10000
+2026-11-20 11:44:48,701 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 500/14000
+2026-11-20 11:44:48,895 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 1000/14000
+2026-11-20 11:44:49,110 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 1500/14000
+2026-11-20 11:44:49,333 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 2000/14000
+2026-11-20 11:44:49,582 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 2500/14000
+2026-11-20 11:44:49,836 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 3000/14000
+2026-11-20 11:44:50,103 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 3500/14000
+2026-11-20 11:44:50,381 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 4000/14000
+2026-11-20 11:44:50,682 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 4500/14000
+2026-11-20 11:44:50,979 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 5000/14000
+2026-11-20 11:44:51,313 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 5500/14000
+2026-11-20 11:44:51,655 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 6000/14000
+2026-11-20 11:44:52,016 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 6500/14000
+2026-11-20 11:44:52,377 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 7000/14000
+2026-11-20 11:44:52,738 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 7500/14000
+2026-11-20 11:44:53,132 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 8000/14000
+2026-11-20 11:44:53,528 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 8500/14000
+2026-11-20 11:44:53,940 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 9000/14000
+2026-11-20 11:44:54,361 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 9500/14000
+2026-11-20 11:44:54,758 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 10000/14000
+2026-11-20 11:44:55,203 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 10500/14000
+2026-11-20 11:44:55,699 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 11000/14000
+2026-11-20 11:44:56,157 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 11500/14000
+2026-11-20 11:44:56,601 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 12000/14000
+2026-11-20 11:44:57,095 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 12500/14000
+2026-11-20 11:44:57,591 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 13000/14000
+2026-11-20 11:44:58,137 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 13500/14000
+2026-11-20 11:44:58,643 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 14000/14000
+2026-11-20 11:45:00,043 - INFO - step 3/3: scoring random networks: 500/10000
+2026-11-20 11:45:00,051 - INFO - step 3/3: scoring random networks: 1000/10000
+2026-11-20 11:45:00,063 - INFO - step 3/3: scoring random networks: 1500/10000
+2026-11-20 11:45:00,074 - INFO - step 3/3: scoring random networks: 2000/10000
+2026-11-20 11:45:00,083 - INFO - step 3/3: scoring random networks: 2500/10000
+2026-11-20 11:45:00,099 - INFO - step 3/3: scoring random networks: 3000/10000
+2026-11-20 11:45:00,111 - INFO - step 3/3: scoring random networks: 3500/10000
+2026-11-20 11:45:00,122 - INFO - step 3/3: scoring random networks: 4000/10000
+2026-11-20 11:45:00,128 - INFO - step 3/3: scoring random networks: 4500/10000
+2026-11-20 11:45:00,143 - INFO - step 3/3: scoring random networks: 5000/10000
+2026-11-20 11:45:00,162 - INFO - step 3/3: scoring random networks: 5500/10000
+2026-11-20 11:45:00,163 - INFO - step 3/3: scoring random networks: 6000/10000
+2026-11-20 11:45:00,189 - INFO - step 3/3: scoring random networks: 6500/10000
+2026-11-20 11:45:00,194 - INFO - step 3/3: scoring random networks: 7000/10000
+2026-11-20 11:45:00,205 - INFO - step 3/3: scoring random networks: 7500/10000
+2026-11-20 11:45:00,216 - INFO - step 3/3: scoring random networks: 8000/10000
+2026-11-20 11:45:00,226 - INFO - step 3/3: scoring random networks: 8500/10000
+2026-11-20 11:45:00,238 - INFO - step 3/3: scoring random networks: 9000/10000
+2026-11-20 11:45:00,244 - INFO - step 3/3: scoring random networks: 9500/10000
+2026-11-20 11:45:00,253 - INFO - step 3/3: scoring random networks: 10000/10000
+2026-11-20 11:45:00,273 - INFO - Per-run statistics: 10000 random lists of 265 genes (+14000 for q) in 24.2 s (4 processes)
+2026-11-20 11:45:00,306 - INFO - Saved per-run statistical report to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/HIV_dependency_factors.symbols_20261120_114431
+2026-11-20 11:45:00,326 - INFO - Network communities: 6 (Leiden (igraph, modularity)); saved network_modules_*.tsv
+2026-11-20 11:45:00,328 - INFO - Saved combined iterative results to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/HIV_dependency_factors.symbols_20261120_114431/combined_iterative_results.tsv
+2026-11-20 11:45:00,354 - INFO - Saved combined network DOT to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/HIV_dependency_factors.symbols_20261120_114431/combined_network.dot (26 terms)
+2026-11-20 11:45:00,357 - INFO - Saved semantic network (network_llm.dot) and LLM prompt (llm_prompt.txt) to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only/HIV_dependency_factors.symbols_20261120_114431
+✅ Analysis completed successfully! Results saved to /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/Iterative Enrichment Paper/Publication/v7/07 Reviewer Analyses/step09_end_to_end/hiv_go_only

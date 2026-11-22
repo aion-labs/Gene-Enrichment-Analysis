@@ -1,0 +1,27 @@
+Library	Term	Community	Genes	Shared genes (weighted degree)	Genes bridging to other communities
+C5: Gene Ontology: Molecular Function	GOMF_CATALYTIC_ACTIVITY_ACTING_ON_RNA	C1	18	5	1
+C5: Gene Ontology: Biological Process	GOBP_POSITIVE_REGULATION_OF_MOLECULAR_FUNCTION	C1	16	8	2
+C5: Gene Ontology: Cellular Component	GOCC_SPINDLE	C1	12	7	4
+C5: Gene Ontology: Cellular Component	GOCC_CLATHRIN_COATED_VESICLE_MEMBRANE	C1	6	4	0
+C5: Gene Ontology: Cellular Component	GOCC_NUCLEAR_EXOSOME_RNASE_COMPLEX	C1	3	2	0
+C5: Gene Ontology: Molecular Function	GOMF_CARGO_ADAPTOR_ACTIVITY	C1	3	3	1
+C5: Gene Ontology: Biological Process	GOBP_GOLGI_VESICLE_TRANSPORT	C2	20	15	2
+C5: Gene Ontology: Biological Process	GOBP_REGULATION_OF_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY	C2	8	4	1
+C5: Gene Ontology: Cellular Component	GOCC_ENDOPLASMIC_RETICULUM_GOLGI_INTERMEDIATE_COMPARTMENT_MEMBRANE	C2	6	8	1
+C5: Gene Ontology: Cellular Component	GOCC_AUTOPHAGOSOME	C2	5	4	0
+C5: Gene Ontology: Molecular Function	GOMF_ALPHA_TUBULIN_BINDING	C2	4	3	1
+C5: Gene Ontology: Molecular Function	GOMF_G_PROTEIN_ACTIVITY	C2	4	4	0
+C5: Gene Ontology: Cellular Component	GOCC_GOLGI_TRANSPORT_COMPLEX	C2	3	3	0
+C5: Gene Ontology: Biological Process	GOBP_NUCLEAR_EXPORT	C3	11	15	1
+C5: Gene Ontology: Molecular Function	GOMF_GTPASE_ACTIVATOR_ACTIVITY	C3	11	6	2
+C5: Gene Ontology: Molecular Function	GOMF_STRUCTURAL_CONSTITUENT_OF_NUCLEAR_PORE	C3	6	12	0
+C5: Gene Ontology: Cellular Component	GOCC_NUCLEAR_PORE	C3	5	8	0
+C5: Gene Ontology: Cellular Component	GOCC_NUCLEAR_PORE_OUTER_RING	C3	4	8	0
+C5: Gene Ontology: Molecular Function	GOMF_TRANSCRIPTION_COREGULATOR_ACTIVITY	C4	15	10	2
+C5: Gene Ontology: Biological Process	GOBP_DNA_TEMPLATED_TRANSCRIPTION_ELONGATION	C4	9	10	1
+C5: Gene Ontology: Cellular Component	GOCC_CORE_MEDIATOR_COMPLEX	C4	5	9	0
+C5: Gene Ontology: Cellular Component	GOCC_ENDOPLASMIC_RETICULUM_PROTEIN_CONTAINING_COMPLEX	C5	8	5	0
+C5: Gene Ontology: Biological Process	GOBP_GLYCOLIPID_BIOSYNTHETIC_PROCESS	C5	7	6	0
+C5: Gene Ontology: Molecular Function	GOMF_HEXOSYLTRANSFERASE_ACTIVITY	C5	7	6	1
+C5: Gene Ontology: Cellular Component	GOCC_CULLIN_RING_UBIQUITIN_LIGASE_COMPLEX	C6	9	7	1
+C5: Gene Ontology: Molecular Function	GOMF_ENZYME_SUBSTRATE_ADAPTOR_ACTIVITY	C6	7	6	0

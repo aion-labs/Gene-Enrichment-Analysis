@@ -1,0 +1,3 @@
+network	terms	genes	max_degree	median_degree	spearman_rho	p	top10_hubs
+iGEA q<0.10	56	168	7	2.0	0.409	3.8e-08	AKT1 (7; 864 sets), EGF (7; 276 sets), EGFR (7; 359 sets), PIGY (7; 24 sets), AP2M1 (6; 115 sets), NUP107 (6; 96 sets), NUP133 (6; 92 sets), NUP155 (6; 93 sets), NUP160 (6; 78 sets), NUP85 (6; 97 sets)
+ORA FDR<0.05	87	123	54	3.0	0.352	6.6e-05	NUP107 (54; 96 sets), NUP133 (54; 92 sets), NUP85 (54; 97 sets), NUP155 (53; 93 sets), NUP160 (53; 78 sets), NUP153 (48; 92 sets), RANBP2 (48; 111 sets), COG3 (12; 26 sets), RAB1B (12; 42 sets), AKT1 (11; 864 sets)

@@ -1,0 +1,4 @@
+repeat	requested_model	returned_model	response_id	started_utc	seconds	input_tokens	output_tokens	context	response_file
+1	gpt-6-astra	gpt-6-astra	resp_04f40499a8230b9f016b003b61924487d2929795b467347e44	2026-11-20T12:21:53+00:00	68.0	10494	1969	an siRNA screen in human cells for host factors required for HIV infection (HIV dependency factors)	followup_r1.json
+2	gpt-6-astra	gpt-6-astra	resp_0b5aac3cd4422b8f016b003ba5a00c87d2b99f078358184d73	2026-11-20T12:23:01+00:00	60.0	10495	1678	an siRNA screen in human cells for host factors required for HIV infection (HIV dependency factors)	followup_r2.json
+3	gpt-6-astra	gpt-6-astra	resp_009ef2a1eb220eee016b003be18c0887d296a77eefa97a69c1	2026-11-20T12:24:01+00:00	55.8	10429	1672	an siRNA screen in human cells for host factors required for HIV infection (HIV dependency factors)	followup_r3.json

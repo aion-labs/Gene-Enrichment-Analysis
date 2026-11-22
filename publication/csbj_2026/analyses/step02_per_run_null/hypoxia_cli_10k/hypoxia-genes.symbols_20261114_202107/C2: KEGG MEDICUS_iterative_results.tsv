@@ -1,0 +1,2 @@
+Library	Iteration	Term	Description	iteration overlapping genes	iteration p-value	iteration -log(p-value)	Genes removed for next iteration	Full list overlapping genes	Full list p-value	Regular FDR	Full list overlapping genes (gene names)
+C2: KEGG MEDICUS	1	KEGG: MEDICUS REFERENCE GLYCOLYSIS	https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KEGG_MEDICUS_REFERENCE_GLYCOLYSIS	5/25	1.4999726817417895e-06	5.823916650462208	ALDOC, GAPDH, LDHA, PGAM1, PGK1	5/25	1.4999726817417895e-06	0.0006044889907419411	ALDOC, GAPDH, LDHA, PGAM1, PGK1

@@ -8,7 +8,7 @@ import plotly.express as px
 import streamlit as st
 from streamlit import session_state as state
 
-from enrichment import Enrichment
+from enrichment import Enrichment, background_terms
 from iter_enrichment import IterativeEnrichment
 from ui.dot_utils import dot_to_plotly
 from ui.utils import download_link
@@ -190,6 +190,23 @@ def render_validation() -> None:
                 )
 
 
+GREY_ROW = "background-color: #e6e6e6; color: #808080"
+
+
+def add_term_stats(df: pd.DataFrame, stats) -> pd.DataFrame:
+    """Replace '-log(p-value)' by the term q-value and add 'Kept' (q below the threshold).
+    ``stats`` maps iteration -> (q-value, kept); ``df`` is indexed by iteration."""
+    df = df.drop(columns=["iteration -log(p-value)"], errors="ignore")
+    if stats is None:
+        return df
+    q = [stats.get(int(i), (np.nan, True))[0] for i in df.index]
+    kept = [stats.get(int(i), (np.nan, True))[1] for i in df.index]
+    pos = list(df.columns).index("iteration p-value") + 1 if "iteration p-value" in df.columns else 1
+    df.insert(pos, "q-value", q)
+    df.insert(pos + 1, "Kept", kept)
+    return df
+
+
 def render_iter_table(result: pd.DataFrame) -> None:
     """
     Render a styled DataFrame of iterative enrichment results.
@@ -226,15 +243,21 @@ def render_iter_table(result: pd.DataFrame) -> None:
         format_dict["Full list p-value"] = custom_format
     if "Regular FDR" in df.columns:
         format_dict["Regular FDR"] = custom_format
+    if "q-value" in df.columns:
+        format_dict["q-value"] = custom_format
 
     styled = df.style.format(format_dict)
+    if "Kept" in df.columns:  # terms removed by the q-value filter: grey rows
+        styled = styled.apply(lambda row: [GREY_ROW if not bool(row["Kept"]) else ""]
+                              * len(row), axis=1)
 
     # Build column config
     column_config = {
         "Term": "Term",
         "iteration p-value": "Iteration P-value",
         "iteration overlapping genes": "Iteration Overlapping Genes",
-        "iteration -log(p-value)": "Iteration -log(p-value)",
+        "q-value": st.column_config.Column("q-value", help="Signal-adjusted empirical q-value from the random gene lists"),
+        "Kept": st.column_config.CheckboxColumn("Kept", help="q-value below the threshold: the term is kept (grey rows are removed)"),
         "Genes removed for next iteration": "Genes Removed for Next Iteration",
         "Description": None,
         "Library": None,
@@ -295,52 +318,35 @@ def render_iter_barchart(result: pd.DataFrame, file_name: str = "") -> None:
     st.plotly_chart(fig, use_container_width=True, key=f"iter_barchart_{file_name}")
 
 
-def render_iter_results(result: IterativeEnrichment, file_name: str) -> None:
+def render_iter_results(result: IterativeEnrichment, file_name: str, term_stats=None, q_threshold=None) -> None:
     """
     Render a results section for iterative enrichment within the Streamlit app.
 
     :param result: IterativeEnrichment object containing iteration records.
-    :type result: src.iter_enrichment.IterativeEnrichment
     :param file_name: Name of the library or section header.
-    :type file_name: str
+    :param term_stats: optional {iteration: (q-value, kept)} from the random-list statistics.
+    :param q_threshold: q-value threshold used for ``kept`` (for the caption).
     """
     logger.info(f"Rendering iterative results for {file_name}.")
 
     st.divider()
     st.subheader(file_name)
-    
-    # Calculate and display library-specific size information for the initial gene set
-    # Get the first iteration's enrichment object to show initial sizes
+
+    # Collection-specific sizes, with gene sets restricted to the background (as in the analysis)
     if result._iteration_enrichments:
-        initial_enrichment = result._iteration_enrichments[0]
-        
-        # Calculate library-specific sizes for display
-        filtered_terms = [term for term in initial_enrichment.gene_set_library.library 
-                         if initial_enrichment.min_term_size <= term["size"] <= initial_enrichment.max_term_size]
-        
-        # Calculate unique genes from filtered terms only
-        filtered_unique_genes = set()
-        for term in filtered_terms:
-            filtered_unique_genes.update(term["genes"])
-        
-        # Calculate library-specific background size
-        library_background_size = len(initial_enrichment.background_gene_set.genes & filtered_unique_genes)
-        
-        # Calculate library-specific input size (genes that are in both input and library background)
-        library_input_size = len(initial_enrichment.gene_set.genes & filtered_unique_genes)
-        
-        # Display library-specific size information
-        st.caption(f"Library specific input: {library_input_size}/{initial_enrichment.gene_set.size} genes; Library specific background: {library_background_size}/{initial_enrichment.background_gene_set.size}")
-        
-        # Show final remaining genes if different from initial
+        e0 = result._iteration_enrichments[0]
+        terms = background_terms(e0.gene_set_library, e0.background_gene_set.genes, e0.min_term_size, e0.max_term_size)
+        lib_genes = set().union(*(t["genes"] for t in terms)) if terms else set()
+        lib_background = len(e0.background_gene_set.genes & lib_genes)
+        lib_input = len(e0.gene_set.genes & lib_genes)
+        st.caption(f"Collection-specific input: {lib_input}/{e0.gene_set.size} genes; "
+                   f"collection-specific background: {lib_background}/{e0.background_gene_set.size}; "
+                   f"{len(terms)} gene sets of {e0.min_term_size}-{e0.max_term_size} genes")
         if result.results:
-            # Calculate final remaining genes by starting with library-specific input size
-            # and subtracting genes removed in each iteration
-            final_remaining = library_input_size - sum(len(record.get("genes", [])) for record in result.results)
-            if final_remaining != library_input_size:
+            final_remaining = lib_input - sum(len(record.get("genes", [])) for record in result.results)
+            if final_remaining != lib_input:
                 st.caption(f"Final: {final_remaining} genes remaining after {len(result.results)} iterations")
 
-    # Tabs for table and chart
     table_tab, bar_tab = st.tabs(["Iterations", "Bar chart"])
     df = result.to_dataframe()
 
@@ -348,16 +354,21 @@ def render_iter_results(result: IterativeEnrichment, file_name: str) -> None:
         logger.warning("No iterative enrichment results.")
         st.warning("No iterative enrichment results.")
     else:
-        df = df.set_index("Iteration")
+        df = add_term_stats(df.set_index("Iteration"), term_stats)
         with table_tab:
+            if term_stats is not None and "Kept" in df.columns:
+                n_kept = int(df["Kept"].sum())
+                st.caption(f"{n_kept} of {len(df)} terms kept (q < {q_threshold:g}); grey rows are removed "
+                           "from the network." if q_threshold is not None and q_threshold < 1 else
+                           f"{n_kept} of {len(df)} terms kept (no q-value filter).")
             render_iter_table(df)
 
         with bar_tab:
             render_iter_barchart(df, file_name)
 
-        # Download links
+        tsv = df.reset_index().rename(columns={"Library": "Collection"}).to_csv(sep="\t", index=False)
         st.markdown(
-            f'Download iterative results as {download_link(result.to_tsv(), file_name, "tsv")}, '
+            f'Download iterative results as {download_link(tsv, file_name, "tsv")}, '
             f'{download_link(result.to_json(), file_name, "json")}',
             unsafe_allow_html=True,
         )
@@ -699,43 +710,40 @@ def render_ora_igea_comparison(
 
 
 def render_network(dot: str, title: str = "Iterative Enrichment Network",
-                   gene_count: int = None, library_list: list = None, llm_export: tuple = None) -> None:
+                   gene_count: int = None, library_list: list = None, llm_export: tuple = None,
+                   network: dict = None) -> None:
     """
-    Render a bipartite network graph of iterative enrichment across libraries.
+    Render the enrichment network and its downloads.
 
-    :param dot: Graphviz DOT-format string.
-    :type dot: str
-    :param title: Header title for the network graph.
-    :type title: str
+    With statistics (``network``), the figure shows the network that is tested and sent to the LLM:
+    terms that passed the q-value filter, with communities, hub genes and bridges. Without
+    statistics, the merged per-collection DOT is drawn.
     """
     logger.info("Rendering iterative network graph.")
 
     st.divider()
     st.subheader(title)
-    
-    # Count edges to check network size
-    from ui.dot_utils import count_edges_in_dot
-    edge_count = count_edges_in_dot(dot)
-    
-    # Check if network is too large for Plotly rendering
-    if edge_count <= 500:
-        # Render Plotly network as usual
-        st.plotly_chart(dot_to_plotly(dot), use_container_width=True, key="network_chart")
+
+    if network and network.get("terms"):
+        render_network_figure(network)
     else:
-        # Show warning and skip Plotly rendering
-        st.warning(
-            f"⚠️ Network too large ({edge_count} edges). "
-            "Plotly visualization skipped to prevent crashes. "
-            "Download the DOT file to view in external tools like Graphviz."
-        )
-    
-    # Always offer downloads regardless of size
+        from ui.dot_utils import count_edges_in_dot
+        edge_count = count_edges_in_dot(dot)
+        if edge_count <= 500:
+            st.plotly_chart(dot_to_plotly(dot), use_container_width=True, key="network_chart")
+        else:
+            st.warning(
+                f"⚠️ Network too large ({edge_count} edges). "
+                "Plotly visualization skipped to prevent crashes. "
+                "Download the DOT file to view in external tools like Graphviz."
+            )
+
     if llm_export:
         llm_dot, llm_prompt = llm_export
         st.markdown(
-            f'Download network graph as {download_link(dot, "iterative_network", "dot")} (for drawing) · '
-            f'network for AI analysis as {download_link(llm_dot, "network_llm", "dot")} (communities, statistics) · '
-            f'{download_link(llm_prompt, "llm_prompt", "txt")} (complete prompt: statistics, communities, network and instructions)',
+            f'Download the network as drawn and sent to the AI as {download_link(llm_dot, "network_llm", "dot")} '
+            f'(communities, statistics) · {download_link(llm_prompt, "llm_prompt", "txt")} '
+            '(complete prompt: statistics, communities, network and instructions)',
             unsafe_allow_html=True,
         )
     else:
@@ -746,9 +754,38 @@ def render_network(dot: str, title: str = "Iterative Enrichment Network",
         )
 
 
+def render_network_figure(network: dict) -> None:
+    from ui.dot_utils import load_library_colors
+    from ui.network_plot import LABEL_OPTIONS, MAX_EDGES, n_edges, network_figure
+
+    terms, mods = network["terms"], network.get("modules")
+    has_comm = mods is not None and len(getattr(mods, "terms", []))
+    ne = n_edges(terms)
+    st.caption(f"{len(terms)} terms (q-value filter passed), "
+               f"{len({g for t in terms for g in t['genes']})} genes, {ne} edges"
+               + (f", {mods.summary['n_communities']} communities" if has_comm else "")
+               + ". Squares: terms; each community is titled with its lead term (dark outline); hover for the other terms. "
+                 "Circles: genes, sized by degree (number of terms). Diamonds: bridge genes (terms in more "
+                 "than one community). **Double-click a community in the legend to show it alone** "
+                 "(double-click again to show all); scroll to zoom; use the fullscreen button at the top "
+                 "right of the chart for a larger view.")
+    c1, c2 = st.columns(2)
+    colour_by = c1.radio("Colour by", ["Community", "Collection"] if has_comm else ["Collection"],
+                         horizontal=True, key="net_colour_by")
+    labels = c2.radio("Labels", LABEL_OPTIONS, horizontal=True, key="net_labels")
+    if ne > MAX_EDGES:
+        st.warning(f"⚠️ Network too large to draw here ({ne} edges). Download the DOT file below to view it "
+                   "in Graphviz or Cytoscape; the communities table is under Network statistics.")
+        return
+    lib_colours = {v: k for k, v in load_library_colors().items()}
+    st.plotly_chart(network_figure(terms, mods, colour_by, labels, lib_colours), use_container_width=True,
+                    key="network_chart", theme=None,
+                    config={"scrollZoom": True, "displaylogo": False})
+
+
 def generate_ai_analysis_prompt(dot_content: str) -> str:
     """
-    Generate an AI analysis prompt based on the DOT network content with library source annotations.
+    Generate an AI analysis prompt based on the DOT network content with collection annotations.
     
     :param dot_content: The DOT network content
     :return: Formatted AI analysis prompt with library information
@@ -772,19 +809,19 @@ def generate_ai_analysis_prompt(dot_content: str) -> str:
             color_match = re.search(r'fillcolor="([^"]+)"', line)
             if color_match:
                 color = color_match.group(1)
-                library_name = color_to_library.get(color, "Unknown Library")
+                library_name = color_to_library.get(color, "Unknown collection")
                 
                 # Add library information to the node attributes
-                if 'library=' not in line:
+                if 'collection=' not in line:
                     # Insert library attribute before the closing bracket
-                    line = line.rstrip('];') + f', library="{library_name}"];'
+                    line = line.rstrip('];') + f', collection="{library_name}"];'
         
         annotated_lines.append(line)
     
     # Create the annotated DOT content
     annotated_dot = '\n'.join(annotated_lines)
     
-    prompt = """You are a computational biologist analyzing an iterative gene set enrichment network. Iterative means that for each library source, the top enriched gene set is found, saved and the genes are removed from the initial gene list. The remaining genes are then tested for enrichment again. Thus, each gene appears only once per library source tested but can be linked to multiple terms that originate from different libraries. The results are provided as a DOT network represents the relationships between genes and gene sets(=terms).
+    prompt = """You are a computational biologist analyzing an iterative gene set enrichment network. Iterative means that for each gene set collection, the top enriched gene set is found, saved and the genes are removed from the initial gene list. The remaining genes are then tested for enrichment again. Thus, each gene appears only once per collection tested but can be linked to multiple terms that originate from different collections. The results are provided as a DOT network represents the relationships between genes and gene sets(=terms).
 
 **NETWORK STRUCTURE:**
 """
@@ -798,9 +835,9 @@ def generate_ai_analysis_prompt(dot_content: str) -> str:
 **Node Types:**
 - **Gene nodes** (type="gene"): Individual genes from the input gene set
 - **Term nodes** (type="term"): Enriched biological pathways/processes/gene sets
-- **Library Source**: Each term node includes a "library" attribute indicating the source database
+- **Collection**: Each term node includes a "collection" attribute indicating the source gene set collection
 
-**Library Sources and Their Biological Context:**
+**Gene Set Collections and Their Biological Context:**
 - **H: Hallmark gene sets**: Curated gene sets representing well-defined biological states or processes
 - **C2: BioCarta**: Canonical pathways from BioCarta database
 - **C2: KEGG MEDICUS**: Metabolic and signaling pathways from KEGG
@@ -838,7 +875,7 @@ Please analyze this network and provide:
 
 3. **Biological Hypothesis:**
    - Based on the network structure, what biological hypothesis can you generate?
-   - How do the different library sources support or complement each other?
+   - How do the different collections support or complement each other?
    - Try to formulate one hypothesis based on the most central terms and how they possibly related to one another.
    
 4. **Estimated Experimental Context**
@@ -846,7 +883,7 @@ Please analyze this network and provide:
 
 **RESPONSE STRUCTURE:**
 - **Executive Summary** (2-3 sentences)
-- **Key Biological Processes Identified** (by library source)
+- **Key Biological Processes Identified** (by collection)
 - **Network Topology Insights**
 - **Proposed Biological Hypothesis**
 - **Estimated Experimental Context**
@@ -856,8 +893,8 @@ Please analyze this network and provide:
 - Consider the functional relationships between connected genes and terms
 - Look for unexpected connections that might reveal novel or unexpected biology
 - Consider the broader biological context and literature
-- Note that protein interaction library could shed light on physical interaction between genes while terms indicate functional interaction
-- Different library sources may provide complementary biological insights"""
+- Note that the protein interaction collection could shed light on physical interaction between genes while terms indicate functional interaction
+- Different collections may provide complementary biological insights"""
     
     return prompt
 
@@ -1253,15 +1290,15 @@ You are a computational biologist analyzing over-representation analysis (ORA) r
 **DATA STRUCTURE:**
 - **Ranked List**: Terms are ranked by statistical significance (lower rank = more significant)
 - **Gene Lists**: Each term contains the specific genes that are enriched in that biological process
-- **Library Sources**: Different databases provide complementary biological context
-- **Table Format**: Results are organized by ranked terms per library source
+- **Gene Set Collections**: Different collections provide complementary biological context
+- **Table Format**: Results are organized by ranked terms per collection
 
 ## ENRICHMENT DATA (JSON Format)
 ```json
 {json.dumps(analysis_data, indent=2)}
 ```
 
-## LIBRARY SOURCES AND THEIR BIOLOGICAL CONTEXT:
+## GENE SET COLLECTIONS AND THEIR BIOLOGICAL CONTEXT:
 - **H: Hallmark gene sets**: Curated gene sets representing well-defined biological states or processes
 - **C2: BioCarta**: Canonical pathways from BioCarta database
 - **C2: KEGG MEDICUS**: Metabolic and signaling pathways from KEGG
@@ -1288,7 +1325,7 @@ Please analyze this ranked list of enriched terms and provide:
 
 3. **Biological Hypothesis:**
    - Based on the ranked list structure, what biological hypothesis can you generate?
-   - How do the different library sources support or complement each other?
+   - How do the different collections support or complement each other?
    - Try to formulate one coherent hypothesis that explains as many terms as possible and generates a coherent biological story.
    
 4. **Estimated Experimental Context**
@@ -1296,7 +1333,7 @@ Please analyze this ranked list of enriched terms and provide:
 
 ## RESPONSE STRUCTURE:
 - **Executive Summary** (2-3 sentences)
-- **Key Biological Processes Identified** (by library source and rank)
+- **Key Biological Processes Identified** (by collection and rank)
 - **Gene-Term Relationship Analysis**
 - **Proposed Biological Hypothesis** (coherent story explaining multiple terms)
 - **Estimated Experimental Context**
@@ -1306,7 +1343,7 @@ Please analyze this ranked list of enriched terms and provide:
 - Consider the functional relationships between genes within and across terms
 - Consider that some genes may appear in multiple terms due to term redundancy
 - Consider the broader biological context and literature
-- Different library sources may provide complementary biological insights
+- Different collections may provide complementary biological insights
 - Build a coherent story that explains as many terms as possible rather than treating them in isolation
 - The goal is to find a unifying biological hypothesis that connects the enriched terms into a meaningful narrative
 """

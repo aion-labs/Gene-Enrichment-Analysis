@@ -1,0 +1,11 @@
+method	Leiden (igraph, modularity)
+n_terms	41
+n_genes	242
+n_communities	6
+modularity	0.4167
+partition_stability_mean_ARI	0.8379
+partition_identical_fraction	0.3
+n_seeds	100
+seed	2026
+n_bridge_genes	44
+max_gene_degree	3

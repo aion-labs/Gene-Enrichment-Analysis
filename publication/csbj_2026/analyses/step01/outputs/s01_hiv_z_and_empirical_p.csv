@@ -1,0 +1,6 @@
+Metric,Observed,Null mean,Null SD,Null max,z,Random >= observed (r),n random,Empirical p = (r+1)/(n+1),Null skewness,check: code null mean
+Cluster size (genes + terms),241.0,46.43,24.99,124.0,7.79,0,1000,0.001,0.59,46.428
+Genes,179.0,36.0,19.39,98.0,7.38,0,1000,0.001,0.62,36.001
+Terms,62.0,10.43,6.0,33.0,8.59,0,1000,0.001,0.67,10.427
+Edges,412.0,53.53,31.32,159.0,11.45,0,1000,0.001,0.72,53.531
+Edges per gene,2.3017,1.46,0.23,3.31,3.62,4,1000,0.005,1.29,1.4577

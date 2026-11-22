@@ -1,0 +1,6 @@
+dataset	null	Metric	Observed	Null Mean	Null SD	Null Max	Z-score	Random >= Observed	Random Lists	Empirical p	terms_kept	terms_selected	chance_terms_per_list	input_mean_annotation	matched_lists_mean_annotation	background_mean_annotation
+Vaccination	annotation-matched	Cluster Size	263.0	10.2969	12.816073907012242	117.0	19.71766875202982	0	10000	9.999000099990002e-05	37	80	43.2	50.1	0.0	28.1
+Vaccination	annotation-matched	Number of Genes	226.0	9.3521	11.857382746205	106.0	18.27113998401873	0	10000	9.999000099990002e-05	37	80	43.2	50.1	0.0	28.1
+Vaccination	annotation-matched	Number of Terms	37.0	0.9448	1.1814198914865113	13.0	30.518531353517215	0	10000	9.999000099990002e-05	37	80	43.2	50.1	0.0	28.1
+Vaccination	annotation-matched	Number of Edges	498.0	10.5151	14.26330158098047	144.0	34.177563815241854	0	10000	9.999000099990002e-05	37	80	43.2	50.1	0.0	28.1
+Vaccination	annotation-matched	Average Edges per Gene	2.2035398230088497	0.6478673091605469	0.5575621738204405	2.8333333333333335	2.7901328083086527	14	10000	0.0014998500149985001	37	80	43.2	50.1	0.0	28.1

@@ -1,0 +1,50 @@
+Gene list: random_control_seed999_265genes
+Validated input genes: 264
+Largest cluster: 5 nodes, 4 genes, 1 terms, 4 edges, 1.0000 edges per gene, 1 collections
+
+====================================================================================================
+iGEA STATISTICAL REPORT (per-run random lists)
+====================================================================================================
+Random lists: 10000, each of 264 genes (= validated input size), drawn without replacement
+from the analysis background (23391 genes); seed 2026; 31.9 s on 4 process(es).
+Each random list was analysed with the same collections and parameters as the input:
+  p_value_method=Fisher's Exact Test, p_threshold=0.01, min_overlap=3, min_term_size=10, max_term_size=600, max_iterations=30, background=all_genes
+Collections: H: Hallmark Gene Sets; C2: BioCarta; C2: KEGG MEDICUS; C2: Pathway Interaction Database; C2: Reactome Pathways; C2: WikiPathways; C2: KEGG Legacy; C5: Gene Ontology: Biological Process; C5: Gene Ontology: Cellular Component; C5: Gene Ontology: Molecular Function
+
+TERM LEVEL (signal-adjusted empirical q-value)
+  A random list of this size selects on average 15.95 terms by chance.
+  q = expected chance terms with p' <= p / selected terms with p' <= p (per collection, monotone),
+  re-estimated after treating genes of accepted terms as signal (260 of 264 genes
+  treated as noise in the final round; 1000 random lists per size step).
+  Terms kept (q < 0.1): 1 of 15. Random lists are filtered the same way.
+
+NETWORK LEVEL (largest connected cluster)
+  z = (observed - random mean) / random SD
+  empirical p = (r + 1) / (n + 1), r = random lists with a value >= observed, n = 10000
+  (smallest attainable p = 9.999e-05). The metrics describe the same cluster and are not independent tests.
+
+  Metric                      Observed  Rand mean  Rand SD  Rand max       z     r    Emp. p
+  ------------------------------------------------------------------------------------------
+  Cluster Size                       5      4.906    5.561        57    0.02  4913    0.4914
+  Number of Genes                    4      4.050    4.693        47   -0.01  4882    0.4883
+  Number of Terms                    1      0.856    1.035        13    0.14  5965    0.5965
+  Number of Edges                    4      4.665    6.076        65   -0.11  4913    0.4914
+  Average Edges per Gene             1      0.664    0.590         4    0.57  5965    0.5965
+
+TERMS
+  Collection                                It     p-value  q-value  Kept  Term
+  C2: KEGG Legacy                            1     0.00721    0.461  no    KEGG_SYSTEMIC_LUPUS_ERYTHEMATOSUS
+  C2: Reactome Pathways                      1     0.00958        1  no    REACTOME_ASSEMBLY_OF_THE_ORC_COMPLEX_AT_THE_ORIGIN_OF_REPLICATION
+  C2: WikiPathways                           1     0.00155    0.359  no    WP_ENTEROCYTE_CHOLESTEROL_METABOLISM
+  C2: WikiPathways                           2     0.00687    0.493  no    WP_BARDETBIEDL_SYNDROME
+  C2: WikiPathways                           3     0.00891    0.493  no    WP_DEVELOPMENT_AND_HETEROGENEITY_OF_THE_ILC_FAMILY
+  C5: Gene Ontology: Biological Process      1    1.82e-05   0.0263  yes   GOBP_NEGATIVE_REGULATION_OF_B_CELL_MEDIATED_IMMUNITY
+  C5: Gene Ontology: Biological Process      2    0.000191    0.135  no    GOBP_NITRIC_OXIDE_MEDIATED_SIGNAL_TRANSDUCTION
+  C5: Gene Ontology: Biological Process      3     0.00107    0.453  no    GOBP_REGULATION_OF_CLATHRIN_DEPENDENT_ENDOCYTOSIS
+  C5: Gene Ontology: Biological Process      4     0.00241    0.585  no    GOBP_INTESTINAL_LIPID_ABSORPTION
+  C5: Gene Ontology: Biological Process      5     0.00307    0.585  no    GOBP_RNA_SPLICING
+  C5: Gene Ontology: Biological Process      6      0.0049    0.655  no    GOBP_RESPONSE_TO_CORTICOSTEROID
+  C5: Gene Ontology: Biological Process      7     0.00774    0.655  no    GOBP_NEGATIVE_REGULATION_OF_MUSCLE_HYPERTROPHY
+  C5: Gene Ontology: Biological Process      8     0.00874    0.655  no    GOBP_SKELETAL_MUSCLE_CELL_DIFFERENTIATION
+  C5: Gene Ontology: Biological Process      9     0.00886    0.655  no    GOBP_NEGATIVE_REGULATION_OF_CELL_MIGRATION_INVOLVED_IN_SPROUTING_ANGIOGENESIS
+  C5: Gene Ontology: Molecular Function      1     0.00255    0.806  no    GOMF_EXOGENOUS_PROTEIN_BINDING

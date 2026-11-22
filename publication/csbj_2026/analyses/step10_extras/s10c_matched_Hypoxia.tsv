@@ -1,0 +1,6 @@
+dataset	null	Metric	Observed	Null Mean	Null SD	Null Max	Z-score	Random >= Observed	Random Lists	Empirical p	terms_kept	terms_selected	chance_terms_per_list	input_mean_annotation	matched_lists_mean_annotation	background_mean_annotation
+Hypoxia	annotation-matched	Cluster Size	60.0	4.7213	5.603965230977081	54.0	9.864211807460103	0	10000	9.999000099990002e-05	16	32	15.44	58.3	0.0	28.1
+Hypoxia	annotation-matched	Number of Genes	44.0	3.7318	4.424643348338937	39.0	9.100891717095607	0	10000	9.999000099990002e-05	16	32	15.44	58.3	0.0	28.1
+Hypoxia	annotation-matched	Number of Terms	16.0	0.9895	1.3267968005689492	17.0	11.313337500937058	2	10000	0.00029997000299970003	16	32	15.44	58.3	0.0	28.1
+Hypoxia	annotation-matched	Number of Edges	101.0	4.6602	6.496763498850792	79.0	14.828891342133891	0	10000	9.999000099990002e-05	16	32	15.44	58.3	0.0	28.1
+Hypoxia	annotation-matched	Average Edges per Gene	2.2954545454545454	0.6801083890737321	0.6398306302944019	5.0	2.5246464922092784	98	10000	0.0098990100989901	16	32	15.44	58.3	0.0	28.1

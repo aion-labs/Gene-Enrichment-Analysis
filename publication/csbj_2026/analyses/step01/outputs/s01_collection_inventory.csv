@@ -1,0 +1,11 @@
+Collection,Source (release),GMT file,Gene sets (total),Gene sets 10-600,Distinct genes (all sets),Distinct genes (sets 10-600),Collection background M (all_genes ∩ collection),HIV genes in collection (n),"Max possible terms (sets 10-600, overlap>=3)",ORA p<0.01 (overlap>=3),ORA FDR<0.05,iGEA terms,In ORA comparison,In iGEA network,In random-list null
+H: Hallmark Gene Sets,MSigDB H (v2025.1.Hs),h.all.v2025.1.Hs.symbols.gmt,50,50,4384,4384,4378,76,22,1,1,1,yes,yes,yes
+C2: Reactome Pathways,MSigDB C2:CP:REACTOME (v2025.1.Hs),c2.cp.reactome.v2025.1.Hs.symbols.gmt,1787,1409,11369,11044,11019,169,228,85,65,9,yes,yes,yes
+C2: KEGG Legacy,MSigDB C2:CP:KEGG_LEGACY (v2025.1.Hs),c2.cp.kegg_legacy.v2025.1.Hs.symbols.gmt,186,186,5245,5245,5230,73,47,9,0,5,yes,yes,yes
+C2: KEGG MEDICUS,MSigDB C2:CP:KEGG_MEDICUS (v2025.1.Hs),c2.cp.kegg_medicus.v2025.1.Hs.symbols.gmt,658,403,2788,2274,2262,41,11,7,2,3,yes,yes,yes
+C2: BioCarta,MSigDB C2:CP:BIOCARTA (v2025.1.Hs),c2.cp.biocarta.v2025.1.Hs.symbols.gmt,292,226,1509,1365,1363,27,10,6,0,3,yes,yes,yes
+C2: Pathway Interaction Database,MSigDB C2:CP:PID (v2025.1.Hs),c2.cp.pid.v2025.1.Hs.symbols.gmt,196,196,2534,2534,2534,46,33,3,0,2,yes,yes,yes
+C2: WikiPathways,MSigDB C2:CP:WIKIPATHWAYS (v2025.1.Hs),c2.cp.wikipathways.v2025.1.Hs.symbols.gmt,885,766,9127,9063,9035,134,113,19,0,6,yes,yes,yes
+C5: Gene Ontology: Biological Process,MSigDB C5:GO:BP (v2025.1.Hs),c5.go.bp.v2025.1.Hs.symbols.gmt,7583,5360,17999,16094,16032,228,793,88,14,12,yes,yes,yes
+C5: Gene Ontology: Cellular Component,MSigDB C5:GO:CC (v2025.1.Hs),c5.go.cc.v2025.1.Hs.symbols.gmt,1042,684,14868,12133,12091,191,136,18,3,11,yes,yes,yes
+C5: Gene Ontology: Molecular Function,MSigDB C5:GO:MF (v2025.1.Hs),c5.go.mf.v2025.1.Hs.symbols.gmt,1855,1165,15698,13919,13870,195,115,16,2,10,yes,yes,yes
