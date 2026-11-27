@@ -247,11 +247,6 @@ def render_per_run_benchmark(st, state, download_link: Callable, default_n_lists
             st.dataframe(mods.communities.drop(columns=["All terms"]), use_container_width=True, hide_index=True)
             st.dataframe(mods.genes[["Gene", "Degree", "Community", "Participation", "Bridge", "Terms"]],
                          use_container_width=True, hide_index=True)
-            nm = state.get("gene_set_name") or "network"
-            st.markdown(f"📄 {download_link(mods.communities.to_csv(sep=chr(9), index=False), nm + '_communities', 'tsv')} · "
-                        f"{download_link(mods.terms.rename(columns={'Library': 'Collection'}).to_csv(sep=chr(9), index=False), nm + '_community_terms', 'tsv')} · "
-                        f"{download_link(mods.genes.to_csv(sep=chr(9), index=False), nm + '_hub_genes', 'tsv')}",
-                        unsafe_allow_html=True)
     with st.expander("📖 How to read these numbers"):
         n = attrs["n_lists"]
         st.markdown(f"""
@@ -265,10 +260,42 @@ def render_per_run_benchmark(st, state, download_link: Callable, default_n_lists
 - A small network p means your genes form a more connected cross-collection network than random lists
   of the same size, background and settings.
 """)
-    name = state.get("gene_set_name") or "statistical_report"
-    st.markdown(f"📄 {download_link(stored['report'], name + '_statistical_report', 'txt')} · "
-                f"{download_link(stored['null'].to_csv(sep=chr(9), index=False), name + '_random_lists', 'tsv')}",
-                unsafe_allow_html=True)
+    _render_statistics_downloads(st, state, stored, download_link)
+
+
+def _render_statistics_downloads(st, state, stored, download_link: Callable) -> None:
+    """All files of the network statistics in one labeled table."""
+    name = "".join(c if c.isalnum() or c in "-_" else "_" for c in (state.get("gene_set_name") or "gene_list"))
+    tsv = lambda df: df.to_csv(sep="\t", index=False)
+    qt = stored["attrs"].get("q_threshold")
+    terms = stored["terms"].rename(columns={"Library": "Collection", "p-value": "iteration p-value",
+                                            "Kept": "In network"})
+    rows = [
+        ("Statistical report (TXT)", stored["report"], "_statistical_report", "txt",
+         "Readable summary: settings, network test and every term's q-value"),
+        ("Network test (TSV)", tsv(stored["table"].rename(columns={"Observed": "Your network", "Null Mean": "Random mean",
+                                                                  "Null SD": "Random SD", "Null Max": "Random max"})),
+         "_network_test", "tsv", "The five largest-cluster metrics: your network, random mean, SD and max, empirical p"),
+        ("Term q-values (TSV)", tsv(terms), "_term_qvalues", "tsv",
+         "Every selected term with its iteration p-value, q-value and whether it is in the network"
+         + (f" (q < {qt:g})" if qt is not None and qt < 1 else "")),
+    ]
+    mods = stored.get("modules")
+    if mods is not None and mods.summary.get("n_terms"):
+        rows += [
+            ("Communities (TSV)", tsv(mods.communities), "_communities", "tsv",
+             "One row per community: size, lead term, top hub genes, bridge genes and all its terms"),
+            ("Terms by community (TSV)", tsv(mods.terms.rename(columns={"Library": "Collection"})), "_community_terms", "tsv",
+             "Each term in the network with its community and the genes it shares"),
+            ("Genes: hubs and bridges (TSV)", tsv(mods.genes), "_genes", "tsv",
+             "Each gene in the network with its degree, community, participation coefficient and bridge status"),
+        ]
+    rows.append(("Random lists (TSV)", tsv(stored["null"]), "_random_lists", "tsv",
+                 "The largest-cluster metrics of every random list (the distribution behind the empirical p)"))
+    st.markdown("#### 📥 Download network statistics")
+    st.markdown("| File | Contents |\n|---|---|\n" + "\n".join(
+        f"| {download_link(content, name + suffix, ext, label=label)} | {desc} |"
+        for label, content, suffix, ext, desc in rows), unsafe_allow_html=True)
 
 
 def network_from_state(state):

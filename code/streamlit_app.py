@@ -29,6 +29,7 @@ from ui.rendering import (
     generate_regular_enrichment_json_analysis,
     render_ora_igea_comparison,
 )
+from ui.downloads import kept_terms as dl_kept_terms, q_threshold as dl_q_threshold, render_results_downloads
 from ui.utils import download_link, download_file_link, update_aliases
 from ui.per_run_benchmark import (ensure_statistics, llm_export_from_state, network_from_state, render_per_run_benchmark,
                                   render_q_threshold, render_statistics_settings,
@@ -1459,46 +1460,20 @@ Results include ranked tables, bar charts, and network graphs."""
 
     # Iterative rendering
     if mode == "Iterative" and state.iter_ready:
-        # Download section as a table
-        st.markdown("**📥 Download Results:**")
+        # render each library's results with a persistent checkbox in the same order as the checkbox list
+        def sort_libraries(libraries):
+            hallmark = [lib for lib in libraries if lib.startswith("H:")]
+            c2_libs = sorted([lib for lib in libraries if lib.startswith("C2:")])
+            c5_libs = sorted([lib for lib in libraries if lib.startswith("C5:")])
+            protein_interaction = [lib for lib in libraries if lib.startswith("Protein Interaction")]
+            other = sorted([lib for lib in libraries if not any(lib.startswith(prefix) for prefix in ["H:", "C2:", "C5:", "Protein Interaction"])])
+            
+            return hallmark + c2_libs + c5_libs + protein_interaction + other
         
-        # Extract ORA results
+        # Downloads: ORA and iGEA results of all collections (iGEA with q-value, network and community)
         ora_results = _extract_iteration_1_as_ora(state.iter_enrich)
         combined_ora = _build_ora_tables_download(ora_results) if ora_results else None
-        ora_archive_path = _create_combined_ora_archive(state.iter_enrich) if ora_results else None
-        
-        # Build iGEA results
-        combined_igea = _build_iterative_tables_download(state.iter_results)
-        combined_archive_path = _create_combined_iteration_archive({})
-        
-        # Create table data
-        ora_combined_link = download_link(combined_ora, 'ora_enrichment_results', 'tsv') if combined_ora else "—"
-        ora_individual_link = download_file_link(ora_archive_path, Path(ora_archive_path).name.replace('.tar.gz', ''), 'tar.gz') if ora_archive_path else "—"
-        igea_combined_link = download_link(combined_igea, 'iterative_enrichment_results', 'tsv')
-        igea_individual_link = download_file_link(combined_archive_path, Path(combined_archive_path).name.replace('.tar.gz', ''), 'tar.gz') if combined_archive_path else "—"
-        
-        # Display as table using markdown
-        st.markdown("""
-        | | ORA | iGEA |
-        |---|---|---|
-        | **Combined** | {ora_combined} | {igea_combined} |
-        | **Individual collection files** | {ora_individual} | {igea_individual} |
-        """.format(
-            ora_combined=ora_combined_link,
-            ora_individual=ora_individual_link,
-            igea_combined=igea_combined_link,
-            igea_individual=igea_individual_link
-        ), unsafe_allow_html=True)
-        
-        # Download validated gene symbols
-        if hasattr(state, 'gene_set') and state.gene_set and state.gene_set.genes:
-            validated_genes = sorted(list(state.gene_set.genes))
-            validated_genes_text = '\n'.join(validated_genes)
-            gene_set_name = state.gene_set_name if hasattr(state, 'gene_set_name') and state.gene_set_name else 'validated_genes'
-            st.markdown(
-                f"**📋 Validated Gene Symbols:** {download_link(validated_genes_text, gene_set_name, 'txt')}",
-                unsafe_allow_html=True
-            )
+        render_results_downloads(st, state, ora_results, combined_ora, sort_libraries(list(state.iter_enrich.keys())))
 
         # callback to keep checkbox state in session
         def toggle_library(lib_name):
@@ -1527,16 +1502,6 @@ Results include ranked tables, bar charts, and network graphs."""
             state.network_generated = False
             state.last_merged_dot = ""
 
-        # render each library's results with a persistent checkbox in the same order as the checkbox list
-        def sort_libraries(libraries):
-            hallmark = [lib for lib in libraries if lib.startswith("H:")]
-            c2_libs = sorted([lib for lib in libraries if lib.startswith("C2:")])
-            c5_libs = sorted([lib for lib in libraries if lib.startswith("C5:")])
-            protein_interaction = [lib for lib in libraries if lib.startswith("Protein Interaction")]
-            other = sorted([lib for lib in libraries if not any(lib.startswith(prefix) for prefix in ["H:", "C2:", "C5:", "Protein Interaction"])])
-            
-            return hallmark + c2_libs + c5_libs + protein_interaction + other
-        
         available_libraries = sort_libraries(list(state.iter_enrich.keys()))
         for lib in available_libraries:
             it = state.iter_enrich[lib]
@@ -1575,6 +1540,9 @@ Results include ranked tables, bar charts, and network graphs."""
                         state.iter_enrich,
                         p_threshold=state.iter_p_threshold,
                         fdr_threshold=state.adjusted_p_threshold,
+                        kept_terms=dl_kept_terms(state),
+                        q_threshold=dl_q_threshold(state),
+                        file_prefix=state.get("gene_set_name") or "",
                     )
                 except Exception as e:
                     logger.error(f"Error displaying comparison: {e}")

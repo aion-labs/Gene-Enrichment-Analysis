@@ -356,7 +356,7 @@ class IterativeEnrichment:
         
         # Ensure results directory exists
         results_dir = self._get_run_results_dir()
-        results_dir.mkdir(exist_ok=True)
+        results_dir.mkdir(parents=True, exist_ok=True)
         
         # Create filename with library name and iteration number
         # Replace problematic file name characters with dots
@@ -432,7 +432,7 @@ class IterativeEnrichment:
         
         # Ensure results directory exists
         results_dir = self._get_run_results_dir()
-        results_dir.mkdir(exist_ok=True)
+        results_dir.mkdir(parents=True, exist_ok=True)
         
         # Create archive filename
         library_name = self.gene_set_library.name.replace(" ", "_").replace("/", "_")
@@ -512,7 +512,7 @@ class IterativeEnrichment:
         
         # Ensure results directory exists
         results_dir = self._get_run_results_dir()
-        results_dir.mkdir(exist_ok=True)
+        results_dir.mkdir(parents=True, exist_ok=True)
         
         # Create filename with library name and timestamp
         # Replace problematic file name characters with dots

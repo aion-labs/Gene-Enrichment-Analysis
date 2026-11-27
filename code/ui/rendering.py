@@ -1,6 +1,6 @@
 import logging
 from math import log10
-from typing import Dict, Set
+from typing import Optional, Dict, Set
 
 import numpy as np
 import pandas as pd
@@ -366,10 +366,11 @@ def render_iter_results(result: IterativeEnrichment, file_name: str, term_stats=
         with bar_tab:
             render_iter_barchart(df, file_name)
 
-        tsv = df.reset_index().rename(columns={"Library": "Collection"}).to_csv(sep="\t", index=False)
+        from ui.downloads import _safe, igea_table
+        tsv = igea_table(st.session_state, file_name, result).to_csv(sep="\t", index=False)
         st.markdown(
-            f'Download iterative results as {download_link(tsv, file_name, "tsv")}, '
-            f'{download_link(result.to_json(), file_name, "json")}',
+            f'📥 {download_link(tsv, _safe(file_name) + "_iGEA", "tsv", label="This collection (TSV, with q-values)")} · '
+            f'{download_link(result.to_json(), _safe(file_name) + "_iGEA_records", "json", label="Iteration records (JSON, without q-values)")}',
             unsafe_allow_html=True,
         )
 
@@ -379,9 +380,12 @@ def calculate_ora_igea_comparison(
     iterative_enrichments: Dict[str, IterativeEnrichment],
     p_threshold: float = 0.01,
     fdr_threshold: float = 0.05,
+    kept_terms: Optional[Set[str]] = None,
 ) -> Dict:
     """
     Calculate comparison statistics between ORA (regular enrichment) and iGEA (iterative enrichment).
+    ``kept_terms``: raw names of the iGEA terms that passed the q-value filter (the network); when given,
+    the iGEA terms in the network are compared with ORA at the FDR threshold (term-level error control for both).
     ORA is split into two sets: one based on raw p-value threshold and one based on FDR threshold.
     
     Args:
@@ -528,6 +532,18 @@ def calculate_ora_igea_comparison(
                         # Handle comma-separated string
                         genes_igea.update([g.strip() for g in genes_removed.split(",") if g.strip()])
     
+    # iGEA terms in the network (q-value filter)
+    genes_igea_q: Set[str] = set()
+    terms_igea_q: Set[str] = set()
+    if kept_terms is not None:
+        for lib_name, iter_enrich in iterative_enrichments.items():
+            for record in (iter_enrich.results if iter_enrich else []):
+                name = record.get("Term_raw", record.get("Term", ""))
+                if name in kept_terms:
+                    terms_igea_q.add(name)
+                    g = record.get("Genes removed for next iteration", [])
+                    genes_igea_q.update(g if isinstance(g, list) else [x.strip() for x in str(g).split(",") if x.strip()])
+
     # Calculate overlaps - separate for raw p-value and FDR
     genes_overlap_raw = genes_ora_raw & genes_igea
     genes_overlap_fdr = genes_ora_fdr & genes_igea
@@ -602,6 +618,8 @@ def calculate_ora_igea_comparison(
         "terms_ora_raw_only": terms_ora_raw_only,
         "terms_ora_fdr_only": terms_ora_fdr_only,
         "terms_igea_only": terms_igea_only,
+        "genes_igea_q": genes_igea_q if kept_terms is not None else None,
+        "terms_igea_q": terms_igea_q if kept_terms is not None else None,
         "stats": stats,
     }
 
@@ -611,102 +629,53 @@ def render_ora_igea_comparison(
     iterative_enrichments: Dict[str, IterativeEnrichment],
     p_threshold: float = 0.01,
     fdr_threshold: float = 0.05,
+    kept_terms: Optional[Set[str]] = None,
+    q_threshold: Optional[float] = None,
+    file_prefix: str = "",
 ) -> None:
     """
-    Render comparison statistics between ORA and iGEA results.
-    
-    Args:
-        regular_enrichments: Dictionary mapping library names to Enrichment objects
-        iterative_enrichments: Dictionary mapping library names to IterativeEnrichment objects
-        p_threshold: P-value threshold for significance
-        fdr_threshold: FDR threshold for significance
+    Comparison of ORA (iteration 1, every gene set) and iGEA. ORA is shown at the raw p-value and at the
+    FDR threshold; iGEA as selected (iteration p-value) and, when statistics are available, as the terms in
+    the network (q-value filter). ORA at FDR and iGEA in the network both control error at the term level.
     """
-    # Check if we have iterative enrichment results (required)
-    if not iterative_enrichments:
+    if not iterative_enrichments or not any(it and it.results for it in iterative_enrichments.values()):
         st.info("ℹ️ Iterative enrichment results are required for comparison.")
         return
-    
-    # Check if we have actual iterative results
-    has_iterative_results = any(
-        iter_enrich and iter_enrich.results 
-        for iter_enrich in iterative_enrichments.values()
-    )
-    
-    if not has_iterative_results:
-        st.info("ℹ️ Iterative enrichment results with data are required for comparison.")
-        return
-    
-    # Check if we have ORA data (either from regular enrichment or iteration 1)
-    has_regular_results = False
-    if regular_enrichments:
-        has_regular_results = any(
-            enrich and enrich.results 
-            for enrich in regular_enrichments.values()
-        )
-    
-    # If no regular enrichment, check if we have iteration 1 to use as ORA
-    if not has_regular_results:
-        has_iteration_1 = any(
-            iter_enrich and iter_enrich.results and 
-            any(r.get("Iteration") == 1 for r in iter_enrich.results)
-            for iter_enrich in iterative_enrichments.values()
-        )
-        if not has_iteration_1:
-            st.info("ℹ️ Either regular enrichment results or iterative enrichment with at least iteration 1 is required for comparison.")
-            return
-    
-    comparison = calculate_ora_igea_comparison(
-        regular_enrichments, iterative_enrichments, p_threshold, fdr_threshold
-    )
-    
-    stats = comparison["stats"]
-    
+    c = calculate_ora_igea_comparison(regular_enrichments, iterative_enrichments, p_threshold, fdr_threshold,
+                                      kept_terms=kept_terms)
+    has_q = c["terms_igea_q"] is not None
+    gq, tq = (c["genes_igea_q"], c["terms_igea_q"]) if has_q else (set(), set())
+    qlab = f"q<{q_threshold:g}" if q_threshold is not None and q_threshold < 1 else "all terms"
+    cols = [(f"ORA (p≤{p_threshold:g})", c["genes_ora_raw"], c["terms_ora_raw"]),
+            (f"ORA (FDR<{fdr_threshold:g})", c["genes_ora_fdr"], c["terms_ora_fdr"]),
+            (f"iGEA selected (p≤{p_threshold:g})", c["genes_igea"], c["terms_igea"])]
+    if has_q:
+        cols += [(f"iGEA in network ({qlab})", gq, tq),
+                 (f"Both: ORA (FDR) and iGEA network", c["genes_ora_fdr"] & gq, c["terms_ora_fdr"] & tq)]
+    else:
+        cols += [("Both: ORA (FDR) and iGEA selected", c["genes_overlap_fdr"], c["terms_overlap_fdr"])]
     st.markdown("### 📊 ORA vs iGEA Comparison Statistics")
-    
-    # Create comparison table
-    gene_stats = stats["genes"]
-    term_stats = stats["terms"]
-    
-    # Display as expanded table with ORA split into raw p-value and FDR
-    st.markdown("""
-    | | ORA (raw p-value) | ORA (FDR) | iGEA | Overlap (raw) | Overlap (FDR) |
-    |---|---|---|---|---|---|
-    | **Genes** | {ora_raw_genes} | {ora_fdr_genes} | {igea_genes} | {overlap_raw_genes} | {overlap_fdr_genes} |
-    | **Terms** | {ora_raw_terms} | {ora_fdr_terms} | {igea_terms} | {overlap_raw_terms} | {overlap_fdr_terms} |
-    """.format(
-        ora_raw_genes=gene_stats["ora_raw_total"],
-        ora_fdr_genes=gene_stats["ora_fdr_total"],
-        igea_genes=gene_stats["igea_total"],
-        overlap_raw_genes=gene_stats["overlap_raw"],
-        overlap_fdr_genes=gene_stats["overlap_fdr"],
-        ora_raw_terms=term_stats["ora_raw_total"],
-        ora_fdr_terms=term_stats["ora_fdr_total"],
-        igea_terms=term_stats["igea_total"],
-        overlap_raw_terms=term_stats["overlap_raw"],
-        overlap_fdr_terms=term_stats["overlap_fdr"]
-    ))
-    
-    # Comparison table data for download
-    # Create TSV with Venn diagram data - expanded to include raw and FDR sets
-    venn_data_rows = [
-        "Category\tSet\tCount\tItems",
-        f"Genes\tORA (raw) Only\t{len(comparison['genes_ora_raw_only'])}\t{', '.join(sorted(comparison['genes_ora_raw_only']))}",
-        f"Genes\tORA (FDR) Only\t{len(comparison['genes_ora_fdr_only'])}\t{', '.join(sorted(comparison['genes_ora_fdr_only']))}",
-        f"Genes\tiGEA Only\t{len(comparison['genes_igea_only'])}\t{', '.join(sorted(comparison['genes_igea_only']))}",
-        f"Genes\tOverlap (raw)\t{len(comparison['genes_overlap_raw'])}\t{', '.join(sorted(comparison['genes_overlap_raw']))}",
-        f"Genes\tOverlap (FDR)\t{len(comparison['genes_overlap_fdr'])}\t{', '.join(sorted(comparison['genes_overlap_fdr']))}",
-        f"Terms\tORA (raw) Only\t{len(comparison['terms_ora_raw_only'])}\t{', '.join(sorted(comparison['terms_ora_raw_only']))}",
-        f"Terms\tORA (FDR) Only\t{len(comparison['terms_ora_fdr_only'])}\t{', '.join(sorted(comparison['terms_ora_fdr_only']))}",
-        f"Terms\tiGEA Only\t{len(comparison['terms_igea_only'])}\t{', '.join(sorted(comparison['terms_igea_only']))}",
-        f"Terms\tOverlap (raw)\t{len(comparison['terms_overlap_raw'])}\t{', '.join(sorted(comparison['terms_overlap_raw']))}",
-        f"Terms\tOverlap (FDR)\t{len(comparison['terms_overlap_fdr'])}\t{', '.join(sorted(comparison['terms_overlap_fdr']))}",
-    ]
-    venn_data_tsv = "\n".join(venn_data_rows)
-    
-    st.markdown(
-        f"📥 **Download comparison table:** {download_link(venn_data_tsv, 'ora_igea_comparison', 'tsv')}",
-        unsafe_allow_html=True,
-    )
+    st.markdown("| | " + " | ".join(h for h, _, _ in cols) + " |\n|---|" + "---|" * len(cols) + "\n"
+                + "| **Genes** | " + " | ".join(str(len(g)) for _, g, _ in cols) + " |\n"
+                + "| **Terms** | " + " | ".join(str(len(t)) for _, _, t in cols) + " |")
+    if has_q:
+        st.caption(f"Like-for-like comparison: ORA at FDR < {fdr_threshold:g} and iGEA terms in the network ({qlab}); "
+                   "both control error at the term level. The raw p-value columns are shown for reference.")
+    else:
+        st.caption("Statistics were not computed, so iGEA terms are shown at the iteration p-value only (no q-value filter).")
+    rows = ["Category\tSet\tCount\tItems"]
+    def add(cat, label, items):
+        rows.append(f"{cat}\t{label}\t{len(items)}\t{', '.join(sorted(items))}")
+    for cat, k in (("Genes", 0), ("Terms", 1)):
+        pick = lambda tup: tup[1 + k]
+        for h, *gt in cols:
+            add(cat, h, gt[k])
+        ora_fdr = c["genes_ora_fdr"] if k == 0 else c["terms_ora_fdr"]
+        igea_set = (gq if k == 0 else tq) if has_q else (c["genes_igea"] if k == 0 else c["terms_igea"])
+        add(cat, "ORA (FDR) only", ora_fdr - igea_set)
+        add(cat, "iGEA only" + (" (network)" if has_q else ""), igea_set - ora_fdr)
+    st.markdown(f"📥 {download_link(chr(10).join(rows), (__import__('ui.downloads', fromlist=['_safe'])._safe(file_prefix) + '_' if file_prefix else '') + 'ORA_vs_iGEA', 'tsv', label='Comparison: counts and gene and term lists (TSV)')}",
+                unsafe_allow_html=True)
 
 
 def render_network(dot: str, title: str = "Iterative Enrichment Network",

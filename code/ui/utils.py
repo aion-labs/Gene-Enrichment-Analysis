@@ -178,7 +178,7 @@ def get_background_info(background_name: str) -> Tuple[str, str]:
         return "", "symbols"
 
 
-def download_link(val: str, filename: str, extension: str) -> str:
+def download_link(val: str, filename: str, extension: str, label: str = None) -> str:
     """
     Create a download link for a file with the given content, filename, and extension.
 
@@ -189,11 +189,12 @@ def download_link(val: str, filename: str, extension: str) -> str:
     :param val: The content of the file to be downloaded.
     :param filename: The name of the file, without the extension.
     :param extension: The file extension (e.g., 'tsv', 'json').
+    :param label: link text (default: the extension).
     :return: An HTML string containing the download link.
     """
     logger.info(f"Creating download link for file: {filename}.{extension}")
     b64 = base64.b64encode(val.encode("utf-8"))
-    return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="{filename}.{extension}">{extension}</a>'
+    return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="{filename}.{extension}">{label or extension}</a>'
 
 
 def download_file_link(file_path: str, filename: str, extension: str) -> str:

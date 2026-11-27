@@ -907,7 +907,9 @@ def run_iterative_enrichment(
                 dot_content = it.to_dot()
                 all_iter_results[library.name] = {
                     'results': it.results,
-                    'dot_content': dot_content
+                    'dot_content': dot_content,
+                    'df': results_df,
+                    'file': output_file,
                 }
                 
             
@@ -982,6 +984,25 @@ def run_iterative_enrichment(
                     "Community": term_community.get((lib_name, result.get("Term", "")), ""),
                     "Genes": ", ".join(result.get("Genes removed for next iteration", [])),
                 })
+        # Per-collection tables rewritten with the term statistics (q-value, In network, Community)
+        if term_q:
+            for lib_name, data in all_iter_results.items():
+                df = data.get('df')
+                if df is None or df.empty or "Iteration" not in df.columns:
+                    continue
+                by_iter = {r.get("Iteration"): term_q.get((lib_name, r.get("Term_raw", r.get("Term"))), (None, True))
+                           for r in data['results']}
+                df = df.copy()
+                anchor = "iteration -log(p-value)" if "iteration -log(p-value)" in df.columns else "iteration p-value"
+                pos = list(df.columns).index(anchor) + 1
+                kept_col = [bool(by_iter.get(i, (None, True))[1]) for i in df["Iteration"]]
+                df.insert(pos, "q-value", [by_iter.get(i, (None, True))[0] for i in df["Iteration"]])
+                df.insert(pos + 1, "In network", kept_col)
+                df.insert(pos + 2, "Community", [term_community.get((lib_name, t), "") if k else ""
+                                                 for t, k in zip(df["Term"], kept_col)])
+                df.to_csv(data['file'], sep='\t', index=False)
+            logger.info("Per-collection iterative results updated with q-values, network membership and communities")
+
         if combined_rows:
             combined_file = final_output_dir / "combined_iterative_results.tsv"
             pd.DataFrame(combined_rows).to_csv(combined_file, sep='\t', index=False)
