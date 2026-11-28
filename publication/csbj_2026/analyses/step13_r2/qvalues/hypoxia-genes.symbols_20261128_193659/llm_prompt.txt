@@ -1,0 +1,210 @@
+Below is an iterative gene set enrichment (iGEA) network computed from a gene list. Iterative means that for each gene set collection, the top enriched gene set is found, saved and its genes are removed from the gene list; the remaining genes are then tested again. Thus each gene appears at most once per collection but can be linked to terms from different collections. The network of genes and gene sets (= terms) is given in DOT format, preceded by its statistics and communities.
+
+**STATISTICAL CONTEXT:**
+The input contained 75 validated genes. iGEA selected 32 terms; 32 passed the term-level filter (q-value < 0.1, an empirical false discovery rate estimated from 10,000 random gene lists of the same size, background and settings) and form this network. A random gene list of this size selects about 5.72 terms by chance.
+
+Network-level test: the largest connected cluster of this network compared with the networks built the same way (same filter) from the 10,000 random gene lists. Empirical p = (r + 1) / (10,000 + 1), where r is the number of random lists with a value at least as large. The metrics describe the same cluster and are not independent tests.
+
+| Metric | This network | Random mean | Empirical p |
+|---|---|---|---|
+| Nodes (genes + terms) in the largest connected cluster | 96 | 3.13 | p < 0.0001 (no random list reached this value) |
+| Genes in the largest cluster | 64 | 2.37 | p < 0.0001 (no random list reached this value) |
+| Terms in the largest cluster | 32 | 0.75 | p < 0.0001 (no random list reached this value) |
+| Edges in the largest cluster | 171 | 2.87 | p < 0.0001 (no random list reached this value) |
+| Average edges per gene | 2.672 | 0.58 | p = 0.0053 |
+
+How to use the statistics: the network is not distinguishable from what random gene lists produce if the empirical p for the number of nodes in the largest cluster is 0.05 or higher. In that case, say so plainly, keep the rest short and tentative, and do not propose an experimental context. Do not use p-values, q-values or iteration numbers to rank biological importance.
+
+**COMMUNITIES:**
+Terms were grouped into communities with Leiden (igraph, modularity) on the term network, in which two terms are linked when they share genes (modularity 0.3043; the same partition was found with 79% of 100 random seeds). Communities are algorithmic groupings, not biological labels; the cluster blocks in the DOT list each community's terms and genes. Gene degree is the number of terms a gene connects to; in iGEA this equals the number of collections that place the gene in the network. Bridge genes connect terms in different communities.
+
+| Community | Terms | Genes | Lead term (most genes) | Top hub genes (degree) | Bridge genes |
+|---|---|---|---|---|---|
+| C1 | 11 | 41 | HALLMARK: HYPOXIA | NR3C1 (5), PIM1 (5), CXCR4 (4), KDM3A (4), MIF (4) | 15 |
+| C2 | 7 | 26 | GOBP: CELLULAR RESPONSE TO OXYGEN LEVELS | CCNB1 (6), NDRG1 (4), TGFBR1 (2), TUBG1 (2), ACTR1A (1) | 2 |
+| C3 | 8 | 15 | GOBP: PYRUVATE METABOLIC PROCESS | PGK1 (9), GAPDH (8), ALDOC (7), LDHA (6), PGAM1 (5) | 6 |
+| C4 | 6 | 15 | GOMF: 2 OXOGLUTARATE DEPENDENT DIOXYGENASE ACTIVITY | P4HA1 (6), P4HA2 (5), PLOD1 (4), KDM4C (3), LOX (3) | 4 |
+
+**NETWORK (DOT):**
+graph enrichment_network {
+  // 75 validated input genes; network = terms passing the term-level filter
+  graph [input_genes=75, random_lists=10000, q_threshold="0.1", network_p="<0.0001"];
+  // communities: Leiden (igraph, modularity), modularity="0.3043"
+  graph [community_method="Leiden (igraph, modularity)", modularity="0.3043"];
+  subgraph cluster_C1 {
+    label="C1"; lead_term="HALLMARK: HYPOXIA"; terms=11; genes=41;
+    "term_HALLMARK_HYPOXIA" [type=term, label="HALLMARK: HYPOXIA", collection="H: Hallmark Gene Sets", iteration=1, p="2.9e-21", q="0", community=C1, genes=25];
+    "term_REACTOME_TP53_REGULATES_METABOLIC_GENES" [type=term, label="REACTOME: TP53 REGULATES METABOLIC GENES", collection="C2: Reactome Pathways", iteration=4, p="0.0055", q="0.017", community=C1, genes=3];
+    "term_WP_ADIPOGENESIS" [type=term, label="WP: ADIPOGENESIS", collection="C2: WikiPathways", iteration=3, p="0.00037", q="0.004", community=C1, genes=5];
+    "term_WP_HEMATOPOIETIC_STEM_CELL_DIFFERENTIATION" [type=term, label="WP: HEMATOPOIETIC STEM CELL DIFFERENTIATION", collection="C2: WikiPathways", iteration=4, p="0.0023", q="0.008", community=C1, genes=3];
+    "term_GOBP_NUCLEAR_RECEPTOR_MEDIATED_SIGNALING_PATHWAY" [type=term, label="GOBP: NUCLEAR RECEPTOR MEDIATED SIGNALING PATHWAY", collection="C5: Gene Ontology: Biological Process", iteration=3, p="4.7e-05", q="0.0057", community=C1, genes=6];
+    "term_GOBP_RESPONSE_TO_STARVATION" [type=term, label="GOBP: RESPONSE TO STARVATION", collection="C5: Gene Ontology: Biological Process", iteration=5, p="0.0022", q="0.043", community=C1, genes=4];
+    "term_GOBP_SYMBIONT_ENTRY_INTO_HOST" [type=term, label="GOBP: SYMBIONT ENTRY INTO HOST", collection="C5: Gene Ontology: Biological Process", iteration=6, p="0.0036", q="0.045", community=C1, genes=3];
+    "term_GOBP_POSITIVE_REGULATION_OF_MAPK_CASCADE" [type=term, label="GOBP: POSITIVE REGULATION OF MAPK CASCADE", collection="C5: Gene Ontology: Biological Process", iteration=7, p="0.0026", q="0.043", community=C1, genes=5];
+    "term_GOBP_GENERATION_OF_PRECURSOR_METABOLITES_AND_ENERGY" [type=term, label="GOBP: GENERATION OF PRECURSOR METABOLITES AND ENERGY", collection="C5: Gene Ontology: Biological Process", iteration=8, p="0.0083", q="0.059", community=C1, genes=4];
+    "term_GOCC_TRANSCRIPTION_REGULATOR_COMPLEX" [type=term, label="GOCC: TRANSCRIPTION REGULATOR COMPLEX", collection="C5: Gene Ontology: Cellular Component", iteration=4, p="0.007", q="0.025", community=C1, genes=6];
+    "term_GOMF_STEROID_BINDING" [type=term, label="GOMF: STEROID BINDING", collection="C5: Gene Ontology: Molecular Function", iteration=3, p="0.0071", q="0.04", community=C1, genes=3];
+    "ASCC1" [type=gene, degree=1, community=C1];
+    "ATF3" [type=gene, degree=3, community=C1];
+    "ATF7IP" [type=gene, degree=1, community=C1];
+    "CRKL" [type=gene, degree=1, community=C1];
+    "EFNA1" [type=gene, degree=2, community=C1];
+    "GYS1" [type=gene, degree=2, community=C1];
+    "ILF3" [type=gene, degree=1, community=C1];
+    "INSIG2" [type=gene, degree=1, community=C1];
+    "KLF10" [type=gene, degree=1, community=C1];
+    "MXI1" [type=gene, degree=3, community=C1];
+    "NAMPT" [type=gene, degree=2, community=C1];
+    "PJA2" [type=gene, degree=1, community=C1];
+    "RARA" [type=gene, degree=3, community=C1];
+    "RBPJ" [type=gene, degree=3, community=C1];
+    "RRAGD" [type=gene, degree=3, community=C1];
+    "TMEM45A" [type=gene, degree=1, community=C1];
+    "WSB1" [type=gene, degree=1, community=C1];
+  }
+  subgraph cluster_C2 {
+    label="C2"; lead_term="GOBP: CELLULAR RESPONSE TO OXYGEN LEVELS"; terms=7; genes=26;
+    "term_PID_MYC_ACTIV_PATHWAY" [type=term, label="PID: MYC ACTIV PATHWAY", collection="C2: Pathway Interaction Database", iteration=2, p="0.0042", q="0.0005", community=C2, genes=4];
+    "term_REACTOME_REGULATION_OF_PLK1_ACTIVITY_AT_G2_M_TRANSITION" [type=term, label="REACTOME: REGULATION OF PLK1 ACTIVITY AT G2 M TRANSITION", collection="C2: Reactome Pathways", iteration=5, p="0.0055", q="0.017", community=C2, genes=3];
+    "term_KEGG_P53_SIGNALING_PATHWAY" [type=term, label="KEGG: P53 SIGNALING PATHWAY", collection="C2: KEGG Legacy", iteration=2, p="0.0044", q="0.006", community=C2, genes=3];
+    "term_GOBP_CELLULAR_RESPONSE_TO_OXYGEN_LEVELS" [type=term, label="GOBP: CELLULAR RESPONSE TO OXYGEN LEVELS", collection="C5: Gene Ontology: Biological Process", iteration=2, p="3.3e-06", q="0.0015", community=C2, genes=7];
+    "term_GOCC_MITOCHONDRIAL_MATRIX" [type=term, label="GOCC: MITOCHONDRIAL MATRIX", collection="C5: Gene Ontology: Cellular Component", iteration=2, p="0.0061", q="0.025", community=C2, genes=7];
+    "term_GOCC_RECYCLING_ENDOSOME" [type=term, label="GOCC: RECYCLING ENDOSOME", collection="C5: Gene Ontology: Cellular Component", iteration=3, p="0.0072", q="0.025", community=C2, genes=4];
+    "term_GOMF_PROTEIN_SERINE_THREONINE_KINASE_ACTIVITY" [type=term, label="GOMF: PROTEIN SERINE THREONINE KINASE ACTIVITY", collection="C5: Gene Ontology: Molecular Function", iteration=2, p="0.0088", q="0.04", community=C2, genes=7];
+    "ACTR1A" [type=gene, degree=1, community=C2];
+    "CCNB1" [type=gene, degree=6, community=C2];
+    "CLK3" [type=gene, degree=1, community=C2];
+    "GRK6" [type=gene, degree=1, community=C2];
+    "HILPDA" [type=gene, degree=1, community=C2];
+    "MRPL4" [type=gene, degree=1, community=C2];
+    "MRPS12" [type=gene, degree=1, community=C2];
+    "OXSR1" [type=gene, degree=1, community=C2];
+    "RAB8B" [type=gene, degree=1, community=C2];
+    "TUBG1" [type=gene, degree=2, community=C2];
+  }
+  subgraph cluster_C3 {
+    label="C3"; lead_term="GOBP: PYRUVATE METABOLIC PROCESS"; terms=8; genes=15;
+    "term_KEGG_MEDICUS_REFERENCE_GLYCOLYSIS" [type=term, label="KEGG: MEDICUS REFERENCE GLYCOLYSIS", collection="C2: KEGG MEDICUS", iteration=1, p="1.5e-06", q="0", community=C3, genes=5];
+    "term_PID_HIF1_TFPATHWAY" [type=term, label="PID: HIF1 TFPATHWAY", collection="C2: Pathway Interaction Database", iteration=1, p="0.00053", q="0.0005", community=C3, genes=5];
+    "term_REACTOME_GLUCONEOGENESIS" [type=term, label="REACTOME: GLUCONEOGENESIS", collection="C2: Reactome Pathways", iteration=1, p="1.1e-05", q="0.003", community=C3, genes=4];
+    "term_WP_GLYCOLYSIS_IN_SENESCENCE" [type=term, label="WP: GLYCOLYSIS IN SENESCENCE", collection="C2: WikiPathways", iteration=1, p="2.9e-07", q="0", community=C3, genes=4];
+    "term_KEGG_GLYCOLYSIS_GLUCONEOGENESIS" [type=term, label="KEGG: GLYCOLYSIS GLUCONEOGENESIS", collection="C2: KEGG Legacy", iteration=1, p="2.7e-05", q="0", community=C3, genes=5];
+    "term_GOBP_PYRUVATE_METABOLIC_PROCESS" [type=term, label="GOBP: PYRUVATE METABOLIC PROCESS", collection="C5: Gene Ontology: Biological Process", iteration=1, p="4.6e-08", q="0", community=C3, genes=8];
+    "term_GOCC_FICOLIN_1_RICH_GRANULE_LUMEN" [type=term, label="GOCC: FICOLIN 1 RICH GRANULE LUMEN", collection="C5: Gene Ontology: Cellular Component", iteration=5, p="0.005", q="0.025", community=C3, genes=3];
+    "term_GOCC_NUCLEAR_ENVELOPE" [type=term, label="GOCC: NUCLEAR ENVELOPE", collection="C5: Gene Ontology: Cellular Component", iteration=6, p="0.0093", q="0.025", community=C3, genes=5];
+    "NARF" [type=gene, degree=1, community=C3];
+    "NXF1" [type=gene, degree=1, community=C3];
+    "PGAM1" [type=gene, degree=5, community=C3];
+    "SPAG4" [type=gene, degree=1, community=C3];
+  }
+  subgraph cluster_C4 {
+    label="C4"; lead_term="GOMF: 2 OXOGLUTARATE DEPENDENT DIOXYGENASE ACTIVITY"; terms=6; genes=15;
+    "term_REACTOME_COLLAGEN_FORMATION" [type=term, label="REACTOME: COLLAGEN FORMATION", collection="C2: Reactome Pathways", iteration=2, p="0.0011", q="0.017", community=C4, genes=4];
+    "term_REACTOME_HDMS_DEMETHYLATE_HISTONES" [type=term, label="REACTOME: HDMS DEMETHYLATE HISTONES", collection="C2: Reactome Pathways", iteration=3, p="0.0017", q="0.017", community=C4, genes=3];
+    "term_WP_METABOLIC_PATHWAYS_OF_FIBROBLASTS" [type=term, label="WP: METABOLIC PATHWAYS OF FIBROBLASTS", collection="C2: WikiPathways", iteration=2, p="2.1e-05", q="0.001", community=C4, genes=4];
+    "term_GOBP_COLLAGEN_FIBRIL_ORGANIZATION" [type=term, label="GOBP: COLLAGEN FIBRIL ORGANIZATION", collection="C5: Gene Ontology: Biological Process", iteration=4, p="4.2e-05", q="0.0057", community=C4, genes=4];
+    "term_GOCC_ENDOPLASMIC_RETICULUM_LUMEN" [type=term, label="GOCC: ENDOPLASMIC RETICULUM LUMEN", collection="C5: Gene Ontology: Cellular Component", iteration=1, p="0.0037", q="0.025", community=C4, genes=6];
+    "term_GOMF_2_OXOGLUTARATE_DEPENDENT_DIOXYGENASE_ACTIVITY" [type=term, label="GOMF: 2 OXOGLUTARATE DEPENDENT DIOXYGENASE ACTIVITY", collection="C5: Gene Ontology: Molecular Function", iteration=1, p="8.7e-12", q="0", community=C4, genes=9];
+    "ASPH" [type=gene, degree=2, community=C4];
+    "EDEM3" [type=gene, degree=1, community=C4];
+    "KDM4B" [type=gene, degree=2, community=C4];
+    "PLOD1" [type=gene, degree=4, community=C4];
+    "RIOX1" [type=gene, degree=1, community=C4];
+    "RSBN1" [type=gene, degree=1, community=C4];
+  }
+  // bridge genes: connect terms in different communities
+  "ALDOC" [type=gene, degree=7, community=C3, bridge=true, participation="0.24"];
+  "BNIP3" [type=gene, degree=3, community=C3, bridge=true, participation="0.44"];
+  "CAD" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  "CXCR4" [type=gene, degree=4, community=C1, bridge=true, participation="0.38"];
+  "CYCS" [type=gene, degree=3, community=C1, bridge=true, participation="0.44"];
+  "DDIT4" [type=gene, degree=3, community=C1, bridge=true, participation="0.44"];
+  "ERO1A" [type=gene, degree=3, community=C1, bridge=true, participation="0.67"];
+  "FAM162A" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  "FH" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  "GADD45B" [type=gene, degree=3, community=C1, bridge=true, participation="0.44"];
+  "GAPDH" [type=gene, degree=8, community=C3, bridge=true, participation="0.41"];
+  "KDM3A" [type=gene, degree=4, community=C1, bridge=true, participation="0.5"];
+  "KDM4C" [type=gene, degree=3, community=C4, bridge=true, participation="0.44"];
+  "LDHA" [type=gene, degree=6, community=C3, bridge=true, participation="0.28"];
+  "LOX" [type=gene, degree=3, community=C4, bridge=true, participation="0.44"];
+  "MIF" [type=gene, degree=4, community=C1, bridge=true, participation="0.38"];
+  "NDRG1" [type=gene, degree=4, community=C2, bridge=true, participation="0.62"];
+  "NR3C1" [type=gene, degree=5, community=C1, bridge=true, participation="0.32"];
+  "P4HA1" [type=gene, degree=6, community=C4, bridge=true, participation="0.28"];
+  "P4HA2" [type=gene, degree=5, community=C4, bridge=true, participation="0.32"];
+  "PGK1" [type=gene, degree=9, community=C3, bridge=true, participation="0.49"];
+  "PIM1" [type=gene, degree=5, community=C1, bridge=true, participation="0.48"];
+  "SLC16A1" [type=gene, degree=2, community=C3, bridge=true, participation="0.5"];
+  "STC2" [type=gene, degree=3, community=C1, bridge=true, participation="0.67"];
+  "TGFBR1" [type=gene, degree=2, community=C2, bridge=true, participation="0.5"];
+  "TPCN1" [type=gene, degree=2, community=C1, bridge=true, participation="0.5"];
+  "VDAC1" [type=gene, degree=3, community=C1, bridge=true, participation="0.67"];
+  // edges: each term with its genes
+  "term_HALLMARK_HYPOXIA" -- {"ALDOC" "ATF3" "CXCR4" "DDIT4" "EFNA1" "ERO1A" "FAM162A" "GAPDH" "GYS1" "KDM3A" "LDHA" "LOX" "MIF" "MXI1" "NDRG1" "NR3C1" "P4HA1" "P4HA2" "PGK1" "PIM1" "RBPJ" "RRAGD" "STC2" "TMEM45A" "WSB1"};
+  "term_KEGG_MEDICUS_REFERENCE_GLYCOLYSIS" -- {"ALDOC" "GAPDH" "LDHA" "PGAM1" "PGK1"};
+  "term_PID_HIF1_TFPATHWAY" -- {"BNIP3" "CXCR4" "LDHA" "NDRG1" "PGK1"};
+  "term_PID_MYC_ACTIV_PATHWAY" -- {"CAD" "CCNB1" "GAPDH" "PIM1"};
+  "term_REACTOME_GLUCONEOGENESIS" -- {"ALDOC" "GAPDH" "PGAM1" "PGK1"};
+  "term_REACTOME_COLLAGEN_FORMATION" -- {"LOX" "P4HA1" "P4HA2" "PLOD1"};
+  "term_REACTOME_HDMS_DEMETHYLATE_HISTONES" -- {"KDM3A" "KDM4B" "KDM4C"};
+  "term_REACTOME_TP53_REGULATES_METABOLIC_GENES" -- {"CYCS" "DDIT4" "RRAGD"};
+  "term_REACTOME_REGULATION_OF_PLK1_ACTIVITY_AT_G2_M_TRANSITION" -- {"ACTR1A" "CCNB1" "TUBG1"};
+  "term_WP_GLYCOLYSIS_IN_SENESCENCE" -- {"ALDOC" "GAPDH" "LDHA" "PGK1"};
+  "term_WP_METABOLIC_PATHWAYS_OF_FIBROBLASTS" -- {"P4HA1" "P4HA2" "PLOD1" "SLC16A1"};
+  "term_WP_ADIPOGENESIS" -- {"GADD45B" "MIF" "NAMPT" "NR3C1" "RARA"};
+  "term_WP_HEMATOPOIETIC_STEM_CELL_DIFFERENTIATION" -- {"CXCR4" "MXI1" "PIM1"};
+  "term_KEGG_GLYCOLYSIS_GLUCONEOGENESIS" -- {"ALDOC" "GAPDH" "LDHA" "PGAM1" "PGK1"};
+  "term_KEGG_P53_SIGNALING_PATHWAY" -- {"CCNB1" "CYCS" "GADD45B"};
+  "term_GOBP_PYRUVATE_METABOLIC_PROCESS" -- {"ALDOC" "DDIT4" "GAPDH" "LDHA" "PGAM1" "PGK1" "SLC16A1" "VDAC1"};
+  "term_GOBP_CELLULAR_RESPONSE_TO_OXYGEN_LEVELS" -- {"BNIP3" "CCNB1" "ERO1A" "FAM162A" "HILPDA" "NDRG1" "STC2"};
+  "term_GOBP_NUCLEAR_RECEPTOR_MEDIATED_SIGNALING_PATHWAY" -- {"CRKL" "KDM3A" "KDM4C" "NR3C1" "PIM1" "RARA"};
+  "term_GOBP_COLLAGEN_FIBRIL_ORGANIZATION" -- {"LOX" "P4HA1" "PLOD1" "TGFBR1"};
+  "term_GOBP_RESPONSE_TO_STARVATION" -- {"ATF3" "CAD" "KLF10" "RRAGD"};
+  "term_GOBP_SYMBIONT_ENTRY_INTO_HOST" -- {"CXCR4" "ILF3" "TPCN1"};
+  "term_GOBP_POSITIVE_REGULATION_OF_MAPK_CASCADE" -- {"EFNA1" "GADD45B" "MIF" "NAMPT" "PJA2"};
+  "term_GOBP_GENERATION_OF_PRECURSOR_METABOLITES_AND_ENERGY" -- {"CYCS" "FH" "GYS1" "RBPJ"};
+  "term_GOCC_ENDOPLASMIC_RETICULUM_LUMEN" -- {"ASPH" "EDEM3" "ERO1A" "P4HA1" "P4HA2" "STC2"};
+  "term_GOCC_MITOCHONDRIAL_MATRIX" -- {"CCNB1" "FH" "MRPL4" "MRPS12" "NR3C1" "PGK1" "VDAC1"};
+  "term_GOCC_RECYCLING_ENDOSOME" -- {"NDRG1" "RAB8B" "TPCN1" "TUBG1"};
+  "term_GOCC_TRANSCRIPTION_REGULATOR_COMPLEX" -- {"ASCC1" "ATF3" "ATF7IP" "MXI1" "RARA" "RBPJ"};
+  "term_GOCC_FICOLIN_1_RICH_GRANULE_LUMEN" -- {"ALDOC" "MIF" "PGAM1"};
+  "term_GOCC_NUCLEAR_ENVELOPE" -- {"BNIP3" "GAPDH" "NARF" "NXF1" "SPAG4"};
+  "term_GOMF_2_OXOGLUTARATE_DEPENDENT_DIOXYGENASE_ACTIVITY" -- {"ASPH" "KDM3A" "KDM4B" "KDM4C" "P4HA1" "P4HA2" "PLOD1" "RIOX1" "RSBN1"};
+  "term_GOMF_PROTEIN_SERINE_THREONINE_KINASE_ACTIVITY" -- {"CCNB1" "CLK3" "GRK6" "OXSR1" "PGK1" "PIM1" "TGFBR1"};
+  "term_GOMF_STEROID_BINDING" -- {"INSIG2" "NR3C1" "VDAC1"};
+}
+
+**NETWORK INTERPRETATION GUIDE (background):**
+- **Term nodes** (`type=term`): enriched gene sets, with `collection` (source gene set collection), `iteration`, `p` (enrichment p-value in its iteration), `q` (term q-value) and `genes` (number of genes linked)
+- **Gene nodes** (`type=gene`): input genes, with `degree` (number of terms the gene connects to; in iGEA, the number of collections that place it in the network)
+- **Communities**: each `subgraph cluster_Cn` block is one community; term and gene nodes carry `community`. Bridge genes are listed outside the blocks with `bridge=true` and a `participation` value (0 = all terms in one community; higher = spread over communities).
+- **Edges**: each line `"term" -- {"GENE1" "GENE2" ...}` links a term to its genes. Edges are gene-set memberships from curated annotation, not physical interactions or directions of change.
+
+**Gene Set Collections:**
+- **H: Hallmark Gene Sets**: Curated gene sets representing well-defined biological states or processes
+- **C2: KEGG MEDICUS**: Metabolic and signaling pathways from KEGG (MEDICUS)
+- **C2: KEGG Legacy**: Metabolic and signaling pathways from KEGG (legacy release)
+- **C2: Pathway Interaction Database**: Curated human signaling pathways
+- **C2: Reactome Pathways**: Expert-curated biological pathways
+- **C2: WikiPathways**: Community-curated biological pathways
+- **C5: Gene Ontology: Biological Process**: Biological processes from Gene Ontology
+- **C5: Gene Ontology: Cellular Component**: Cellular components from Gene Ontology
+- **C5: Gene Ontology: Molecular Function**: Molecular functions from Gene Ontology
+
+**YOUR TASK:**
+You are an experienced molecular biologist explaining to a colleague what this gene list reveals. Write in clear, natural prose. Explain the biology behind the network and why these processes appear together; do not describe the network itself. Your answer should be a conversation starter: it should make the reader want to dig further, and it ends by asking how the gene list was generated so that the interpretation can be rebuilt around the real experiment.
+
+**How to write it:**
+- Ground your claims in the network by naming a few key genes in parentheses, for example (GENE1, GENE2, GENE3). Do not quote term names verbatim or list memberships; describe them in plain words. The reader has the network.
+- Use your biological knowledge to explain mechanisms. When a central point depends on knowledge that is not in the network, say so once in plain words ("this is not in the network, but ...").
+- Do not repeat general caveats about annotation networks (memberships rather than interactions, no direction of change). Mention a limitation only where it changes the interpretation.
+- Point out what is surprising or unexpected.
+- About 900-1,200 words.
+
+**Structure:**
+1. **Executive summary**: the main findings in 4-6 plain sentences. Start with whether the network is distinguishable from random gene lists, then the overall biological picture and the most important modules and genes.
+2. **Communities**: one short section per community (C1, C2, ...), headed by the community ID and a plain biological name you choose. In 3-5 sentences, explain the biology it represents in plain language, which genes anchor it and why they matter, and anything surprising. If a community looks like a mix of unrelated processes, say so; if two communities belong together, say so.
+3. **Putting it together**: connected prose that combines the communities into one biological story. Give the key genes a role in that story: hubs that anchor a community, and bridge genes that link communities (what does each link suggest biologically?).
+4. **Estimated experimental context**: hypothesize what experiment most likely generated this gene list (for example the type of assay, perturbation, cell type or condition). Reason from the network: which communities and genes point to it, and how confident you are. Name one or two alternatives and what in the network would distinguish them.
+5. **Closing**: end with one or two sentences inviting the reader to share how the gene list was actually generated (assay, perturbation, cell type, comparison), so that you can rebuild the interpretation around it: what fits the experiment, what does not, what is already known and what may be new.

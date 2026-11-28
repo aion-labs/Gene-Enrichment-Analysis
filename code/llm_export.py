@@ -201,11 +201,11 @@ def _stats_section(stats: Optional[Dict], has_q: bool = True) -> str:
     if qt is None or qt >= 1:
         term = (f"No term-level filter was applied (q-value threshold 1): all {stats['n_terms_total']} terms selected "
                 f"by iGEA are in the network, which may include terms that random gene lists of this size also select by chance"
-                + (f". Each term carries its q-value (an empirical false discovery rate estimated from {n:,} random gene "
+                + (f". Each term carries its q-value (an empirical estimate of the proportion of chance terms, from {n:,} random gene "
                    f"lists of the same size, background and settings)." if has_q else "."))
     else:
         term = (f"iGEA selected {stats['n_terms_total']} terms; {stats['n_terms_kept']} passed the term-level filter "
-                f"(q-value < {qt}, an empirical false discovery rate estimated from {n:,} random gene lists of the same "
+                f"(q-value < {qt}, an empirical estimate of the proportion of chance terms, from {n:,} random gene lists of the same "
                 f"size, background and settings) and form this network. A random gene list of this size selects about "
                 f"{stats['expected_chance_terms']} terms by chance.")
     rows = "\n".join(f"| {METRIC_LABELS.get(m['metric'], m['metric'])} | {_fmt(m['observed'], 4)} | "

@@ -1,0 +1,3 @@
+method	pairs	draws	p_le_0_01	BH_lt_0_05	BH_lt_0_10	bonferroni_lt_0_05
+iGEA	131	50000	9	6	6	4
+ORA	16	50000	1	1	2	1

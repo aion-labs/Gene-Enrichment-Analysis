@@ -91,16 +91,18 @@ fig = plt.figure(figsize=(7.48, 4.3))
 for k, (d, title, n, names) in enumerate(PANELS):
     draw(fig.add_axes([0.01 + k * 0.333, 0.42, 0.32, 0.47]), d, title, n, names)
 ax = fig.add_axes([0.01, 0.0, 0.98, 0.37])
-rows = [("Mediator", "Mediator / transcription coregulators", ["C3", "C3", "C3"], "0.56–0.78", "≤ 0.001"),
-        ("Ubiquitin", "Ubiquitin–proteasome", ["C7", "C2", "C5"], "0.08–0.16", "0.002–0.02"),
-        ("RNA", "RNA processing / RNA polymerase", ["C5", "C1 C5", "C2"], "0.09–0.12", "0.005–0.02"),
-        ("Pore", "Nuclear pore / export", ["C4", "C4", ""], "0.35", "0.001"),
-        ("Signalling", "NF-κB / AKT signaling", ["C2", "", "C1"], "0.10", "0.03")
+# R2 (Dec 2026): FDR = Benjamini-Hochberg over the 131 cross-screen pairs, matched random communities (step11 s11h, K = 25);
+# ranges over the best pair of each pair of screens (Supplementary Table 14). R1 showed uncorrected p (2,000 random groups).
+rows = [("Mediator", "Mediator / transcription coregulators", ["C3", "C3", "C3"], "0.56–0.78", "< 0.001"),
+        ("Ubiquitin", "Ubiquitin–proteasome", ["C7", "C2", "C5"], "0.08–0.16", "0.009–0.03"),
+        ("RNA", "RNA processing / RNA polymerase", ["C5", "C1 C5", "C2"], "0.10–0.12", "0.05–0.13"),
+        ("Pore", "Nuclear pore / export", ["C4", "C4", ""], "0.35", "0.05"),
+        ("Signalling", "NF-κB / AKT signaling", ["C2", "", "C1"], "0.10", "0.90")
         ]
 xs = [0.42, 0.53, 0.64]; jx, px = 0.79, 0.92
 ax.set_xlim(0, 1); ax.set_ylim(len(rows) + 0.6, -1.0); ax.axis("off")
-ax.text(0.0, -0.8, "(d)", fontsize=9, weight="bold", va="center"); ax.text(0.034, -0.8, "Communities shared between screens", fontsize=8, va="center")
-for x, h in zip(xs + [jx, px], ["Brass", "König", "Zhou", "Jaccard", "p"]):
+ax.text(0.0, -0.8, "(d)", fontsize=9, weight="bold", va="center"); ax.text(0.034, -0.8, "Themes shared between screens", fontsize=8, va="center")
+for x, h in zip(xs + [jx, px], ["Brass", "König", "Zhou", "Jaccard", "FDR"]):
     ax.text(x, 0.0, h, ha="center", va="center", fontsize=7.5, weight="bold")
 for i, (th, name, cs, j, p) in enumerate(rows, start=1):
     shared = not th.startswith("own")

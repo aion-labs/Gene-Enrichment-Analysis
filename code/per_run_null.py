@@ -16,6 +16,9 @@ Two layers, applied identically to the input list and to every random list:
    point of a size grid, which can only over-estimate chance terms. Terms with q >= q_threshold are
    dropped before the network is built.
 
+   The q-value without the signal adjustment (all input genes treated as noise, i.e. the first round)
+   is also reported; it is conservative when the list contains signal.
+
 2. Network level. The cross-collection network is built from the retained terms and its largest
    connected cluster is measured. Each random list goes through exactly the same steps (its own
    terms are scored against the reference, leaving that list out, then filtered), so the null
@@ -346,15 +349,17 @@ def run_statistics(observed_records: Sequence[Record], libraries, background_gen
     obs = list(observed_records)
     if q_threshold is None:
         q_obs, m0 = np.full(len(obs), np.nan), n_genes
+        q_raw = q_obs
         kept = obs
     else:
         q_obs, m0 = signal_adjusted_q(obs, n_genes, ref, _accept_level(q_threshold))
+        q_raw, _ = signal_adjusted_q(obs, n_genes, ref, _accept_level(q_threshold), max_rounds=1)   # no signal adjustment
         kept = [r for r, q in zip(obs, q_obs) if _keep(q, q_threshold)]
     observed = largest_cluster_metrics(_to_dicts(kept, names))
     observed["n_terms_total"], observed["n_terms_kept"] = len(obs), len(kept)
     obs_terms = pd.DataFrame([{"Library": names[c], "Iteration": it, "Term": t, "p-value": p, "q-value": q,
-                               "Kept": _keep(q, q_threshold),
-                               "Genes": ", ".join(g)} for (c, t, it, p, g), q in zip(obs, q_obs)])
+                               "q-value (no signal adjustment)": qr, "Kept": _keep(q, q_threshold),
+                               "Genes": ", ".join(g)} for (c, t, it, p, g), q, qr in zip(obs, q_obs, q_raw)])
     table = compare_to_null(observed, null)
     attrs = dict(n_genes=n_genes, n_lists=n_lists, seed=seed, n_jobs=n_jobs, background_size=len(background),
                  q_threshold=q_threshold, grid_sizes=grid, grid_lists=grid_lists if q_threshold is not None else 0,
@@ -420,6 +425,13 @@ def format_report(table: pd.DataFrame, attrs: Dict, libraries: List[str], params
             f"  treated as noise in the final round; {attrs['grid_lists']} random lists per size step).",
             (f"  Terms kept (q < {qt}): {kept} of {len(observed_terms)}. Random lists are filtered the same way."
              if qt < 1 else f"  No term filter (q threshold {qt}): all {kept} selected terms kept, in the input and the random lists."),
+        ]
+        if "q-value (no signal adjustment)" in observed_terms and qt < 1:
+            n_raw = int((observed_terms["q-value (no signal adjustment)"] < qt).sum())
+            lines += [f"  Without the signal adjustment (all {attrs['n_genes']} genes treated as noise), {n_raw} of "
+                      f"{len(observed_terms)} terms have q < {qt}.",
+                      "  The q-value is an empirical estimate used to filter terms, not formal false discovery rate control."]
+        lines += [
             "",
         ]
     lines += [

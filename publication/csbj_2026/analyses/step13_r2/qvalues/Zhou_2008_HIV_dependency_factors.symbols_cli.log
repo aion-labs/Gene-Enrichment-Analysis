@@ -1,0 +1,1092 @@
+🎯 Using default background: all_genes.txt
+📚 Using active collections from alias.json: 10 files
+   - h.all.v2025.1.Hs.symbols.gmt
+   - c2.cp.biocarta.v2025.1.Hs.symbols.gmt
+   - c2.cp.kegg_medicus.v2025.1.Hs.symbols.gmt
+   - c2.cp.pid.v2025.1.Hs.symbols.gmt
+   - c2.cp.reactome.v2025.1.Hs.symbols.gmt
+   - c2.cp.wikipathways.v2025.1.Hs.symbols.gmt
+   - c2.cp.kegg_legacy.v2025.1.Hs.symbols.gmt
+   - c5.go.bp.v2025.1.Hs.symbols.gmt
+   - c5.go.cc.v2025.1.Hs.symbols.gmt
+   - c5.go.mf.v2025.1.Hs.symbols.gmt
+
+Analysis Mode: iterative
+Gene Sets: 1 files
+Background: /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/backgrounds/all_genes.txt
+Collections: 10 files
+P-value Method: Fisher's Exact Test
+P-value Threshold: 0.01
+Min Overlap: 3
+Term Size Range: 10-600
+Max Iterations: 30
+Statistical Benchmarking: Enabled
+Output Directory: step13_r2/qvalues
+
+2026-11-28 19:38:50,963 - INFO - Loading background gene set: /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/backgrounds/all_genes.txt
+2026-11-28 19:38:50,965 - INFO - Loading gene info from /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/recent_release/Homo_sapiens.gene_info.gz
+2026-11-28 19:38:51,153 - INFO - Loaded 193577 human Entrez ID mappings (taxonomy ID 9606)
+2026-11-28 19:38:51,153 - INFO - Loaded 69379 synonym mappings
+2026-11-28 19:38:51,155 - INFO - Sample Entrez IDs: ['1', '2', '9']
+2026-11-28 19:38:51,156 - INFO - Sample symbols: ['A1BG', 'A2M', 'NAT1']
+2026-11-28 19:38:51,156 - INFO - Loading gene history from /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/recent_release/gene_history_9606.gz
+2026-11-28 19:38:51,220 - INFO - Loaded 166606 unique old-to-current symbol mappings
+2026-11-28 19:38:51,226 - WARNING - 199 symbols not found in database: ['DDX12B', 'ENSG00000181123', 'ENSG00000187185', 'ENSG00000187951', 'ENSG00000188897', 'ENSG00000189229', 'ENSG00000200063', 'ENSG00000201329', 'ENSG00000201957', 'ENSG00000202231']...
+2026-11-28 19:38:51,232 - INFO - Loading 10 gene set collections
+2026-11-28 19:38:51,234 - INFO - Gene Set Library
+H: Hallmark Gene Sets (Homo Sapiens)
+	50 terms
+	4384 genes
+2026-11-28 19:38:51,235 - INFO - Loaded collection H: Hallmark Gene Sets: 50 terms
+2026-11-28 19:38:51,236 - INFO - Gene Set Library
+C2: BioCarta (Homo Sapiens)
+	292 terms
+	1509 genes
+2026-11-28 19:38:51,236 - INFO - Loaded collection C2: BioCarta: 226 terms
+2026-11-28 19:38:51,238 - INFO - Gene Set Library
+C2: KEGG MEDICUS (Homo Sapiens)
+	658 terms
+	2788 genes
+2026-11-28 19:38:51,239 - INFO - Loaded collection C2: KEGG MEDICUS: 403 terms
+2026-11-28 19:38:51,240 - INFO - Gene Set Library
+C2: Pathway Interaction Database (Homo Sapiens)
+	196 terms
+	2534 genes
+2026-11-28 19:38:51,240 - INFO - Loaded collection C2: Pathway Interaction Database: 196 terms
+2026-11-28 19:38:51,247 - INFO - Gene Set Library
+C2: Reactome Pathways (Homo Sapiens)
+	1787 terms
+	11369 genes
+2026-11-28 19:38:51,249 - INFO - Loaded collection C2: Reactome Pathways: 1409 terms
+2026-11-28 19:38:51,252 - INFO - Gene Set Library
+C2: WikiPathways (Homo Sapiens)
+	885 terms
+	9127 genes
+2026-11-28 19:38:51,253 - INFO - Loaded collection C2: WikiPathways: 766 terms
+2026-11-28 19:38:51,255 - INFO - Gene Set Library
+C2: KEGG Legacy (Homo Sapiens)
+	186 terms
+	5245 genes
+2026-11-28 19:38:51,255 - INFO - Loaded collection C2: KEGG Legacy: 186 terms
+2026-11-28 19:38:51,291 - INFO - Gene Set Library
+C5: Gene Ontology: Biological Process (Homo Sapiens)
+	7583 terms
+	17999 genes
+2026-11-28 19:38:51,297 - INFO - Loaded collection C5: Gene Ontology: Biological Process: 5360 terms
+2026-11-28 19:38:51,304 - INFO - Gene Set Library
+C5: Gene Ontology: Cellular Component (Homo Sapiens)
+	1042 terms
+	14868 genes
+2026-11-28 19:38:51,306 - INFO - Loaded collection C5: Gene Ontology: Cellular Component: 684 terms
+2026-11-28 19:38:51,314 - INFO - Gene Set Library
+C5: Gene Ontology: Molecular Function (Homo Sapiens)
+	1855 terms
+	15698 genes
+2026-11-28 19:38:51,316 - INFO - Loaded collection C5: Gene Ontology: Molecular Function: 1165 terms
+2026-11-28 19:38:51,316 - INFO - Processing gene set: inputs/Zhou_2008_HIV_dependency_factors.symbols.txt
+2026-11-28 19:38:51,317 - INFO - Loading gene info from /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/recent_release/Homo_sapiens.gene_info.gz
+2026-11-28 19:38:51,511 - INFO - Loaded 193577 human Entrez ID mappings (taxonomy ID 9606)
+2026-11-28 19:38:51,512 - INFO - Loaded 69379 synonym mappings
+2026-11-28 19:38:51,514 - INFO - Sample Entrez IDs: ['1', '2', '9']
+2026-11-28 19:38:51,514 - INFO - Sample symbols: ['A1BG', 'A2M', 'NAT1']
+2026-11-28 19:38:51,515 - INFO - Loading gene history from /sessions/rcw-0192xuvqvw7g1tkprhffphnn/mnt/iterative_enrichment/data/recent_release/gene_history_9606.gz
+2026-11-28 19:38:51,579 - INFO - Loaded 166606 unique old-to-current symbol mappings
+2026-11-28 19:38:51,579 - INFO - Input Gene Set
+Zhou_2008_HIV_dependency_factors.symbols
+	307 genes
+2026-11-28 19:38:51,580 - WARNING - 4 non valid
+2026-11-28 19:38:51,580 - WARNING - 4 validated genes are not in the background (all_genes) and were removed: ACKR5, ERICH6B, KRABD2, POTEB3
+2026-11-28 19:38:51,580 - INFO - Gene set Zhou_2008_HIV_dependency_factors.symbols: 307 genes in the background (used for the analysis)
+2026-11-28 19:38:51,581 - INFO - Created unique output directory: Zhou_2008_HIV_dependency_factors.symbols_20261128_193851
+2026-11-28 19:38:51,581 - INFO - Running iterative enrichment analysis
+2026-11-28 19:38:51,581 - INFO - Generated shared run ID: 20261128_193851_581
+2026-11-28 19:38:51,582 - INFO - Processing collection: H: Hallmark Gene Sets
+2026-11-28 19:38:51,582 - INFO - Collection H: Hallmark Gene Sets: Starting iterative enrichment with 307 genes
+2026-11-28 19:38:51,582 - INFO - Collection H: Hallmark Gene Sets: Iteration 1: Processing 307 remaining genes
+2026-11-28 19:38:51,583 - INFO - Input Gene Set
+
+	307 genes
+2026-11-28 19:38:51,583 - INFO - Calculating p-values for H: Hallmark Gene Sets
+2026-11-28 19:38:51,584 - INFO - Library-specific background size: 4378 genes (intersection of 23391 background genes and 4378 filtered library genes from 50 terms within size range [10, 600])
+2026-11-28 19:38:51,584 - INFO - Input gene set filtered: 307 → 105 genes (intersected with library-specific background)
+2026-11-28 19:38:51,586 - INFO - Top term p-value >= threshold; terminating.
+2026-11-28 19:38:51,587 - INFO - Collection H: Hallmark Gene Sets: Top term p-value (0.02898081358282073) >= threshold (0.01); terminating.
+2026-11-28 19:38:51,587 - INFO - Collection H: Hallmark Gene Sets: Completed iterative enrichment: 0 iterations, 307 genes remaining
+2026-11-28 19:38:51,587 - INFO - Processing collection: C2: BioCarta
+2026-11-28 19:38:51,587 - INFO - Collection C2: BioCarta: Starting iterative enrichment with 307 genes
+2026-11-28 19:38:51,588 - INFO - Collection C2: BioCarta: Iteration 1: Processing 307 remaining genes
+2026-11-28 19:38:51,588 - INFO - Input Gene Set
+
+	307 genes
+2026-11-28 19:38:51,588 - INFO - Calculating p-values for C2: BioCarta
+2026-11-28 19:38:51,592 - INFO - Library-specific background size: 1363 genes (intersection of 23391 background genes and 1363 filtered library genes from 226 terms within size range [10, 600])
+2026-11-28 19:38:51,592 - INFO - Input gene set filtered: 307 → 40 genes (intersected with library-specific background)
+2026-11-28 19:38:51,599 - INFO - Iteration 1: Top term 'BIOCARTA_NFKB_PATHWAY' has p-value 0.00024311851172350175 and overlap size 5
+2026-11-28 19:38:51,600 - INFO - Overlap genes: {'RELA', 'IL1A', 'MAP3K14', 'NFKB1', 'MAP3K7'}
+2026-11-28 19:38:51,600 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:51,600 - INFO - Collection C2: BioCarta: Iteration 1: Found term 'BIOCARTA_NFKB_PATHWAY' (p=0.0002, overlap=5)
+2026-11-28 19:38:51,600 - INFO - Saved first iteration as regular enrichment
+2026-11-28 19:38:51,605 - INFO - Saved iteration 1 results to step13_r2/qvalues/run_20261128_193851_581/C2.BioCarta_iteration_001.tsv
+2026-11-28 19:38:51,606 - INFO - Collection C2: BioCarta: Iteration 2: Processing 302 remaining genes
+2026-11-28 19:38:51,606 - INFO - Input Gene Set
+
+	302 genes
+2026-11-28 19:38:51,607 - INFO - Calculating p-values for C2: BioCarta
+2026-11-28 19:38:51,607 - INFO - Library-specific background size: 1363 genes (intersection of 23391 background genes and 1363 filtered library genes from 226 terms within size range [10, 600])
+2026-11-28 19:38:51,607 - INFO - Input gene set filtered: 302 → 35 genes (intersected with library-specific background)
+2026-11-28 19:38:51,614 - INFO - Top term p-value >= threshold; terminating.
+2026-11-28 19:38:51,615 - INFO - Collection C2: BioCarta: Top term p-value (0.026913638592039758) >= threshold (0.01); terminating.
+2026-11-28 19:38:51,615 - INFO - Collection C2: BioCarta: Completed iterative enrichment: 1 iterations, 302 genes remaining
+2026-11-28 19:38:51,618 - INFO - Saved 1 iterations to step13_r2/qvalues/Zhou_2008_HIV_dependency_factors.symbols_20261128_193851/C2: BioCarta_iterative_results.tsv
+2026-11-28 19:38:51,618 - INFO - Processing collection: C2: KEGG MEDICUS
+2026-11-28 19:38:51,618 - INFO - Collection C2: KEGG MEDICUS: Starting iterative enrichment with 307 genes
+2026-11-28 19:38:51,618 - INFO - Collection C2: KEGG MEDICUS: Iteration 1: Processing 307 remaining genes
+2026-11-28 19:38:51,619 - INFO - Input Gene Set
+
+	307 genes
+2026-11-28 19:38:51,619 - INFO - Calculating p-values for C2: KEGG MEDICUS
+2026-11-28 19:38:51,621 - INFO - Library-specific background size: 2258 genes (intersection of 23391 background genes and 2258 filtered library genes from 402 terms within size range [10, 600])
+2026-11-28 19:38:51,621 - INFO - Input gene set filtered: 307 → 57 genes (intersected with library-specific background)
+2026-11-28 19:38:51,634 - INFO - Iteration 1: Top term 'KEGG_MEDICUS_REFERENCE_TLR3_NFKB_SIGNALING_PATHWAY' has p-value 0.0016145913306885892 and overlap size 3
+2026-11-28 19:38:51,634 - INFO - Overlap genes: {'NFKB1', 'RELA', 'MAP3K7'}
+2026-11-28 19:38:51,634 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:51,634 - INFO - Collection C2: KEGG MEDICUS: Iteration 1: Found term 'KEGG_MEDICUS_REFERENCE_TLR3_NFKB_SIGNALING_PATHWAY' (p=0.0016, overlap=3)
+2026-11-28 19:38:51,635 - INFO - Saved first iteration as regular enrichment
+2026-11-28 19:38:51,642 - INFO - Saved iteration 1 results to step13_r2/qvalues/run_20261128_193851_581/C2.KEGG.MEDICUS_iteration_001.tsv
+2026-11-28 19:38:51,642 - INFO - Collection C2: KEGG MEDICUS: Iteration 2: Processing 304 remaining genes
+2026-11-28 19:38:51,642 - INFO - Input Gene Set
+
+	304 genes
+2026-11-28 19:38:51,643 - INFO - Calculating p-values for C2: KEGG MEDICUS
+2026-11-28 19:38:51,643 - INFO - Library-specific background size: 2258 genes (intersection of 23391 background genes and 2258 filtered library genes from 402 terms within size range [10, 600])
+2026-11-28 19:38:51,643 - INFO - Input gene set filtered: 304 → 54 genes (intersected with library-specific background)
+2026-11-28 19:38:51,658 - INFO - Iteration 2: Top term 'KEGG_MEDICUS_REFERENCE_ELECTRON_TRANSFER_IN_COMPLEX_I' has p-value 0.0015791230112193143 and overlap size 5
+2026-11-28 19:38:51,658 - INFO - Overlap genes: {'NDUFA10', 'NDUFS7', 'NDUFS6', 'NDUFS3', 'NDUFA6'}
+2026-11-28 19:38:51,658 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:51,658 - INFO - Collection C2: KEGG MEDICUS: Iteration 2: Found term 'KEGG_MEDICUS_REFERENCE_ELECTRON_TRANSFER_IN_COMPLEX_I' (p=0.0016, overlap=5)
+2026-11-28 19:38:51,666 - INFO - Saved iteration 2 results to step13_r2/qvalues/run_20261128_193851_581/C2.KEGG.MEDICUS_iteration_002.tsv
+2026-11-28 19:38:51,666 - INFO - Collection C2: KEGG MEDICUS: Iteration 3: Processing 299 remaining genes
+2026-11-28 19:38:51,667 - INFO - Input Gene Set
+
+	299 genes
+2026-11-28 19:38:51,667 - INFO - Calculating p-values for C2: KEGG MEDICUS
+2026-11-28 19:38:51,668 - INFO - Library-specific background size: 2258 genes (intersection of 23391 background genes and 2258 filtered library genes from 402 terms within size range [10, 600])
+2026-11-28 19:38:51,668 - INFO - Input gene set filtered: 299 → 49 genes (intersected with library-specific background)
+2026-11-28 19:38:51,682 - INFO - Iteration 3: Top term 'KEGG_MEDICUS_REFERENCE_TRANSCRIPTION_COUPLED_NER' has p-value 0.00400330246321878 and overlap size 4
+2026-11-28 19:38:51,682 - INFO - Overlap genes: {'GTF2H1', 'POLR2K', 'POLR2H', 'POLR2L'}
+2026-11-28 19:38:51,683 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:51,683 - INFO - Collection C2: KEGG MEDICUS: Iteration 3: Found term 'KEGG_MEDICUS_REFERENCE_TRANSCRIPTION_COUPLED_NER' (p=0.0040, overlap=4)
+2026-11-28 19:38:51,690 - INFO - Saved iteration 3 results to step13_r2/qvalues/run_20261128_193851_581/C2.KEGG.MEDICUS_iteration_003.tsv
+2026-11-28 19:38:51,690 - INFO - Collection C2: KEGG MEDICUS: Iteration 4: Processing 295 remaining genes
+2026-11-28 19:38:51,691 - INFO - Input Gene Set
+
+	295 genes
+2026-11-28 19:38:51,691 - INFO - Calculating p-values for C2: KEGG MEDICUS
+2026-11-28 19:38:51,691 - INFO - Library-specific background size: 2258 genes (intersection of 23391 background genes and 2258 filtered library genes from 402 terms within size range [10, 600])
+2026-11-28 19:38:51,691 - INFO - Input gene set filtered: 295 → 45 genes (intersected with library-specific background)
+2026-11-28 19:38:51,707 - INFO - No results meet minimum overlap requirement (3); terminating.
+2026-11-28 19:38:51,707 - INFO - Collection C2: KEGG MEDICUS: No results meet minimum overlap requirement (3); terminating.
+2026-11-28 19:38:51,707 - INFO - Collection C2: KEGG MEDICUS: Completed iterative enrichment: 3 iterations, 295 genes remaining
+2026-11-28 19:38:51,710 - INFO - Saved 3 iterations to step13_r2/qvalues/Zhou_2008_HIV_dependency_factors.symbols_20261128_193851/C2: KEGG MEDICUS_iterative_results.tsv
+2026-11-28 19:38:51,710 - INFO - Processing collection: C2: Pathway Interaction Database
+2026-11-28 19:38:51,710 - INFO - Collection C2: Pathway Interaction Database: Starting iterative enrichment with 307 genes
+2026-11-28 19:38:51,711 - INFO - Collection C2: Pathway Interaction Database: Iteration 1: Processing 307 remaining genes
+2026-11-28 19:38:51,711 - INFO - Input Gene Set
+
+	307 genes
+2026-11-28 19:38:51,711 - INFO - Calculating p-values for C2: Pathway Interaction Database
+2026-11-28 19:38:51,712 - INFO - Library-specific background size: 2534 genes (intersection of 23391 background genes and 2534 filtered library genes from 196 terms within size range [10, 600])
+2026-11-28 19:38:51,713 - INFO - Input gene set filtered: 307 → 57 genes (intersected with library-specific background)
+2026-11-28 19:38:51,721 - INFO - Iteration 1: Top term 'PID_HIV_NEF_PATHWAY' has p-value 0.0009345310718985445 and overlap size 5
+2026-11-28 19:38:51,721 - INFO - Overlap genes: {'RELA', 'MAP3K14', 'CFLAR', 'NFKB1', 'CYCS'}
+2026-11-28 19:38:51,721 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:51,722 - INFO - Collection C2: Pathway Interaction Database: Iteration 1: Found term 'PID_HIV_NEF_PATHWAY' (p=0.0009, overlap=5)
+2026-11-28 19:38:51,722 - INFO - Saved first iteration as regular enrichment
+2026-11-28 19:38:51,725 - INFO - Saved iteration 1 results to step13_r2/qvalues/run_20261128_193851_581/C2.Pathway.Interaction.Database_iteration_001.tsv
+2026-11-28 19:38:51,726 - INFO - Collection C2: Pathway Interaction Database: Iteration 2: Processing 302 remaining genes
+2026-11-28 19:38:51,726 - INFO - Input Gene Set
+
+	302 genes
+2026-11-28 19:38:51,726 - INFO - Calculating p-values for C2: Pathway Interaction Database
+2026-11-28 19:38:51,727 - INFO - Library-specific background size: 2534 genes (intersection of 23391 background genes and 2534 filtered library genes from 196 terms within size range [10, 600])
+2026-11-28 19:38:51,727 - INFO - Input gene set filtered: 302 → 52 genes (intersected with library-specific background)
+2026-11-28 19:38:51,734 - INFO - Iteration 2: Top term 'PID_DELTA_NP63_PATHWAY' has p-value 0.0023910562850484596 and overlap size 5
+2026-11-28 19:38:51,734 - INFO - Overlap genes: {'MRE11', 'IL1A', 'VDR', 'HES1', 'PERP'}
+2026-11-28 19:38:51,734 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:51,734 - INFO - Collection C2: Pathway Interaction Database: Iteration 2: Found term 'PID_DELTA_NP63_PATHWAY' (p=0.0024, overlap=5)
+2026-11-28 19:38:51,739 - INFO - Saved iteration 2 results to step13_r2/qvalues/run_20261128_193851_581/C2.Pathway.Interaction.Database_iteration_002.tsv
+2026-11-28 19:38:51,739 - INFO - Collection C2: Pathway Interaction Database: Iteration 3: Processing 297 remaining genes
+2026-11-28 19:38:51,740 - INFO - Input Gene Set
+
+	297 genes
+2026-11-28 19:38:51,740 - INFO - Calculating p-values for C2: Pathway Interaction Database
+2026-11-28 19:38:51,740 - INFO - Library-specific background size: 2534 genes (intersection of 23391 background genes and 2534 filtered library genes from 196 terms within size range [10, 600])
+2026-11-28 19:38:51,741 - INFO - Input gene set filtered: 297 → 47 genes (intersected with library-specific background)
+2026-11-28 19:38:51,748 - INFO - Iteration 3: Top term 'PID_CXCR4_PATHWAY' has p-value 0.0020714445310371543 and overlap size 7
+2026-11-28 19:38:51,749 - INFO - Overlap genes: {'MMP9', 'CD4', 'AKT1', 'VPS4A', 'CXCR4', 'GRK2', 'RALB'}
+2026-11-28 19:38:51,749 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:51,749 - INFO - Collection C2: Pathway Interaction Database: Iteration 3: Found term 'PID_CXCR4_PATHWAY' (p=0.0021, overlap=7)
+2026-11-28 19:38:51,753 - INFO - Saved iteration 3 results to step13_r2/qvalues/run_20261128_193851_581/C2.Pathway.Interaction.Database_iteration_003.tsv
+2026-11-28 19:38:51,753 - INFO - Collection C2: Pathway Interaction Database: Iteration 4: Processing 290 remaining genes
+2026-11-28 19:38:51,754 - INFO - Input Gene Set
+
+	290 genes
+2026-11-28 19:38:51,754 - INFO - Calculating p-values for C2: Pathway Interaction Database
+2026-11-28 19:38:51,754 - INFO - Library-specific background size: 2534 genes (intersection of 23391 background genes and 2534 filtered library genes from 196 terms within size range [10, 600])
+2026-11-28 19:38:51,755 - INFO - Input gene set filtered: 290 → 40 genes (intersected with library-specific background)
+2026-11-28 19:38:51,761 - INFO - Top term p-value >= threshold; terminating.
+2026-11-28 19:38:51,762 - INFO - Collection C2: Pathway Interaction Database: Top term p-value (0.020982907150222625) >= threshold (0.01); terminating.
+2026-11-28 19:38:51,762 - INFO - Collection C2: Pathway Interaction Database: Completed iterative enrichment: 3 iterations, 290 genes remaining
+2026-11-28 19:38:51,765 - INFO - Saved 3 iterations to step13_r2/qvalues/Zhou_2008_HIV_dependency_factors.symbols_20261128_193851/C2: Pathway Interaction Database_iterative_results.tsv
+2026-11-28 19:38:51,765 - INFO - Processing collection: C2: Reactome Pathways
+2026-11-28 19:38:51,765 - INFO - Collection C2: Reactome Pathways: Starting iterative enrichment with 307 genes
+2026-11-28 19:38:51,765 - INFO - Collection C2: Reactome Pathways: Iteration 1: Processing 307 remaining genes
+2026-11-28 19:38:51,766 - INFO - Input Gene Set
+
+	307 genes
+2026-11-28 19:38:51,766 - INFO - Calculating p-values for C2: Reactome Pathways
+2026-11-28 19:38:51,772 - INFO - Library-specific background size: 11019 genes (intersection of 23391 background genes and 11019 filtered library genes from 1408 terms within size range [10, 600])
+2026-11-28 19:38:51,772 - INFO - Input gene set filtered: 307 → 219 genes (intersected with library-specific background)
+2026-11-28 19:38:51,779 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:51,882 - INFO - Iteration 1: Top term 'REACTOME_TRANSCRIPTIONAL_REGULATION_OF_WHITE_ADIPOCYTE_DIFFERENTIATION' has p-value 6.628194829787488e-12 and overlap size 16
+2026-11-28 19:38:51,883 - INFO - Overlap genes: {'MED4', 'MED17', 'MED7', 'RELA', 'MED19', 'MED31', 'TBL1X', 'MED20', 'MED27', 'MED6', 'NFKB1', 'MED28', 'MED26', 'PCK1', 'MED8', 'MED11'}
+2026-11-28 19:38:51,883 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:51,883 - INFO - Collection C2: Reactome Pathways: Iteration 1: Found term 'REACTOME_TRANSCRIPTIONAL_REGULATION_OF_WHITE_ADIPOCYTE_DIFFERENTIATION' (p=0.0000, overlap=16)
+2026-11-28 19:38:51,883 - INFO - Saved first iteration as regular enrichment
+2026-11-28 19:38:51,906 - INFO - Saved iteration 1 results to step13_r2/qvalues/run_20261128_193851_581/C2.Reactome.Pathways_iteration_001.tsv
+2026-11-28 19:38:51,906 - INFO - Collection C2: Reactome Pathways: Iteration 2: Processing 291 remaining genes
+2026-11-28 19:38:51,907 - INFO - Input Gene Set
+
+	291 genes
+2026-11-28 19:38:51,907 - INFO - Calculating p-values for C2: Reactome Pathways
+2026-11-28 19:38:51,909 - INFO - Library-specific background size: 11019 genes (intersection of 23391 background genes and 11019 filtered library genes from 1408 terms within size range [10, 600])
+2026-11-28 19:38:51,909 - INFO - Input gene set filtered: 291 → 203 genes (intersected with library-specific background)
+2026-11-28 19:38:51,914 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:51,975 - INFO - Iteration 2: Top term 'REACTOME_HIV_LIFE_CYCLE' has p-value 1.923558459072337e-05 and overlap size 12
+2026-11-28 19:38:51,975 - INFO - Overlap genes: {'GTF2H1', 'VPS4A', 'POLR2K', 'XPO1', 'GTF2F1', 'POLR2H', 'CD4', 'GTF2A1', 'ELOA', 'POLR2L', 'CXCR4', 'NUP155'}
+2026-11-28 19:38:51,976 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:51,976 - INFO - Collection C2: Reactome Pathways: Iteration 2: Found term 'REACTOME_HIV_LIFE_CYCLE' (p=0.0000, overlap=12)
+2026-11-28 19:38:51,999 - INFO - Saved iteration 2 results to step13_r2/qvalues/run_20261128_193851_581/C2.Reactome.Pathways_iteration_002.tsv
+2026-11-28 19:38:52,000 - INFO - Collection C2: Reactome Pathways: Iteration 3: Processing 279 remaining genes
+2026-11-28 19:38:52,001 - INFO - Input Gene Set
+
+	279 genes
+2026-11-28 19:38:52,001 - INFO - Calculating p-values for C2: Reactome Pathways
+2026-11-28 19:38:52,002 - INFO - Library-specific background size: 11019 genes (intersection of 23391 background genes and 11019 filtered library genes from 1408 terms within size range [10, 600])
+2026-11-28 19:38:52,003 - INFO - Input gene set filtered: 279 → 191 genes (intersected with library-specific background)
+2026-11-28 19:38:52,007 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:52,066 - INFO - Iteration 3: Top term 'REACTOME_IRF3_MEDIATED_INDUCTION_OF_TYPE_I_IFN' has p-value 0.0012899190522701913 and overlap size 3
+2026-11-28 19:38:52,067 - INFO - Overlap genes: {'DTX4', 'NLRC3', 'MRE11'}
+2026-11-28 19:38:52,067 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:52,067 - INFO - Collection C2: Reactome Pathways: Iteration 3: Found term 'REACTOME_IRF3_MEDIATED_INDUCTION_OF_TYPE_I_IFN' (p=0.0013, overlap=3)
+2026-11-28 19:38:52,085 - INFO - Saved iteration 3 results to step13_r2/qvalues/run_20261128_193851_581/C2.Reactome.Pathways_iteration_003.tsv
+2026-11-28 19:38:52,086 - INFO - Collection C2: Reactome Pathways: Iteration 4: Processing 276 remaining genes
+2026-11-28 19:38:52,086 - INFO - Input Gene Set
+
+	276 genes
+2026-11-28 19:38:52,087 - INFO - Calculating p-values for C2: Reactome Pathways
+2026-11-28 19:38:52,088 - INFO - Library-specific background size: 11019 genes (intersection of 23391 background genes and 11019 filtered library genes from 1408 terms within size range [10, 600])
+2026-11-28 19:38:52,088 - INFO - Input gene set filtered: 276 → 188 genes (intersected with library-specific background)
+2026-11-28 19:38:52,094 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:52,152 - INFO - Iteration 4: Top term 'REACTOME_AEROBIC_RESPIRATION_AND_RESPIRATORY_ELECTRON_TRANSPORT' has p-value 0.0011530672709114363 and overlap size 12
+2026-11-28 19:38:52,152 - INFO - Overlap genes: {'NDUFA10', 'ATP5F1B', 'NDUFA6', 'DLST', 'NDUFS3', 'NDUFS6', 'NDUFS7', 'SUCLG2', 'PKLR', 'UQCRC1', 'CYCS', 'SLC25A27'}
+2026-11-28 19:38:52,153 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:52,153 - INFO - Collection C2: Reactome Pathways: Iteration 4: Found term 'REACTOME_AEROBIC_RESPIRATION_AND_RESPIRATORY_ELECTRON_TRANSPORT' (p=0.0012, overlap=12)
+2026-11-28 19:38:52,176 - INFO - Saved iteration 4 results to step13_r2/qvalues/run_20261128_193851_581/C2.Reactome.Pathways_iteration_004.tsv
+2026-11-28 19:38:52,176 - INFO - Collection C2: Reactome Pathways: Iteration 5: Processing 264 remaining genes
+2026-11-28 19:38:52,177 - INFO - Input Gene Set
+
+	264 genes
+2026-11-28 19:38:52,177 - INFO - Calculating p-values for C2: Reactome Pathways
+2026-11-28 19:38:52,179 - INFO - Library-specific background size: 11019 genes (intersection of 23391 background genes and 11019 filtered library genes from 1408 terms within size range [10, 600])
+2026-11-28 19:38:52,179 - INFO - Input gene set filtered: 264 → 176 genes (intersected with library-specific background)
+2026-11-28 19:38:52,184 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:52,246 - INFO - Iteration 5: Top term 'REACTOME_MTOR_SIGNALLING' has p-value 0.004018087907956836 and overlap size 4
+2026-11-28 19:38:52,247 - INFO - Overlap genes: {'PRKAA1', 'LAMTOR5', 'LAMTOR2', 'AKT1'}
+2026-11-28 19:38:52,247 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:52,247 - INFO - Collection C2: Reactome Pathways: Iteration 5: Found term 'REACTOME_MTOR_SIGNALLING' (p=0.0040, overlap=4)
+2026-11-28 19:38:52,266 - INFO - Saved iteration 5 results to step13_r2/qvalues/run_20261128_193851_581/C2.Reactome.Pathways_iteration_005.tsv
+2026-11-28 19:38:52,267 - INFO - Collection C2: Reactome Pathways: Iteration 6: Processing 260 remaining genes
+2026-11-28 19:38:52,267 - INFO - Input Gene Set
+
+	260 genes
+2026-11-28 19:38:52,268 - INFO - Calculating p-values for C2: Reactome Pathways
+2026-11-28 19:38:52,269 - INFO - Library-specific background size: 11019 genes (intersection of 23391 background genes and 11019 filtered library genes from 1408 terms within size range [10, 600])
+2026-11-28 19:38:52,269 - INFO - Input gene set filtered: 260 → 172 genes (intersected with library-specific background)
+2026-11-28 19:38:52,275 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:52,335 - INFO - Iteration 6: Top term 'REACTOME_TBC_RABGAPS' has p-value 0.004785485020726208 and overlap size 4
+2026-11-28 19:38:52,336 - INFO - Overlap genes: {'RAB8A', 'TBC1D10A', 'RAB35', 'GABARAP'}
+2026-11-28 19:38:52,336 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:52,336 - INFO - Collection C2: Reactome Pathways: Iteration 6: Found term 'REACTOME_TBC_RABGAPS' (p=0.0048, overlap=4)
+2026-11-28 19:38:52,355 - INFO - Saved iteration 6 results to step13_r2/qvalues/run_20261128_193851_581/C2.Reactome.Pathways_iteration_006.tsv
+2026-11-28 19:38:52,356 - INFO - Collection C2: Reactome Pathways: Iteration 7: Processing 256 remaining genes
+2026-11-28 19:38:52,356 - INFO - Input Gene Set
+
+	256 genes
+2026-11-28 19:38:52,357 - INFO - Calculating p-values for C2: Reactome Pathways
+2026-11-28 19:38:52,358 - INFO - Library-specific background size: 11019 genes (intersection of 23391 background genes and 11019 filtered library genes from 1408 terms within size range [10, 600])
+2026-11-28 19:38:52,358 - INFO - Input gene set filtered: 256 → 168 genes (intersected with library-specific background)
+2026-11-28 19:38:52,364 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:52,425 - INFO - Iteration 7: Top term 'REACTOME_NUCLEAR_RECEPTOR_TRANSCRIPTION_PATHWAY' has p-value 0.008544240023812091 and overlap size 4
+2026-11-28 19:38:52,426 - INFO - Overlap genes: {'VDR', 'RARB', 'NRBP1', 'NR4A2'}
+2026-11-28 19:38:52,426 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:52,426 - INFO - Collection C2: Reactome Pathways: Iteration 7: Found term 'REACTOME_NUCLEAR_RECEPTOR_TRANSCRIPTION_PATHWAY' (p=0.0085, overlap=4)
+2026-11-28 19:38:52,445 - INFO - Saved iteration 7 results to step13_r2/qvalues/run_20261128_193851_581/C2.Reactome.Pathways_iteration_007.tsv
+2026-11-28 19:38:52,446 - INFO - Collection C2: Reactome Pathways: Iteration 8: Processing 252 remaining genes
+2026-11-28 19:38:52,446 - INFO - Input Gene Set
+
+	252 genes
+2026-11-28 19:38:52,447 - INFO - Calculating p-values for C2: Reactome Pathways
+2026-11-28 19:38:52,448 - INFO - Library-specific background size: 11019 genes (intersection of 23391 background genes and 11019 filtered library genes from 1408 terms within size range [10, 600])
+2026-11-28 19:38:52,448 - INFO - Input gene set filtered: 252 → 164 genes (intersected with library-specific background)
+2026-11-28 19:38:52,454 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:52,514 - INFO - Top term p-value >= threshold; terminating.
+2026-11-28 19:38:52,515 - INFO - Collection C2: Reactome Pathways: Top term p-value (0.01013196541785646) >= threshold (0.01); terminating.
+2026-11-28 19:38:52,515 - INFO - Collection C2: Reactome Pathways: Completed iterative enrichment: 7 iterations, 252 genes remaining
+2026-11-28 19:38:52,520 - INFO - Saved 7 iterations to step13_r2/qvalues/Zhou_2008_HIV_dependency_factors.symbols_20261128_193851/C2: Reactome Pathways_iterative_results.tsv
+2026-11-28 19:38:52,521 - INFO - Processing collection: C2: WikiPathways
+2026-11-28 19:38:52,521 - INFO - Collection C2: WikiPathways: Starting iterative enrichment with 307 genes
+2026-11-28 19:38:52,521 - INFO - Collection C2: WikiPathways: Iteration 1: Processing 307 remaining genes
+2026-11-28 19:38:52,522 - INFO - Input Gene Set
+
+	307 genes
+2026-11-28 19:38:52,522 - INFO - Calculating p-values for C2: WikiPathways
+2026-11-28 19:38:52,526 - INFO - Library-specific background size: 9035 genes (intersection of 23391 background genes and 9035 filtered library genes from 766 terms within size range [10, 600])
+2026-11-28 19:38:52,526 - INFO - Input gene set filtered: 307 → 180 genes (intersected with library-specific background)
+2026-11-28 19:38:52,532 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:52,576 - INFO - Iteration 1: Top term 'WP_NONALCOHOLIC_FATTY_LIVER_DISEASE' has p-value 8.575862785490892e-06 and overlap size 13
+2026-11-28 19:38:52,576 - INFO - Overlap genes: {'NDUFA10', 'IL1A', 'NDUFA6', 'NDUFS3', 'NDUFS6', 'NDUFS7', 'PRKAA1', 'RELA', 'PKLR', 'AKT1', 'NFKB1', 'UQCRC1', 'CYCS'}
+2026-11-28 19:38:52,577 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:52,577 - INFO - Collection C2: WikiPathways: Iteration 1: Found term 'WP_NONALCOHOLIC_FATTY_LIVER_DISEASE' (p=0.0000, overlap=13)
+2026-11-28 19:38:52,577 - INFO - Saved first iteration as regular enrichment
+2026-11-28 19:38:52,590 - INFO - Saved iteration 1 results to step13_r2/qvalues/run_20261128_193851_581/C2.WikiPathways_iteration_001.tsv
+2026-11-28 19:38:52,591 - INFO - Collection C2: WikiPathways: Iteration 2: Processing 294 remaining genes
+2026-11-28 19:38:52,591 - INFO - Input Gene Set
+
+	294 genes
+2026-11-28 19:38:52,591 - INFO - Calculating p-values for C2: WikiPathways
+2026-11-28 19:38:52,593 - INFO - Library-specific background size: 9035 genes (intersection of 23391 background genes and 9035 filtered library genes from 766 terms within size range [10, 600])
+2026-11-28 19:38:52,593 - INFO - Input gene set filtered: 294 → 167 genes (intersected with library-specific background)
+2026-11-28 19:38:52,598 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:52,641 - INFO - Iteration 2: Top term 'WP_DNA_REPAIR_PATHWAYS_FULL_NETWORK' has p-value 0.001674314640987331 and overlap size 8
+2026-11-28 19:38:52,641 - INFO - Overlap genes: {'GTF2H1', 'MRE11', 'BRCA1', 'RAD23A', 'FANCM', 'TERF2', 'POLE', 'NEIL3'}
+2026-11-28 19:38:52,641 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:52,641 - INFO - Collection C2: WikiPathways: Iteration 2: Found term 'WP_DNA_REPAIR_PATHWAYS_FULL_NETWORK' (p=0.0017, overlap=8)
+2026-11-28 19:38:52,653 - INFO - Saved iteration 2 results to step13_r2/qvalues/run_20261128_193851_581/C2.WikiPathways_iteration_002.tsv
+2026-11-28 19:38:52,653 - INFO - Collection C2: WikiPathways: Iteration 3: Processing 286 remaining genes
+2026-11-28 19:38:52,654 - INFO - Input Gene Set
+
+	286 genes
+2026-11-28 19:38:52,654 - INFO - Calculating p-values for C2: WikiPathways
+2026-11-28 19:38:52,655 - INFO - Library-specific background size: 9035 genes (intersection of 23391 background genes and 9035 filtered library genes from 766 terms within size range [10, 600])
+2026-11-28 19:38:52,656 - INFO - Input gene set filtered: 286 → 159 genes (intersected with library-specific background)
+2026-11-28 19:38:52,661 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:52,702 - INFO - Iteration 3: Top term 'WP_TCA_CYCLE_AND_DEFICIENCY_OF_PYRUVATE_DEHYDROGENASE_COMPLEX_PDHC' has p-value 0.0025307111015634353 and overlap size 3
+2026-11-28 19:38:52,703 - INFO - Overlap genes: {'DLST', 'PCK1', 'SUCLG2'}
+2026-11-28 19:38:52,703 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:52,704 - INFO - Collection C2: WikiPathways: Iteration 3: Found term 'WP_TCA_CYCLE_AND_DEFICIENCY_OF_PYRUVATE_DEHYDROGENASE_COMPLEX_PDHC' (p=0.0025, overlap=3)
+2026-11-28 19:38:52,714 - INFO - Saved iteration 3 results to step13_r2/qvalues/run_20261128_193851_581/C2.WikiPathways_iteration_003.tsv
+2026-11-28 19:38:52,714 - INFO - Collection C2: WikiPathways: Iteration 4: Processing 283 remaining genes
+2026-11-28 19:38:52,715 - INFO - Input Gene Set
+
+	283 genes
+2026-11-28 19:38:52,715 - INFO - Calculating p-values for C2: WikiPathways
+2026-11-28 19:38:52,716 - INFO - Library-specific background size: 9035 genes (intersection of 23391 background genes and 9035 filtered library genes from 766 terms within size range [10, 600])
+2026-11-28 19:38:52,716 - INFO - Input gene set filtered: 283 → 156 genes (intersected with library-specific background)
+2026-11-28 19:38:52,722 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:52,762 - INFO - Iteration 4: Top term 'WP_DRUG_INDUCTION_OF_BILE_ACID_PATHWAY' has p-value 0.002874094170104711 and overlap size 3
+2026-11-28 19:38:52,763 - INFO - Overlap genes: {'SLC10A1', 'CYP3A4', 'VDR'}
+2026-11-28 19:38:52,763 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:52,763 - INFO - Collection C2: WikiPathways: Iteration 4: Found term 'WP_DRUG_INDUCTION_OF_BILE_ACID_PATHWAY' (p=0.0029, overlap=3)
+2026-11-28 19:38:52,774 - INFO - Saved iteration 4 results to step13_r2/qvalues/run_20261128_193851_581/C2.WikiPathways_iteration_004.tsv
+2026-11-28 19:38:52,774 - INFO - Collection C2: WikiPathways: Iteration 5: Processing 280 remaining genes
+2026-11-28 19:38:52,775 - INFO - Input Gene Set
+
+	280 genes
+2026-11-28 19:38:52,775 - INFO - Calculating p-values for C2: WikiPathways
+2026-11-28 19:38:52,776 - INFO - Library-specific background size: 9035 genes (intersection of 23391 background genes and 9035 filtered library genes from 766 terms within size range [10, 600])
+2026-11-28 19:38:52,777 - INFO - Input gene set filtered: 280 → 153 genes (intersected with library-specific background)
+2026-11-28 19:38:52,782 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:52,822 - INFO - Iteration 5: Top term 'WP_NOTCH_SIGNALING_WP268' has p-value 0.006872209844634448 and overlap size 4
+2026-11-28 19:38:52,822 - INFO - Overlap genes: {'DTX4', 'HES1', 'KCNJ5', 'DVL1'}
+2026-11-28 19:38:52,822 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:52,822 - INFO - Collection C2: WikiPathways: Iteration 5: Found term 'WP_NOTCH_SIGNALING_WP268' (p=0.0069, overlap=4)
+2026-11-28 19:38:52,833 - INFO - Saved iteration 5 results to step13_r2/qvalues/run_20261128_193851_581/C2.WikiPathways_iteration_005.tsv
+2026-11-28 19:38:52,833 - INFO - Collection C2: WikiPathways: Iteration 6: Processing 276 remaining genes
+2026-11-28 19:38:52,834 - INFO - Input Gene Set
+
+	276 genes
+2026-11-28 19:38:52,834 - INFO - Calculating p-values for C2: WikiPathways
+2026-11-28 19:38:52,835 - INFO - Library-specific background size: 9035 genes (intersection of 23391 background genes and 9035 filtered library genes from 766 terms within size range [10, 600])
+2026-11-28 19:38:52,835 - INFO - Input gene set filtered: 276 → 149 genes (intersected with library-specific background)
+2026-11-28 19:38:52,841 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:52,881 - INFO - Top term p-value >= threshold; terminating.
+2026-11-28 19:38:52,881 - INFO - Collection C2: WikiPathways: Top term p-value (0.01173442692589994) >= threshold (0.01); terminating.
+2026-11-28 19:38:52,881 - INFO - Collection C2: WikiPathways: Completed iterative enrichment: 5 iterations, 276 genes remaining
+2026-11-28 19:38:52,885 - INFO - Saved 5 iterations to step13_r2/qvalues/Zhou_2008_HIV_dependency_factors.symbols_20261128_193851/C2: WikiPathways_iterative_results.tsv
+2026-11-28 19:38:52,885 - INFO - Processing collection: C2: KEGG Legacy
+2026-11-28 19:38:52,886 - INFO - Collection C2: KEGG Legacy: Starting iterative enrichment with 307 genes
+2026-11-28 19:38:52,886 - INFO - Collection C2: KEGG Legacy: Iteration 1: Processing 307 remaining genes
+2026-11-28 19:38:52,887 - INFO - Input Gene Set
+
+	307 genes
+2026-11-28 19:38:52,887 - INFO - Calculating p-values for C2: KEGG Legacy
+2026-11-28 19:38:52,888 - INFO - Library-specific background size: 5230 genes (intersection of 23391 background genes and 5230 filtered library genes from 186 terms within size range [10, 600])
+2026-11-28 19:38:52,889 - INFO - Input gene set filtered: 307 → 118 genes (intersected with library-specific background)
+2026-11-28 19:38:52,897 - INFO - Iteration 1: Top term 'KEGG_ADIPOCYTOKINE_SIGNALING_PATHWAY' has p-value 0.0007065557946038785 and overlap size 7
+2026-11-28 19:38:52,898 - INFO - Overlap genes: {'ACACB', 'PRKAA1', 'RELA', 'CAMKK2', 'NFKB1', 'AKT1', 'PCK1'}
+2026-11-28 19:38:52,898 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:52,898 - INFO - Collection C2: KEGG Legacy: Iteration 1: Found term 'KEGG_ADIPOCYTOKINE_SIGNALING_PATHWAY' (p=0.0007, overlap=7)
+2026-11-28 19:38:52,898 - INFO - Saved first iteration as regular enrichment
+2026-11-28 19:38:52,902 - INFO - Saved iteration 1 results to step13_r2/qvalues/run_20261128_193851_581/C2.KEGG.Legacy_iteration_001.tsv
+2026-11-28 19:38:52,902 - INFO - Collection C2: KEGG Legacy: Iteration 2: Processing 300 remaining genes
+2026-11-28 19:38:52,903 - INFO - Input Gene Set
+
+	300 genes
+2026-11-28 19:38:52,903 - INFO - Calculating p-values for C2: KEGG Legacy
+2026-11-28 19:38:52,904 - INFO - Library-specific background size: 5230 genes (intersection of 23391 background genes and 5230 filtered library genes from 186 terms within size range [10, 600])
+2026-11-28 19:38:52,904 - INFO - Input gene set filtered: 300 → 111 genes (intersected with library-specific background)
+2026-11-28 19:38:52,912 - INFO - Iteration 2: Top term 'KEGG_HUNTINGTONS_DISEASE' has p-value 0.001162635406870958 and overlap size 11
+2026-11-28 19:38:52,913 - INFO - Overlap genes: {'POLR2K', 'NDUFA10', 'NDUFS3', 'ATP5F1B', 'NDUFA6', 'NDUFS6', 'NDUFS7', 'POLR2H', 'UQCRC1', 'POLR2L', 'CYCS'}
+2026-11-28 19:38:52,913 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:52,913 - INFO - Collection C2: KEGG Legacy: Iteration 2: Found term 'KEGG_HUNTINGTONS_DISEASE' (p=0.0012, overlap=11)
+2026-11-28 19:38:52,917 - INFO - Saved iteration 2 results to step13_r2/qvalues/run_20261128_193851_581/C2.KEGG.Legacy_iteration_002.tsv
+2026-11-28 19:38:52,917 - INFO - Collection C2: KEGG Legacy: Iteration 3: Processing 289 remaining genes
+2026-11-28 19:38:52,918 - INFO - Input Gene Set
+
+	289 genes
+2026-11-28 19:38:52,918 - INFO - Calculating p-values for C2: KEGG Legacy
+2026-11-28 19:38:52,919 - INFO - Library-specific background size: 5230 genes (intersection of 23391 background genes and 5230 filtered library genes from 186 terms within size range [10, 600])
+2026-11-28 19:38:52,919 - INFO - Input gene set filtered: 289 → 100 genes (intersected with library-specific background)
+2026-11-28 19:38:52,927 - INFO - Top term p-value >= threshold; terminating.
+2026-11-28 19:38:52,928 - INFO - Collection C2: KEGG Legacy: Top term p-value (0.028525825138669234) >= threshold (0.01); terminating.
+2026-11-28 19:38:52,928 - INFO - Collection C2: KEGG Legacy: Completed iterative enrichment: 2 iterations, 289 genes remaining
+2026-11-28 19:38:52,930 - INFO - Saved 2 iterations to step13_r2/qvalues/Zhou_2008_HIV_dependency_factors.symbols_20261128_193851/C2: KEGG Legacy_iterative_results.tsv
+2026-11-28 19:38:52,931 - INFO - Processing collection: C5: Gene Ontology: Biological Process
+2026-11-28 19:38:52,931 - INFO - Collection C5: Gene Ontology: Biological Process: Starting iterative enrichment with 307 genes
+2026-11-28 19:38:52,931 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 1: Processing 307 remaining genes
+2026-11-28 19:38:52,932 - INFO - Input Gene Set
+
+	307 genes
+2026-11-28 19:38:52,932 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:52,960 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:52,960 - INFO - Input gene set filtered: 307 → 275 genes (intersected with library-specific background)
+2026-11-28 19:38:52,966 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:53,126 - INFO - Iteration 1: Top term 'GOBP_POSITIVE_REGULATION_OF_DNA_TEMPLATED_TRANSCRIPTION_INITIATION' has p-value 1.0774097773652927e-12 and overlap size 15
+2026-11-28 19:38:53,126 - INFO - Overlap genes: {'MED4', 'MED17', 'MED7', 'MED8', 'MED19', 'MED31', 'MED20', 'MED27', 'MED6', 'GTF2A1', 'NFKB1', 'MED28', 'MED26', 'BCLAF1', 'MED11'}
+2026-11-28 19:38:53,127 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:53,127 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 1: Found term 'GOBP_POSITIVE_REGULATION_OF_DNA_TEMPLATED_TRANSCRIPTION_INITIATION' (p=0.0000, overlap=15)
+2026-11-28 19:38:53,127 - INFO - Saved first iteration as regular enrichment
+2026-11-28 19:38:53,211 - INFO - Saved iteration 1 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_001.tsv
+2026-11-28 19:38:53,212 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 2: Processing 292 remaining genes
+2026-11-28 19:38:53,212 - INFO - Input Gene Set
+
+	292 genes
+2026-11-28 19:38:53,213 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:53,217 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:53,218 - INFO - Input gene set filtered: 292 → 260 genes (intersected with library-specific background)
+2026-11-28 19:38:53,225 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:53,427 - INFO - Iteration 2: Top term 'GOBP_REGULATION_OF_AUTOPHAGY' has p-value 1.0555130836673875e-05 and overlap size 19
+2026-11-28 19:38:53,427 - INFO - Overlap genes: {'USP20', 'CAMKK2', 'TOM1', 'MAGEA6', 'TLK2', 'RAB8A', 'RB1CC1', 'UBQLN2', 'AKT1', 'ZMPSTE24', 'MAP3K7', 'MAGEA3', 'RNF5', 'LYPLA1', 'OSBPL7', 'PRKAA1', 'WNK1', 'DAPK2', 'RALB'}
+2026-11-28 19:38:53,427 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:53,427 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 2: Found term 'GOBP_REGULATION_OF_AUTOPHAGY' (p=0.0000, overlap=19)
+2026-11-28 19:38:53,515 - INFO - Saved iteration 2 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_002.tsv
+2026-11-28 19:38:53,516 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 3: Processing 273 remaining genes
+2026-11-28 19:38:53,517 - INFO - Input Gene Set
+
+	273 genes
+2026-11-28 19:38:53,517 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:53,521 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:53,522 - INFO - Input gene set filtered: 273 → 241 genes (intersected with library-specific background)
+2026-11-28 19:38:53,528 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:53,681 - INFO - Iteration 3: Top term 'GOBP_RESPONSE_TO_INTERLEUKIN_7' has p-value 0.0002944192582725969 and overlap size 4
+2026-11-28 19:38:53,682 - INFO - Overlap genes: {'JAK1', 'PDIA3', 'ATP5F1B', 'STIP1'}
+2026-11-28 19:38:53,682 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:53,682 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 3: Found term 'GOBP_RESPONSE_TO_INTERLEUKIN_7' (p=0.0003, overlap=4)
+2026-11-28 19:38:53,748 - INFO - Saved iteration 3 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_003.tsv
+2026-11-28 19:38:53,749 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 4: Processing 269 remaining genes
+2026-11-28 19:38:53,749 - INFO - Input Gene Set
+
+	269 genes
+2026-11-28 19:38:53,749 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:53,754 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:53,754 - INFO - Input gene set filtered: 269 → 237 genes (intersected with library-specific background)
+2026-11-28 19:38:53,761 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:53,915 - INFO - Iteration 4: Top term 'GOBP_ELECTRON_TRANSPORT_CHAIN' has p-value 0.00030803375605937687 and overlap size 8
+2026-11-28 19:38:53,916 - INFO - Overlap genes: {'NDUFA10', 'NDUFS6', 'NDUFS3', 'NDUFA6', 'NDUFS7', 'THAP11', 'UQCRC1', 'CYCS'}
+2026-11-28 19:38:53,916 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:53,916 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 4: Found term 'GOBP_ELECTRON_TRANSPORT_CHAIN' (p=0.0003, overlap=8)
+2026-11-28 19:38:53,987 - INFO - Saved iteration 4 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_004.tsv
+2026-11-28 19:38:53,988 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 5: Processing 261 remaining genes
+2026-11-28 19:38:53,989 - INFO - Input Gene Set
+
+	261 genes
+2026-11-28 19:38:53,989 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:53,993 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:53,993 - INFO - Input gene set filtered: 261 → 229 genes (intersected with library-specific background)
+2026-11-28 19:38:53,999 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:54,154 - INFO - Iteration 5: Top term 'GOBP_VIRAL_LIFE_CYCLE' has p-value 0.0003667500043961898 and overlap size 13
+2026-11-28 19:38:54,154 - INFO - Overlap genes: {'CAV2', 'RAD23A', 'DPP4', 'LAMTOR5', 'CD4', 'TNFRSF4', 'VPS4A', 'SLC10A1', 'CXCR4', 'RNASEL', 'PKN2', 'GRK2', 'DDX3X'}
+2026-11-28 19:38:54,155 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:54,155 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 5: Found term 'GOBP_VIRAL_LIFE_CYCLE' (p=0.0004, overlap=13)
+2026-11-28 19:38:54,233 - INFO - Saved iteration 5 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_005.tsv
+2026-11-28 19:38:54,234 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 6: Processing 248 remaining genes
+2026-11-28 19:38:54,235 - INFO - Input Gene Set
+
+	248 genes
+2026-11-28 19:38:54,235 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:54,239 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:54,239 - INFO - Input gene set filtered: 248 → 216 genes (intersected with library-specific background)
+2026-11-28 19:38:54,246 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:54,396 - INFO - Iteration 6: Top term 'GOBP_ASPARTATE_FAMILY_AMINO_ACID_CATABOLIC_PROCESS' has p-value 0.0003674382294093548 and overlap size 3
+2026-11-28 19:38:54,396 - INFO - Overlap genes: {'DLST', 'AASS', 'DDO'}
+2026-11-28 19:38:54,397 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:54,397 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 6: Found term 'GOBP_ASPARTATE_FAMILY_AMINO_ACID_CATABOLIC_PROCESS' (p=0.0004, overlap=3)
+2026-11-28 19:38:54,463 - INFO - Saved iteration 6 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_006.tsv
+2026-11-28 19:38:54,464 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 7: Processing 245 remaining genes
+2026-11-28 19:38:54,464 - INFO - Input Gene Set
+
+	245 genes
+2026-11-28 19:38:54,464 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:54,469 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:54,469 - INFO - Input gene set filtered: 245 → 213 genes (intersected with library-specific background)
+2026-11-28 19:38:54,476 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:54,631 - INFO - Iteration 7: Top term 'GOBP_PROTEIN_K48_LINKED_UBIQUITINATION' has p-value 0.00039606321758465764 and overlap size 7
+2026-11-28 19:38:54,632 - INFO - Overlap genes: {'UBR5', 'UBE2E1', 'GABARAP', 'DTX4', 'ANAPC2', 'PELI1', 'NT5C2'}
+2026-11-28 19:38:54,632 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:54,632 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 7: Found term 'GOBP_PROTEIN_K48_LINKED_UBIQUITINATION' (p=0.0004, overlap=7)
+2026-11-28 19:38:54,755 - INFO - Saved iteration 7 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_007.tsv
+2026-11-28 19:38:54,755 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 8: Processing 238 remaining genes
+2026-11-28 19:38:54,756 - INFO - Input Gene Set
+
+	238 genes
+2026-11-28 19:38:54,756 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:54,761 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:54,761 - INFO - Input gene set filtered: 238 → 206 genes (intersected with library-specific background)
+2026-11-28 19:38:54,768 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:54,922 - INFO - Iteration 8: Top term 'GOBP_RESPONSE_TO_TEMPERATURE_STIMULUS' has p-value 0.0019318429220993904 and overlap size 8
+2026-11-28 19:38:54,922 - INFO - Overlap genes: {'IL1A', 'ZNF516', 'DNAJA2', 'DNAJB6', 'LRP11', 'SLC25A27', 'MICB', 'OPN4'}
+2026-11-28 19:38:54,922 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:54,923 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 8: Found term 'GOBP_RESPONSE_TO_TEMPERATURE_STIMULUS' (p=0.0019, overlap=8)
+2026-11-28 19:38:54,993 - INFO - Saved iteration 8 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_008.tsv
+2026-11-28 19:38:54,994 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 9: Processing 230 remaining genes
+2026-11-28 19:38:54,994 - INFO - Input Gene Set
+
+	230 genes
+2026-11-28 19:38:54,995 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:54,999 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:54,999 - INFO - Input gene set filtered: 230 → 198 genes (intersected with library-specific background)
+2026-11-28 19:38:55,006 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:55,163 - INFO - Iteration 9: Top term 'GOBP_TRIGLYCERIDE_BIOSYNTHETIC_PROCESS' has p-value 0.0017502346766819054 and overlap size 4
+2026-11-28 19:38:55,164 - INFO - Overlap genes: {'GPAT2', 'PCK1', 'MOGAT1', 'SIK1'}
+2026-11-28 19:38:55,164 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:55,164 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 9: Found term 'GOBP_TRIGLYCERIDE_BIOSYNTHETIC_PROCESS' (p=0.0018, overlap=4)
+2026-11-28 19:38:55,231 - INFO - Saved iteration 9 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_009.tsv
+2026-11-28 19:38:55,231 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 10: Processing 226 remaining genes
+2026-11-28 19:38:55,232 - INFO - Input Gene Set
+
+	226 genes
+2026-11-28 19:38:55,232 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:55,237 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:55,237 - INFO - Input gene set filtered: 226 → 194 genes (intersected with library-specific background)
+2026-11-28 19:38:55,244 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:55,396 - INFO - Iteration 10: Top term 'GOBP_POSITIVE_REGULATION_OF_NOTCH_SIGNALING_PATHWAY' has p-value 0.0026689300611582468 and overlap size 4
+2026-11-28 19:38:55,396 - INFO - Overlap genes: {'AAK1', 'BMP2K', 'HES1', 'NOTCH2NLA'}
+2026-11-28 19:38:55,396 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:55,396 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 10: Found term 'GOBP_POSITIVE_REGULATION_OF_NOTCH_SIGNALING_PATHWAY' (p=0.0027, overlap=4)
+2026-11-28 19:38:55,459 - INFO - Saved iteration 10 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_010.tsv
+2026-11-28 19:38:55,460 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 11: Processing 222 remaining genes
+2026-11-28 19:38:55,460 - INFO - Input Gene Set
+
+	222 genes
+2026-11-28 19:38:55,460 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:55,465 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:55,465 - INFO - Input gene set filtered: 222 → 190 genes (intersected with library-specific background)
+2026-11-28 19:38:55,471 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:55,620 - INFO - Iteration 11: Top term 'GOBP_REGULATION_OF_EXTRINSIC_APOPTOTIC_SIGNALING_PATHWAY_VIA_DEATH_DOMAIN_RECEPTORS' has p-value 0.002670803012566017 and overlap size 4
+2026-11-28 19:38:55,621 - INFO - Overlap genes: {'GRINA', 'BRCA1', 'SFRP1', 'CFLAR'}
+2026-11-28 19:38:55,621 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:55,621 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 11: Found term 'GOBP_REGULATION_OF_EXTRINSIC_APOPTOTIC_SIGNALING_PATHWAY_VIA_DEATH_DOMAIN_RECEPTORS' (p=0.0027, overlap=4)
+2026-11-28 19:38:55,686 - INFO - Saved iteration 11 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_011.tsv
+2026-11-28 19:38:55,687 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 12: Processing 218 remaining genes
+2026-11-28 19:38:55,688 - INFO - Input Gene Set
+
+	218 genes
+2026-11-28 19:38:55,688 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:55,692 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:55,693 - INFO - Input gene set filtered: 218 → 186 genes (intersected with library-specific background)
+2026-11-28 19:38:55,699 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:55,849 - INFO - Iteration 12: Top term 'GOBP_RNA_LOCALIZATION' has p-value 0.0026558926128822254 and overlap size 8
+2026-11-28 19:38:55,850 - INFO - Overlap genes: {'XPO1', 'THOC6', 'HNRNPU', 'MCM3AP', 'UPF3B', 'BICD2', 'NUP155', 'CCT2'}
+2026-11-28 19:38:55,850 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:55,850 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 12: Found term 'GOBP_RNA_LOCALIZATION' (p=0.0027, overlap=8)
+2026-11-28 19:38:55,973 - INFO - Saved iteration 12 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_012.tsv
+2026-11-28 19:38:55,974 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 13: Processing 210 remaining genes
+2026-11-28 19:38:55,974 - INFO - Input Gene Set
+
+	210 genes
+2026-11-28 19:38:55,974 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:55,979 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:55,979 - INFO - Input gene set filtered: 210 → 178 genes (intersected with library-specific background)
+2026-11-28 19:38:55,986 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:56,129 - INFO - Iteration 13: Top term 'GOBP_RESPONSE_TO_ATP' has p-value 0.0057487426996319655 and overlap size 3
+2026-11-28 19:38:56,129 - INFO - Overlap genes: {'PKLR', 'P2RX5', 'CIB2'}
+2026-11-28 19:38:56,129 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:56,130 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 13: Found term 'GOBP_RESPONSE_TO_ATP' (p=0.0057, overlap=3)
+2026-11-28 19:38:56,191 - INFO - Saved iteration 13 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_013.tsv
+2026-11-28 19:38:56,191 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 14: Processing 207 remaining genes
+2026-11-28 19:38:56,192 - INFO - Input Gene Set
+
+	207 genes
+2026-11-28 19:38:56,192 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:56,196 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:56,196 - INFO - Input gene set filtered: 207 → 175 genes (intersected with library-specific background)
+2026-11-28 19:38:56,202 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:56,346 - INFO - Iteration 14: Top term 'GOBP_AXON_EXTENSION' has p-value 0.007966118755869755 and overlap size 5
+2026-11-28 19:38:56,346 - INFO - Overlap genes: {'NLGN3', 'DVL1', 'SLC9A6', 'SMURF1', 'SEMA5B'}
+2026-11-28 19:38:56,347 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:56,347 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 14: Found term 'GOBP_AXON_EXTENSION' (p=0.0080, overlap=5)
+2026-11-28 19:38:56,410 - INFO - Saved iteration 14 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_014.tsv
+2026-11-28 19:38:56,410 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 15: Processing 202 remaining genes
+2026-11-28 19:38:56,411 - INFO - Input Gene Set
+
+	202 genes
+2026-11-28 19:38:56,411 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:56,416 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:56,416 - INFO - Input gene set filtered: 202 → 170 genes (intersected with library-specific background)
+2026-11-28 19:38:56,423 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:56,569 - INFO - Iteration 15: Top term 'GOBP_RETINOIC_ACID_RECEPTOR_SIGNALING_PATHWAY' has p-value 0.007527470251803083 and overlap size 3
+2026-11-28 19:38:56,570 - INFO - Overlap genes: {'VDR', 'KLF2', 'RARB'}
+2026-11-28 19:38:56,570 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:56,570 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 15: Found term 'GOBP_RETINOIC_ACID_RECEPTOR_SIGNALING_PATHWAY' (p=0.0075, overlap=3)
+2026-11-28 19:38:56,631 - INFO - Saved iteration 15 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_015.tsv
+2026-11-28 19:38:56,632 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 16: Processing 199 remaining genes
+2026-11-28 19:38:56,632 - INFO - Input Gene Set
+
+	199 genes
+2026-11-28 19:38:56,633 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:56,637 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:56,638 - INFO - Input gene set filtered: 199 → 167 genes (intersected with library-specific background)
+2026-11-28 19:38:56,646 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:56,792 - INFO - Iteration 16: Top term 'GOBP_RESPIRATORY_BURST' has p-value 0.008269322826187068 and overlap size 3
+2026-11-28 19:38:56,793 - INFO - Overlap genes: {'BCR', 'MPO', 'CAMK1D'}
+2026-11-28 19:38:56,793 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:56,793 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 16: Found term 'GOBP_RESPIRATORY_BURST' (p=0.0083, overlap=3)
+2026-11-28 19:38:56,855 - INFO - Saved iteration 16 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_016.tsv
+2026-11-28 19:38:56,856 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 17: Processing 196 remaining genes
+2026-11-28 19:38:56,856 - INFO - Input Gene Set
+
+	196 genes
+2026-11-28 19:38:56,856 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:56,861 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:56,861 - INFO - Input gene set filtered: 196 → 164 genes (intersected with library-specific background)
+2026-11-28 19:38:56,868 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:57,081 - INFO - Iteration 17: Top term 'GOBP_REGULATION_OF_INTRINSIC_APOPTOTIC_SIGNALING_PATHWAY_IN_RESPONSE_TO_DNA_DAMAGE' has p-value 0.008427783701914856 and overlap size 3
+2026-11-28 19:38:57,082 - INFO - Overlap genes: {'BCL2L12', 'NACC2', 'TPT1'}
+2026-11-28 19:38:57,082 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:57,082 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 17: Found term 'GOBP_REGULATION_OF_INTRINSIC_APOPTOTIC_SIGNALING_PATHWAY_IN_RESPONSE_TO_DNA_DAMAGE' (p=0.0084, overlap=3)
+2026-11-28 19:38:57,140 - INFO - Saved iteration 17 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_017.tsv
+2026-11-28 19:38:57,141 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 18: Processing 193 remaining genes
+2026-11-28 19:38:57,142 - INFO - Input Gene Set
+
+	193 genes
+2026-11-28 19:38:57,142 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:57,146 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:57,147 - INFO - Input gene set filtered: 193 → 161 genes (intersected with library-specific background)
+2026-11-28 19:38:57,155 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:57,299 - INFO - Iteration 18: Top term 'GOBP_PROTEIN_TARGETING_TO_MEMBRANE' has p-value 0.009144298321571827 and overlap size 5
+2026-11-28 19:38:57,300 - INFO - Overlap genes: {'BAG6', 'SSR3', 'ZDHHC20', 'SEC61G', 'SSR1'}
+2026-11-28 19:38:57,300 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:57,300 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 18: Found term 'GOBP_PROTEIN_TARGETING_TO_MEMBRANE' (p=0.0091, overlap=5)
+2026-11-28 19:38:57,360 - INFO - Saved iteration 18 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_018.tsv
+2026-11-28 19:38:57,361 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 19: Processing 188 remaining genes
+2026-11-28 19:38:57,361 - INFO - Input Gene Set
+
+	188 genes
+2026-11-28 19:38:57,361 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:57,366 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:57,366 - INFO - Input gene set filtered: 188 → 156 genes (intersected with library-specific background)
+2026-11-28 19:38:57,374 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:57,517 - INFO - Iteration 19: Top term 'GOBP_TYPE_I_INTERFERON_PRODUCTION' has p-value 0.009126681751125486 and overlap size 5
+2026-11-28 19:38:57,517 - INFO - Overlap genes: {'NLRC3', 'DHX58', 'UAP1', 'RNF26', 'ARRDC4'}
+2026-11-28 19:38:57,517 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:57,518 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 19: Found term 'GOBP_TYPE_I_INTERFERON_PRODUCTION' (p=0.0091, overlap=5)
+2026-11-28 19:38:57,576 - INFO - Saved iteration 19 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_019.tsv
+2026-11-28 19:38:57,577 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 20: Processing 183 remaining genes
+2026-11-28 19:38:57,578 - INFO - Input Gene Set
+
+	183 genes
+2026-11-28 19:38:57,578 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:57,582 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:57,582 - INFO - Input gene set filtered: 183 → 151 genes (intersected with library-specific background)
+2026-11-28 19:38:57,589 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:57,728 - INFO - Iteration 20: Top term 'GOBP_SIGNALING_RECEPTOR_LIGAND_PRECURSOR_PROCESSING' has p-value 0.008703887115669193 and overlap size 3
+2026-11-28 19:38:57,729 - INFO - Overlap genes: {'BACE2', 'CTSZ', 'PCSK6'}
+2026-11-28 19:38:57,730 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:57,730 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 20: Found term 'GOBP_SIGNALING_RECEPTOR_LIGAND_PRECURSOR_PROCESSING' (p=0.0087, overlap=3)
+2026-11-28 19:38:57,791 - INFO - Saved iteration 20 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_020.tsv
+2026-11-28 19:38:57,792 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 21: Processing 180 remaining genes
+2026-11-28 19:38:57,792 - INFO - Input Gene Set
+
+	180 genes
+2026-11-28 19:38:57,792 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:57,797 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:57,797 - INFO - Input gene set filtered: 180 → 148 genes (intersected with library-specific background)
+2026-11-28 19:38:57,804 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:57,948 - INFO - Iteration 21: Top term 'GOBP_SULFUR_COMPOUND_CATABOLIC_PROCESS' has p-value 0.009290705856065175 and overlap size 3
+2026-11-28 19:38:57,949 - INFO - Overlap genes: {'HGSNAT', 'CDO1', 'SUCLG2'}
+2026-11-28 19:38:57,949 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:57,949 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 21: Found term 'GOBP_SULFUR_COMPOUND_CATABOLIC_PROCESS' (p=0.0093, overlap=3)
+2026-11-28 19:38:58,013 - INFO - Saved iteration 21 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_021.tsv
+2026-11-28 19:38:58,013 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 22: Processing 177 remaining genes
+2026-11-28 19:38:58,014 - INFO - Input Gene Set
+
+	177 genes
+2026-11-28 19:38:58,014 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:58,019 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:58,019 - INFO - Input gene set filtered: 177 → 145 genes (intersected with library-specific background)
+2026-11-28 19:38:58,026 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:58,168 - INFO - Iteration 22: Top term 'GOBP_NEGATIVE_REGULATION_OF_COLD_INDUCED_THERMOGENESIS' has p-value 0.009311475024170776 and overlap size 3
+2026-11-28 19:38:58,168 - INFO - Overlap genes: {'IL18R1', 'PCTP', 'ADAMTS5'}
+2026-11-28 19:38:58,168 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:58,169 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 22: Found term 'GOBP_NEGATIVE_REGULATION_OF_COLD_INDUCED_THERMOGENESIS' (p=0.0093, overlap=3)
+2026-11-28 19:38:58,295 - INFO - Saved iteration 22 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Biological.Process_iteration_022.tsv
+2026-11-28 19:38:58,296 - INFO - Collection C5: Gene Ontology: Biological Process: Iteration 23: Processing 174 remaining genes
+2026-11-28 19:38:58,297 - INFO - Input Gene Set
+
+	174 genes
+2026-11-28 19:38:58,297 - INFO - Calculating p-values for C5: Gene Ontology: Biological Process
+2026-11-28 19:38:58,301 - INFO - Library-specific background size: 16032 genes (intersection of 23391 background genes and 16032 filtered library genes from 5357 terms within size range [10, 600])
+2026-11-28 19:38:58,301 - INFO - Input gene set filtered: 174 → 142 genes (intersected with library-specific background)
+2026-11-28 19:38:58,309 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:58,448 - INFO - Top term p-value >= threshold; terminating.
+2026-11-28 19:38:58,448 - INFO - Collection C5: Gene Ontology: Biological Process: Top term p-value (0.015410445444587282) >= threshold (0.01); terminating.
+2026-11-28 19:38:58,448 - INFO - Collection C5: Gene Ontology: Biological Process: Completed iterative enrichment: 22 iterations, 174 genes remaining
+2026-11-28 19:38:58,454 - INFO - Saved 22 iterations to step13_r2/qvalues/Zhou_2008_HIV_dependency_factors.symbols_20261128_193851/C5: Gene Ontology: Biological Process_iterative_results.tsv
+2026-11-28 19:38:58,455 - INFO - Processing collection: C5: Gene Ontology: Cellular Component
+2026-11-28 19:38:58,455 - INFO - Collection C5: Gene Ontology: Cellular Component: Starting iterative enrichment with 307 genes
+2026-11-28 19:38:58,455 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 1: Processing 307 remaining genes
+2026-11-28 19:38:58,456 - INFO - Input Gene Set
+
+	307 genes
+2026-11-28 19:38:58,456 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-28 19:38:58,460 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-28 19:38:58,461 - INFO - Input gene set filtered: 307 → 213 genes (intersected with library-specific background)
+2026-11-28 19:38:58,467 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:58,509 - INFO - Iteration 1: Top term 'GOCC_CORE_MEDIATOR_COMPLEX' has p-value 5.0943266244584595e-15 and overlap size 12
+2026-11-28 19:38:58,509 - INFO - Overlap genes: {'MED4', 'MED17', 'MED7', 'MED19', 'MED31', 'MED20', 'MED27', 'MED6', 'MED28', 'MED26', 'MED8', 'MED11'}
+2026-11-28 19:38:58,509 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:58,509 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 1: Found term 'GOCC_CORE_MEDIATOR_COMPLEX' (p=0.0000, overlap=12)
+2026-11-28 19:38:58,510 - INFO - Saved first iteration as regular enrichment
+2026-11-28 19:38:58,520 - INFO - Saved iteration 1 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Cellular.Component_iteration_001.tsv
+2026-11-28 19:38:58,521 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 2: Processing 295 remaining genes
+2026-11-28 19:38:58,521 - INFO - Input Gene Set
+
+	295 genes
+2026-11-28 19:38:58,522 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-28 19:38:58,523 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-28 19:38:58,523 - INFO - Input gene set filtered: 295 → 201 genes (intersected with library-specific background)
+2026-11-28 19:38:58,529 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:58,571 - INFO - Iteration 2: Top term 'GOCC_NADH_DEHYDROGENASE_COMPLEX' has p-value 0.0004952806145506107 and overlap size 5
+2026-11-28 19:38:58,571 - INFO - Overlap genes: {'NDUFA10', 'NDUFS7', 'NDUFS6', 'NDUFS3', 'NDUFA6'}
+2026-11-28 19:38:58,571 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:58,572 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 2: Found term 'GOCC_NADH_DEHYDROGENASE_COMPLEX' (p=0.0005, overlap=5)
+2026-11-28 19:38:58,582 - INFO - Saved iteration 2 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Cellular.Component_iteration_002.tsv
+2026-11-28 19:38:58,582 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 3: Processing 290 remaining genes
+2026-11-28 19:38:58,583 - INFO - Input Gene Set
+
+	290 genes
+2026-11-28 19:38:58,583 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-28 19:38:58,584 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-28 19:38:58,584 - INFO - Input gene set filtered: 290 → 196 genes (intersected with library-specific background)
+2026-11-28 19:38:58,591 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:58,631 - INFO - Iteration 3: Top term 'GOCC_RNA_POLYMERASE_I_COMPLEX' has p-value 0.0010642350472656384 and overlap size 3
+2026-11-28 19:38:58,632 - INFO - Overlap genes: {'POLR2L', 'POLR2K', 'POLR2H'}
+2026-11-28 19:38:58,632 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:58,632 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 3: Found term 'GOCC_RNA_POLYMERASE_I_COMPLEX' (p=0.0011, overlap=3)
+2026-11-28 19:38:58,642 - INFO - Saved iteration 3 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Cellular.Component_iteration_003.tsv
+2026-11-28 19:38:58,642 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 4: Processing 287 remaining genes
+2026-11-28 19:38:58,643 - INFO - Input Gene Set
+
+	287 genes
+2026-11-28 19:38:58,643 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-28 19:38:58,645 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-28 19:38:58,645 - INFO - Input gene set filtered: 287 → 193 genes (intersected with library-specific background)
+2026-11-28 19:38:58,651 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:58,693 - INFO - Iteration 4: Top term 'GOCC_VACUOLAR_LUMEN' has p-value 0.0022188096316432255 and overlap size 9
+2026-11-28 19:38:58,693 - INFO - Overlap genes: {'GM2A', 'SDC1', 'ACP2', 'DYNC1H1', 'HGSNAT', 'APOB', 'DAPK2', 'MPO', 'CCT2'}
+2026-11-28 19:38:58,694 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:58,694 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 4: Found term 'GOCC_VACUOLAR_LUMEN' (p=0.0022, overlap=9)
+2026-11-28 19:38:58,704 - INFO - Saved iteration 4 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Cellular.Component_iteration_004.tsv
+2026-11-28 19:38:58,704 - INFO - Collection C5: Gene Ontology: Cellular Component: Iteration 5: Processing 278 remaining genes
+2026-11-28 19:38:58,705 - INFO - Input Gene Set
+
+	278 genes
+2026-11-28 19:38:58,705 - INFO - Calculating p-values for C5: Gene Ontology: Cellular Component
+2026-11-28 19:38:58,706 - INFO - Library-specific background size: 12091 genes (intersection of 23391 background genes and 12091 filtered library genes from 684 terms within size range [10, 600])
+2026-11-28 19:38:58,707 - INFO - Input gene set filtered: 278 → 184 genes (intersected with library-specific background)
+2026-11-28 19:38:58,714 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:58,756 - INFO - Top term p-value >= threshold; terminating.
+2026-11-28 19:38:58,757 - INFO - Collection C5: Gene Ontology: Cellular Component: Top term p-value (0.015517152443093754) >= threshold (0.01); terminating.
+2026-11-28 19:38:58,757 - INFO - Collection C5: Gene Ontology: Cellular Component: Completed iterative enrichment: 4 iterations, 278 genes remaining
+2026-11-28 19:38:58,760 - INFO - Saved 4 iterations to step13_r2/qvalues/Zhou_2008_HIV_dependency_factors.symbols_20261128_193851/C5: Gene Ontology: Cellular Component_iterative_results.tsv
+2026-11-28 19:38:58,761 - INFO - Processing collection: C5: Gene Ontology: Molecular Function
+2026-11-28 19:38:58,761 - INFO - Collection C5: Gene Ontology: Molecular Function: Starting iterative enrichment with 307 genes
+2026-11-28 19:38:58,761 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 1: Processing 307 remaining genes
+2026-11-28 19:38:58,762 - INFO - Input Gene Set
+
+	307 genes
+2026-11-28 19:38:58,762 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-28 19:38:58,768 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-28 19:38:58,768 - INFO - Input gene set filtered: 307 → 259 genes (intersected with library-specific background)
+2026-11-28 19:38:58,774 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:58,832 - INFO - Iteration 1: Top term 'GOMF_PROTEIN_SERINE_KINASE_ACTIVITY' has p-value 5.089177109481993e-05 and overlap size 19
+2026-11-28 19:38:58,833 - INFO - Overlap genes: {'BCR', 'BMP2K', 'CAMKK2', 'AAK1', 'TLK2', 'MAP3K14', 'ERN2', 'RPS6KA3', 'AKT1', 'PKN2', 'MAP3K9', 'MAP3K7', 'SIK1', 'NEK9', 'SRPK3', 'PRKAA1', 'CAMK1D', 'WNK1', 'DAPK2'}
+2026-11-28 19:38:58,833 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:58,833 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 1: Found term 'GOMF_PROTEIN_SERINE_KINASE_ACTIVITY' (p=0.0001, overlap=19)
+2026-11-28 19:38:58,834 - INFO - Saved first iteration as regular enrichment
+2026-11-28 19:38:58,853 - INFO - Saved iteration 1 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Molecular.Function_iteration_001.tsv
+2026-11-28 19:38:58,854 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 2: Processing 288 remaining genes
+2026-11-28 19:38:58,854 - INFO - Input Gene Set
+
+	288 genes
+2026-11-28 19:38:58,854 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-28 19:38:58,856 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-28 19:38:58,856 - INFO - Input gene set filtered: 288 → 240 genes (intersected with library-specific background)
+2026-11-28 19:38:58,862 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:58,914 - INFO - Iteration 2: Top term 'GOMF_OXIDOREDUCTION_DRIVEN_ACTIVE_TRANSMEMBRANE_TRANSPORTER_ACTIVITY' has p-value 0.0003251385499732529 and overlap size 6
+2026-11-28 19:38:58,915 - INFO - Overlap genes: {'NDUFA10', 'NDUFS7', 'NDUFS6', 'NDUFS3', 'NDUFA6', 'UQCRC1'}
+2026-11-28 19:38:58,915 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:58,915 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 2: Found term 'GOMF_OXIDOREDUCTION_DRIVEN_ACTIVE_TRANSMEMBRANE_TRANSPORTER_ACTIVITY' (p=0.0003, overlap=6)
+2026-11-28 19:38:58,931 - INFO - Saved iteration 2 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Molecular.Function_iteration_002.tsv
+2026-11-28 19:38:58,931 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 3: Processing 282 remaining genes
+2026-11-28 19:38:58,932 - INFO - Input Gene Set
+
+	282 genes
+2026-11-28 19:38:58,932 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-28 19:38:58,934 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-28 19:38:58,934 - INFO - Input gene set filtered: 282 → 234 genes (intersected with library-specific background)
+2026-11-28 19:38:58,940 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:58,992 - INFO - Iteration 3: Top term 'GOMF_ATP_DEPENDENT_ACTIVITY_ACTING_ON_RNA' has p-value 0.00036744572633388273 and overlap size 7
+2026-11-28 19:38:58,993 - INFO - Overlap genes: {'DDX50', 'DHX58', 'EIF4A2', 'FANCM', 'DDX60L', 'DDX49', 'DDX3X'}
+2026-11-28 19:38:58,993 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:58,993 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 3: Found term 'GOMF_ATP_DEPENDENT_ACTIVITY_ACTING_ON_RNA' (p=0.0004, overlap=7)
+2026-11-28 19:38:59,011 - INFO - Saved iteration 3 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Molecular.Function_iteration_003.tsv
+2026-11-28 19:38:59,012 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 4: Processing 275 remaining genes
+2026-11-28 19:38:59,012 - INFO - Input Gene Set
+
+	275 genes
+2026-11-28 19:38:59,013 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-28 19:38:59,014 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-28 19:38:59,014 - INFO - Input gene set filtered: 275 → 227 genes (intersected with library-specific background)
+2026-11-28 19:38:59,021 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:59,071 - INFO - Iteration 4: Top term 'GOMF_TRANSCRIPTION_COREGULATOR_ACTIVITY' has p-value 0.000410932267415698 and overlap size 20
+2026-11-28 19:38:59,072 - INFO - Overlap genes: {'TBL1X', 'MED20', 'BRCA1', 'MED7', 'MED19', 'MED31', 'AASS', 'BRDT', 'HNRNPU', 'SRSF2', 'MED27', 'MED26', 'BCLAF1', 'MED11', 'MED4', 'MED17', 'ANKRD1', 'NFKB1', 'MED6', 'MED8'}
+2026-11-28 19:38:59,072 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:59,072 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 4: Found term 'GOMF_TRANSCRIPTION_COREGULATOR_ACTIVITY' (p=0.0004, overlap=20)
+2026-11-28 19:38:59,093 - INFO - Saved iteration 4 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Molecular.Function_iteration_004.tsv
+2026-11-28 19:38:59,094 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 5: Processing 255 remaining genes
+2026-11-28 19:38:59,094 - INFO - Input Gene Set
+
+	255 genes
+2026-11-28 19:38:59,094 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-28 19:38:59,096 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-28 19:38:59,096 - INFO - Input gene set filtered: 255 → 207 genes (intersected with library-specific background)
+2026-11-28 19:38:59,102 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:59,153 - INFO - Iteration 5: Top term 'GOMF_3_5_DNA_EXONUCLEASE_ACTIVITY' has p-value 0.0015895250774742382 and overlap size 3
+2026-11-28 19:38:59,153 - INFO - Overlap genes: {'POLE', 'MRE11', 'TATDN1'}
+2026-11-28 19:38:59,153 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:59,154 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 5: Found term 'GOMF_3_5_DNA_EXONUCLEASE_ACTIVITY' (p=0.0016, overlap=3)
+2026-11-28 19:38:59,170 - INFO - Saved iteration 5 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Molecular.Function_iteration_005.tsv
+2026-11-28 19:38:59,170 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 6: Processing 252 remaining genes
+2026-11-28 19:38:59,171 - INFO - Input Gene Set
+
+	252 genes
+2026-11-28 19:38:59,171 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-28 19:38:59,173 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-28 19:38:59,173 - INFO - Input gene set filtered: 252 → 204 genes (intersected with library-specific background)
+2026-11-28 19:38:59,181 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:59,232 - INFO - Iteration 6: Top term 'GOMF_POLYUBIQUITIN_MODIFICATION_DEPENDENT_PROTEIN_BINDING' has p-value 0.0017227956255739694 and overlap size 5
+2026-11-28 19:38:59,232 - INFO - Overlap genes: {'RAD23A', 'BAG6', 'UBQLN2', 'TOM1', 'PSMD4'}
+2026-11-28 19:38:59,233 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:59,233 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 6: Found term 'GOMF_POLYUBIQUITIN_MODIFICATION_DEPENDENT_PROTEIN_BINDING' (p=0.0017, overlap=5)
+2026-11-28 19:38:59,250 - INFO - Saved iteration 6 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Molecular.Function_iteration_006.tsv
+2026-11-28 19:38:59,250 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 7: Processing 247 remaining genes
+2026-11-28 19:38:59,251 - INFO - Input Gene Set
+
+	247 genes
+2026-11-28 19:38:59,251 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-28 19:38:59,253 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-28 19:38:59,253 - INFO - Input gene set filtered: 247 → 199 genes (intersected with library-specific background)
+2026-11-28 19:38:59,259 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:59,313 - INFO - Iteration 7: Top term 'GOMF_NUCLEAR_RETINOID_X_RECEPTOR_BINDING' has p-value 0.0017054602998171644 and overlap size 3
+2026-11-28 19:38:59,313 - INFO - Overlap genes: {'VDR', 'RARB', 'NR4A2'}
+2026-11-28 19:38:59,314 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:59,314 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 7: Found term 'GOMF_NUCLEAR_RETINOID_X_RECEPTOR_BINDING' (p=0.0017, overlap=3)
+2026-11-28 19:38:59,330 - INFO - Saved iteration 7 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Molecular.Function_iteration_007.tsv
+2026-11-28 19:38:59,330 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 8: Processing 244 remaining genes
+2026-11-28 19:38:59,330 - INFO - Input Gene Set
+
+	244 genes
+2026-11-28 19:38:59,331 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-28 19:38:59,332 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-28 19:38:59,332 - INFO - Input gene set filtered: 244 → 196 genes (intersected with library-specific background)
+2026-11-28 19:38:59,339 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:59,392 - INFO - Iteration 8: Top term 'GOMF_ENDOPEPTIDASE_ACTIVITY' has p-value 0.004115823071426967 and overlap size 17
+2026-11-28 19:38:59,393 - INFO - Overlap genes: {'BACE2', 'USP20', 'MMP13', 'SENP5', 'DPP4', 'SERPINB6', 'SFRP1', 'CFLAR', 'KLK12', 'ADAMTS5', 'F2', 'CRIM1', 'MMP9', 'ZMPSTE24', 'PCSK6', 'PDIA3', 'CTSZ'}
+2026-11-28 19:38:59,393 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:59,393 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 8: Found term 'GOMF_ENDOPEPTIDASE_ACTIVITY' (p=0.0041, overlap=17)
+2026-11-28 19:38:59,413 - INFO - Saved iteration 8 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Molecular.Function_iteration_008.tsv
+2026-11-28 19:38:59,413 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 9: Processing 227 remaining genes
+2026-11-28 19:38:59,414 - INFO - Input Gene Set
+
+	227 genes
+2026-11-28 19:38:59,414 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-28 19:38:59,416 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-28 19:38:59,416 - INFO - Input gene set filtered: 227 → 179 genes (intersected with library-specific background)
+2026-11-28 19:38:59,422 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:59,476 - INFO - Iteration 9: Top term 'GOMF_GDP_BINDING' has p-value 0.008863412653747307 and overlap size 10
+2026-11-28 19:38:59,476 - INFO - Overlap genes: {'TBC1D10A', 'NGEF', 'SUCLG2', 'RAB8A', 'SBF2', 'RAB28', 'LAMTOR5', 'RAB35', 'LAMTOR2', 'RALB'}
+2026-11-28 19:38:59,477 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:59,477 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 9: Found term 'GOMF_GDP_BINDING' (p=0.0089, overlap=10)
+2026-11-28 19:38:59,493 - INFO - Saved iteration 9 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Molecular.Function_iteration_009.tsv
+2026-11-28 19:38:59,493 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 10: Processing 217 remaining genes
+2026-11-28 19:38:59,494 - INFO - Input Gene Set
+
+	217 genes
+2026-11-28 19:38:59,494 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-28 19:38:59,495 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-28 19:38:59,496 - INFO - Input gene set filtered: 217 → 169 genes (intersected with library-specific background)
+2026-11-28 19:38:59,502 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:59,553 - INFO - Iteration 10: Top term 'GOMF_LIPID_TRANSPORTER_ACTIVITY' has p-value 0.007562100197821899 and overlap size 7
+2026-11-28 19:38:59,554 - INFO - Overlap genes: {'OSBPL7', 'GM2A', 'SLCO2A1', 'PCTP', 'APOB', 'SLC10A1', 'SLC27A6'}
+2026-11-28 19:38:59,554 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:59,554 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 10: Found term 'GOMF_LIPID_TRANSPORTER_ACTIVITY' (p=0.0076, overlap=7)
+2026-11-28 19:38:59,569 - INFO - Saved iteration 10 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Molecular.Function_iteration_010.tsv
+2026-11-28 19:38:59,569 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 11: Processing 210 remaining genes
+2026-11-28 19:38:59,569 - INFO - Input Gene Set
+
+	210 genes
+2026-11-28 19:38:59,570 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-28 19:38:59,571 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-28 19:38:59,572 - INFO - Input gene set filtered: 210 → 162 genes (intersected with library-specific background)
+2026-11-28 19:38:59,578 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:59,631 - INFO - Iteration 11: Top term 'GOMF_DNA_BINDING_TRANSCRIPTION_REPRESSOR_ACTIVITY' has p-value 0.006178635548965479 and overlap size 9
+2026-11-28 19:38:59,632 - INFO - Overlap genes: {'FEZF2', 'POU6F1', 'HMX1', 'RELA', 'ETV3', 'THAP11', 'HES1', 'TCFL5', 'NACC2'}
+2026-11-28 19:38:59,632 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:59,632 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 11: Found term 'GOMF_DNA_BINDING_TRANSCRIPTION_REPRESSOR_ACTIVITY' (p=0.0062, overlap=9)
+2026-11-28 19:38:59,646 - INFO - Saved iteration 11 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Molecular.Function_iteration_011.tsv
+2026-11-28 19:38:59,646 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 12: Processing 201 remaining genes
+2026-11-28 19:38:59,647 - INFO - Input Gene Set
+
+	201 genes
+2026-11-28 19:38:59,647 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-28 19:38:59,649 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-28 19:38:59,649 - INFO - Input gene set filtered: 201 → 153 genes (intersected with library-specific background)
+2026-11-28 19:38:59,657 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:59,710 - INFO - Iteration 12: Top term 'GOMF_TETRAPYRROLE_BINDING' has p-value 0.006159288958261202 and overlap size 6
+2026-11-28 19:38:59,711 - INFO - Overlap genes: {'CYP4F11', 'CYP3A4', 'MPO', 'CYP46A1', 'CYCS', 'PGRMC2'}
+2026-11-28 19:38:59,711 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:59,711 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 12: Found term 'GOMF_TETRAPYRROLE_BINDING' (p=0.0062, overlap=6)
+2026-11-28 19:38:59,727 - INFO - Saved iteration 12 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Molecular.Function_iteration_012.tsv
+2026-11-28 19:38:59,727 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 13: Processing 195 remaining genes
+2026-11-28 19:38:59,728 - INFO - Input Gene Set
+
+	195 genes
+2026-11-28 19:38:59,728 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-28 19:38:59,730 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-28 19:38:59,730 - INFO - Input gene set filtered: 195 → 147 genes (intersected with library-specific background)
+2026-11-28 19:38:59,737 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:59,791 - INFO - Iteration 13: Top term 'GOMF_RNA_POLYMERASE_ACTIVITY' has p-value 0.005956033286582512 and overlap size 3
+2026-11-28 19:38:59,791 - INFO - Overlap genes: {'POLR2L', 'POLR2K', 'POLR2H'}
+2026-11-28 19:38:59,792 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:59,792 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 13: Found term 'GOMF_RNA_POLYMERASE_ACTIVITY' (p=0.0060, overlap=3)
+2026-11-28 19:38:59,807 - INFO - Saved iteration 13 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Molecular.Function_iteration_013.tsv
+2026-11-28 19:38:59,808 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 14: Processing 192 remaining genes
+2026-11-28 19:38:59,808 - INFO - Input Gene Set
+
+	192 genes
+2026-11-28 19:38:59,808 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-28 19:38:59,810 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-28 19:38:59,810 - INFO - Input gene set filtered: 192 → 144 genes (intersected with library-specific background)
+2026-11-28 19:38:59,818 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:59,871 - INFO - Iteration 14: Top term 'GOMF_IMMUNE_RECEPTOR_ACTIVITY' has p-value 0.005918509825306219 and overlap size 6
+2026-11-28 19:38:59,872 - INFO - Overlap genes: {'CMKLR1', 'CD4', 'HLA-DOA', 'CXCR4', 'KLRC2', 'IL18R1'}
+2026-11-28 19:38:59,872 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:59,872 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 14: Found term 'GOMF_IMMUNE_RECEPTOR_ACTIVITY' (p=0.0059, overlap=6)
+2026-11-28 19:38:59,887 - INFO - Saved iteration 14 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Molecular.Function_iteration_014.tsv
+2026-11-28 19:38:59,888 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 15: Processing 186 remaining genes
+2026-11-28 19:38:59,888 - INFO - Input Gene Set
+
+	186 genes
+2026-11-28 19:38:59,889 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-28 19:38:59,890 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-28 19:38:59,890 - INFO - Input gene set filtered: 186 → 138 genes (intersected with library-specific background)
+2026-11-28 19:38:59,898 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:38:59,950 - INFO - Iteration 15: Top term 'GOMF_CARBON_OXYGEN_LYASE_ACTIVITY' has p-value 0.007925094691653643 and overlap size 4
+2026-11-28 19:38:59,950 - INFO - Overlap genes: {'CA2', 'THNSL2', 'NEIL3', 'TGDS'}
+2026-11-28 19:38:59,950 - INFO - Minimum overlap requirement: 3
+2026-11-28 19:38:59,951 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 15: Found term 'GOMF_CARBON_OXYGEN_LYASE_ACTIVITY' (p=0.0079, overlap=4)
+2026-11-28 19:38:59,969 - INFO - Saved iteration 15 results to step13_r2/qvalues/run_20261128_193851_581/C5.Gene.Ontology.Molecular.Function_iteration_015.tsv
+2026-11-28 19:38:59,970 - INFO - Collection C5: Gene Ontology: Molecular Function: Iteration 16: Processing 182 remaining genes
+2026-11-28 19:38:59,970 - INFO - Input Gene Set
+
+	182 genes
+2026-11-28 19:38:59,970 - INFO - Calculating p-values for C5: Gene Ontology: Molecular Function
+2026-11-28 19:38:59,972 - INFO - Library-specific background size: 13870 genes (intersection of 23391 background genes and 13870 filtered library genes from 1164 terms within size range [10, 600])
+2026-11-28 19:38:59,972 - INFO - Input gene set filtered: 182 → 134 genes (intersected with library-specific background)
+2026-11-28 19:38:59,981 - INFO - Initializing the MP pool with 2 processes
+2026-11-28 19:39:00,036 - INFO - Top term p-value >= threshold; terminating.
+2026-11-28 19:39:00,036 - INFO - Collection C5: Gene Ontology: Molecular Function: Top term p-value (0.028019908496032354) >= threshold (0.01); terminating.
+2026-11-28 19:39:00,037 - INFO - Collection C5: Gene Ontology: Molecular Function: Completed iterative enrichment: 15 iterations, 182 genes remaining
+2026-11-28 19:39:00,041 - INFO - Saved 15 iterations to step13_r2/qvalues/Zhou_2008_HIV_dependency_factors.symbols_20261128_193851/C5: Gene Ontology: Molecular Function_iterative_results.tsv
+2026-11-28 19:39:00,041 - INFO - Computing term q-values and network statistics...
+2026-11-28 19:39:00,044 - INFO - Generating 10000 random lists of 307 genes from the run background
+2026-11-28 19:39:03,583 - INFO - step 1/3: random lists of 307 genes (network test): 1200/10000
+2026-11-28 19:39:05,406 - INFO - step 1/3: random lists of 307 genes (network test): 2400/10000
+2026-11-28 19:39:07,410 - INFO - step 1/3: random lists of 307 genes (network test): 3600/10000
+2026-11-28 19:39:09,066 - INFO - step 1/3: random lists of 307 genes (network test): 4800/10000
+2026-11-28 19:39:10,856 - INFO - step 1/3: random lists of 307 genes (network test): 6000/10000
+2026-11-28 19:39:12,670 - INFO - step 1/3: random lists of 307 genes (network test): 7200/10000
+2026-11-28 19:39:14,554 - INFO - step 1/3: random lists of 307 genes (network test): 8400/10000
+2026-11-28 19:39:16,464 - INFO - step 1/3: random lists of 307 genes (network test): 9600/10000
+2026-11-28 19:39:17,909 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 800/14000
+2026-11-28 19:39:18,396 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 2000/14000
+2026-11-28 19:39:19,309 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 3200/14000
+2026-11-28 19:39:20,363 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 4400/14000
+2026-11-28 19:39:21,448 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 5600/14000
+2026-11-28 19:39:22,658 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 6800/14000
+2026-11-28 19:39:23,908 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 8000/14000
+2026-11-28 19:39:25,323 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 9200/14000
+2026-11-28 19:39:26,818 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 10400/14000
+2026-11-28 19:39:28,380 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 11600/14000
+2026-11-28 19:39:30,031 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 12800/14000
+2026-11-28 19:39:31,727 - INFO - step 2/3: lists for the q-value adjustment (14 sizes × 1,000): 14000/14000
+2026-11-28 19:39:33,136 - INFO - step 3/3: scoring random networks: 500/10000
+2026-11-28 19:39:33,157 - INFO - step 3/3: scoring random networks: 1000/10000
+2026-11-28 19:39:33,185 - INFO - step 3/3: scoring random networks: 1500/10000
+2026-11-28 19:39:33,209 - INFO - step 3/3: scoring random networks: 2000/10000
+2026-11-28 19:39:33,231 - INFO - step 3/3: scoring random networks: 2500/10000
+2026-11-28 19:39:33,252 - INFO - step 3/3: scoring random networks: 3000/10000
+2026-11-28 19:39:33,287 - INFO - step 3/3: scoring random networks: 3500/10000
+2026-11-28 19:39:33,296 - INFO - step 3/3: scoring random networks: 4000/10000
+2026-11-28 19:39:33,317 - INFO - step 3/3: scoring random networks: 4500/10000
+2026-11-28 19:39:33,340 - INFO - step 3/3: scoring random networks: 5000/10000
+2026-11-28 19:39:33,362 - INFO - step 3/3: scoring random networks: 5500/10000
+2026-11-28 19:39:33,383 - INFO - step 3/3: scoring random networks: 6000/10000
+2026-11-28 19:39:33,407 - INFO - step 3/3: scoring random networks: 6500/10000
+2026-11-28 19:39:33,428 - INFO - step 3/3: scoring random networks: 7000/10000
+2026-11-28 19:39:33,448 - INFO - step 3/3: scoring random networks: 7500/10000
+2026-11-28 19:39:33,467 - INFO - step 3/3: scoring random networks: 8000/10000
+2026-11-28 19:39:33,489 - INFO - step 3/3: scoring random networks: 8500/10000
+2026-11-28 19:39:33,510 - INFO - step 3/3: scoring random networks: 9000/10000
+2026-11-28 19:39:33,530 - INFO - step 3/3: scoring random networks: 9500/10000
+2026-11-28 19:39:33,554 - INFO - step 3/3: scoring random networks: 10000/10000
+2026-11-28 19:39:33,574 - INFO - Per-run statistics: 10000 random lists of 307 genes (+14000 for q) in 33.5 s (4 processes)
+2026-11-28 19:39:33,631 - INFO - Saved per-run statistical report to step13_r2/qvalues/Zhou_2008_HIV_dependency_factors.symbols_20261128_193851
+2026-11-28 19:39:33,832 - INFO - Network communities: 5 (Leiden (igraph, modularity)); saved network_modules_*.tsv
+2026-11-28 19:39:33,844 - INFO - Per-collection iterative results updated with q-values, network membership and communities
+2026-11-28 19:39:33,846 - INFO - Saved combined iterative results to step13_r2/qvalues/Zhou_2008_HIV_dependency_factors.symbols_20261128_193851/combined_iterative_results.tsv
+2026-11-28 19:39:33,874 - INFO - Saved combined network DOT to step13_r2/qvalues/Zhou_2008_HIV_dependency_factors.symbols_20261128_193851/combined_network.dot (32 terms)
+2026-11-28 19:39:33,877 - INFO - Saved semantic network (network_llm.dot) and LLM prompt (llm_prompt.txt) to step13_r2/qvalues/Zhou_2008_HIV_dependency_factors.symbols_20261128_193851
+✅ Analysis completed successfully! Results saved to step13_r2/qvalues

@@ -46,13 +46,14 @@ outs["Supp Table 04 - ORA results.html"] = page(4, "ORA results for the HIV depe
 g = pd.read_csv(f"{D}/Supp Table 05 - iGEA results.txt", sep="\t")
 kept = g["In network"].astype(str) == "True"
 body = (f"<div class='cards'><div class='card a'><b>{len(g)} terms selected</b><span>iterative selection, p &lt; 0.01, at most 30 iterations per collection</span></div>"
-        f"<div class='card b'><b>{kept.sum()} terms kept</b><span>empirical q &lt; 0.10 (10,000 random gene lists); they form the network</span></div></div>")
+        f"<div class='card b'><b>{kept.sum()} terms kept</b><span>signal-adjusted empirical q &lt; 0.10 (10,000 random gene lists); they form the network</span></div>"
+        f"<div class='card c'><b>{(g['q-value (no signal adjustment)'] < 0.10).sum()} terms without the adjustment</b><span>q &lt; 0.10 when all input genes are treated as noise (conservative); all kept terms have q ≤ {-(-g.loc[kept, 'q-value (no signal adjustment)'].max() * 100 // 1) / 100:.2f}</span></div></div>")
 for c in ORDER:
     s = g[g.Collection == c]
     if s.empty: continue
     k = (s["In network"].astype(str) == "True").sum()
     body += f"<h2>{e(c)} <span class='count'>{len(s)} selected, {k} kept</span></h2><div class='tbl'><table class='data'>"
-    body += ("<tr><th>Iter.</th><th>Term</th><th>Overlap</th><th>p-value</th><th>q-value</th><th>Kept</th><th>Comm.</th>"
+    body += ("<tr><th>Iter.</th><th>Term</th><th>Overlap</th><th>p-value</th><th>q-value<br><span>adjusted</span></th><th>q-value<br><span>unadjusted</span></th><th>Kept</th><th>Comm.</th>"
              "<th>Genes assigned (removed for the next iteration)</th><th>Full-list overlap</th><th>Full-list p</th><th>Full-list FDR</th></tr>")
     for r in s.itertuples(index=False):
         rr = r._asdict() if hasattr(r, "_asdict") else None
@@ -60,15 +61,18 @@ for c in ORDER:
         kk = str(r["In network"]) == "True"
         body += (f"<tr class='{'' if kk else 'notkept'}'><td class='num'>{r['Iteration']}</td><td>{term_link(r['Term'], r['Description'])}</td>"
                  f"<td class='num'>{e(r['Iteration overlap'])}</td><td class='num'>{fmt_p(r['Iteration p-value'])}</td>"
-                 f"<td class='num'>{fmt_p(r['q-value (empirical FDR)'])}</td><td>{'yes' if kk else 'no'}</td>"
+                 f"<td class='num'>{fmt_p(r['q-value (signal-adjusted)'])}</td><td class='num'>{fmt_p(r['q-value (no signal adjustment)'])}</td><td>{'yes' if kk else 'no'}</td>"
                  f"<td>{e(r['Community']) if isinstance(r['Community'], str) else '–'}</td><td class='genes'>{e(r['Genes removed for next iteration'])}</td>"
                  f"<td class='num'>{e(r['Full list overlap'])}</td><td class='num'>{fmt_p(r['Full list p-value'])}</td><td class='num'>{fmt_p(r['Full list FDR (BH)'])}</td></tr>")
     body += "</table></div>"
 outs["Supp Table 05 - iGEA results.html"] = page(5, "iGEA results for the HIV dependency factors (ten collections)",
     "Terms selected by iGEA for the 265 HIV dependency factors, in order of selection within each collection. Overlap and p-value refer to the "
     "iteration in which the term was selected (genes of earlier terms of the same collection removed); the full-list columns give the same term "
-    "tested on the complete list, as in ORA. q-value: signal-adjusted empirical FDR from 10,000 random gene lists of the same size. Terms with "
-    "q &lt; 0.10 are kept and form the network (gray rows: not kept). Comm.: community in the network (Leiden).", body)
+    "tested on the complete list, as in ORA. q-value (adjusted): empirical estimate of the proportion of chance terms among the terms selected at "
+    "this p-value or lower, from 10,000 random gene lists of the same size, after the signal adjustment (chance terms re-estimated from random lists "
+    "of the genes not assigned to accepted terms; Methods). q-value (unadjusted): the same estimate with all input genes treated as noise; it is "
+    "conservative when the list contains signal. Both are empirical estimates used to filter terms, not formal false discovery rate control. Terms "
+    "with adjusted q &lt; 0.10 are kept and form the network (gray rows: not kept). Comm.: community in the network (Leiden).", body)
 # ---------------- Table 6: ORA vs iGEA as collections are added
 L = open(f"{D}/Supp Table 06 - ORA vs iGEA as collections are added.txt").read().splitlines()
 start = next(i for i, l in enumerate(L) if l.startswith("Dataset\t"))

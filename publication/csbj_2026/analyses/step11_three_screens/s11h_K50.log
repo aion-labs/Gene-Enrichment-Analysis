@@ -1,0 +1,36 @@
+Brass ORA terms 87 genes 123 edges/gene 6.37 communities 2 modularity 0.1311
+König ORA terms 246 genes 164 edges/gene 17.32 communities 2 modularity 0.2029
+Zhou ORA terms 38 genes 88 edges/gene 4.99 communities 3 modularity 0.2069
+10439 gene sets; K = 50 size-matched candidates per term
+  iGEA: 20 pairs, 4 s
+  iGEA: 40 pairs, 6 s
+  iGEA: 60 pairs, 8 s
+  iGEA: 80 pairs, 11 s
+  iGEA: 100 pairs, 13 s
+  iGEA: 120 pairs, 15 s
+  iGEA: 131 pairs in 16 s
+  ORA: 16 pairs in 50 s
+method  pairs  draws  matched_p_le_0_01  matched_BH_lt_0_05  matched_BH_lt_0_10  uniform_BH_lt_0_05
+  iGEA    131  50000                 11                   8                  10                   6
+   ORA     16  50000                  0                   0                   0                   1
+screen_1 community_1  terms_1 screen_2 community_2  terms_2  footprint_jaccard  matched_median_jaccard  matched_p  matched_BH_FDR  uniform_p  uniform_BH_FDR
+   Brass          C3        5    König          C3       10              0.560                   0.038   0.000020        0.000873   0.000040        0.001747
+   König          C3       10     Zhou          C3        5              0.595                   0.032   0.000020        0.000873   0.000040        0.001747
+   Brass          C3        5     Zhou          C3        5              0.780                   0.024   0.000020        0.000873   0.000020        0.001747
+   Brass          C7        2    König          C2       14              0.157                   0.023   0.000160        0.005240   0.000980        0.025675
+   Brass          C4        8    König          C4        7              0.352                   0.040   0.001040        0.027247   0.000360        0.011790
+   König          C5        6     Zhou          C2        6              0.100                   0.028   0.001380        0.029147   0.010880        0.142525
+   Brass          C7        2     Zhou          C5        5              0.084                   0.010   0.001660        0.029147   0.007840        0.114113
+   König          C2       14     Zhou          C5        5              0.083                   0.022   0.001780        0.029147   0.022940        0.232477
+   Brass          C5        5     Zhou          C2        6              0.117                   0.027   0.004940        0.071903   0.006540        0.107090
+   Brass          C1       13    König          C4        7              0.193                   0.051   0.007180        0.094056   0.001460        0.031876
+   Brass          C5        5    König          C1       11              0.123                   0.036   0.009740        0.115992   0.005640        0.105546
+   Brass          C5        5    König          C5        6              0.073                   0.019   0.013340        0.145625   0.025419        0.232477
+   Brass          C3        5    König          C5        6              0.055                   0.019   0.023760        0.239423   0.057039        0.406092
+   Brass          C6        9    König          C6        2              0.033                   0.006   0.052859        0.494609   0.089238        0.487092
+   Brass          C3        5     Zhou          C2        6              0.074                   0.035   0.083578        0.729917   0.024460        0.232477
+screen_1 community_1  terms_1 screen_2 community_2  terms_2  footprint_jaccard  matched_median_jaccard  matched_p  matched_BH_FDR  uniform_p  uniform_BH_FDR
+   Brass          C2       54     Zhou          C3       10              0.088                   0.077   0.208236             1.0   0.149257        0.375947
+   König          C1      124     Zhou          C2       18              0.173                   0.164   0.268575             1.0   0.010380        0.083038
+   Brass          C2       54    König          C1      124              0.305                   0.299   0.393352             1.0   0.001380        0.022080
+   König          C2      122     Zhou          C1       10              0.096                   0.094   0.417972             1.0   0.083878        0.348793

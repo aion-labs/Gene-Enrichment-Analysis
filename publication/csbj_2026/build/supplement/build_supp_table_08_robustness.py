@@ -3,6 +3,8 @@ Part A: analysis settings (step10_extras/s10a_parameter_sensitivity.tsv).
 Part B: input subsampling and near ties (step06_stability/s06_subsamples.tsv, s06_term_recurrence.tsv, s06_near_ties.tsv).
 Part C: redundancy between collections (step03_redundancy/s03_redundancy_matrix_J90.csv, s03_dedup_summary.json,
         s03_sensitivity_dedup.csv, s03_sensitivity_loo.csv).
+Part D (R2, Dec 2026): annotation-matched random gene lists (step10_extras/s10c_matched_*.tsv, s10c_matched_HIV_terms.tsv),
+        compared with the standard random lists of the main analyses (step09_end_to_end).
 Usage: python build_supp_table_08_robustness.py <analyses dir> <out dir>"""
 import sys, os, json, html
 import pandas as pd
@@ -17,6 +19,42 @@ dd = json.load(open(f"{A}/step03_redundancy/s03_dedup_summary.json"))
 dedup = pd.read_csv(f"{A}/step03_redundancy/s03_sensitivity_dedup.csv")
 loo = pd.read_csv(f"{A}/step03_redundancy/s03_sensitivity_loo.csv")
 E = html.escape
+import glob, re
+# ---------------------------------------------------------------- Part D: annotation-matched random lists
+RUNS = {"HIV": "HIV_dependency_factors.symbols", "Hypoxia": "hypoxia-genes.symbols", "Vaccination": "vaccination_NAKAYA_HAI_28DY_3DY_POSITIVE"}
+drows, dtxt = [], []
+for ds, pre in RUNS.items():
+    mt = pd.read_csv(f"{A}/step10_extras/s10c_matched_{ds}.tsv", sep="\t").set_index("Metric")
+    run = glob.glob(f"{A}/step09_end_to_end/{pre}_2026*/")[0]
+    st = pd.read_csv(glob.glob(f"{run}*_statistics.tsv")[0], sep="\t").set_index("Metric")
+    rep = open(glob.glob(f"{run}*_statistical_report.txt")[0]).read()
+    kept_u, sel = map(int, re.search(r"Terms kept \(q < 0.1\): (\d+) of (\d+)", rep).groups())
+    ch_u = float(re.search(r"selects on average ([\d.]+) terms", rep).group(1))
+    m0 = mt.iloc[0]
+    r = dict(ds=ds, sel=sel, ann_in=m0.input_mean_annotation, ann_bg=m0.background_mean_annotation, ch_u=ch_u, ch_m=m0.chance_terms_per_list,
+             kept_u=kept_u, kept_m=int(m0.terms_kept), p_cs_u=st.loc["Cluster Size", "Empirical p"], p_cs_m=mt.loc["Cluster Size", "Empirical p"],
+             p_epg_u=st.loc["Average Edges per Gene", "Empirical p"], p_epg_m=mt.loc["Average Edges per Gene", "Empirical p"],
+             genes_m=int(mt.loc["Number of Genes", "Observed"]), terms_m=int(mt.loc["Number of Terms", "Observed"]))
+    drows.append(r)
+def pd_(p):
+    if p < 0.0006: return '<span class="pb sig">&lt; 0.001</span>'
+    return f'<span class="pb {"sig" if p < 0.05 else "ns"}">{p:.3f}</span>' 
+DROWS = "".join(f"<tr><td><b>{r['ds']}</b></td><td class='n'>{r['ann_in']:.1f}</td><td class='n'>{r['ch_u']:.1f} → {r['ch_m']:.1f}</td>"
+                f"<td class='n'>{r['kept_u']} → <b>{r['kept_m']}</b> <span class='muted'>of {r['sel']}</span></td><td class='n'>{r['genes_m']} / {r['terms_m']}</td>"
+                f"<td>{pd_(r['p_cs_u'])} → {pd_(r['p_cs_m'])}</td><td>{pd_(r['p_epg_u'])} → {pd_(r['p_epg_m'])}</td></tr>" for r in drows)
+mterms = pd.read_csv(f"{A}/step10_extras/s10c_matched_HIV_terms.tsv", sep="\t")
+hrun = glob.glob(f"{A}/step09_end_to_end/HIV_dependency_factors.symbols_2026*/")[0]
+hq = pd.read_csv(glob.glob(f"{hrun}*_term_qvalues.tsv")[0], sep="\t")
+hq["Community"] = pd.read_csv(f"{hrun}combined_iterative_results.tsv", sep="\t")["Community"].values
+hx = hq.merge(mterms, on=["Library", "Term", "Iteration"], suffixes=("", "_m")); hx = hx[hx.Kept]
+assert len(hx) == 56
+un = pd.read_csv(f"{A}/step13_r2/s13a_terms_HIV.tsv", sep="\t").set_index(["Library", "Term"])["q-value (no signal adjustment)"]
+hx["q_unadj"] = [un[(a, b)] for a, b in zip(hx.Library, hx.Term)]
+dropped = hx[~hx.Kept_m]; n_unadj = int((hx.q_unadj >= 0.10).sum()); n_both = int(((hx.q_unadj >= 0.10) & ~hx.Kept_m).sum())
+CNAME = {"C1": "Golgi vesicle transport", "C2": "growth-factor and NF-κB signaling, endocytosis", "C3": "Mediator-dependent transcription",
+         "C4": "nuclear pore, nuclear export", "C5": "RNA processing, RNA exosome", "C6": "ER glycosylation, GPI anchor", "C7": "cullin-RING ubiquitin ligases"}
+cg = hx.groupby("Community").agg(n=("Term", "size"), m=("Kept_m", "sum"))
+CROWS = "".join(f"<tr><td><b>{c}</b> {E(CNAME[c])}</td><td class='n'>{int(r.n)}</td><td class='n'><b>{int(r.m)}</b></td></tr>" for c, r in cg.iterrows())
 # ---------------------------------------------------------------- Part A
 DESC = {"default": ("Default", "p < 0.01; overlap ≥ 3; 10–600 genes; ≤ 30 iterations"),
         "p < 0.005": ("Stricter selection", "p < 0.005"), "p < 0.05": ("Looser selection", "p < 0.05"),
@@ -73,16 +111,18 @@ CHEAD = ("<tr><th>Collections</th><th class='n'>Terms selected</th><th class='n'
 doc = f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Supplementary Table 8 — Robustness of iGEA results</title><style>{CSS}</style></head><body><main>
 <p class="kicker">Supplementary Table 8</p><h1>Robustness of iGEA results</h1>
-<p class="lead">Three analyses test whether the HIV results depend on choices that a user, or the data, could have made differently:
-(A) the analysis settings, (B) the composition of the input list and near ties in the iterative selection, and (C) redundancy between
-gene-set collections. In every analysis the random gene lists were generated and analyzed in the same way as the gene list being tested.</p>
+<p class="lead">Four analyses test whether the HIV results depend on choices that a user, or the data, could have made differently:
+(A) the analysis settings, (B) the composition of the input list and near ties in the iterative selection, (C) redundancy between
+gene-set collections, and (D) the annotation density of the input genes. In every analysis the random gene lists were generated and analyzed in the same way as the gene list being tested.</p>
 <div class="cards">
 <div class="card b"><b>A · Settings</b><span>The HIV network stays significant under every setting (p &lt; 0.001); the random control never does
 (p ≥ {rnd[rnd.kept > 0].p_cluster_size.min():.2f}).</span></div>
 <div class="card a"><b>B · Subsampling</b><span>All {len(sub)} subsamples of 90% of the list give a significant network; cluster genes overlap the
 full-list cluster with median Jaccard {sub.cluster_gene_jaccard_vs_full.median():.2f}.</span></div>
 <div class="card c"><b>C · Collection redundancy</b><span>{n_any} of {n_sets:,} gene sets have a near-duplicate in another collection; removing
-duplicates or any one collection leaves the network significant.</span></div></div>
+duplicates or any one collection leaves the network significant.</span></div>
+<div class="card d"><b>D · Annotation density</b><span>With random lists matched to the annotation density of the input, all three networks stay significant,
+but fewer terms are kept (HIV {drows[0]['kept_u']} → {drows[0]['kept_m']}).</span></div></div>
 
 <h2>A. Analysis settings</h2>
 <p class="muted" style="font-size:13.5px">Each row changes one setting from the default analysis; the random lists use the same changed setting.</p>
@@ -111,15 +151,34 @@ gene set was removed if it had J ≥ 0.9 with a set in an earlier collection ({n
 removed in turn. The HIV list was re-analyzed with 1,000 random lists per configuration (smallest attainable p = 0.001).</p>
 <div class='tbl'><table><thead>{CHEAD}</thead><tbody>{crows}</tbody></table></div>
 
+<h2>D. Annotation-matched random gene lists</h2>
+<p class="muted" style="font-size:13.5px">Genes reported in screens and signatures tend to be well studied and therefore annotated to more gene sets than a random
+background gene (mean number of the 10,439 analysed gene sets containing a gene: {drows[0]['ann_bg']:.1f} in the background). Random lists drawn uniformly
+from the background could therefore underestimate the number of terms selected by chance. In this analysis each random list was matched to the input
+gene by gene: for every input gene, a background gene was drawn from the same annotation bin (genes in no analysed gene set, plus nine quantile bins of
+the annotation count of the annotated genes). The reduced-size lists for the q-value adjustment were random subsets of matched lists. Everything else
+(10,000 lists, seed 2026, selection, q-values, term filter and network test) was as in the main analysis. Arrows: standard random lists → annotation-matched lists.</p>
+<div class='tbl'><table><thead><tr><th>Gene list</th><th class='n'>Input annotation<br><span>mean gene sets per gene</span></th><th class='n'>Chance terms<br><span>per random list</span></th>
+<th class='n'>Terms kept<br><span>q &lt; 0.10</span></th><th class='n'>Matched network<br><span>cluster genes / terms</span></th><th>Network p<br><span>cluster size</span></th>
+<th>Network p<br><span>edges per gene</span></th></tr></thead><tbody>{DROWS}</tbody></table></div>
+<p class="notes">The networks remain significant against annotation-matched lists, but random lists of well-annotated genes select more terms by chance,
+so fewer terms pass the q-value filter. Annotation density therefore affects which individual terms are kept more than the significance of the network.
+In the HIV network every community keeps at least one term:</p>
+<div class='tbl'><table class='narrow'><thead><tr><th>Community</th><th class='n'>Terms kept<br><span>standard lists</span></th><th class='n'>Terms kept<br><span>matched lists</span></th></tr></thead><tbody>{CROWS}</tbody></table></div>
+<p class="notes">The {len(dropped)} HIV terms not kept against matched lists had q-values between {dropped.q.min():.2f} and {dropped.q.max():.2f} in that analysis and
+{dropped["q-value"].min():.3f}–{dropped["q-value"].max():.3f} in the main analysis, i.e. they were the weaker of the kept terms (every term with q &lt; {dropped["q-value"].min():.3f}
+was kept in both analyses); they include all {n_unadj} terms whose q-value
+without the signal adjustment is 0.10 or more (Supplementary Table 5). Individual terms near the threshold should therefore be interpreted with caution.</p>
+
 <h2>Notes</h2><ul class="notes">
 <li><b>Default analysis:</b> hypergeometric test (upper tail); p &lt; 0.01 for selection; at least 3 input genes
 per term; gene sets of 10–600 genes after restriction to the background; at most 30 iterations per collection; the ten collections of Supplementary Table 2.</li>
 <li><b>Random gene lists:</b> Part A, 2,000 lists of the input size and 200 per reduced size for the q-value adjustment (seed 2026), generated with the
-setting of each row; Part B, 5,000 lists; Part C, 1,000 lists. Empirical p = (r + 1)/(n + 1). The main analyses use 10,000 lists.</li>
-<li><b>Terms kept:</b> terms with empirical q &lt; 0.10, which form the network. <b>Jaccard:</b> size of the intersection divided by the size of the union.</li>
+setting of each row; Part B, 5,000 lists; Part C, 1,000 lists; Part D, 10,000 annotation-matched lists and 1,000 per reduced size. Empirical p = (r + 1)/(n + 1). The main analyses use 10,000 lists.</li>
+<li><b>Terms kept:</b> terms with signal-adjusted empirical q &lt; 0.10, which form the network (an empirical estimate used to filter terms, not formal false discovery rate control). <b>Jaccard:</b> size of the intersection divided by the size of the union.</li>
 </ul>
 <footer>Code and data: iGEA repository, publication/csbj_2026/analyses — step10_extras/s10a_sensitivity.py (A), step06_stability/s06_stability.py (B),
-step03_redundancy/s03_redundancy.py and s03b_sensitivity.py (C). Builder: publication/csbj_2026/build/supplement/build_supp_table_08_robustness.py.</footer>
+step03_redundancy/s03_redundancy.py and s03b_sensitivity.py (C), step10_extras/s10c_annotation_matched.py (D). Builder: publication/csbj_2026/build/supplement/build_supp_table_08_robustness.py.</footer>
 </main></body></html>"""
 open(f"{OUT}/Supp Table 08 - Robustness analyses.html", "w").write(doc)
 # ---------------------------------------------------------------- TXT
@@ -135,6 +194,12 @@ L += ["", f"Full-list kept terms kept in >= 80% / >= 50% of subsamples: {int((k.
       "C. Redundancy between collections (gene sets with Jaccard >= 0.9 to a set in another collection).", "", mat.to_csv(sep="\t", index=False),
       f"Deduplication removed {n_drop} sets ({drop_txt}). Re-analysis (1,000 random lists):", "",
       pd.concat([dedup.assign(Configuration="all 10 (deduplicated)"), loo])[["Configuration", "iGEA terms", "Kept (q < 0.10)", "Cluster genes", "Cluster terms",
-       "Edges/gene", "p Cluster Size", "p Average Edges per Gene"]].to_csv(sep="\t", index=False)]
+       "Edges/gene", "p Cluster Size", "p Average Edges per Gene"]].to_csv(sep="\t", index=False),
+      "D. Annotation-matched random gene lists (10,000 lists matched to the input gene by gene on annotation count; standard -> matched).", "",
+      pd.DataFrame(drows).rename(columns={"ds": "Gene list", "sel": "Terms selected", "ann_in": "Input mean annotation", "ann_bg": "Background mean annotation",
+        "ch_u": "Chance terms/list standard", "ch_m": "Chance terms/list matched", "kept_u": "Kept standard", "kept_m": "Kept matched",
+        "p_cs_u": "p cluster size standard", "p_cs_m": "p cluster size matched", "p_epg_u": "p edges/gene standard", "p_epg_m": "p edges/gene matched",
+        "genes_m": "Matched cluster genes", "terms_m": "Matched cluster terms"}).to_csv(sep="\t", index=False),
+      "HIV terms kept per community (standard / matched):", cg.to_csv(sep="\t")]
 open(f"{OUT}/Supp Table 08 - Robustness analyses.txt", "w").write("\n".join(L))
 print("written")

@@ -1,0 +1,25 @@
+10439 gene sets, 18506 genes, 50000 draws per size pair
+  131 pairs in 36 s
+  16 pairs in 21 s
+method  pairs  draws  p_le_0_01  BH_lt_0_05  BH_lt_0_10  bonferroni_lt_0_05
+  iGEA    131  50000          9           6           6                   4
+   ORA     16  50000          1           1           2                   1
+screen_1 community_1 screen_2 community_2  footprint_jaccard  shared_terms  random_median_jaccard  empirical_p   BH_FDR  bonferroni
+   Brass          C3     Zhou          C3              0.780             3                  0.016     0.000020 0.001747    0.002620
+   König          C3     Zhou          C3              0.595             2                  0.024     0.000040 0.001747    0.005240
+   Brass          C3    König          C3              0.560             2                  0.024     0.000040 0.001747    0.005240
+   Brass          C4    König          C4              0.352             4                  0.027     0.000360 0.011790    0.047159
+   Brass          C7    König          C2              0.157             0                  0.010     0.000980 0.025675    0.128377
+   Brass          C1    König          C4              0.193             1                  0.034     0.001460 0.031876    0.191256
+   Brass          C5    König          C1              0.123             0                  0.025     0.005640 0.105546    0.738825
+   Brass          C5     Zhou          C2              0.117             0                  0.018     0.006540 0.107090    0.856723
+   Brass          C7     Zhou          C5              0.084             0                  0.007     0.007840 0.114113    1.000000
+   König          C5     Zhou          C2              0.100             1                  0.021     0.010880 0.142525    1.000000
+   König          C1     Zhou          C2              0.088             0                  0.028     0.020640 0.232477    1.000000
+   König          C2     Zhou          C5              0.083             0                  0.026     0.022940 0.232477    1.000000
+   Brass          C3     Zhou          C2              0.074             0                  0.018     0.024460 0.232477    1.000000
+   Brass          C5    König          C5              0.073             1                  0.018     0.025419 0.232477    1.000000
+   Brass          C2     Zhou          C1              0.095             0                  0.038     0.026619 0.232477    1.000000
+screen_1 community_1                                                   lead_1  terms_1 screen_2 community_2                                                   lead_2  terms_2  footprint_jaccard  random_median_jaccard  empirical_p   BH_FDR  bonferroni
+   Brass          C2  GOBP_ESTABLISHMENT_OF_PROTEIN_LOCALIZATION_TO_ORGANELLE       54    König          C1 REACTOME_PROCESSING_OF_CAPPED_INTRON_CONTAINING_PRE_MRNA      124              0.305                  0.211      0.00138 0.022080    0.022080
+   König          C1 REACTOME_PROCESSING_OF_CAPPED_INTRON_CONTAINING_PRE_MRNA      124     Zhou          C2                     GOCC_TRANSCRIPTION_REGULATOR_COMPLEX       18              0.173                  0.096      0.01038 0.083038    0.166077

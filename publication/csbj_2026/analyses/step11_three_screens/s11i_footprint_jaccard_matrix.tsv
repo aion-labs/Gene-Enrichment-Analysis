@@ -1,0 +1,21 @@
+	Brass:C1 · Golgi transport	Brass:C2 · EGFR/AKT/NF-κB signaling	Brass:C3 · Mediator	Brass:C4 · nuclear pore, export	Brass:C5 · RNA exosome, RNA processing	Brass:C6 · ER glycosylation, GPI anchor	Brass:C7 · cullin-RING ligases	König:C1 · mRNA splicing	König:C2 · proteasome	König:C3 · Mediator, transcription coregulators	König:C4 · nuclear pore, import	König:C5 · RNA polymerase II, DNA repair	König:C6 · nucleases	König:C7 · tyrosine phosphatases	König:C8 · perinuclear ER	Zhou:C1 · NF-κB/AKT signaling, autophagy	Zhou:C2 · RNA polymerase II, entry receptors	Zhou:C3 · Mediator	Zhou:C4 · mitochondrial complex I	Zhou:C5 · K48 ubiquitination
+Brass:C1 · Golgi transport	1.0	0.097	0.019	0.07	0.014	0.059	0.013	0.028	0.051	0.026	0.193	0.011	0.006	0.002	0.003	0.072	0.049	0.017	0.021	0.01
+Brass:C2 · EGFR/AKT/NF-κB signaling	0.097	1.0	0.046	0.068	0.006	0.008	0.014	0.027	0.064	0.062	0.067	0.013	0.005	0.007	0.003	0.095	0.068	0.048	0.042	0.019
+Brass:C3 · Mediator	0.019	0.046	1.0	0.018	0.034	0.001	0.013	0.049	0.062	0.56	0.016	0.055	0.004	0.001	0.001	0.037	0.074	0.78	0.031	0.031
+Brass:C4 · nuclear pore, export	0.07	0.068	0.018	1.0	0.018	0.002	0.002	0.064	0.022	0.016	0.352	0.009	0.005	0.003	0.0	0.028	0.066	0.015	0.011	0.011
+Brass:C5 · RNA exosome, RNA processing	0.014	0.006	0.034	0.018	1.0	0.002	0.001	0.123	0.011	0.024	0.022	0.073	0.018	0.0	0.0	0.005	0.117	0.019	0.018	0.008
+Brass:C6 · ER glycosylation, GPI anchor	0.059	0.008	0.001	0.002	0.002	1.0	0.001	0.0	0.026	0.011	0.0	0.005	0.033	0.002	0.0	0.014	0.004	0.001	0.008	0.007
+Brass:C7 · cullin-RING ligases	0.013	0.014	0.013	0.002	0.001	0.001	1.0	0.009	0.157	0.014	0.011	0.011	0.0	0.0	0.004	0.016	0.014	0.009	0.004	0.084
+König:C1 · mRNA splicing	0.028	0.027	0.049	0.064	0.123	0.0	0.009	1.0	0.04	0.048	0.072	0.036	0.004	0.001	0.0	0.022	0.088	0.037	0.033	0.012
+König:C2 · proteasome	0.051	0.064	0.062	0.022	0.011	0.026	0.157	0.04	1.0	0.08	0.021	0.02	0.004	0.002	0.002	0.066	0.051	0.064	0.027	0.083
+König:C3 · Mediator, transcription coregulators	0.026	0.062	0.56	0.016	0.024	0.011	0.014	0.048	0.08	1.0	0.015	0.038	0.003	0.003	0.003	0.044	0.066	0.595	0.041	0.031
+König:C4 · nuclear pore, import	0.193	0.067	0.016	0.352	0.022	0.0	0.011	0.072	0.021	0.015	1.0	0.012	0.001	0.0	0.0	0.036	0.066	0.011	0.008	0.013
+König:C5 · RNA polymerase II, DNA repair	0.011	0.013	0.055	0.009	0.073	0.005	0.011	0.036	0.02	0.038	0.012	1.0	0.032	0.0	0.005	0.005	0.1	0.022	0.032	0.011
+König:C6 · nucleases	0.006	0.005	0.004	0.005	0.018	0.033	0.0	0.004	0.004	0.003	0.001	0.032	1.0	0.0	0.0	0.013	0.003	0.004	0.003	0.014
+König:C7 · tyrosine phosphatases	0.002	0.007	0.001	0.003	0.0	0.002	0.0	0.001	0.002	0.003	0.0	0.0	0.0	1.0	0.0	0.004	0.009	0.001	0.0	0.003
+König:C8 · perinuclear ER	0.003	0.003	0.001	0.0	0.0	0.0	0.004	0.0	0.002	0.003	0.0	0.005	0.0	0.0	1.0	0.003	0.003	0.002	0.002	0.0
+Zhou:C1 · NF-κB/AKT signaling, autophagy	0.072	0.095	0.037	0.028	0.005	0.014	0.016	0.022	0.066	0.044	0.036	0.005	0.013	0.004	0.003	1.0	0.042	0.036	0.047	0.017
+Zhou:C2 · RNA polymerase II, entry receptors	0.049	0.068	0.074	0.066	0.117	0.004	0.014	0.088	0.051	0.066	0.066	0.1	0.003	0.009	0.003	0.042	1.0	0.045	0.044	0.03
+Zhou:C3 · Mediator	0.017	0.048	0.78	0.015	0.019	0.001	0.009	0.037	0.064	0.595	0.011	0.022	0.004	0.001	0.002	0.036	0.045	1.0	0.03	0.031
+Zhou:C4 · mitochondrial complex I	0.021	0.042	0.031	0.011	0.018	0.008	0.004	0.033	0.027	0.041	0.008	0.032	0.003	0.0	0.002	0.047	0.044	0.03	1.0	0.009
+Zhou:C5 · K48 ubiquitination	0.01	0.019	0.031	0.011	0.008	0.007	0.084	0.012	0.083	0.031	0.013	0.011	0.014	0.003	0.0	0.017	0.03	0.031	0.009	1.0

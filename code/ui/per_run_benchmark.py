@@ -119,9 +119,10 @@ def render_q_threshold(st) -> None:
     """Term q-value threshold, shown next to the iteration p-value threshold."""
     st.number_input("Term q-value threshold (1 = keep all terms)", min_value=0.01, max_value=1.0,
                     value=DEFAULT_Q_THRESHOLD, step=0.01, format="%.2f", key="null_q_threshold",
-                    help="Correction of the iteration p-values: the q-value is the empirical false discovery rate "
-                         "estimated from the random gene lists. Terms with q below this threshold form the network; "
-                         "random lists are filtered the same way.")
+                    help="Correction of the iteration p-values: the q-value is an empirical estimate of the proportion of "
+                         "chance terms, from the random gene lists (used to filter terms, not formal false discovery "
+                         "rate control). Terms with q below this threshold form the network; random lists are filtered "
+                         "the same way.")
 
 
 def run_statistics_after_analysis(st, state, default_n_lists: int = 10000, n_jobs: Optional[int] = None,

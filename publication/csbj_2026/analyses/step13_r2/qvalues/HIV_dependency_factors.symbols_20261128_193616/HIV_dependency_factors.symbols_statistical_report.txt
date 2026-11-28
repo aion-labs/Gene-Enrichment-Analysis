@@ -1,0 +1,99 @@
+Gene list: HIV_dependency_factors.symbols
+Validated input genes: 265
+Largest cluster: 224 nodes, 168 genes, 56 terms, 381 edges, 2.2679 edges per gene, 10 collections
+
+====================================================================================================
+iGEA STATISTICAL REPORT (per-run random lists)
+====================================================================================================
+Random lists: 10000, each of 265 genes (= validated input size), drawn without replacement
+from the analysis background (23391 genes); seed 2026; 30.5 s on 4 process(es).
+Each random list was analysed with the same collections and parameters as the input:
+  p_value_method=Fisher's Exact Test (one-sided), p_threshold=0.01, min_overlap=3, min_term_size=10, max_term_size=600, max_iterations=30, background=all_genes
+Collections: H: Hallmark Gene Sets; C2: BioCarta; C2: KEGG MEDICUS; C2: Pathway Interaction Database; C2: Reactome Pathways; C2: WikiPathways; C2: KEGG Legacy; C5: Gene Ontology: Biological Process; C5: Gene Ontology: Cellular Component; C5: Gene Ontology: Molecular Function
+
+TERM LEVEL (signal-adjusted empirical q-value)
+  A random list of this size selects on average 16.05 terms by chance.
+  q = expected chance terms with p' <= p / selected terms with p' <= p (per collection, monotone),
+  re-estimated after treating genes of accepted terms as signal (97 of 265 genes
+  treated as noise in the final round; 1000 random lists per size step).
+  Terms kept (q < 0.1): 56 of 62. Random lists are filtered the same way.
+  Without the signal adjustment (all 265 genes treated as noise), 39 of 62 terms have q < 0.1.
+  The q-value is an empirical estimate used to filter terms, not formal false discovery rate control.
+
+NETWORK LEVEL (largest connected cluster)
+  z = (observed - random mean) / random SD
+  empirical p = (r + 1) / (n + 1), r = random lists with a value >= observed, n = 10000
+  (smallest attainable p = 9.999e-05). The metrics describe the same cluster and are not independent tests.
+
+  Metric                      Observed  Rand mean  Rand SD  Rand max       z     r    Emp. p
+  ------------------------------------------------------------------------------------------
+  Cluster Size                     224      4.993    5.784        81   37.86     0 9.999e-05
+  Number of Genes                  168      4.127    4.889        67   33.52     0 9.999e-05
+  Number of Terms                   56      0.866    1.058        14   52.10     0 9.999e-05
+  Number of Edges                  381      4.751    6.313        98   59.60     0 9.999e-05
+  Average Edges per Gene         2.268      0.663    0.587       4.4    2.73    62  0.006299
+
+TERMS
+  Collection                                It     p-value  q-value  Kept  Term
+  C2: BioCarta                               1     0.00031  0.00733  yes   BIOCARTA_CARDIACEGF_PATHWAY
+  C2: BioCarta                               2     0.00108  0.00733  yes   BIOCARTA_RAB_PATHWAY
+  C2: BioCarta                               3     0.00397  0.00733  yes   BIOCARTA_PTDINS_PATHWAY
+  C2: KEGG Legacy                            1    0.000389     0.02  yes   KEGG_PANCREATIC_CANCER
+  C2: KEGG Legacy                            2     0.00268   0.0316  yes   KEGG_N_GLYCAN_BIOSYNTHESIS
+  C2: KEGG Legacy                            3     0.00317   0.0316  yes   KEGG_GLYCOSYLPHOSPHATIDYLINOSITOL_GPI_ANCHOR_BIOSYNTHESIS
+  C2: KEGG Legacy                            4     0.00424   0.0316  yes   KEGG_RNA_POLYMERASE
+  C2: KEGG Legacy                            5      0.0037   0.0316  yes   KEGG_RNA_DEGRADATION
+  C2: KEGG MEDICUS                           1    2.73e-06        0  yes   KEGG_MEDICUS_REFERENCE_EGF_EGFR_PI3K_NFKB_SIGNALING_PATHWAY
+  C2: KEGG MEDICUS                           2     4.8e-06        0  yes   KEGG_MEDICUS_REFERENCE_NUCLEAR_EXPORT_OF_MRNA
+  C2: KEGG MEDICUS                           3     0.00355  0.00733  yes   KEGG_MEDICUS_REFERENCE_GPI_ANCHOR_BIOSYNTHESIS
+  C2: Pathway Interaction Database           1    0.000302    0.014  yes   PID_ARF_3PATHWAY
+  C2: Pathway Interaction Database           2     0.00352    0.045  yes   PID_ECADHERIN_NASCENT_AJ_PATHWAY
+  C2: Reactome Pathways                      1    1.99e-08        0  yes   REACTOME_REGULATION_OF_GLUCOKINASE_BY_GLUCOKINASE_REGULATORY_PROTEIN
+  C2: Reactome Pathways                      2    1.36e-07        0  yes   REACTOME_ASPARAGINE_N_LINKED_GLYCOSYLATION
+  C2: Reactome Pathways                      3    1.23e-06        0  yes   REACTOME_TRANSCRIPTIONAL_REGULATION_OF_WHITE_ADIPOCYTE_DIFFERENTIATION
+  C2: Reactome Pathways                      4    0.000364   0.0232  yes   REACTOME_CLATHRIN_MEDIATED_ENDOCYTOSIS
+  C2: Reactome Pathways                      5    0.000629   0.0288  yes   REACTOME_NUCLEAR_RNA_DECAY
+  C2: Reactome Pathways                      6     0.00171   0.0403  yes   REACTOME_INTERLEUKIN_12_SIGNALING
+  C2: Reactome Pathways                      7     0.00177   0.0403  yes   REACTOME_RETROGRADE_TRANSPORT_AT_THE_TRANS_GOLGI_NETWORK
+  C2: Reactome Pathways                      8     0.00263   0.0474  yes   REACTOME_POST_TRANSLATIONAL_MODIFICATION_SYNTHESIS_OF_GPI_ANCHORED_PROTEINS
+  C2: Reactome Pathways                      9      0.0085   0.0971  yes   REACTOME_HIV_TRANSCRIPTION_ELONGATION
+  C2: WikiPathways                           1     0.00115   0.0805  yes   WP_PRADERWILLI_AND_ANGELMAN_SYNDROME
+  C2: WikiPathways                           2    0.000987   0.0805  yes   WP_IL17_SIGNALING
+  C2: WikiPathways                           3     0.00509   0.0805  yes   WP_GLYCOSYLPHOSPHATIDYL_INOSITOL_ANCHOR_PATHWAY
+  C2: WikiPathways                           4     0.00479   0.0805  yes   WP_MIRTARGETED_GENES_IN_LYMPHOCYTES
+  C2: WikiPathways                           5     0.00386   0.0805  yes   WP_TGFBETA_RECEPTOR_SIGNALING
+  C2: WikiPathways                           6     0.00382   0.0805  yes   WP_NGLYCAN_BIOSYNTHESIS
+  C5: Gene Ontology: Biological Process      1     2.4e-08        0  yes   GOBP_GOLGI_VESICLE_TRANSPORT
+  C5: Gene Ontology: Biological Process      2    1.53e-05   0.0095  yes   GOBP_NUCLEAR_EXPORT
+  C5: Gene Ontology: Biological Process      3    4.92e-05   0.0145  yes   GOBP_DNA_TEMPLATED_TRANSCRIPTION_ELONGATION
+  C5: Gene Ontology: Biological Process      4    3.88e-05   0.0145  yes   GOBP_GLYCOLIPID_BIOSYNTHETIC_PROCESS
+  C5: Gene Ontology: Biological Process      5    0.000141    0.029  yes   GOBP_REGULATION_OF_PROTEIN_CONTAINING_COMPLEX_DISASSEMBLY
+  C5: Gene Ontology: Biological Process      6    0.000574   0.0743  yes   GOBP_POSITIVE_REGULATION_OF_MOLECULAR_FUNCTION
+  C5: Gene Ontology: Biological Process      7     0.00108    0.104  no    GOBP_POSITIVE_REGULATION_BY_HOST_OF_VIRAL_PROCESS
+  C5: Gene Ontology: Biological Process      8     0.00411    0.192  no    GOBP_PROTEIN_POLYUBIQUITINATION
+  C5: Gene Ontology: Biological Process      9     0.00548    0.192  no    GOBP_RIBONUCLEOPROTEIN_COMPLEX_BIOGENESIS
+  C5: Gene Ontology: Biological Process     10     0.00527    0.192  no    GOBP_POSITIVE_REGULATION_OF_INTERFERON_BETA_PRODUCTION
+  C5: Gene Ontology: Biological Process     11     0.00529    0.192  no    GOBP_PROTEIN_N_LINKED_GLYCOSYLATION_VIA_ASPARAGINE
+  C5: Gene Ontology: Biological Process     12       0.006    0.192  no    GOBP_ARP2_3_COMPLEX_MEDIATED_ACTIN_NUCLEATION
+  C5: Gene Ontology: Cellular Component      1    1.18e-05    0.004  yes   GOCC_NUCLEAR_PORE_OUTER_RING
+  C5: Gene Ontology: Cellular Component      2    4.24e-05    0.004  yes   GOCC_CORE_MEDIATOR_COMPLEX
+  C5: Gene Ontology: Cellular Component      3    0.000372   0.0165  yes   GOCC_GOLGI_TRANSPORT_COMPLEX
+  C5: Gene Ontology: Cellular Component      4    0.000428   0.0165  yes   GOCC_ENDOPLASMIC_RETICULUM_PROTEIN_CONTAINING_COMPLEX
+  C5: Gene Ontology: Cellular Component      5    0.000868   0.0224  yes   GOCC_ENDOPLASMIC_RETICULUM_GOLGI_INTERMEDIATE_COMPARTMENT_MEMBRANE
+  C5: Gene Ontology: Cellular Component      6     0.00123   0.0263  yes   GOCC_NUCLEAR_EXOSOME_RNASE_COMPLEX
+  C5: Gene Ontology: Cellular Component      7     0.00403   0.0581  yes   GOCC_CULLIN_RING_UBIQUITIN_LIGASE_COMPLEX
+  C5: Gene Ontology: Cellular Component      8     0.00738   0.0682  yes   GOCC_NUCLEAR_PORE
+  C5: Gene Ontology: Cellular Component      9     0.00745   0.0682  yes   GOCC_CLATHRIN_COATED_VESICLE_MEMBRANE
+  C5: Gene Ontology: Cellular Component     10      0.0066   0.0682  yes   GOCC_SPINDLE
+  C5: Gene Ontology: Cellular Component     11      0.0098   0.0783  yes   GOCC_AUTOPHAGOSOME
+  C5: Gene Ontology: Molecular Function      1    1.01e-06        0  yes   GOMF_STRUCTURAL_CONSTITUENT_OF_NUCLEAR_PORE
+  C5: Gene Ontology: Molecular Function      2    1.55e-05   0.0035  yes   GOMF_CATALYTIC_ACTIVITY_ACTING_ON_RNA
+  C5: Gene Ontology: Molecular Function      3    0.000611   0.0283  yes   GOMF_GTPASE_ACTIVATOR_ACTIVITY
+  C5: Gene Ontology: Molecular Function      4     0.00113   0.0283  yes   GOMF_TRANSCRIPTION_COREGULATOR_ACTIVITY
+  C5: Gene Ontology: Molecular Function      5    0.000854   0.0283  yes   GOMF_ENZYME_SUBSTRATE_ADAPTOR_ACTIVITY
+  C5: Gene Ontology: Molecular Function      6    0.000935   0.0283  yes   GOMF_ALPHA_TUBULIN_BINDING
+  C5: Gene Ontology: Molecular Function      7     0.00103   0.0283  yes   GOMF_CARGO_ADAPTOR_ACTIVITY
+  C5: Gene Ontology: Molecular Function      8     0.00273   0.0464  yes   GOMF_HEXOSYLTRANSFERASE_ACTIVITY
+  C5: Gene Ontology: Molecular Function      9     0.00302   0.0464  yes   GOMF_G_PROTEIN_ACTIVITY
+  C5: Gene Ontology: Molecular Function     10     0.00675   0.0754  yes   GOMF_GTPASE_BINDING
+  H: Hallmark Gene Sets                      1     3.4e-05    0.002  yes   HALLMARK_PROTEIN_SECRETION

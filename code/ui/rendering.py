@@ -636,7 +636,8 @@ def render_ora_igea_comparison(
     """
     Comparison of ORA (iteration 1, every gene set) and iGEA. ORA is shown at the raw p-value and at the
     FDR threshold; iGEA as selected (iteration p-value) and, when statistics are available, as the terms in
-    the network (q-value filter). ORA at FDR and iGEA in the network both control error at the term level.
+    the network (q-value filter). ORA at FDR and iGEA in the network are both filtered at the term level (the iGEA
+    q-value is an empirical estimate, not formal FDR control).
     """
     if not iterative_enrichments or not any(it and it.results for it in iterative_enrichments.values()):
         st.info("ℹ️ Iterative enrichment results are required for comparison.")
@@ -660,7 +661,8 @@ def render_ora_igea_comparison(
                 + "| **Terms** | " + " | ".join(str(len(t)) for _, _, t in cols) + " |")
     if has_q:
         st.caption(f"Like-for-like comparison: ORA at FDR < {fdr_threshold:g} and iGEA terms in the network ({qlab}); "
-                   "both control error at the term level. The raw p-value columns are shown for reference.")
+                   "both are filtered at the term level (the iGEA q-value is an empirical estimate, not formal FDR control). "
+                   "The raw p-value columns are shown for reference.")
     else:
         st.caption("Statistics were not computed, so iGEA terms are shown at the iteration p-value only (no q-value filter).")
     rows = ["Category\tSet\tCount\tItems"]

@@ -1,0 +1,6 @@
+theme	name	communities
+1	Mediator / transcription coregulators	Brass:C3 · Mediator; König:C3 · Mediator, transcription coregulators; Zhou:C3 · Mediator
+2	nuclear pore and transport	Brass:C1 · Golgi transport; Brass:C4 · nuclear pore, export; König:C4 · nuclear pore, import
+3	ubiquitin–proteasome	Brass:C7 · cullin-RING ligases; König:C2 · proteasome; Zhou:C5 · K48 ubiquitination
+4	RNA processing and RNA polymerase	Brass:C5 · RNA exosome, RNA processing; König:C1 · mRNA splicing; Zhou:C2 · RNA polymerase II, entry receptors
+5	NF-κB / AKT signaling	Brass:C2 · EGFR/AKT/NF-κB signaling; Zhou:C1 · NF-κB/AKT signaling, autophagy
